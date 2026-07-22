@@ -1,13 +1,23 @@
-## Problema
+## Diagnóstico
 
-La ruta `/demo` sirve `src/assets/demo-index.html`, pero ese HTML referencia assets con rutas relativas (`src="body.svg"`, `src="data.js"`, etc.). Como la URL es `/demo` (sin barra final), el navegador resuelve esas rutas contra la raíz (`/body.svg`) en lugar de contra `/demo/…` donde viven los archivos en `public/demo/`. Resultado: todos los assets dan 404 y la pantalla queda en blanco.
+Los meta tags de Open Graph y la imagen (`https://aprendoenglish.com/head.png`, 144 KB, 376×333) ya están publicados y accesibles. WhatsApp no muestra la vista previa por dos razones concretas:
 
-## Solución
+1. **Faltan `og:image:width`, `og:image:height` y `og:image:type`.** WhatsApp exige estas tres metaetiquetas para renderizar la tarjeta grande; sin ellas suele omitir la preview.
+2. **La imagen `head.png` es cuadrada y pequeña.** Aunque cumple el mínimo (≥300×200), WhatsApp prefiere una imagen apaisada tipo 1200×630 para la tarjeta grande.
 
-Inyectar `<base href="/demo/">` en el `<head>` del HTML servido por `src/routes/demo.tsx`, para que todas las rutas relativas resuelvan contra `/demo/`, que es donde están los assets estáticos.
+Adicionalmente, WhatsApp cachea el preview por URL — una vez que sale mal, no se refresca hasta que la URL cambia o pasan varios días.
 
-### Cambio
+## Plan
 
-- `src/routes/demo.tsx`: antes de devolver el HTML, insertar `<base href="/demo/">` justo después de la etiqueta `<head>` (con un simple `.replace('<head>', '<head><base href="/demo/">')`). No se toca el HTML original en `src/assets/` ni los assets en `public/demo/`.
+1. **Generar una imagen de social preview** (1200×630 JPG, <300 KB), con el oso de marca sobre un fondo con el nombre y tagline de AprendoEnglish. Se guarda en `public/social-preview.jpg`.
+2. **Actualizar los 4 HTML** (`landing.html`, `presentacion.html`, `presentation.html`, `demo-index.html`) para:
+   - apuntar `og:image` y `twitter:image` a `https://aprendoenglish.com/social-preview.jpg`
+   - añadir `og:image:width` (1200), `og:image:height` (630), `og:image:type` (image/jpeg) y `og:image:alt`
+3. **Mantener `head.png` como favicon** (sin cambios en ese uso).
+4. **Instrucciones al usuario:** re-publicar y, para saltarse el caché de WhatsApp durante la prueba, compartir el link con un parámetro nuevo (p.ej. `https://aprendoenglish.com/?v=2`). En un chat nuevo con la URL limpia también reintenta el scrape.
 
-Con esto, `/demo` carga la demo completa igual que si se abriera `/demo/index.html` estático, sin modificar el contenido del zip.
+## Detalles técnicos
+
+- La imagen se inyecta editando el `<head>` de cada HTML servido crudo por los route handlers (mismo mecanismo usado hoy para los meta tags).
+- No se toca el flujo de TanStack `head()` porque estas rutas devuelven HTML crudo por `Response`.
+- No hay cambios en rutas ni en lógica de servidor.
