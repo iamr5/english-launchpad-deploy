@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as PresentacionRouteImport } from './routes/presentacion'
 import { Route as DemoRouteImport } from './routes/demo'
+import { Route as CipRouteImport } from './routes/cip'
 import { Route as IndexRouteImport } from './routes/index'
 
 const PresentationRoute = PresentationRouteImport.update({
@@ -29,6 +30,11 @@ const DemoRoute = DemoRouteImport.update({
   path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CipRoute = CipRouteImport.update({
+  id: '/cip',
+  path: '/cip',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/demo' | '/presentacion' | '/presentation'
+  fullPaths: '/' | '/cip' | '/demo' | '/presentacion' | '/presentation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/demo' | '/presentacion' | '/presentation'
-  id: '__root__' | '/' | '/demo' | '/presentacion' | '/presentation'
+  to: '/' | '/cip' | '/demo' | '/presentacion' | '/presentation'
+  id: '__root__' | '/' | '/cip' | '/demo' | '/presentacion' | '/presentation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CipRoute: typeof CipRoute
   DemoRoute: typeof DemoRoute
   PresentacionRoute: typeof PresentacionRoute
   PresentationRoute: typeof PresentationRoute
@@ -92,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cip': {
+      id: '/cip'
+      path: '/cip'
+      fullPath: '/cip'
+      preLoaderRoute: typeof CipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CipRoute: CipRoute,
   DemoRoute: DemoRoute,
   PresentacionRoute: PresentacionRoute,
   PresentationRoute: PresentationRoute,
@@ -111,3 +129,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
