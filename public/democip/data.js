@@ -14,7 +14,7 @@ const microlection1 = {
   contentBlocks: [
     { id: 'modulo1-1-titulo', type: 'titulo', title: '¿Cómo cuento lo que hago cada día?', subtitle: 'Presente Simple', markdown: '' },
     { id: 'modulo1-1-mision', type: 'mision', markdown: `Aprender a **hablar de tu rutina diaria en inglés** usando el **Presente Simple**, describiendo lo que haces habitualmente (trabajar, estudiar, comer, etc.) y contando lo que ocurre en tu día a día.` },
-    { id: 'modulo1-1-intro', type: 'intro', markdown: `¡Hola! Soy **Ozzy**, tu bus guía 😊. Hoy vamos a aprender a contar lo que haces normalmente o lo que está pasando, como si le contaras a alguien tu rutina mientras das una caminata ⌚.
+    { id: 'modulo1-1-intro', type: 'intro', markdown: `¡Hola! Soy **Boti**, tu robot guía 😊. Hoy vamos a aprender a contar lo que haces normalmente o lo que está pasando, como si le contaras a alguien tu rutina mientras das una caminata ⌚.
 
 En inglés utilizamos el **Present Simple** (presente simple) para hablar de rutinas. Es como narrar tu vida diaria: *tú* eres el protagonista, ¡así que empezaremos hablando de ti mismo pe mascota! Luego pasaremos a los demás (porque, ¿pensabas que no te iba a enseñar a **chismear**? ¡Claro que *yes* 😁!).` },
     { id: 'modulo1-1-sneakpeek', type: 'sneakPeek', markdown: `Vamos por partes, del más cercano al más lejano en tu pequeño mundo:
@@ -196,7 +196,7 @@ Recuerda la secuencia:
 * Luego directamente con **otra persona** (you).
 * Y cuando **chismeas de otro** que no está (he, she, it), ¡no olvides poner **-S** o **-ES** al verbo!
 
-🚍 **Misión cumplida:** ahora puedes contar tu rutina en inglés mientras vas en el bus. Practica contándosela a alguien (¡o a tu agente Do-ménica imaginaria 😜!) todos los días para afianzar.
+✅ **Misión cumplida:** ahora puedes contar tu rutina en inglés mientras vas en el bus. Practica contándosela a alguien (¡o a tu agente Do-ménica imaginaria 😜!) todos los días para afianzar.
 
 **🏅 Insignia obtenida:** ✨ *Primeros Pasos en Inglés* (Rutina Diaria) 🎖️` },
   ],
@@ -227,7 +227,7 @@ const microlection2 = {
   contentBlocks: [
     { id: 'modulo2-titulo', type: 'titulo', title: '¿Quién soy yo?', subtitle: 'Verbo "to be" – ser/estar', markdown: '' },
     { id: 'modulo2-mision', type: 'mision', markdown: `Aprender a **presentarte a ti mismo y a otros en inglés** utilizando el verbo **"to be" (ser/estar)**. Incluiremos cómo decir tu nombre, edad, origen y ocupación, tanto en afirmaciones como en preguntas básicas con *to be*.` },
-    { id: 'modulo2-intro', type: 'intro', markdown: `¡Hola de nuevo! Soy **Ozzy** 🚌💬, listo para otra aventura. Hoy aprenderemos a hablar de **quién eres**: cómo decir tu nombre, tu edad, de dónde eres, cómo estás, etc. En español usamos dos verbos diferentes (**ser** y **estar**) para todo eso. ¿Sabías que en inglés se usa **un solo verbo** para ambos? 😲
+    { id: 'modulo2-intro', type: 'intro', markdown: `¡Hola de nuevo! Soy **Boti** 🤖💬, listo para otra aventura. Hoy aprenderemos a hablar de **quién eres**: cómo decir tu nombre, tu edad, de dónde eres, cómo estás, etc. En español usamos dos verbos diferentes (**ser** y **estar**) para todo eso. ¿Sabías que en inglés se usa **un solo verbo** para ambos? 😲
 
 Ese verbo mágico es **"to be"**, que significa *ser* y *estar* a la vez.` },
     { id: 'modulo2-sneakpeek', type: 'sneakPeek', markdown: `El verbo **"to be"** es donde conocemos a **Is-abella** 🕵🏽‍♀️.
@@ -416,7 +416,7 @@ const microlection3 = {
   contentBlocks: [
     { id: 'modulo3-titulo', type: 'titulo', title: 'El arte del camuflaje 🕵️‍♀️', subtitle: 'Contracciones con to be', markdown: '' },
     { id: 'modulo3-mision', type: 'mision', markdown: `Aprender a **entender y usar las formas abreviadas del verbo mágico *to be*** con la ayuda de nuestra agente secreta favorita: **Is-abella**. Vas a descubrir cómo *"is"* (y sus amigas *"are"* y *"am"*) se **camuflan** en la conversación real.` },
-    { id: 'modulo3-intro', type: 'intro', markdown: `¡Hey, ruter@! Soy **Ozzy** 🚌, y hoy te presento el *superpoder* favorito de Is-abella:
+    { id: 'modulo3-intro', type: 'intro', markdown: `¡Hey, ingenier@! Soy **Boti** 🤖, y hoy te presento el *superpoder* favorito de Is-abella:
 
 🕵️‍♀️ **La Contracción Ninja**.
 
@@ -572,7 +572,7 @@ Así que la próxima vez que alguien te diga en inglés:
 
 … ¡tú ya sabes quién está ahí adentro! 👀 Es **Is-abella**, siempre lista para ayudarte a sonar como parte de la tribu.
 
-🚍 **Misión cumplida:** Ahora puedes hablar con soltura y sonar natural. Tu inglés ya no suena como texto de examen… ¡sino como conversación de calle, café o fiesta! 🎉
+✅ **Misión cumplida:** Ahora puedes hablar con soltura y sonar natural. Tu inglés ya no suena como texto de examen… ¡sino como conversación de calle, café o fiesta! 🎉
 
 **🏅 Insignia obtenida:** *Hablante Naturalito* (Agente encubiert@ de las Contracciones) 🕵️‍♀️🗣️✨` },
   ],
@@ -603,7 +603,7 @@ const microlection4 = {
   contentBlocks: [
     { id: 'modulo4-titulo', type: 'titulo', title: 'Esto es un gato 🐈', subtitle: 'Demostrativos "this/that" + Artículos', markdown: '' },
     { id: 'modulo4-mision', type: 'mision', markdown: `Aprender a **identificar y presentar objetos en inglés**, usando **"this is"** para decir *"esto es…"*, **"that is"** para *"eso (que está allá) es…"*. Además, aprender a usar **"it is"** para describir algo ya mencionado sin repetir su nombre, y aplicar correctamente los **artículos "a/an"** (un/una) y **"the"** (el/la/los/las) en estas frases.` },
-    { id: 'modulo4-intro', type: 'intro', markdown: `Hello, **it's Ozzy de nuevo** 👋. ¿List@ para señalar cosas y decir sus nombres en inglés? En español solemos decir *"esto es un X"* o simplemente *"es un X"*. En inglés usamos **"this is"** para presentar algo cercano por primera vez, y luego usamos **"it is"** para seguir hablando de eso sin repetir su nombre. Si algo está más lejos, usamos **"that is"** (*"ese/esa es…"*).
+    { id: 'modulo4-intro', type: 'intro', markdown: `Hello, **it's Boti de nuevo** 👋. ¿List@ para señalar cosas y decir sus nombres en inglés? En español solemos decir *"esto es un X"* o simplemente *"es un X"*. En inglés usamos **"this is"** para presentar algo cercano por primera vez, y luego usamos **"it is"** para seguir hablando de eso sin repetir su nombre. Si algo está más lejos, usamos **"that is"** (*"ese/esa es…"*).
 
 Además, en inglés **siempre** usamos **artículos** (*a, an, the*) para acompañar a los sustantivos en singular. ¡No podemos dejar una palabra solita sin artículo si va en singular!` },
     { id: 'modulo4-sneakpeek', type: 'sneakPeek', markdown: `**Los artículos son como la ropa de las palabras**: si los sustantivos no se *"visten"* con *a/an/the*, la frase se escucha incompleta, como salir a la calle **calat@** (desnudo) 🩲. Hoy veremos cómo armar frases tipo: *"Esto es un gato. Es azul. El gato es grande."* en inglés correctamente.` },
@@ -694,9 +694,9 @@ Ahora combinamos todo en frases reales. Fíjate cómo cambia **this/that**, apar
 
 > 💡 **Recuerda:** usa **a** (antes de sonido de consonante) o **an** (antes de sonido de vocal) la primera vez que mencionas algo singular: *This is a phone*, *This is an umbrella*. Usa **the** las siguientes veces o si ya es algo específico: *The phone is new*. Y si no quieres repetir el sustantivo (*phone*), ponle un **it** y listo: *It is new*.
 
-**Ozzy tip:** la próxima vez que vayas por la calle, intenta pensar en inglés lo que ves. Por ejemplo: *"This is a tree. It is tall. That is a bus. It is old. The bus is yellow."* – Estarás practicando demostrativos y artículos en tu mente. ¡Paja, no! 😎
+**Boti tip:** la próxima vez que vayas por la calle, intenta pensar en inglés lo que ves. Por ejemplo: *"This is a tree. It is tall. That is a bus. It is old. The bus is yellow."* – Estarás practicando demostrativos y artículos en tu mente. ¡Paja, no! 😎
 
-🚍 **Misión cumplida:** Ya puedes presentar cosas y personas a tu alrededor como un guía turístico bilingüe. Tus frases tendrán la *"ropa"* adecuada (artículos) y sonarás más natural al no repetir innecesariamente los nombres.
+✅ **Misión cumplida:** Ya puedes presentar cosas y personas a tu alrededor como un guía turístico bilingüe. Tus frases tendrán la *"ropa"* adecuada (artículos) y sonarás más natural al no repetir innecesariamente los nombres.
 
 **🏅 Insignia obtenida:** *Identificador Experto* (Maestr@ de **this/that/it** y **artículos**) 📖✨` },
   ],
@@ -726,8 +726,8 @@ const microlection5 = {
   audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
   contentBlocks: [
     { id: 'modulo5-titulo', type: 'titulo', title: 'Un poquito de Ubicaína ¿Dónde estoy?', subtitle: 'There is/are + Preposiciones de lugar', markdown: '' },
-    { id: 'modulo5-mision', type: 'mision', markdown: `Aprender a **describir lo que hay en tu entorno y ubicarlo** es clave para ubicarte (Casi tanto como usar TuRuta guap@ 😉). Usaremos **"There is / There are"** para decir *"hay"* en singular y plural, y practicaremos algunas **preposiciones de lugar** básicas (on, in, under, next to, in front of, etc.) para indicar dónde están las cosas.` },
-    { id: 'modulo5-intro', type: 'intro', markdown: `¡Hola! Soy Ozzy el Osito 🗺️, tu guía viajero. Imagina que vas en el bus, miras por la ventana y te preguntas *"¿Dónde estoy?"*. Hoy aprenderemos a responder eso describiendo lo que **hay** a tu alrededor y **dónde** está cada cosa.
+    { id: 'modulo5-mision', type: 'mision', markdown: `Aprender a **describir lo que hay en tu entorno y ubicarlo** es clave para ubicarte (Casi tanto como leer bien un plano 😉). Usaremos **"There is / There are"** para decir *"hay"* en singular y plural, y practicaremos algunas **preposiciones de lugar** básicas (on, in, under, next to, in front of, etc.) para indicar dónde están las cosas.` },
+    { id: 'modulo5-intro', type: 'intro', markdown: `¡Hola! Soy Boti 🗺️, tu robot guía viajero. Imagina que vas en el bus, miras por la ventana y te preguntas *"¿Dónde estoy?"*. Hoy aprenderemos a responder eso describiendo lo que **hay** a tu alrededor y **dónde** está cada cosa.
 
 En inglés, para decir **"hay (algo)"**, usamos **"There is"** (cuando es *una* cosa) y **"There are"** (cuando son *varias*). Es como decir "Ahí está..." o "Ahí están..." en sentido de existencia.
 
@@ -816,7 +816,7 @@ Así que la próxima vez que vayas en el bus y quieras contar lo que ves: *"Ther
 
 Y si te pierdes, no temas preguntar: *"Excuse me, where is the bus stop?"* – con esa frase mágica, cualquier buen samaritano te ayudará a encontrar la parada de bus más cercana.
 
-🚍 **Misión cumplida:** Tus habilidades de **navegación en inglés** están en marcha. ¡Ya nada de andar perdid@ por el mundo! Sigue con este buen rumbo hacia el dominio del idioma.
+✅ **Misión cumplida:** Tus habilidades de **navegación en inglés** están en marcha. ¡Ya nada de andar perdid@ por el mundo! Sigue con este buen rumbo hacia el dominio del idioma.
 
 **🏅 Insignia obtenida:** *Explorador Urbano* (Maestría en **there is/are** y direcciones) 🗺️🌟` },
   ],
@@ -847,7 +847,7 @@ const microlection6 = {
   contentBlocks: [
     { id: 'modulo6-titulo', type: 'titulo', title: '¿Quién eres tú?', subtitle: 'Palabras WH-atsapp en presente', markdown: '' },
     { id: 'modulo6-mision', type: 'mision', markdown: `Aprender a **hacer y responder preguntas básicas en inglés** utilizando las palabras **WH-atsapp** (**Who, What, Where, When, Why, How**). Practicaremos cómo formular preguntas abiertas tanto con el verbo **to be** como con el auxiliar **do/does**.` },
-    { id: 'modulo6-intro', type: 'intro', markdown: `¡Hola de nuevo! Ozzy el bus está de regreso, más curioso que nunca 🕵️‍♂️. Ya sabes hacer afirmaciones sobre personas y cosas, y ubicarlas; ¡ahora toca **preguntar**! Las **palabras Wh-atsapp** son las preguntas abiertas que te permiten pedir TODO tipo de información.
+    { id: 'modulo6-intro', type: 'intro', markdown: `¡Hola de nuevo! Boti está de regreso, más curioso que nunca 🕵️‍♂️. Ya sabes hacer afirmaciones sobre personas y cosas, y ubicarlas; ¡ahora toca **preguntar**! Las **palabras Wh-atsapp** son las preguntas abiertas que te permiten pedir TODO tipo de información.
 
 En esta microlección, descubrirás la **fórmula secreta** para construir estas preguntas y practicaremos con las más comunes: **Who, What, Where, When, Why, How**.` },
     { id: 'modulo6-sneakpeek', type: 'sneakPeek', markdown: `Nuestras agentes gramaticales **Is-abella** y **Do-ménica** estarán en esta misión de espionaje lingüístico para ayudarte a armar bien las preguntas.
@@ -986,7 +986,7 @@ Ya puedes:
 ✅ Responder preguntas sobre ti mismo
 ✅ Formular preguntas correctas con la estructura adecuada
 
-🚍 **Misión cumplida:** ¡Eres un agente secreto del inglés! Con Is-abella y Do-ménica de tu lado, nada podrá detenerte.
+✅ **Misión cumplida:** ¡Eres un agente secreto del inglés! Con Is-abella y Do-ménica de tu lado, nada podrá detenerte.
 
 **🏅 Insignia obtenida:** *Agente Interrogador* (Maestr@ de las preguntas Wh-atsapp) 🕵️‍♀️✨` },
   ],
@@ -1017,7 +1017,7 @@ const microlection7 = {
   contentBlocks: [
     { id: 'modulo7-titulo', type: 'titulo', title: 'Supervivencia en el camino', subtitle: 'Saludos y frases útiles', markdown: '' },
     { id: 'modulo7-mision', type: 'mision', markdown: `Aprender las frases básicas de cortesía y supervivencia en inglés para el día a día. Esto incluye saludar apropiadamente según la hora, agradecer, disculparse, pedir algo de forma amable y otras expresiones útiles cuando estás por la ciudad o en el bus.` },
-    { id: 'modulo7-intro', type: 'intro', markdown: `¡Hello! 👋 Soy Ozzy el Osito, tu guía, y hoy armaremos un kit de supervivencia lingüística. Cuando viajas en bus o caminas por la ciudad, hay frases básicas que necesitas para ser amable y hacerte entender con la gente. Cosas como saludar al subir, dar las gracias, pedir permiso para bajar, o disculparte si empujas sin querer.
+    { id: 'modulo7-intro', type: 'intro', markdown: `¡Hello! 👋 Soy Boti, tu guía, y hoy armaremos un kit de supervivencia lingüística. Cuando viajas en bus o caminas por la ciudad, hay frases básicas que necesitas para ser amable y hacerte entender con la gente. Cosas como saludar al subir, dar las gracias, pedir permiso para bajar, o disculparte si empujas sin querer.
 
 No se trata de gramática complicada esta vez, sino de saber qué decir en el momento justo. Estas frases son cortas pero poderosas. ¡Vamos a aprenderlas y practicarlas! 😃
 
@@ -1168,7 +1168,7 @@ Recuerda: la cortesía abre caminos. Un "please", "thank you" o "excuse me" dich
 
 Ahora, cada vez que subas al bus saluda con un alegre "Good morning", sonríe y si necesitas algo, no temas decir "Excuse me..." para preguntar. Verás que la gente responde bien a la amabilidad.
 
-🚍 **Misión cumplida:** Tu yo bilingüe cortés está listo para el mundo. Sigue practicando estas frases hasta que te salgan naturalitas, sin pensar.
+✅ **Misión cumplida:** Tu yo bilingüe cortés está listo para el mundo. Sigue practicando estas frases hasta que te salgan naturalitas, sin pensar.
 
 **🏅 Insignia obtenida:** ✨ *Viajero Cortés* (Maestr@ de la Supervivencia Urbana en inglés) 🌟🤝` },
   ],
@@ -1199,7 +1199,7 @@ const microlection8 = {
   contentBlocks: [
     { id: 'modulo8-titulo', type: 'titulo', title: 'El arte de usar bien la lengua', subtitle: 'Pronunciando como se debe', markdown: '' },
     { id: 'modulo8-mision', type: 'mision', markdown: `Entrenar tu oído y tu boca en algunos sonidos clave del inglés que suelen ser difíciles para hispanohablantes. Practicaremos la pronunciación de "th", la diferencia entre b y v, entre ch y sh, y otros sonidos donde a veces metemos la pata, para que empieces a sonar más cool 😎 al hablar.` },
-    { id: 'modulo8-intro', type: 'intro', markdown: `¡Hola, hola! 🎤 Soy Ozzy el Osito, tu coach de pronunciación por hoy. Sabemos que el inglés escrito a veces no suena como se ve. Y para nosotros hispanohablantes, hay ciertos sonidos que son como los "jefes finales" del videojuego de la pronunciación: un poco tricky (complicados) 😅.
+    { id: 'modulo8-intro', type: 'intro', markdown: `¡Hola, hola! 🎤 Soy Boti, tu coach de pronunciación por hoy. Sabemos que el inglés escrito a veces no suena como se ve. Y para nosotros hispanohablantes, hay ciertos sonidos que son como los "jefes finales" del videojuego de la pronunciación: un poco tricky (complicados) 😅.
 
 No te asustes: con práctica y algunos tips, podrás dominarlos. Vamos a enfocarnos en unos sonidos específicos que, si los pronuncias bien, tu inglés dará un salto de calidad. ¡A calentar la lengua! 👅🔥
 
@@ -1317,7 +1317,7 @@ Diviértete con el idioma, juega con los sonidos. Ya no son enemigos, ¡son desa
 
 Recuerda: la pronunciación es como bailar, al inicio piensas cada paso, luego ya sale natural. 💃🕺 Keep practicing!
 
-🚍 **Misión cumplida:** Tus oídos y tu pronunciación están a otro nivel. La próxima vez que digas "three very big ships" te saldrá más auténtico.
+✅ **Misión cumplida:** Tus oídos y tu pronunciación están a otro nivel. La próxima vez que digas "three very big ships" te saldrá más auténtico.
 
 **🏅 Insignia obtenida:** ✨ *Domador de la Lengua Gringa* (has conquistado los Sounds of English) 🎙️🎖️` },
   ],
@@ -1347,7 +1347,7 @@ const microlection9 = {
   audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
   contentBlocks: [
     { id: 'modulo9-titulo', type: 'titulo', title: 'Mini Simulacro A1', subtitle: 'Evaluación Final del Módulo 1', markdown: '' },
-    { id: 'modulo9-mision', type: 'mision', markdown: `¡Llegaste al gran momento! 📋✨ En este simulacro de fin de módulo pondrás a prueba todo lo aprendido. Ozzy, Is-abella y Do-ménica están aquí contigo, ¡animándote desde la primera fila! 🚌🎉` },
+    { id: 'modulo9-mision', type: 'mision', markdown: `¡Llegaste al gran momento! 📋✨ En este simulacro de fin de módulo pondrás a prueba todo lo aprendido. Boti, Is-abella y Do-ménica están aquí contigo, ¡animándote desde la primera fila! 🤖🎉` },
     { id: 'modulo9-intro', type: 'intro', markdown: `Este mini examen recopila puntos clave de todas las microlecciones anteriores (presentaciones, rutinas, ubicaciones, preguntas, vocabulario básico, pronunciación). Te ayudará a medir cuánto has avanzado. Encontrarás preguntas de opción múltiple y pequeñas traducciones.
 
 **Consejos antes de empezar:**
@@ -1464,19 +1464,19 @@ Has repasado los 5 pilares del Módulo 1:
 Ahora sí, ¡a por el simulacro final! 🚀` },
     { id: 'modulo9-cierre', type: 'cierre', markdown: `#### **🌟 Cierre del Módulo 1**
 
-¡Enhorabuena! 🎉 Has completado el módulo 1 de TuRuta English.
+¡Enhorabuena! 🎉 Has completado el módulo 1 de AprendoEnglish.
 
-Mira hacia atrás un momento: en este módulo aprendiste a presentarte, describir tu rutina diaria, hablar de lugares, hacer preguntas clave, usar vocabulario esencial y hasta a pronunciar mejor ciertos sonidos. ¡Eso es un montón de progreso! 🤩 Cada trayecto que aprovechaste estudiando te trajo hasta aquí.
+Mira hacia atrás un momento: en este módulo aprendiste a presentarte, describir tu rutina diaria, hablar de lugares, hacer preguntas clave, usar vocabulario esencial y hasta a pronunciar mejor ciertos sonidos. ¡Eso es un montón de progreso! 🤩 Cada rato que aprovechaste estudiando te trajo hasta aquí.
 
-Ahora, Ozzy, Is-abella, Do-ménica y todo el equipo de TuRuta English te otorgamos la ¡Insignia Final de Módulo 1! 🏅
+Ahora, Boti, Is-abella, Do-ménica y todo el equipo de AprendoEnglish te otorgamos la ¡Insignia Final de Módulo 1! 🏅
 
-Has ganado el ✨ **Certificado Interno TuRuta – Nivel A1**.
+Has ganado el ✨ **Certificado Interno AprendoEnglish – Nivel A1**.
 
-¿Qué sigue? El nivel A2 aguarda con nuevos desafíos (¡como hablar en pasado y futuro!). Pero por hoy, celebra tu logro. Tómate una selfie mental con Ozzy y nuestras agentes secretas y di "I did it!" 🥳📸.
+¿Qué sigue? El nivel A2 aguarda con nuevos desafíos (¡como hablar en pasado y futuro!). Pero por hoy, celebra tu logro. Tómate una selfie mental con Boti y nuestras agentes secretas y di "I did it!" 🥳📸.
 
-¡Nos vemos en el siguiente trayecto de aprendizaje, Ruter@!💙 Sigue así, que tu ruta hacia el inglés avanzado ya empezó con el pie derecho.
+¡Nos vemos en el siguiente tramo de aprendizaje, ingenier@! 💙 Sigue así, que tu camino hacia el inglés avanzado ya empezó con el pie derecho.
 
-**🏅 Insignia obtenida:** ✨ *Certificado TuRuta A1* – Has completado el Módulo 1 🎖️🏆` },
+**🏅 Insignia obtenida:** ✨ *Certificado AprendoEnglish A1* – Has completado el Módulo 1 🎖️🏆` },
   ],
   quizQuestions: [
     mc('"Ella ___ de Perú." (usa to be)', ['am', 'are', 'is', 'be'], 2),
@@ -1511,7 +1511,7 @@ Al final, si completas todos los retos y quizzes, recibirás un título especial
 🏅 **Certificación Honoraria: Bricher@ Bilingüe – Nivel 1.**
 
 ("Brichero/a" en jerga peruana se refiere a la persona que coquetea con turistas o extranjeros. Aquí lo usamos en plan divertido, ¡sin estereotipos ofensivos, solo buena onda y práctica real!)` },
-    { id: 'modulo10-intro', type: 'intro', markdown: `Hi there! Soy Ozzy el Osito 💘, tu wingman salvaje. En esta microlección extra nos ponemos en modo conquistador@. Vamos a aprender frases y expresiones útiles para coquetear en inglés con humor y claridad, sin pasarnos de confianzudos.
+    { id: 'modulo10-intro', type: 'intro', markdown: `Hi there! Soy Boti 💘, tu wingman salvaje. En esta microlección extra nos ponemos en modo conquistador@. Vamos a aprender frases y expresiones útiles para coquetear en inglés con humor y claridad, sin pasarnos de confianzudos.
 
 Y porque no podía ser de otra forma, nos acompañan nuestras agentes secretas favoritas: **Is-abella** y **Do-ménica** 😎. Ellas te soplarán cómo hablar de ti con seguridad (Is-abella, *I am...*) y cómo hacer buenas preguntas sin sonar robot ni stalker (Do-ménica, *Do you ...?*).
 
@@ -1723,7 +1723,7 @@ const modulo2_1 = {
   contentBlocks: [
     { id: 'modulo2-1-titulo', type: 'titulo', title: '¿Qué está pasando ahora?', subtitle: 'Presente Continuo vs. Presente Simple', markdown: '' },
     { id: 'modulo2-1-mision', type: 'mision', markdown: `Aprender a **describir acciones que ocurren en este momento** (Presente Continuo) y a distinguirlas de las **rutinas habituales** (Presente Simple). Al finalizar podrás decir **qué estás haciendo ahorita** 📹 y diferenciarlo de lo que **sueles hacer** siempre.` },
-    { id: 'modulo2-1-intro', type: 'intro', markdown: `¡Hola otra vez! Soy **Ozzy** 🚌, tu bus guía. En la micro anterior aprendiste a hablar de **rutinas** con el **Presente Simple** (lo que haces *siempre*).
+    { id: 'modulo2-1-intro', type: 'intro', markdown: `¡Hola otra vez! Soy **Boti** 🤖, tu robot guía. En la micro anterior aprendiste a hablar de **rutinas** con el **Presente Simple** (lo que haces *siempre*).
 
 Pero ahora, mientras vamos rodando en el bus, **cosas pasan en este instante** ⌚: gente subiendo, alguien hablando por teléfono, un perro correteando 🐕. Para describir lo que ocurre **AHORITA**, usamos el **Presente Continuo**.
 
@@ -1799,7 +1799,7 @@ Estos son los tropiezos clásicos cuando mezclamos los dos tiempos. ¡Cázalos a
 * ❌ *Do you watching TV?* → ✅ ***Are** you watching TV?* (en preguntas continuas se usa *are*, no *do*).
 * ❌ *He is knowing the answer.* → ✅ *He **knows** the answer.* (*know* es verbo de estado → simple).
 
-  > 💡 **Truco de Ozzy:** si la acción **está pasando ahorita** y **se puede ver**, asegúrate de tener **am/are/is + verbo-ing** completos. Si es un **estado interno** (saber, querer, necesitar), vuelve al **simple**.
+  > 💡 **Truco de Boti:** si la acción **está pasando ahorita** y **se puede ver**, asegúrate de tener **am/are/is + verbo-ing** completos. Si es un **estado interno** (saber, querer, necesitar), vuelve al **simple**.
 
 En los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`,
       miniQuiz: [
@@ -1837,7 +1837,7 @@ Recuerda:
 * **Rutina / habitual** → Presente Simple: *I drive to work every day.* 🚗
 * **Algo que pasa ahorita** → Presente Continuo: *I am driving to work right now.* 📹
 
-🚍 **Misión cumplida:** ya puedes contarle a Ozzy qué estás haciendo en tiempo real: *"I am sitting on the bus and looking out the window."*
+✅ **Misión cumplida:** ya puedes contarle a Boti qué estás haciendo en tiempo real: *"I am sitting on the bus and looking out the window."*
 
 **🏅 Insignia obtenida:** ✨ *Reportero del Momento* (Experto en Presente Continuo) 📸🕐` },
   ],
@@ -1868,7 +1868,7 @@ const modulo2_2 = {
   contentBlocks: [
     { id: 'modulo2-2-titulo', type: 'titulo', title: 'Historias del pasado', subtitle: 'Pasado Simple', markdown: '' },
     { id: 'modulo2-2-mision', type: 'mision', markdown: `¡Hoy te conviertes en narrador del ayer! 🕒\n\nVas a aprender a:\n\n- 🗣️ **Hablar de cosas que ya ocurrieron** usando el **Pasado Simple**.\n- ✅ Describir eventos pasados con verbos **regulares e irregulares**.\n- 🚫 Formar **negativos** (didn't) y **preguntas** (did) en pasado.\n\n> Al final podrás contar tu finde, tu anécdota de ayer y cualquier historia que se te ocurra.💨` },
-    { id: 'modulo2-2-intro', type: 'intro', markdown: `#### **🚌 ¡Sube al Bus del Tiempo!**\n\nOzzy es un **viajero del tiempo** 🕒. Hoy viajamos al **ayer** para contar historias: qué hiciste el finde, esa anécdota graciosa de ayer...\n\nEn español ya lo haces sin pensar: **fui**, **hice**, **comí**. 🍽️\n\nEn inglés eso se llama el **Past Simple** (Pasado Simple).\n\nY adivina quién reaparece... 🥁 ¡La agente **Do-ménica**! 🕵️‍♀️ La misma que usaba **do/does** en presente, ahora se pone el traje de **"did"** para las preguntas del pasado. Misma agente, nuevo disfraz. 😎` },
+    { id: 'modulo2-2-intro', type: 'intro', markdown: `#### **🕰️ ¡Sube a la Máquina del Tiempo!**\n\nBoti es un **viajero del tiempo** 🕒. Hoy viajamos al **ayer** para contar historias: qué hiciste el finde, esa anécdota graciosa de ayer...\n\nEn español ya lo haces sin pensar: **fui**, **hice**, **comí**. 🍽️\n\nEn inglés eso se llama el **Past Simple** (Pasado Simple).\n\nY adivina quién reaparece... 🥁 ¡La agente **Do-ménica**! 🕵️‍♀️ La misma que usaba **do/does** en presente, ahora se pone el traje de **"did"** para las preguntas del pasado. Misma agente, nuevo disfraz. 😎` },
     { id: 'modulo2-2-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **✅ Afirmativos: Verbos regulares (+ ed)**\n\n**1️⃣ Verbos regulares → + ed**\n\nLa mayoría de los verbos solo necesitan un **-ed** al final. ¡Fácil! ✨\n\n| Verbo | Pasado | Ejemplo |\n|---|---|---|\n| work | work**ed** | I **worked** yesterday. |\n| play | play**ed** | She **played** football last Saturday. |\n| wait | wait**ed** | We **waited** for the bus. |\n\n**🔤 Reglas de ortografía:**\n\n| Si termina en... | Regla | Ejemplo |\n|---|---|---|\n| **-e** | solo + d | live → liv**ed** |\n| consonante + **y** | -y → **ied** | study → stud**ied** |\n| **CVC** tónica | duplica consonante | stop → sto**pped** |`, miniQuiz: [
       mc('¿Cómo se forma el pasado de la mayoría de verbos regulares?', ['Añadiendo -ed', 'Añadiendo -ing', 'Cambiando toda la palabra', 'No cambian'], 0),
       mc('El pasado de "study" es...', ['studyed', 'studied', 'studyied', 'studed'], 1),
@@ -1919,7 +1919,7 @@ const modulo2_2 = {
       tap('Toca la palabra incorrecta:', ['Where', 'did', 'you', 'bought', 'that?'], 3, 'buy'),
       rebuild('Escucha y reconstruye:', 'Did you eat lunch', ['Did', 'you', 'eat', 'lunch', 'ate', 'did', 'eaten', 'launch']),
     ] },
-    { id: 'modulo2-2-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nOzzy ha visto estos errores mil veces... ¡no caigas en ellos!🛑\n\n| ❌ Incorrecto | ✅ Correcto | ¿Por qué? |\n|---|---|---|\n| I **no went** to class. | I **didn't go** to class. | El negativo se forma con **didn't + base**. |\n| Did you **went** to the gym? | Did you **go** to the gym? | Tras "did", el verbo va en **base**. |\n| She **not studied**. | She **didn't study**. | Falta el **didn't**; el verbo va en base. |\n| He **didn't went** either. | He **didn't go** either. | Doble pasado: "did" ya lo lleva. |\n| **Was you** at the office? | **Were you** at the office? | Con "you" **were**, no "was". |\n\n**🧠 Dos reglas que lo salvan todo:**\n\n1. 🙅‍♂️ Nada de **"goed"** → es **went** (irregular).\n2. 🙅‍♀️ Nada de **"didn't went"** → es **didn't go** (¡un solo pasado!).\n\n> 👉 En negativos y preguntas, el "did/didn't" carga el pasado. El verbo principal descansa en su forma base. 😴`, miniQuiz: [
+    { id: 'modulo2-2-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nBoti ha visto estos errores mil veces... ¡no caigas en ellos!🛑\n\n| ❌ Incorrecto | ✅ Correcto | ¿Por qué? |\n|---|---|---|\n| I **no went** to class. | I **didn't go** to class. | El negativo se forma con **didn't + base**. |\n| Did you **went** to the gym? | Did you **go** to the gym? | Tras "did", el verbo va en **base**. |\n| She **not studied**. | She **didn't study**. | Falta el **didn't**; el verbo va en base. |\n| He **didn't went** either. | He **didn't go** either. | Doble pasado: "did" ya lo lleva. |\n| **Was you** at the office? | **Were you** at the office? | Con "you" **were**, no "was". |\n\n**🧠 Dos reglas que lo salvan todo:**\n\n1. 🙅‍♂️ Nada de **"goed"** → es **went** (irregular).\n2. 🙅‍♀️ Nada de **"didn't went"** → es **didn't go** (¡un solo pasado!).\n\n> 👉 En negativos y preguntas, el "did/didn't" carga el pasado. El verbo principal descansa en su forma base. 😴`, miniQuiz: [
       tap('Toca la palabra incorrecta:', ['Yesterday', 'I', 'worked', 'and', 'study', 'a', 'lot.'], 4, 'studied'),
       tap('Toca la palabra incorrecta:', ['She', "didn't", 'studied', 'for', 'the', 'test.'], 2, 'study'),
       tap('Toca la palabra incorrecta:', ['Did', 'you', 'went', 'to', 'the', 'gym?'], 2, 'go'),
@@ -1930,7 +1930,7 @@ const modulo2_2 = {
       tap('Toca la palabra incorrecta:', ['Where', 'did', 'she', 'bought', 'the', 'tickets?'], 3, 'buy'),
     ] },
     { id: 'modulo2-2-resumen', type: 'resumen', markdown: `#### **📝 Resumen Express**\n\n¡Lo dominas, agente del tiempo! ⏳ Recuerda:\n\n- ✅ **Afirmativo:** verbo regular + **ed** (worked) o irregular (go → **went**).\n- 🚫 **Negativo:** **didn't + verbo base** (I didn't go). To be → **wasn't / weren't**.\n- ❓ **Pregunta:** **Did + sujeto + verbo base?** (Did you go?). To be → **Was/Were...?**\n\n| Tipo | Verbos normales | Verbo to be |\n|---|---|---|\n| ✅ | I went | I was |\n| 🚫 | I didn't go | I wasn't |\n| ❓ | Did I go? | Was I? |\n\n> 🔑 La clave: en negativos y preguntas, **el "did" lleva el pasado** y el verbo se queda en **base**. ¡Nunca dos pasados juntos!` },
-    { id: 'modulo2-2-cierre', type: 'cierre', markdown: `#### **🏅 ¡Misión Cumplida!**\n\nExcelente trabajo, **agente del tiempo** ⏳. Ya dominas el **Pasado Simple**. 🎉\n\n**🗣️ Práctica para ti:** cuenta **3 cosas que hiciste el finde**:\n\n> I **went** to... 🚶\n> I **saw**... 👀\n> I **ate**... 🍕\n\n**🚍 Misión final:** responde a "**What did you do yesterday?**" con algo como:\n\n> *"Yesterday I **studied**, **cooked** dinner, and **watched** a movie."* 🎬\n\n🏅 **Insignia obtenida:** *Cronista del Ayer* (Maestr@ del Past Simple) ⏱️✨\n\n¡Nos vemos en la próxima parada, Ozzy ya calienta motores! 🚌💨` },
+    { id: 'modulo2-2-cierre', type: 'cierre', markdown: `#### **🏅 ¡Misión Cumplida!**\n\nExcelente trabajo, **agente del tiempo** ⏳. Ya dominas el **Pasado Simple**. 🎉\n\n**🗣️ Práctica para ti:** cuenta **3 cosas que hiciste el finde**:\n\n> I **went** to... 🚶\n> I **saw**... 👀\n> I **ate**... 🍕\n\n**🎯 Misión final:** responde a "**What did you do yesterday?**" con algo como:\n\n> *"Yesterday I **studied**, **cooked** dinner, and **watched** a movie."* 🎬\n\n🏅 **Insignia obtenida:** *Cronista del Ayer* (Maestr@ del Past Simple) ⏱️✨\n\n¡Nos vemos en la siguiente etapa, Boti ya calienta motores! 🤖⚡` },
   ],
   quizQuestions: [
     mc('"Ellos viajaron el año pasado."', ['They traveled last year.', 'They travel last year.', 'They travels last year.', 'They traveling last year.'], 0),
@@ -1959,7 +1959,7 @@ const modulo2_3 = {
   contentBlocks: [
     { id: 'modulo2-3-titulo', type: 'titulo', title: '¿Cómo hablo del futuro?', subtitle: 'Futuro con "going to" y "will"', markdown: '' },
     { id: 'modulo2-3-mision', type: 'mision', markdown: `🎯 **Tu misión de hoy**\n\nVas a aprender a hablar del **futuro** con las dos formas básicas del inglés: **"be going to"** y **"will"**. 🚀\n\nAl terminar podrás:\n\n- 📅 Expresar **planes e intenciones** ya decididas.\n- 🔮 Hacer **predicciones** sobre lo que va a pasar.\n- 🤝 Reaccionar con **ofertas y promesas** en el momento.\n- ⚖️ Saber **cuándo usar cada una** sin dudar.\n\n¡Vamos a viajar al futuro! 🌟` },
-    { id: 'modulo2-3-intro', type: 'intro', markdown: `Bienvenido al futuro 🚀\n\nQuieres decir cosas como *"voy a estudiar más inglés el próximo mes"* o *"te ayudaré con tu tarea"*. Para eso necesitas dos aliados.\n\n> 🤖 **El Agente Will** (clave: **will**) aparece para **promesas** o **decisiones en el acto**.\n>\n> 👩 **Is-abella** (el verbo *to be*) te ayuda con **"going to"** para tus **planes**.\n\nDos rutas al futuro:\n\n| Ruta | Forma | Significado |\n|---|---|---|\n| 📅 Planes | be **going to** | voy a… |\n| ⚡ Ocurrencias | **will** | …ré |\n\n¡Sube al bus y elige tu ruta! 🔮🚍` },
+    { id: 'modulo2-3-intro', type: 'intro', markdown: `Bienvenido al futuro 🚀\n\nQuieres decir cosas como *"voy a estudiar más inglés el próximo mes"* o *"te ayudaré con tu tarea"*. Para eso necesitas dos aliados.\n\n> 🤖 **El Agente Will** (clave: **will**) aparece para **promesas** o **decisiones en el acto**.\n>\n> 👩 **Is-abella** (el verbo *to be*) te ayuda con **"going to"** para tus **planes**.\n\nDos rutas al futuro:\n\n| Ruta | Forma | Significado |\n|---|---|---|\n| 📅 Planes | be **going to** | voy a… |\n| ⚡ Ocurrencias | **will** | …ré |\n\n¡Elige tu camino! 🔮⚙️` },
     { id: 'modulo2-3-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **📅 Camino 1: "be going to"**\n\nEsta es la ruta de los **planes** e **intenciones** que ya decidiste. Equivale a *"voy a…"*.\n\n**Estructura:**\n\n> **am / is / are** + **going to** + verbo base\n\n| Sujeto | Forma |\n|---|---|\n| I | **am** going to |\n| He / She / It | **is** going to |\n| You / We / They | **are** going to |\n\n**¿Cuándo lo uso?** 🤔\n\n- 🗓️ **Plan o intención ya decidida:**\n  - *I **am going to** travel next year.*\n  - *She **is going to** learn French.*\n- 👀 **Predicción con evidencia visible:**\n  - *Look at those clouds! It **is going to** rain.* ☁️\n  - *Be careful! You**'re going to** fall!*\n\n**Preguntas y negaciones:**\n\n- ❓ *Are you **going to** eat that?*\n- 🚫 *I'm **not going to** attend the meeting.*` , miniQuiz: [
       mc('¿Qué estructura sigue "be going to"?', ['will + verbo base', 'am/is/are + going to + verbo base', 'do + going to + verbo', 'going to + verbo + -s'], 1),
       mc('"Mira esas nubes" — hay evidencia visible. ¿Cómo lo dices?', ['It is going to rain.', 'It rains going to.', 'It will rain maybe.', 'It going to rain.'], 0),
@@ -2020,7 +2020,7 @@ const modulo2_4 = {
   contentBlocks: [
     { id: 'modulo2-4-titulo', type: 'titulo', title: '¡Qué diferente!', subtitle: 'Comparativos y Superlativos', markdown: '' },
     { id: 'modulo2-4-mision', type: 'mision', markdown: `Aprender a **comparar cosas en inglés** 🆚: decir si algo es *más grande que* otra cosa, o *el más grande de todos*. Vas a dominar los **comparativos** (\`-er\` / \`more\`) y los **superlativos** (\`-est\` / \`the most\`), sus reglas de ortografía y los irregulares básicos. 💪` },
-    { id: 'modulo2-4-intro', type: 'intro', markdown: `¡Hola otra vez! Soy **Ozzy** 🚌💬. Hoy suben al bus dos pasajeros bien competitivos: uno grita *"I am taller!"* 🙋 y el otro *"No, I'm faster!"* 🏃. ¡Y me toca arbitrar la pelea de "**más que**" y "**el más**"! ⚖️
+    { id: 'modulo2-4-intro', type: 'intro', markdown: `¡Hola otra vez! Soy **Boti** 🤖💬. Hoy suben al bus dos pasajeros bien competitivos: uno grita *"I am taller!"* 🙋 y el otro *"No, I'm faster!"* 🏃. ¡Y me toca arbitrar la pelea de "**más que**" y "**el más**"! ⚖️
 
 En inglés, a veces agregamos **\`+er\`** para decir "más" y **\`+est\`** para decir "el más"... pero ojo, **depende del largo del adjetivo** 📏. Desde *"Mi bus es más rápido que tu combi"* 😎 hasta *"Este es el mejor ceviche del mundo"* 🦐. ¡Vamos a comparar todo!` },
     { id: 'modulo2-4-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **1️⃣ Comparativos (más... que)**
@@ -2062,7 +2062,7 @@ En inglés, a veces agregamos **\`+er\`** para decir "más" y **\`+est\`** para 
 
   | Adjetivo | Superlativo   | Ejemplo                                  |
   | -------- | ------------- | ---------------------------------------- |
-  | fast     | the fastest   | Ozzy is **the fastest** bus in the city. 🚌 |
+  | fast     | the fastest   | Boti is **the fastest** robot in the city. 🤖 |
   | high     | the highest   | Mount Everest is **the highest** mountain in the world. 🏔️ |
 
 > 💡 **Ortografía** (igual que antes): *happy → the happiest* 😄 / *big → the biggest* 🔡
@@ -2078,7 +2078,7 @@ En inglés, a veces agregamos **\`+er\`** para decir "más" y **\`+est\`** para 
 - She is the smartest **in** the class. 🏫
 - It was the coldest day **of** the year. ❄️`,
       miniQuiz: [
-        mc('Ozzy is ___ bus in the city. (fast)', ['the fastest', 'the most fast', 'fastest', 'the faster'], 0),
+        mc('Boti is ___ robot in the city. (fast)', ['the fastest', 'the most fast', 'fastest', 'the faster'], 0),
         mc('This is ___ lesson. (important)', ['the importantest', 'the most important', 'most important', 'the more important'], 1),
         mc('She is the smartest ___ the class.', ['of', 'in', 'on', 'at'], 1),
         mc('It was the coldest day ___ the year.', ['in', 'on', 'of', 'at'], 2),
@@ -2155,7 +2155,7 @@ Recuerda:
 * Siempre \`than\` en comparativos y \`the\` en superlativos.
 * Y los irregulares: *good, better, the best*; *bad, worse, the worst*. 🧠
 
-🚍 **Misión cumplida:** ahora arbitra esta pelea → *"Juan is smart, but Carlos is **smarter than** Juan. However, Lucy is **the smartest** of all."* 😎
+✅ **Misión cumplida:** ahora arbitra esta pelea → *"Juan is smart, but Carlos is **smarter than** Juan. However, Lucy is **the smartest** of all."* 😎
 
 **🏅 Insignia obtenida:** ⚖️ *Juez de las Comparaciones* 📏` },
   ],
@@ -2186,14 +2186,14 @@ const modulo2_5 = {
   contentBlocks: [
     { id: 'modulo2-5-titulo', type: 'titulo', title: '¿Qué puedo hacer?', subtitle: 'Modal can / can\'t (habilidad y permiso)', markdown: '' },
     { id: 'modulo2-5-mision', type: 'mision', markdown: `Aprender a usar **can** (poder) para dos cosas geniales: expresar tus **habilidades** (lo que sabes hacer 💪) y **pedir o dar permiso** (¿Puedo…?). Verás la forma **afirmativa**, **negativa** (*can't*) e **interrogativa**, y descubrirás cuándo usar **could** para sonar más cortés. 🎩` },
-    { id: 'modulo2-5-intro', type: 'intro', markdown: `¡Hola! Soy **Ozzy**😊. Hoy subes un mago al bus 🎩… ¡y ese mago eres **tú** con **can**!
+    { id: 'modulo2-5-intro', type: 'intro', markdown: `¡Hola! Soy **Boti**😊. Hoy subes un mago al bus 🎩… ¡y ese mago eres **tú** con **can**!
 
 Con **can** dices lo que **sabes hacer**, lo que **puedes** o **no puedes**, y hasta pides **permiso**. Mira qué fácil:
 
 > *"I can swim."* 🏊
 > *"Can I open the window?"* 🪟
 
-🤓 **Secreto Ozzy:** en situaciones formales, **could** es tu as bajo la manga para pedir permiso con **más cortesía**. ¡Guárdalo para impresionar! ✨` },
+🤓 **Secreto Boti:** en situaciones formales, **could** es tu as bajo la manga para pedir permiso con **más cortesía**. ¡Guárdalo para impresionar! ✨` },
     { id: 'modulo2-5-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **Habilidad y permiso con can**
 
 **can** es un **verbo modal**. Esto significa tres reglas de oro 🥇:
@@ -2305,7 +2305,7 @@ En contextos formales: **Could I…? > Can I…?** 🤝
   | Cortesía    | Could I have a pen?        |` },
     { id: 'modulo2-5-cierre', type: 'cierre', markdown: `¡Ya usas **can** como campeón 💫! Puedes contar qué puedes hacer (*I can cook, I can sing, but I can't dance*) y pedir con **Can I…?** / **Could I…?** con toda la elegancia. 🎩
 
-🚍 **Misión cumplida:** responde *"What can you do that's unique?"* con *"I can…"*; y cuando me digas *"Ozzy, can I get off here?"* yo te diré *"Yes, you can!"* 😄
+✅ **Misión cumplida:** responde *"What can you do that's unique?"* con *"I can…"*; y cuando practiques conmigo *"Can I get off here?"*, yo te responderé *"Yes, you can!"* 😄
 
 🏅 **Insignia obtenida:** **Superhabilidos@** (Dominio de can / can't). ¡A volar! 🦸` },
   ],
@@ -2336,7 +2336,7 @@ const modulo2_6 = {
   contentBlocks: [
     { id: 'modulo2-6-titulo', type: 'titulo', title: '¿Debo o tengo que?', subtitle: 'Modales should vs. must', markdown: '' },
     { id: 'modulo2-6-mision', type: 'mision', markdown: `Aprender a **diferenciar y usar should y must** (ambos se traducen como "deber") 😇😈. Con **should** das **consejos y recomendaciones**; con **must** expresas **obligaciones firmes y reglas**. También verás **have to** ("tener que") y, lo más importante, **cómo negar cada uno** sin meter la pata.` },
-    { id: 'modulo2-6-intro', type: 'intro', markdown: `¡Hola otra vez! Soy **Ozzy** 🚌💬 y hoy entran dos invitados muy peleados: la **Agente Should** 😇 y el **Agente Must** 😈, como el angelito y el diablito de tu hombro.
+    { id: 'modulo2-6-intro', type: 'intro', markdown: `¡Hola otra vez! Soy **Boti** 🤖💬 y hoy entran dos invitados muy peleados: la **Agente Should** 😇 y el **Agente Must** 😈, como el angelito y el diablito de tu hombro.
 
 * La **Agente Should** 😇 te **susurra consejos**: "deberías estudiar" 📚, "deberías descansar". Son **sugerencias**, no te obliga a nada.
 * El **Agente Must** 😈 **impone reglas**: "debes hacerlo, sí o sí" 💼. Es una **obligación fuerte**.
@@ -2448,7 +2448,7 @@ Estos son los resbalones clásicos con should y must. ¡Detéctalos antes de que
 
 Ya sabes **dar consejos** (*You should practice English every day*) y **poner reglas** (*You must follow safety rules*), y sobre todo **suavizar** la diferencia entre *don't have to* (opcional) y *mustn't* (prohibido).
 
-🚍 **Misión cumplida:** *"You should take a break"*; *"You mustn't jump off a moving bus!"*; y si alguien pregunta *"Should I bring snacks for the trip?"*, ya sabes responder: **"Yes, you should!"** 😋
+✅ **Misión cumplida:** *"You should take a break"*; *"You mustn't jump off a moving bus!"*; y si alguien pregunta *"Should I bring snacks for the trip?"*, ya sabes responder: **"Yes, you should!"** 😋
 
 **🏅 Insignia obtenida:** ✨ *Consejer@ & Capataz* (Maestría en Should vs Must) 🎖️📜` },
   ],
@@ -2479,7 +2479,7 @@ const modulo2_7 = {
   contentBlocks: [
     { id: 'modulo2-7-titulo', type: 'titulo', title: 'Me gusta o no me gusta', subtitle: 'Expresar gustos con like/love/hate + -ing', markdown: '' },
     { id: 'modulo2-7-mision', type: 'mision', markdown: `Aprender a **expresar tus gustos, pasiones y disgustos en inglés** usando **like, love, don't like, hate** (y el nuevo **enjoy**) seguidos del verbo en **-ing**. Además, darás **razones** con **because** (porque) para sonar como todo un nativo 😎.` },
-    { id: 'modulo2-7-intro', type: 'intro', markdown: `¡Hora de hablar de gustos! 😁 Soy **Ozzy** 🚌 y hoy te voy a chismear sobre lo que *te encanta* y lo que *no soportas*.
+    { id: 'modulo2-7-intro', type: 'intro', markdown: `¡Hora de hablar de gustos! 😁 Soy **Boti** 🤖 y hoy te voy a chismear sobre lo que *te encanta* y lo que *no soportas*.
 
 En español decimos "Me gusta **bailar**" (infinitivo). Pero en inglés, después de **I like** ¡el verbo se pone en **gerundio (-ing)**! 👉 *I like dancing* suena mucho más natural que *I like to dance*.
 
@@ -2589,7 +2589,7 @@ Recuerda: tras *like/love/hate/enjoy* va **-ing**; en negativo **doesn't** + ver
 
 ¡Excelente! 👏 Ya dices **qué te gusta y qué no** con *like / love / hate / enjoy + -ing*, y le sumas el **because** para explicar tus razones 😃.
 
-🚍 **Misión cumplida:** responde a *"What do you like to do?"* con algo como:
+✅ **Misión cumplida:** responde a *"What do you like to do?"* con algo como:
 
 > *"I like listening to rock music **because** it energizes me."* 🎸
 
@@ -2622,7 +2622,7 @@ const modulo2_8 = {
   contentBlocks: [
     { id: 'modulo2-8-titulo', type: 'titulo', title: '¿Quién, cómo, cuándo?', subtitle: 'Preguntas WH (presente y pasado)', markdown: '' },
     { id: 'modulo2-8-mision', type: 'mision', markdown: `Hacer **preguntas informativas (Wh-)** en **presente** y **pasado simple**. 🕵 Vas a consolidar la fórmula con auxiliares (**do/does**, **did**) y con **to be**, usando *who, what, where, when, why, how, which*.` },
-    { id: 'modulo2-8-intro', type: 'intro', markdown: `¡Hola, agente! Soy **Ozzy** 🚌💬 y hoy eres **detective lingüístico** 🕵.
+    { id: 'modulo2-8-intro', type: 'intro', markdown: `¡Hola, agente! Soy **Boti** 🤖💬 y hoy eres **detective lingüístico** 🕵.
 
 En el **Módulo 1** ya preguntaste en presente:
 - *What do you study?*
@@ -2830,7 +2830,7 @@ Clave para *much* vs *many* 🔑: si lo puedes **contar** uno por uno (apples, b
 **🧠 Práctica detective:** mira una respuesta en español e **inventa la pregunta en inglés**.
 - *Respuesta:* "Fui ayer." *When did you go?*
 
-🚍 **Misión cumplida en la ciudad:**
+✅ **Misión cumplida en la ciudad:**
 > *"Excuse me, what time does the museum open? How can I get to Trafalgar Square?"*
 
 🏅 **Insignia obtenida:** *Detective Lingüístico* — Maestr@ de las Preguntas Wh- 🕵✨` },
@@ -2862,11 +2862,11 @@ const modulo2_9 = {
   contentBlocks: [
     { id: 'modulo2-9-titulo', type: 'titulo', title: '¡Vamos de compras!', subtitle: 'Vocabulario funcional: compras', markdown: '' },
     { id: 'modulo2-9-mision', type: 'mision', markdown: `Aprender las **frases útiles para ir de compras en inglés** 🛍: responder a *"Can I help you?"*, **preguntar precios**, pedir **tallas** y manejar las **formas de pago**. El objetivo es que te desenvuelvas como **cliente** en cualquier tienda de habla inglesa sin morir en el intento. 💪` },
-    { id: 'modulo2-9-intro', type: 'intro', markdown: `¡Hola de nuevo! Soy **Ozzy** 🚌💬 y hoy nos vamos de *shopping* 🛍.
+    { id: 'modulo2-9-intro', type: 'intro', markdown: `¡Hola de nuevo! Soy **Boti** 🤖💬 y hoy nos vamos de *shopping* 🛍.
 
 Imagina **Gamarra** pero todos hablan inglés 😱. ¿Cómo dices *"¿Cuánto cuesta?"*, *"¿Tiene talla M?"*, *"Solo estoy mirando"*?
 
-> 💡 Tranqui, no necesitas ser un experto. Con un puñado de frases sales del paso como todo un **caserit@ internacional**. Ozzy te acompaña a cada vitrina. 👀` },
+> 💡 Tranqui, no necesitas ser un experto. Con un puñado de frases sales del paso como todo un **caserit@ internacional**. Boti te acompaña a cada vitrina. 👀` },
     { id: 'modulo2-9-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **Entrar y buscar** 🏬
 
 Apenas entras, el vendedor te dispara: **"Can I help you?"** (¿Te ayudo?). La **frase de oro** para que te dejen mirar tranqui:
@@ -2988,7 +2988,7 @@ Ojito con estos resbalones clásicos de caserit@ novat@ 😅:
 
 ¡Listo para ir de *shopping*! 🛒 Ya sabes entrar, preguntar precios y tallas, probarte la ropa y pagar como todo un pro. Repasa estas frases **antes de viajar**. ✈️
 
-🚍 **Misión cumplida:** en el mercado de Cusco una turista pregunta *"How much is this llama figurine?"* y tú respondes con toda confianza *"It's 50 soles."* 🦙
+✅ **Misión cumplida:** en el mercado de Cusco una turista pregunta *"How much is this llama figurine?"* y tú respondes con toda confianza *"It's 50 soles."* 🦙
 
 **🏅 Insignia obtenida:** ✨ *Caserit@ Internacional* (Experto en Shopping en inglés) 🛍💳` },
   ],
@@ -3019,11 +3019,11 @@ const modulo2_10 = {
   contentBlocks: [
     { id: 'modulo2-10-titulo', type: 'titulo', title: '¡Me siento mal!', subtitle: 'Inglés para situaciones de salud', markdown: '' },
     { id: 'modulo2-10-mision', type: 'mision', markdown: `Aprender el **vocabulario y las frases para hablar de enfermedades y atención médica básica** 🤒. Vas a poder **describir síntomas** (*I have a headache*), **entender las preguntas del doctor** (*How long have you had…?*) y **seguir recomendaciones** (*You should rest*). ¡Inglés de supervivencia para cuando el cuerpo dice "no más"! 🩺` },
-    { id: 'modulo2-10-intro', type: 'intro', markdown: `¡Hey, ruter@! Soy **Ozzy** 🚌💬 y hoy te veo con **mala cara** 🤒. ¿Te sientes mal? ¡Tranqui! Hoy jugamos a **doctor y paciente**.
+    { id: 'modulo2-10-intro', type: 'intro', markdown: `¡Hey, ingenier@! Soy **Boti** 🤖💬 y hoy te veo con **mala cara** 🤒. ¿Te sientes mal? ¡Tranqui! Hoy jugamos a **doctor y paciente**.
 
 Saber expresar tus molestias en inglés es **vital** 🩹. Aprenderás a decir *"me duele X"*, *"me siento Y"*, a entender al médico y hasta a gritar *"¡Llamen a una ambulancia!"* en caso de emergencia.
 
-> 🩺 Hoy me convierto en **Dr. Ozzy** y paso consulta. ¡Abre la boca y di *"ahh"*! 😷` },
+> 🩺 Hoy me convierto en **Dr. Boti** y paso consulta. ¡Abre la boca y di *"ahh"*! 😷` },
     { id: 'modulo2-10-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **Describir síntomas – ¿Qué te duele? 🤕**
 
 Para decir que tienes un malestar, el inglés usa mucho **"I have a…"** (tengo un/una…) o **"My ___ hurts"** (me duele mi…).
@@ -3106,7 +3106,7 @@ Otras frases del doctor: *Let me take your temperature* (déjame tomar tu temper
       ] },
     { id: 'modulo2-10-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
-Estos resbalones son **clásicos** al traducir del español. ¡Dr. Ozzy te los cura! 💊
+Estos resbalones son **clásicos** al traducir del español. ¡Dr. Boti te los cura! 💊
 
 | ❌ Incorrecto | ✅ Correcto |
 | --- | --- |
@@ -3152,7 +3152,7 @@ Toca la palabra incorrecta en cada frase 👇`,
 
 ¡Bravazo! 🎉 Ahora manejas las **frases de supervivencia médica** 🩹. Sabes **describir tus síntomas**, **entender al doctor** y **lidiar con una urgencia** sin entrar en pánico.
 
-> **Misión cumplida:** Ozzy te mira y dice *"You look much better now!"* y tú respondes con seguridad: *"Yes, I am. Thank you for asking!"* 😊
+> **Misión cumplida:** Boti te mira y dice *"You look much better now!"* y tú respondes con seguridad: *"Yes, I am. Thank you for asking!"* 😊
 
 **🏅 Insignia obtenida:** *Paramédic@ Políglota* (Inglés para la Salud) 🚑💊` },
   ],
@@ -3183,7 +3183,7 @@ const modulo2_11 = {
   contentBlocks: [
     { id: 'modulo2-11-titulo', type: 'titulo', title: '¡A viajar!', subtitle: 'Inglés para viajes y direcciones', markdown: '' },
     { id: 'modulo2-11-mision', type: 'mision', markdown: `Aprender **inglés para viajes** ✈️: moverte por el **aeropuerto** (check-in, seguridad, aduana), **preguntar direcciones** en la ciudad y resolver **situaciones en el hotel** (check-in, problemas en la habitación y check-out). ¡Que el idioma nunca te deje varado! 🧳` },
-    { id: 'modulo2-11-intro', type: 'intro', markdown: `¡Hola, viajero! Soy **Ozzy**, tu guía de viaje internacional 🌍😎. Hoy nos vamos de aventura y te preparo para todo lo que viene en el camino.
+    { id: 'modulo2-11-intro', type: 'intro', markdown: `¡Hola, viajero! Soy **Boti**, tu guía de viaje internacional 🌍😎. Hoy nos vamos de aventura y te preparo para todo lo que viene en el camino.
 
 Vamos a dividir el viaje en **tres paradas**:
 
@@ -3323,7 +3323,7 @@ Ojito con estos tropiezos clásicos del viajero 👀:
 
 ¡Y listo! 🎒 Ahora tienes un **kit de viaje en inglés** completo: te mueves por el **aeropuerto**, preguntas **direcciones** sin perderte y resuelves cualquier situación en el **hotel**.
 
-🚍 **Misión cumplida:** cuando vuelvas y te pregunten *"How was your trip?"* podrás responder con orgullo: *"It was amazing! I had no problems communicating."* 🏅
+✅ **Misión cumplida:** cuando vuelvas y te pregunten *"How was your trip?"* podrás responder con orgullo: *"It was amazing! I had no problems communicating."* 🏅
 
 **🏅 Insignia obtenida:** ✨ *Trotamundos Preparado* (Inglés de Viajes A2) 🌍✈️🏨` },
   ],
@@ -3358,7 +3358,7 @@ const modulo2_12 = {
 
 Pero no se le escribe igual a tu mejor amigo que al jefe, ¿cierto? 😅 Por eso vas a distinguir el **registro informal** vs el **formal**, armar un email con **saludo, cuerpo y despedida**, y de paso aprender abreviaturas de chat (OMG, LOL) por **cultura general** 😜.
 
-¡Saca tu pluma digital que Ozzy te enseña a sonar bien en cualquier mensaje! 🖋` },
+¡Saca tu pluma digital que Boti te enseña a sonar bien en cualquier mensaje! 🖋` },
     { id: 'modulo2-12-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **Informal vs Formal: las partes del mensaje**
 
 Todo mensaje tiene piezas. Cambian según a **quién** le escribes. 👇
@@ -3476,7 +3476,7 @@ Toca la palabra incorrecta y corrígela en los ejercicios. 👇`,
 
 ¡Llegaste al final del módulo con la **pluma digital afilada** 🖋! Ahora escribes desde un **WhatsApp casual** hasta un **email formalito** (¡súper útil para el KET!). ✅
 
-🚍 **Misión cumplida:** Ozzy te entrega tu diploma 🎓: *"Ahora hablas, escuchas, lees y escribes en inglés A2 con confianza."*
+✅ **Misión cumplida:** Boti te entrega tu diploma 🎓: *"Ahora hablas, escuchas, lees y escribes en inglés A2 con confianza."*
 
 **🏅 Insignia obtenida:** 💌🌐 *Escritor@ Global* (Maestría en Emails & Notas en inglés)` },
   ],
@@ -3503,7 +3503,7 @@ const COURSE_DATA = {
   id: 'ingles-basico',
   title: 'AprendoEnglish.com',
   subtitle: 'Microlecciones prácticas',
-  description: 'Aprende inglés paso a paso con microlecciones, misiones y quizzes pensados para practicar en tu ruta.',
+  description: 'Aprende inglés paso a paso con microlecciones, misiones y quizzes pensados para practicar en tu día a día.',
   modules: [
     {
       id: 'modulo-1',

@@ -164,12 +164,12 @@
      que usa el PNG de fondo), asi su posicion no cambia con el ancho de pantalla.
      left:50% + margin-left:(offset − mitadDelAncho) deja el centro de Boti en
      centro-de-pantalla + offset. El offset X/Y y el tamano por modulo se aplican
-     inline desde renderModule (BUSI_POS / BUSI_SIZE).
+     inline desde renderModule (BOTI_POS / BOTI_SIZE).
      pointer-events:none para que nunca bloquee los toques sobre las lecciones;
      z por encima de caps(2) y por debajo del popover(6).
      El SVG y la animacion (resortes en JS) viven en boti.js, que se monta sobre
      este contenedor vacio — ver renderModule y el arranque del onboarding. */
-  .lpath #busi-mascot { position: absolute; left: 50%; z-index: 4; pointer-events: none; }
+  .lpath #boti-mascot { position: absolute; left: 50%; z-index: 4; pointer-events: none; }
   /* la sombra de piso la dibuja boti.js (.boti-shadow): Boti queda plantado */
   .lpath .row { position: relative; display: flex; justify-content: center; }
   /* Shift with `left` (not transform) so the node is NOT its own stacking context —
@@ -657,7 +657,7 @@
   .ob-top .segs { flex: 1 1 auto; }
   /* Boti + globo de dialogo ("talk row") — Boti plantado a la izquierda, globo a la altura de su cabeza */
   .ob-talk { display: flex; align-items: flex-end; gap: 14px; margin-bottom: 24px; }
-  .ob-bear { position: relative; flex: 0 0 auto; width: 96px; height: 145px; }
+  .ob-boti { position: relative; flex: 0 0 auto; width: 96px; height: 145px; }
   .ob-bubble { position: relative; flex: 1 1 auto; background: #fff; border: 2px solid var(--line);
     border-radius: 18px; padding: 14px 16px; margin-bottom: 34px;
     font-size: 18px; font-weight: 800; line-height: 1.35; color: var(--ink); animation: tr-pop .25s ease both; }
@@ -670,7 +670,7 @@
   .ob-intro .ob-top { opacity: 0; pointer-events: none; }
   .ob-intro .ob-talk { flex: 1 1 auto; flex-direction: column-reverse; align-items: center; justify-content: center; gap: 22px; margin-bottom: 0; }
   .ob-intro .ob-body { flex: 0 0 auto; }
-  .ob-intro .ob-bear { width: 172px; height: 259px; }
+  .ob-intro .ob-boti { width: 172px; height: 259px; }
   .ob-intro .ob-bubble { flex: 0 0 auto; margin-bottom: 0; font-size: 22px; text-align: center; max-width: 320px; }
   /* en el intro el pico apunta HACIA ABAJO, hacia Boti (el globo queda encima) */
   .ob-intro .ob-bubble::before { left: 50%; top: 100%; bottom: auto; transform: translateX(-50%);
@@ -811,7 +811,7 @@
       <div class="ob-talk">
         <!-- Boti: contenedor vacio; boti.js le inyecta el SVG y lo anima.
              Aqui SI es interactivo: tocarlo lo hace saltar y guiñar. -->
-        <div class="ob-bear" id="ob-boti" data-boti='{"interactive":true}' aria-hidden="true"></div>
+        <div class="ob-boti" id="ob-boti" data-boti='{"interactive":true}' aria-hidden="true"></div>
         <div class="ob-bubble" id="ob-bubble"></div>
       </div>
       <div class="ob-body">
@@ -1638,68 +1638,26 @@ function setupBtnTuner(scope, bgN) {
   refresh();
   document.body.appendChild(panel);
 }
-// === CODIGO MUERTO: mascota Rive "Busi" — ya no se usa (la mascota es Boti/boti.js).
-// Se deja como referencia; rive.js / rive_wasm.js / busi_act_riv.js ya no se cargan. ====
-// rive.js (runtime) + rive_wasm.js (wasm as a data URL) + busi_act_riv.js (the .riv as
-// base64) are all bundled. The .riv is handed to Rive as a `buffer` — NOT a URL —
-// because the @rive-app/canvas runtime refuses to fetch file:// URLs in a WebView.
-// Ports PoiTutorialOverlay: state machine 'State Machine 1', inputs Expressions /
-// Arm Right / Arm Left.
-if (typeof rive !== 'undefined' && rive.RuntimeLoader && window.__RIVE_WASM_URL) {
-  try { rive.RuntimeLoader.setWasmUrl(window.__RIVE_WASM_URL); } catch (e) {}
-}
-const BUSI_SM = 'State Machine 1';
-// Per-image Busi placement (dialed in with the tuner): x = horizontal offset from the
-// screen's center, y = vertical nudge from the 3rd button's center. Uniform size.
-// Keyed by image number (bgN). Applied inline in renderModule.
-const BUSI_SIZE = 100; // ANCHO de Boti en px (el alto sigue la proporcion 757.6×1139.5 → ~150px)
-const BUSI_POS = {
+// === Posicion de Boti en el mapa de lecciones ======================================
+// Calibrado por imagen de fondo (bgN): x = desplazamiento horizontal respecto del centro
+// de la pantalla, y = ajuste vertical respecto del centro del 3.er boton. Tamano unico.
+// Se aplica inline en renderModule; el afinador de abajo permite recalibrarlo en vivo.
+const BOTI_SIZE = 100; // ANCHO de Boti en px (el alto sigue la proporcion 757.6x1139.5 -> ~150px)
+const BOTI_RATIO = 1139.5 / 757.6;
+const BOTI_POS = {
   1: { x: 57, y: 16 },
   2: { x: 59, y: 16 },
   3: { x: 68, y: -148 },
   4: { x: 77, y: 50 },
   5: { x: 70, y: 27 },
 };
-let _busiRive = null, _busiBuf = null;
-window.busiInputs = {}; // populated on load: 'Expressions', 'Arm Right', 'Arm Left'
-function _busiB64ToBuf(b64) {
-  const bin = atob(b64), u = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
-  return u.buffer;
-}
-function initBusi() {
-  const canvas = document.getElementById('busi-canvas');
-  if (!canvas || typeof rive === 'undefined' || !window.__BUSI_ACT_RIV) return;
-  try { if (_busiRive && _busiRive.cleanup) _busiRive.cleanup(); } catch (e) {}
-  try { _busiBuf = _busiBuf || _busiB64ToBuf(window.__BUSI_ACT_RIV); } catch (e) { return; }
-  _busiRive = new rive.Rive({
-    buffer: _busiBuf,
-    canvas: canvas,
-    autoplay: true,
-    stateMachines: BUSI_SM,
-    fit: rive.Fit.contain,
-    alignment: rive.Alignment.center,
-    onLoad: () => {
-      try { _busiRive.resizeDrawingSurfaceToCanvas(); } catch (e) {}
-      const inputs = _busiRive.stateMachineInputs(BUSI_SM) || [];
-      window.busiInputs = {};
-      inputs.forEach((inp) => { window.busiInputs[inp.name] = inp; });
-    },
-    onLoadError: (e) => { try { console.error('[busi] load error', e); } catch (_) {} },
-  });
-}
-// Helpers mirroring the Flutter inputs (call after onLoad). Expressions = number;
-// Arm Right / Arm Left fire if triggers, else set true if booleans.
-function busiSetExpression(n) { const i = window.busiInputs['Expressions']; if (i) i.value = n; }
-function busiArmRight() { const i = window.busiInputs['Arm Right']; if (i) (i.fire ? i.fire() : (i.value = true)); }
-function busiArmLeft()  { const i = window.busiInputs['Arm Left'];  if (i) (i.fire ? i.fire() : (i.value = true)); }
-// === DEBUG: live Busi offset/size tuner ============================================
-// X = Busi center offset from the screen's horizontal center (matches the centered PNG),
-// Y = vertical nudge from the 3rd button's center, Size = px. Tweak live, Copy, send me
-// the line and I'll bake it. Remove this fn + its call (in renderModule) when done.
-function setupBusiTuner(scope) {
-  const prev = document.getElementById('busi-tuner'); if (prev) prev.remove();
-  const canvas = scope.querySelector('#busi-canvas');
+// === DEBUG: afinador en vivo del offset/tamano de Boti =============================
+// X = desplazamiento del centro de Boti respecto del centro de la pantalla, Y = ajuste
+// vertical respecto del centro del 3.er boton, Size = ANCHO en px (el alto sale solo).
+// Se ajusta en vivo, se copia la linea y se hornea en BOTI_POS / BOTI_SIZE.
+function setupBotiTuner(scope) {
+  const prev = document.getElementById('boti-tuner'); if (prev) prev.remove();
+  const canvas = scope.querySelector('#boti-mascot');
   const rows = scope.querySelectorAll('.lpath .row');
   const row = rows[2] || rows[rows.length - 1];
   if (!canvas || !row) return;
@@ -1711,10 +1669,11 @@ function setupBusiTuner(scope) {
   const out = document.createElement('input'); out.readOnly = true;
   out.style.cssText = 'font:600 11px monospace;padding:5px;border:none;border-radius:6px;width:100%;box-sizing:border-box;';
   function apply() {
-    canvas.style.width = size + 'px'; canvas.style.height = size + 'px';
+    const h = size * BOTI_RATIO;                       // Boti no es cuadrado: el alto se deriva
+    canvas.style.width = size + 'px'; canvas.style.height = h + 'px';
     canvas.style.marginLeft = (x - size / 2) + 'px';
-    canvas.style.top = (rowCenter - size / 2 + y) + 'px';
-    out.value = 'busi x:' + x + ' y:' + y + ' size:' + size;
+    canvas.style.top = (rowCenter - h / 2 + y) + 'px';
+    out.value = 'boti x:' + x + ' y:' + y + ' size:' + size;
   }
   function mkRow(label, get, set) {
     const r = document.createElement('label');
@@ -1725,10 +1684,10 @@ function setupBusiTuner(scope) {
     inp.oninput = () => { const v = parseFloat(inp.value); set(isNaN(v) ? 0 : v); apply(); };
     r.appendChild(inp); return r;
   }
-  const panel = document.createElement('div'); panel.id = 'busi-tuner';
+  const panel = document.createElement('div'); panel.id = 'boti-tuner';
   panel.style.cssText = 'position:fixed;right:0;top:0;z-index:96;width:148px;background:rgba(18,18,22,.93);color:#fff;' +
     'font:600 12px sans-serif;padding:8px;border-radius:0 0 0 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,.45);';
-  const head = document.createElement('div'); head.textContent = '🐤 busi offset';
+  const head = document.createElement('div'); head.textContent = '🤖 boti offset';
   const copyBtn = document.createElement('button'); copyBtn.textContent = 'Copy';
   copyBtn.style.cssText = 'padding:5px 8px;border:none;border-radius:6px;background:#3FAA24;color:#fff;font-weight:700;cursor:pointer;';
   copyBtn.onclick = () => {
@@ -1782,25 +1741,25 @@ function renderModule(mod) {
   const _lbEl = body.querySelector('#langles-banner');
   if (_lbEl) _lbEl.style.marginTop = (24 - (LANGLES_SHIFT[_bgi] || 0)) + 'px';
   // setupBtnTuner(body, (_mi % 5) + 1); // DEBUG: live per-button offset tuner (unplugged — uncomment to re-enable)
-  // Coloca a Boti a la altura de la 3.ª leccion (lado derecho). BUSI_SIZE es su ANCHO;
+  // Coloca a Boti a la altura de la 3.ª leccion (lado derecho). BOTI_SIZE es su ANCHO;
   // el alto sale de la proporcion real del artboard (757.6 × 1139.5) para no deformarlo.
-  const _busiC = document.getElementById('busi-mascot');
+  const _botiC = document.getElementById('boti-mascot');
   const _rows = body.querySelectorAll('.lpath .row');
-  const _busiRow = _rows[2] || _rows[_rows.length - 1];
-  if (_busiC && _busiRow) {
-    const _bp = BUSI_POS[(_mi % 5) + 1] || { x: 62, y: 0 };
-    const _bw = BUSI_SIZE, _bh = BUSI_SIZE * 1139.5 / 757.6;
-    const BUSI_DROP = 40; // global downward nudge (px) applied to every module — raise/lower here
-    const BUSI_NUDGE_X = 6; // global rightward nudge (px) applied to every module — +right / -left
-    _busiC.style.width = _bw + 'px';
-    _busiC.style.height = _bh + 'px';
-    _busiC.style.marginLeft = (_bp.x - _bw / 2 + BUSI_NUDGE_X) + 'px';
-    _busiC.style.top = (_busiRow.offsetTop + _busiRow.offsetHeight / 2 - _bh / 2 + _bp.y + BUSI_DROP) + 'px';
+  const _botiRow = _rows[2] || _rows[_rows.length - 1];
+  if (_botiC && _botiRow) {
+    const _bp = BOTI_POS[(_mi % 5) + 1] || { x: 62, y: 0 };
+    const _bw = BOTI_SIZE, _bh = BOTI_SIZE * BOTI_RATIO;
+    const BOTI_DROP = 40; // empujon global hacia abajo (px) en todos los modulos
+    const BOTI_NUDGE_X = 6; // empujon global a la derecha (px) en todos los modulos (+der / -izq)
+    _botiC.style.width = _bw + 'px';
+    _botiC.style.height = _bh + 'px';
+    _botiC.style.marginLeft = (_bp.x - _bw / 2 + BOTI_NUDGE_X) + 'px';
+    _botiC.style.top = (_botiRow.offsetTop + _botiRow.offsetHeight / 2 - _bh / 2 + _bp.y + BOTI_DROP) + 'px';
     // Boti vive aqui: sin interaccion (el contenedor es pointer-events:none para no
     // robarle toques a las lecciones), pero sus ojos siguen igual al cursor.
-    if (window.Boti) Boti.mount(_busiC, { interactive: false });
+    if (window.Boti) Boti.mount(_botiC, { interactive: false });
   }
-  // setupBusiTuner(body); // DEBUG: live Busi X/Y/size tuner (unplugged — uncomment to re-tune)
+  // setupBotiTuner(body); // DEBUG: afinador en vivo de X/Y/tamano de Boti (desconectado — descomentar para recalibrar)
 
   // Tap a node to open its popover (one at a time); the popover CTA opens the lesson.
   const lp = body.querySelector('.lpath');
@@ -1857,7 +1816,7 @@ function modulePathHTML(mod) {
   let html = `<div class="lpath" style="background-image:url('modulebg${bgN}.png');${bgPos}">`;
   // Mascota "Boti" — solo el hueco; boti.js inyecta el SVG y lo anima (resortes en JS).
   // Se monta en renderModule, justo despues de colocarlo, para que exista en el DOM.
-  html += `<div id="busi-mascot" aria-hidden="true"></div>`;
+  html += `<div id="boti-mascot" aria-hidden="true"></div>`;
   mod.lessons.forEach((lesson, i) => {
     const unlocked = isLessonUnlocked(lesson.id), completed = isLessonCompleted(lesson.id), isCur = i === currentIdx;
     const state = completed ? 'done' : (!unlocked ? 'locked' : (isCur ? 'active' : 'avail'));
@@ -2662,7 +2621,7 @@ const OB_BUBBLES = [
   () => '¿Cómo te llamas?',
   () => OB.name ? `Mira, <b>${escapeHtml(OB.name)}</b>, esto vamos a practicar:` : 'Esto es lo que vamos a practicar:',
   () => '¿Cuál es tu meta diaria?',
-  () => `¡Listo, <b>${escapeHtml(OB.name)}</b>!<br>Tu ruta ya está preparada. `,
+  () => `¡Listo, <b>${escapeHtml(OB.name)}</b>!<br>Tu plan ya está preparado. `,
 ];
 
 function obRender() {
@@ -2735,7 +2694,7 @@ document.getElementById('ob-next').addEventListener('click', () => {
   }
   if (OB.step === OB_LAST) { obFinish(); return; }
   if (OB.step === 0) { // morfea el Boti del hero + su globo hacia la fila de charla
-    obFlip([document.querySelector('.ob-bear'), document.getElementById('ob-bubble')], obAdvance);
+    obFlip([document.querySelector('.ob-boti'), document.getElementById('ob-bubble')], obAdvance);
     return;
   }
   obAdvance();

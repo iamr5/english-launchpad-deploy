@@ -17,7 +17,7 @@
       { id: 'modulo5-1-mision', type: 'mision', markdown: `Desarrollar habilidades de lectura avanzada: **escanear** textos académicos, **extraer ideas principales** y detalles relevantes rápidamente. 📚⚡` },
       { id: 'modulo5-1-intro', type: 'intro', markdown: `#### **✨ Introducción**
 
-¡Hola! Ozzy aquí, listo para leer entre líneas 📚💬.
+¡Hola! Boti aquí, listo para leer entre líneas 📚💬.
 
 En el nivel **C1** leerás artículos y textos complejos, como informes universitarios o noticias científicas. La clave es usar estrategias: **lectura crítica** (entender la idea general) y **escaneo** (buscar información específica).
 
@@ -37,7 +37,7 @@ No necesitas leer cada palabra. Usa estas estrategias:
           mc('¿Qué estrategia usas para captar la idea GLOBAL de un texto?', ['Scanning (escaneo)', 'Skimming (lectura rápida)', 'Leer palabra por palabra', 'Parafrasear cada frase'], 1),
           mc('Quieres encontrar una fecha concreta en un informe. ¿Qué haces?', ['Skimming para la idea general', 'Scanning para localizar el dato', 'Resumir mentalmente el texto', 'Buscar la tesis del autor'], 1),
           mc('¿Para qué sirve hacerte preguntas ANTES de leer?', ['Para leer más despacio cada palabra', 'Para leer con un objetivo claro y buscar eso', 'Para evitar usar el diccionario', 'Para memorizar el vocabulario nuevo'], 1),
-          mc('Al terminar un párrafo, ¿qué te recomienda Ozzy?', ['Memorizar cada palabra del párrafo', 'Parafrasear la idea en tu mente', 'Saltar directo a la conclusión', 'Traducir el párrafo al español'], 1),
+          mc('Al terminar un párrafo, ¿qué te recomienda Boti?', ['Memorizar cada palabra del párrafo', 'Parafrasear la idea en tu mente', 'Saltar directo a la conclusión', 'Traducir el párrafo al español'], 1),
           mc('Leerás primero títulos, subtítulos y el primer y último párrafo. Eso es...', ['scanning', 'skimming', 'parafraseo', 'inferencia'], 1),
           mc('¿Cuál de estas es una "palabra clave" típica que buscarías al escanear un texto académico?', ['the, of, and', 'research, trend, outcome', 'hello, please, thanks', 'maybe, perhaps, somehow'], 1),
           rebuild('Ordena este consejo de lectura.', 'Scan the text for key words.', ['Scan', 'the', 'text', 'for', 'key', 'words.', 'slowly', 'every', 'word', 'skim']),
@@ -70,11 +70,11 @@ Mira cómo aplicar las estrategias a ejemplos reales:
 - ❌ **No relacionar** ideas entre párrafos.
   ✅ Busca **conexiones**: si en un párrafo se mencionó "study", en el siguiente tal vez dicen sus resultados.
 
-> 🐶 Ozzy dice: ¡lee con estrategia, no con lupa! Encuentra las pistas y conéctalas. 🔍`,
+> 🤖 Boti dice: ¡lee con estrategia, no con lupa! Encuentra las pistas y conéctalas. 🔍`,
         miniQuiz: [
           tap('Corrige el plural en esta estrategia de escaneo:', ['Scan', 'the', 'text', 'for', 'key', 'word.'], 5, 'words.'),
           tap('Esta frase tiene un conector mal escrito. Arréglalo.', ['To', 'ilustrate', ',', 'she', 'cites', 'examples', 'from', 'rural', 'schools.'], 1, 'illustrate'),
-          tap('Ozzy busca el dato clave. Corrige el error.', ['The', '2018', 'study', 'was', 'publish', 'in', 'Nature.'], 4, 'published'),
+          tap('Boti busca el dato clave. Corrige el error.', ['The', '2018', 'study', 'was', 'publish', 'in', 'Nature.'], 4, 'published'),
           tap('Corrige el verbo para conectar ideas entre párrafos.', ['We', 'should', 'connecting', 'ideas', 'between', 'paragraphs.'], 2, 'connect'),
           tap('Corrige la forma verbal de esta estrategia.', ['Always', 'skiming', 'the', 'first', 'paragraph', 'for', 'the', 'main', 'idea.'], 1, 'skim'),
           tap('Corrige el error en esta frase de escaneo.', ['Scan', 'the', 'report', 'for', 'specifics', 'dates', 'and', 'names.'], 4, 'specific'),
@@ -246,9 +246,9 @@ Vamos a pulir esos detalles que delatan a un escritor poco formal. ✍️
       { id: 'modulo5-3-mision', type: 'mision', markdown: `Mejorar tu **comprensión auditiva** En entornos **académicos y profesionales**: entender **conferencias**, **entrevistas** y distintos **acentos**, infiriendo la **información implícita** que no se dice de forma literal.` },
       { id: 'modulo5-3-intro', type: 'intro', markdown: `#### **✨ Introducción**
 
-¡**Ozzy** al habla otra vez! En este nivel, los audios son **más complejos**: seminarios, profesores nativos con **acentos distintos**, debates.
+¡**Boti** al habla otra vez! En este nivel, los audios son **más complejos**: seminarios, profesores nativos con **acentos distintos**, debates.
 
-Necesitamos **escuchar con atención** y **leer entre líneas**. Hoy practicaremos estrategias de **listening avanzado**: enfocarte en el **significado**, identificar el **tono** y la **actitud** del hablante. ¡Súbete!` },
+Necesitamos **escuchar con atención** y **leer entre líneas**. Hoy practicaremos estrategias de **listening avanzado**: enfocarte en el **significado**, identificar el **tono** y la **actitud** del hablante. ¡Manos a la obra!` },
       { id: 'modulo5-3-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🛠 ¿Cómo entender audios difíciles?**
 
 * **Atención al contexto:** sabe de qué va el tema (¿ciencia, historia, tecnología?). Esto ayuda a **anticipar vocabulario**. 🧭
@@ -341,10 +341,10 @@ Necesitamos **escuchar con atención** y **leer entre líneas**. Hoy practicarem
     audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
     contentBlocks: [
       { id: 'modulo5-4-titulo', type: 'titulo', title: '¿Listo para tu presentación final? 📢', subtitle: 'Speaking de nivel académico: presentaciones, debates y entrevistas', markdown: '' },
-      { id: 'modulo5-4-mision', type: 'mision', markdown: `## Desarrollar **fluidez y confianza** al hablar en contextos académicos: **presentaciones, debates y entrevistas formales**. 🎤🚌` },
-      { id: 'modulo5-4-intro', type: 'intro', markdown: `Soy **Ozzy**, y estoy listo para tu presentación final. 📢 Cuando llegues al **nivel C1**, te pedirán **exponer ideas complejas** y **debatir con especialistas**. Necesitas dominar un **speaking académico** claro y persuasivo. 🎓
+      { id: 'modulo5-4-mision', type: 'mision', markdown: `## Desarrollar **fluidez y confianza** al hablar en contextos académicos: **presentaciones, debates y entrevistas formales**. 🎤` },
+      { id: 'modulo5-4-intro', type: 'intro', markdown: `Soy **Boti**, y estoy listo para tu presentación final. 📢 Cuando llegues al **nivel C1**, te pedirán **exponer ideas complejas** y **debatir con especialistas**. Necesitas dominar un **speaking académico** claro y persuasivo. 🎓
 
-Hoy repasaremos frases para **comenzar exposiciones**, **concluir**, **responder preguntas** y **mantener la conversación** en contextos formales. ¡Sube, que arrancamos! 🚌` },
+Hoy repasaremos frases para **comenzar exposiciones**, **concluir**, **responder preguntas** y **mantener la conversación** en contextos formales. ¡Manos a la obra, que arrancamos! ⚙️` },
       { id: 'modulo5-4-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **¿Cómo hablar académico? 🔬**
 
 Piensa en ti mismo como un **profesor presentando un descubrimiento**: explica **paso a paso**, atiende curiosidades (preguntas) y cierra con las **ideas principales**.
@@ -420,7 +420,7 @@ Habla como un **profesor que presenta un hallazgo**: claro, estructurado y persu
 * **🙋 Atiende preguntas con calma:** *"That's an interesting question. Based on the data…"*
 * **🎯 Cierra con las ideas clave:** *"In conclusion, these findings indicate that…"*
 
-> 🧠 **Mnemotecnia – Profesor C1:** *Abre, conecta, responde y concluye.* Pausas silenciosas en vez de "uh/um". 🚌💨` },
+> 🧠 **Mnemotecnia – Profesor C1:** *Abre, conecta, responde y concluye.* Pausas silenciosas en vez de "uh/um". ⚡` },
       { id: 'modulo5-4-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**
 
 ¡Bravo! 🎓 Ahora sabes comunicarte en inglés con un **tono profesional y académico**. Estás listo para **cualquier presentación o discusión de alto nivel**. ¡Sigue practicando ese **speaking brillante**! ✨
@@ -456,11 +456,11 @@ Habla como un **profesor que presenta un hallazgo**: claro, estructurado y persu
       { id: 'modulo5-5-mision', type: 'mision', markdown: `Conocer las **técnicas clave** para el **TOEFL iBT**: las **tareas integradas** que combinan **listening**, **speaking** y **writing** con **toma de apuntes**. 🎓
 
 Al terminar sabrás **coordinar** lo que lees y escuchas para responder con orden y precisión. 🚀` },
-      { id: 'modulo5-5-intro', type: 'intro', markdown: `¡Hola, soy **Ozzy**! ¡Seguimos avanzando! 🎓
+      { id: 'modulo5-5-intro', type: 'intro', markdown: `¡Hola, soy **Boti**! ¡Seguimos avanzando! 🎓
 
 En el **TOEFL iBT** te pedirán **leer**, **escuchar** y luego **hablar** o **escribir** sobre lo escuchado. Necesitas **coordinar** las dos fuentes sin perderte. 🧭
 
-Hoy te mostraré **estrategias** para manejar estas **tareas integradas** de forma **eficiente**. ¡Súbete, que arrancamos! 🚌💨` },
+Hoy te mostraré **estrategias** para manejar estas **tareas integradas** de forma **eficiente**. ¡Manos a la obra, que arrancamos! ⚡` },
       { id: 'modulo5-5-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **🛠 Escuchar, leer y tomar apuntes** 📝
 
 En las tareas integradas, el **orden** lo es todo:
@@ -579,13 +579,13 @@ Sigue practicando con **textos y audios reales** 📚🎧 y verás cómo tu coor
     durationMinutes: 13,
     audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
     contentBlocks: [
-      { id: 'modulo5-6-titulo', type: 'titulo', title: '¿Carta, ensayo y entrevista? ¡Ozzy te prepara! 🎓', subtitle: 'Estrategias IELTS General: Writing y Speaking', markdown: '' },
+      { id: 'modulo5-6-titulo', type: 'titulo', title: '¿Carta, ensayo y entrevista? ¡Boti te prepara! 🎓', subtitle: 'Estrategias IELTS General: Writing y Speaking', markdown: '' },
       { id: 'modulo5-6-mision', type: 'mision', markdown: `Prepararte para el **IELTS General** 🌍: dominar las tareas de **escritura** (una **carta** ✉️ y un **ensayo** 📝) y la prueba **oral** (*speaking test* 🎤) con técnicas eficaces. Al terminar, enfrentarás cada parte del examen con un **plan claro** y mucha **confianza**. 💪` },
-      { id: 'modulo5-6-intro', type: 'intro', markdown: `¡Hola, soy **Ozzy** 🚌! Hoy te cuento un secreto: el **IELTS General** se enfoca en la **vida real**. 😊
+      { id: 'modulo5-6-intro', type: 'intro', markdown: `¡Hola, soy **Boti** 🤖! Hoy te cuento un secreto: el **IELTS General** se enfoca en la **vida real**. 😊
 
 En la **escritura**, deberás redactar una **carta** y un **ensayo**. En *speaking*, tendrás una charla en **tres partes** con un examinador. 🎤
 
-Vamos a repasar los **consejos clave** para cada parte, paso a paso. ¡Súbete, que arrancamos rumbo a tu certificación!` },
+Vamos a repasar los **consejos clave** para cada parte, paso a paso. ¡Manos a la obra, rumbo a tu certificación!` },
       { id: 'modulo5-6-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **Writing: Carta (Task 1) y Ensayo (Task 2)** ✍️
 
 En la sección de **escritura** tienes **dos tareas**. ¡Cada una con su estrategia!
@@ -662,7 +662,7 @@ Estos son los tropiezos clásicos del IELTS General. ¡Cázalos antes de que te 
 * ❌ Cerrar un **email formal** con *"Bye bye."* ✅ Usa **"Best regards,"** o **"Yours sincerely,"**.
 * ❌ Olvidar **revisar** tu carta. ✅ **Revisa** antes de entregar y corrige errores.
 
-> 💡 **Truco de Ozzy:** en la carta, cubre **todos** los puntos; en el monólogo, **estructura** con conectores. ¡Orden = puntos! 📈
+> 💡 **Truco de Boti:** en la carta, cubre **todos** los puntos; en el monólogo, **estructura** con conectores. ¡Orden = puntos! 📈
 
 En los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`,
         miniQuiz: [
@@ -672,7 +672,7 @@ En los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`,
           tap('Toca la palabra incorrecta (opinión avanzada):', ['From', 'my', 'perspective,', 'this', 'rises', 'the', 'issue', 'of', 'cost.'], 4, 'raises'),
           tap('Toca la palabra incorrecta (verbo de la carta formal):', ['I', 'are', 'writing', 'to', 'request', 'more', 'information.'], 1, 'am'),
           tap('Toca la palabra incorrecta (conector de orden):', ['Firstly,', 'I', 'will', 'discuss', 'the', 'causes;', 'additional,', 'the', 'effects.'], 6, 'additionally,'),
-          tap('Toca la palabra incorrecta (cierre formal):', ['Yours', 'sincerely', 'Ozzy', 'Turuta'], 1, 'sincerely,'),
+          tap('Toca la palabra incorrecta (cierre formal):', ['Yours', 'sincerely', 'Boti', 'Saludos'], 1, 'sincerely,'),
           tap('Toca la palabra incorrecta (pedir aclaración):', ['Could', 'you', 'repeats', 'that', 'question,', 'please?'], 2, 'repeat'),
         ] },
       { id: 'modulo5-6-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
@@ -701,7 +701,7 @@ Recuerda:
 * 📝 **Ensayo:** intro parafraseada → 2-3 ideas → conclusión.
 * 🎤 **Speaking:** natural en Part 1, **estructurado** en Part 2, **avanzado** en Part 3.
 
-¡**Éxitos** en tu camino hacia la **certificación internacional**! 🌍 Ozzy confía en ti.
+¡**Éxitos** en tu camino hacia la **certificación internacional**! 🌍 Boti confía en ti.
 
 **🏅 Insignia obtenida:** 🎖 *Políglota Global* (¡Listo para el mundo!) 🌐🏅` },
     ],
@@ -715,7 +715,7 @@ Recuerda:
       mc('Si no entiendes una pregunta en el speaking, deberías…', ['quedarte callado', 'pedir aclaración ("Could you repeat that?")', 'inventar la respuesta', 'cambiar de tema'], 1),
       mc('¿Cuántas ideas conviene desarrollar en el ensayo (Task 2)?', ['una sola', '2-3 con ejemplos', 'diez sin ejemplos', 'ninguna'], 1),
       mc('La estructura de una carta del Task 1 es…', ['solo el cuerpo', 'saludo → propósito → cuerpo → cierre', 'conclusión primero', 'solo el cierre'], 1),
-      rebuild('Reconstruye el cierre formal:', 'Yours sincerely, Ozzy', ['Yours', 'sincerely,', 'Ozzy', 'Hi', 'regards', 'soon']),
+      rebuild('Reconstruye el cierre formal:', 'Yours sincerely, Boti', ['Yours', 'sincerely,', 'Boti', 'Hi', 'regards', 'soon']),
       rebuild('Reconstruye la frase de opinión:', 'From my perspective, this raises an issue.', ['From', 'my', 'perspective,', 'this', 'raises', 'an', 'issue.', 'rises', 'your', 'because']),
       rebuild('Reconstruye el cierre del monólogo (Part 2).', 'In conclusion, I believe this is essential.', ['In', 'conclusion,', 'I', 'believe', 'this', 'is', 'essential.', 'start', 'hello', 'dear']),
       rebuild('Reconstruye esta frase de la carta formal.', 'I am writing to apply for the position.', ['I', 'am', 'writing', 'to', 'apply', 'for', 'the', 'position.', 'are', 'hey', 'bye']),
@@ -730,11 +730,11 @@ Recuerda:
     durationMinutes: 14,
     audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
     contentBlocks: [
-      { id: 'modulo5-7-titulo', type: 'titulo', title: '¿Listo para tu examen final de C1? 🎓', subtitle: 'Simulador C1 TuRuta (IELTS/TOEFL)', markdown: '' },
-      { id: 'modulo5-7-mision', type: 'mision', markdown: `## Realizar una **evaluación integradora de nivel C1**, simulando tareas tipo **IELTS / TOEFL** para medir tu **progreso general**. 🚌🏁
+      { id: 'modulo5-7-titulo', type: 'titulo', title: '¿Listo para tu examen final de C1? 🎓', subtitle: 'Simulador C1 AprendoEnglish (IELTS/TOEFL)', markdown: '' },
+      { id: 'modulo5-7-mision', type: 'mision', markdown: `## Realizar una **evaluación integradora de nivel C1**, simulando tareas tipo **IELTS / TOEFL** para medir tu **progreso general**. 🏁
 
 Pondrás a prueba las **cuatro habilidades**: *reading*, *writing*, *listening* y *speaking*. ¡Es tu gran simulacro final! 💪✨` },
-      { id: 'modulo5-7-intro', type: 'intro', markdown: `¡Has llegado lejos, ruter@! 🎓 Soy **Ozzy** 🚌, y hoy te acompaño en tu **simulacro comprensivo de C1**.
+      { id: 'modulo5-7-intro', type: 'intro', markdown: `¡Has llegado lejos, ingenier@! 🎓 Soy **Boti** 🤖, y hoy te acompaño en tu **simulacro comprensivo de C1**.
 
 Este recorrido contempla ejercicios tipo **IELTS / TOEFL**:
 * 📖 **Lectura crítica**
@@ -753,7 +753,7 @@ Lee con atención y responde con precisión. Busca la **idea clave** y la **evid
 
 **Pregunta:** ¿Por qué disminuyen las abejas? → *Because of pesticide use.* (Por el uso de pesticidas.) ✅
 
-🚌 **Tip:** localiza la causa señalada por *due to* / *because of*.
+💡 **Tip:** localiza la causa señalada por *due to* / *because of*.
 
 ### ✍️ Writing (ensayo breve)
 
@@ -763,7 +763,7 @@ Escribe **4-5 líneas** discutiendo una postura. Estructura: **idea central → 
 
 > **Ejemplo:** *"Yes, governments should invest more in public transportation. This reduces traffic and pollution. For example, in cities like Tokyo, efficient transit has lowered car usage…"*
 
-🚌 **Recuerda:** una buena respuesta escrita **toma posición**, la **justifica** y la **cierra**.`,
+📌 **Recuerda:** una buena respuesta escrita **toma posición**, la **justifica** y la **cierra**.`,
         miniQuiz: [
           mc('Según el texto, ¿por qué disminuyen las poblaciones de abejas?', ['Due to pesticide use.', 'Due to cold weather.', 'Due to too much honey.', 'Due to fewer flowers.'], 0),
           mc('En el ensayo "Should governments invest…?", ¿qué debes hacer primero?', ['Tomar una postura clara.', 'Escribir sin opinar.', 'Copiar la pregunta.', 'Dar la conclusión sin argumentos.'], 0),
@@ -792,7 +792,7 @@ Responde con una **opinión estructurada**: presenta ambos lados y concluye.
 
 > **Respuesta ejemplo:** *"In my view, social media can both help and hinder learning. On one hand, it provides access to educational resources. On the other, it can be distracting. Therefore, moderation is key."*
 
-🚌 **Tip:** usa **conectores de C1** (*on one hand*, *on the other*, *therefore*) para sonar fluido y formal.`,
+💡 **Tip:** usa **conectores de C1** (*on one hand*, *on the other*, *therefore*) para sonar fluido y formal.`,
         miniQuiz: [
           mc('Según el audio, ¿qué pasó con la economía?', ['It grew 3%.', 'It fell 3%.', 'It stayed the same.', 'It doubled.'], 0),
           mc('Según el audio, ¿qué pasó con la inflación?', ['It remained low.', 'It rose sharply.', 'It disappeared.', 'It tripled.'], 0),
@@ -833,20 +833,20 @@ Repasaste un examen **integrador tipo IELTS / TOEFL**. Memoriza tu estrategia pa
 | 🎧 Listening | Capturar números y hechos | Atento a datos (*3%*, *low*) |
 | 🗣️ Speaking | Presentar ambos lados y concluir | Usa *therefore* / *on the other hand* |
 
-🧠 **Mnemotecnia:** *Lee con evidencia, escribe con estructura, escucha los datos, habla con conectores.* 🚌💨
+🧠 **Mnemotecnia:** *Lee con evidencia, escribe con estructura, escucha los datos, habla con conectores.* ⚡
 
 **Lo más importante:**
 * Revisa el **vocabulario del enunciado** antes de contestar.
 * Mantén la **calma** y responde con **confianza** lo que sabes.` },
       { id: 'modulo5-7-cierre', type: 'cierre', markdown: `#### **🌟 Cierre Final (Nivel C1)**
 
-¡Felicitaciones, ruter@! 🎉 **Has completado todo el nivel C1.** 🎓
+¡Felicitaciones, ingenier@! 🎉 **Has completado todo el nivel C1.** 🎓
 
 Ahora eres capaz de **entender y producir inglés a nivel académico y profesional**: desde la **lectura crítica** hasta **expresarte con fluidez** y **escribir formalmente**. Este es un **gran logro** en tu camino hacia la **certificación internacional**. 🌍
 
-Sigue practicando, ¡el mundo te espera! 🌟🚌💨
+Sigue practicando, ¡el mundo te espera! 🌟⚡
 
-**🏅 Insignia obtenida:** *Certificado TuRuta – Nivel C1* 📘🎊 (¡Logrado, Profesional C1!)` },
+**🏅 Insignia obtenida:** *Certificado AprendoEnglish – Nivel C1* 📘🎊 (¡Logrado, Profesional C1!)` },
     ],
     quizQuestions: [
       mc('1️⃣ "Bees are declining ___ pesticide use." (debido a)', ['due to', 'so that', 'in case', 'whereas'], 0),
