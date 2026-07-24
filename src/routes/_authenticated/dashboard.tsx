@@ -66,15 +66,13 @@ function Dashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {students.data?.students.map((s) => {
-              const prof = s.profiles as { id: string; name: string | null; level: number; daily_goal: number } | null;
-              const prog = s.progress as { xp: number; level: number; streak_days: unknown[] } | null;
-              const streak = Array.isArray(prog?.streak_days) ? prog!.streak_days.length : 0;
+              const streak = Array.isArray(s.progress?.streak_days) ? (s.progress!.streak_days as unknown[]).length : 0;
               return (
                 <div key={s.student_id} className="bg-white rounded-xl p-5 shadow-sm">
-                  <h3 className="font-semibold">{prof?.name ?? "Alumno"}</h3>
+                  <h3 className="font-semibold">{s.profile?.name ?? "Alumno"}</h3>
                   <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-                    <div><div className="text-xs text-slate-500">XP</div><div className="font-bold">{prog?.xp ?? 0}</div></div>
-                    <div><div className="text-xs text-slate-500">Nivel</div><div className="font-bold">{prog?.level ?? 1}</div></div>
+                    <div><div className="text-xs text-slate-500">XP</div><div className="font-bold">{s.progress?.xp ?? 0}</div></div>
+                    <div><div className="text-xs text-slate-500">Nivel</div><div className="font-bold">{s.progress?.level ?? 1}</div></div>
                     <div><div className="text-xs text-slate-500">Racha</div><div className="font-bold">{streak}</div></div>
                   </div>
                 </div>

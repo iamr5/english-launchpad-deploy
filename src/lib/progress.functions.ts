@@ -34,8 +34,22 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data: links, error } = await context.supabase
       .from("links")
-      .select("student_id, kind, profiles:student_id(id, name, level, daily_goal), progress:student_id(xp, level, streak_days, updated_at)")
+      .select("student_id, kind")
       .eq("guardian_id", context.userId);
     if (error) throw error;
-    return { students: links ?? [] };
+    const ids = (links ?? []).map((l) => l.student_id);
+    if (ids.length === 0) return { students: [] as Array<{ student_id: string; kind: string; profile: { id: string; name: string | null; level: number; daily_goal: number } | null; progress: { xp: number; level: number; streak_days: unknown } | null }> };
+    const [{ data: profs }, { data: progs }] = await Promise.all([
+      context.supabase.from("profiles").select("id, name, level, daily_goal").in("id", ids),
+      context.supabase.from("progress").select("user_id, xp, level, streak_days").in("user_id", ids),
+    ]);
+    return {
+      students: (links ?? []).map((l) => ({
+        student_id: l.student_id,
+        kind: l.kind,
+        profile: profs?.find((p) => p.id === l.student_id) ?? null,
+        progress: progs?.find((p) => p.user_id === l.student_id) ?? null,
+      })),
+    };
   });
+

@@ -11,11 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as PresentacionRouteImport } from './routes/presentacion'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as DemocipRouteImport } from './routes/democip'
 import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as CipRouteImport } from './routes/cip'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 
 const PresentationRoute = PresentationRouteImport.update({
   id: '/presentation',
@@ -25,6 +29,11 @@ const PresentationRoute = PresentationRouteImport.update({
 const PresentacionRoute = PresentacionRouteImport.update({
   id: '/presentacion',
   path: '/presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemocipRoute = DemocipRouteImport.update({
@@ -47,10 +56,24 @@ const CipRoute = CipRouteImport.update({
   path: '/cip',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -59,8 +82,11 @@ export interface FileRoutesByFullPath {
   '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
   '/democip': typeof DemocipRoute
+  '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
+  '/app': typeof AuthenticatedAppRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,18 +94,25 @@ export interface FileRoutesByTo {
   '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
   '/democip': typeof DemocipRoute
+  '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
+  '/app': typeof AuthenticatedAppRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
   '/democip': typeof DemocipRoute
+  '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
+  '/_authenticated/app': typeof AuthenticatedAppRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -89,8 +122,11 @@ export interface FileRouteTypes {
     | '/demo'
     | '/demo-dashboard'
     | '/democip'
+    | '/login'
     | '/presentacion'
     | '/presentation'
+    | '/app'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -98,25 +134,34 @@ export interface FileRouteTypes {
     | '/demo'
     | '/demo-dashboard'
     | '/democip'
+    | '/login'
     | '/presentacion'
     | '/presentation'
+    | '/app'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/cip'
     | '/demo'
     | '/demo-dashboard'
     | '/democip'
+    | '/login'
     | '/presentacion'
     | '/presentation'
+    | '/_authenticated/app'
+    | '/_authenticated/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   CipRoute: typeof CipRoute
   DemoRoute: typeof DemoRoute
   DemoDashboardRoute: typeof DemoDashboardRoute
   DemocipRoute: typeof DemocipRoute
+  LoginRoute: typeof LoginRoute
   PresentacionRoute: typeof PresentacionRoute
   PresentationRoute: typeof PresentationRoute
 }
@@ -135,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/presentacion'
       fullPath: '/presentacion'
       preLoaderRoute: typeof PresentacionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/democip': {
@@ -165,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CipRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -172,15 +231,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/app': {
+      id: '/_authenticated/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AuthenticatedAppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppRoute: typeof AuthenticatedAppRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppRoute: AuthenticatedAppRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   CipRoute: CipRoute,
   DemoRoute: DemoRoute,
   DemoDashboardRoute: DemoDashboardRoute,
   DemocipRoute: DemocipRoute,
+  LoginRoute: LoginRoute,
   PresentacionRoute: PresentacionRoute,
   PresentationRoute: PresentationRoute,
 }
