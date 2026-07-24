@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import html from "../assets/democip-index.html?raw";
+import html from "../assets/demo-dashboard.html?raw";
 
 const htmlWithBase = html.replace("<head>", '<head><base href="/democip/">');
 
-export const Route = createFileRoute("/democip")({
+export const Route = createFileRoute("/demo-dashboard")({
   server: {
     handlers: {
       GET: async () =>
