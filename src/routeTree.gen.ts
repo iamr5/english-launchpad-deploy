@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as PresentacionRouteImport } from './routes/presentacion'
+import { Route as DemocipRouteImport } from './routes/democip'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as CipRouteImport } from './routes/cip'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +24,11 @@ const PresentationRoute = PresentationRouteImport.update({
 const PresentacionRoute = PresentacionRouteImport.update({
   id: '/presentacion',
   path: '/presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemocipRoute = DemocipRouteImport.update({
+  id: '/democip',
+  path: '/democip',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoRoute = DemoRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
+  '/democip': typeof DemocipRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
+  '/democip': typeof DemocipRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
 }
@@ -60,21 +68,36 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
+  '/democip': typeof DemocipRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cip' | '/demo' | '/presentacion' | '/presentation'
+  fullPaths:
+    | '/'
+    | '/cip'
+    | '/demo'
+    | '/democip'
+    | '/presentacion'
+    | '/presentation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cip' | '/demo' | '/presentacion' | '/presentation'
-  id: '__root__' | '/' | '/cip' | '/demo' | '/presentacion' | '/presentation'
+  to: '/' | '/cip' | '/demo' | '/democip' | '/presentacion' | '/presentation'
+  id:
+    | '__root__'
+    | '/'
+    | '/cip'
+    | '/demo'
+    | '/democip'
+    | '/presentacion'
+    | '/presentation'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CipRoute: typeof CipRoute
   DemoRoute: typeof DemoRoute
+  DemocipRoute: typeof DemocipRoute
   PresentacionRoute: typeof PresentacionRoute
   PresentationRoute: typeof PresentationRoute
 }
@@ -93,6 +116,13 @@ declare module '@tanstack/react-router' {
       path: '/presentacion'
       fullPath: '/presentacion'
       preLoaderRoute: typeof PresentacionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/democip': {
+      id: '/democip'
+      path: '/democip'
+      fullPath: '/democip'
+      preLoaderRoute: typeof DemocipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo': {
@@ -123,6 +153,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CipRoute: CipRoute,
   DemoRoute: DemoRoute,
+  DemocipRoute: DemocipRoute,
   PresentacionRoute: PresentacionRoute,
   PresentationRoute: PresentationRoute,
 }
