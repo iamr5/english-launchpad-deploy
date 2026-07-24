@@ -14,16 +14,147 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      links: {
+        Row: {
+          created_at: string
+          guardian_id: string
+          id: string
+          kind: string
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          guardian_id: string
+          id?: string
+          kind: string
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          guardian_id?: string
+          id?: string
+          kind?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "links_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "links_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          daily_goal: number
+          id: string
+          level: number
+          name: string | null
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          created_at?: string
+          daily_goal?: number
+          id: string
+          level?: number
+          name?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          created_at?: string
+          daily_goal?: number
+          id?: string
+          level?: number
+          name?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
+      progress: {
+        Row: {
+          lessons: Json
+          level: number
+          skill_errors: Json
+          streak_days: Json
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          lessons?: Json
+          level?: number
+          skill_errors?: Json
+          streak_days?: Json
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          lessons?: Json
+          level?: number
+          skill_errors?: Json
+          streak_days?: Json
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progress_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_guardian_of: {
+        Args: { _guardian: string; _student: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "student" | "parent" | "teacher"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +281,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["student", "parent", "teacher"],
+    },
   },
 } as const
