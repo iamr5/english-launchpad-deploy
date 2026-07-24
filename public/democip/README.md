@@ -30,6 +30,32 @@ Either one works:
   `document.body.classList.add('debug-fabs');` line near the bottom of
   `index.html`.
 
+## Mascot
+
+The mascot is **Boti**, a robot. The course copy used to call it *"Ozzy"* and
+describe it as a bus ("tu bus guía" 🚌) or a bear ("Ozzy el Osito" 🐻) — all of
+that was rewritten across `data.js` and `data_modulo3..5.js`.
+
+The transit heritage of the original Turuta app is gone too: the reader is now
+addressed as `ingenier@` (was `ruter@`), the brand is `AprendoEnglish` (was
+`TuRuta English`, including the certificate badges), bus-boarding metaphors
+became engineering ones ("Manos a la obra, que arrancamos"), and the 🚌/🚍
+decoration became ✅ ⚙️ ⚡ 🤖 🎯.
+
+Two 🚍 survive on purpose, in Module 2: the *"Frases en el bus o calle"* and
+*"Parada 2: La Ciudad (Transporte y Direcciones)"* lessons. There the bus is the
+subject being taught, not branding.
+
+**Where the copy lives:** all mascot/brand text is in the four course data
+files, not in `index.html`:
+
+| File | Modules |
+| --- | --- |
+| `data.js` | Módulo 1 (Primeros pasos) + Módulo 2 (A2 en acción) |
+| `data_modulo3.js` | Módulo 3 (Rumbo al B1 / PET) |
+| `data_modulo4.js` | Módulo 4 (B2 / FCE) |
+| `data_modulo5.js` | Módulo 5 (C1 / IELTS-TOEFL) |
+
 ## What was removed from the Turuta version
 
 The only coupling to the Flutter host was `window.AppBridge` — used solely by the
@@ -49,7 +75,8 @@ calls only through them.
 
 - `index.html` — the whole app (markup, styles, logic).
 - `Prototipo_Ingles.html` — the family/teacher tracking dashboard (standalone page).
-- `boti.js` — the **Boti** mascot: the SVG plus a small spring-based animation
+- `boti.js` — the **Boti** mascot — a *robot*, not a bus and not a bear. The SVG
+  plus a small spring-based animation
   engine, in one self-contained file. No network, no build, no dependencies.
   Mount it on any empty element and size that element with CSS:
 

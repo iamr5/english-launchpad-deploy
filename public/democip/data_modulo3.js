@@ -15,11 +15,11 @@
     contentBlocks: [
       { id: 'modulo3-1-titulo', type: 'titulo', title: '¿Ya pasó… o sigue pasando?', subtitle: 'Presente Perfecto vs. Pasado Simple', markdown: '' },
       { id: 'modulo3-1-mision', type: 'mision', markdown: `Diferenciar **cuándo usar el Presente Perfecto** (*have/has + participio pasado*) y **cuándo usar el Pasado Simple** (*verbo en pasado*) al hablar de **experiencias o acciones pasadas**. Al terminar sabrás contar lo que hiciste **ayer** ⏪ y lo que **has hecho** en la vida 🌍 sin revolverlos.` },
-      { id: 'modulo3-1-intro', type: 'intro', markdown: `¡Hola, soy **Ozzy** 🚌! En esta misión **viajaremos al pasado** ⏳ y hablaremos de cosas que **ya pasaron**.
+      { id: 'modulo3-1-intro', type: 'intro', markdown: `¡Hola, soy **Boti** 🤖! En esta misión **viajaremos al pasado** ⏳ y hablaremos de cosas que **ya pasaron**.
 
 Quiero que pienses en una **foto antigua** 📸 o en tu **día de ayer**: ¿lo contarías igual? El **Presente Perfecto** y el **Pasado Simple** son tiempos verbales muy importantes para hablar del pasado en inglés.
 
-¡Hoy descubrirás **cuándo usar cada uno**! Súbete, que arrancamos.` },
+¡Hoy descubrirás **cuándo usar cada uno**! Manos a la obra, que arrancamos.` },
       { id: 'modulo3-1-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **Pasado Simple: un momento exacto**
 
 Usamos el **Pasado Simple** para acciones **completadas en un tiempo específico** del pasado (*ayer*, *el año pasado*, etc.). El momento está **claro**. 📍
@@ -82,7 +82,7 @@ Estos son los tropiezos clásicos al mezclar los dos tiempos. ¡Cázalos antes d
 * ❌ *I have lived here **for** 2010.* → ✅ *I have lived here **since** 2010.* (*since* = desde un punto; *for* = por un periodo).
 * ❌ *I have broken my glasses **yesterday**.* → ✅ *I **broke** my glasses yesterday.* (el *yesterday* obliga a Pasado Simple).
 
-> 💡 **Truco de Ozzy:** si dices **cuándo** exacto pasó → **Pasado Simple**. Si hablas de **experiencia o resultado** sin fecha → **Presente Perfecto** con **have/has + participio**.
+> 💡 **Truco de Boti:** si dices **cuándo** exacto pasó → **Pasado Simple**. Si hablas de **experiencia o resultado** sin fecha → **Presente Perfecto** con **have/has + participio**.
 
 En los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`,
         miniQuiz: [
@@ -122,7 +122,7 @@ Recuerda:
 * **Momento exacto** → Pasado Simple: *I visited Berlin last year.* ⏪
 * **Experiencia / resultado sin fecha** → Presente Perfecto: *I have been to Spain three times.* 🌍
 
-🚍 **Misión cumplida:** ya puedes contarle a Ozzy lo que **hiciste ayer** y lo que **has hecho** en la vida. ¡Sigue así y descubrirás más aventuras gramaticales!
+✅ **Misión cumplida:** ya puedes contarle a Boti lo que **hiciste ayer** y lo que **has hecho** en la vida. ¡Sigue así y descubrirás más aventuras gramaticales!
 
 **🏅 Insignia obtenida:** 🎖 *Tiempo Viajero* (Experto en Presente Perfecto vs. Pasado Simple) ⏳🌍` },
     ],
@@ -152,8 +152,8 @@ Recuerda:
     audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
     contentBlocks: [
       { id: 'modulo3-2-titulo', type: 'titulo', title: '¿Cómo cuento mis hábitos del pasado y mis costumbres de hoy?', subtitle: 'Expresiones con used to, would y be used to', markdown: '' },
-      { id: 'modulo3-2-mision', type: 'mision', markdown: `Entender la diferencia entre **used to**, **would** y **be used to** para hablar de **hábitos del pasado** o de **estar acostumbrado a algo** 🚌.` },
-      { id: 'modulo3-2-intro', type: 'intro', markdown: `¡Hola de nuevo! Soy **Ozzy**😊. ¿Recuerdas cuándo eras niño o niña? Hoy exploraremos cómo hablar de **hábitos pasados** y de **costumbres**.
+      { id: 'modulo3-2-mision', type: 'mision', markdown: `Entender la diferencia entre **used to**, **would** y **be used to** para hablar de **hábitos del pasado** o de **estar acostumbrado a algo** ⚙️.` },
+      { id: 'modulo3-2-intro', type: 'intro', markdown: `¡Hola de nuevo! Soy **Boti**😊. ¿Recuerdas cuándo eras niño o niña? Hoy exploraremos cómo hablar de **hábitos pasados** y de **costumbres**.
 
 Veremos tres expresiones similares pero distintas: **used to**, **would** y **be used to**. Aunque parecen iguales, cada una tiene su truco 😏. ¡Vamos a desenredarlas juntos!` },
       { id: 'modulo3-2-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🔴 "Used to" + infinitivo**
@@ -245,7 +245,7 @@ Se vuelve *"didn't use to"* o *"Did you use to...?"*. ❌ *"She didn't used to l
           tap('Toca la palabra incorrecta:', ['Did', 'you', 'used', 'to', 'play', 'soccer?'], 2, 'use'),
           tap('Toca la palabra incorrecta:', ['When', 'I', 'was', 'a', 'kid,', 'I', 'would', 'be', 'shy.'], 6, 'used to'),
         ] },
-      { id: 'modulo3-2-resumen', type: 'resumen', markdown: `#### **🧳 Las tres maletas de Ozzy**
+      { id: 'modulo3-2-resumen', type: 'resumen', markdown: `#### **🧳 Las tres maletas de Boti**
 
 Imagina **tres maletas** con etiquetas de colores:
 
@@ -256,7 +256,7 @@ Imagina **tres maletas** con etiquetas de colores:
 > Si es pasado terminado → 🔴 *used to*. Si es repetición pasada → 🔵 *would*. Si es costumbre actual → 🟢 *be used to*.` },
       { id: 'modulo3-2-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**
 
-¡Gran desempeño! 🎉 Has dominado expresiones que suenan parecidas pero son diferentes. ¡Pronto podrás contar tus historias de infancia con precisión! 🚌💨
+¡Gran desempeño! 🎉 Has dominado expresiones que suenan parecidas pero son diferentes. ¡Pronto podrás contar tus historias de infancia con precisión! ⚡
 
 **🏅 Insignia obtenida:** *Hábito Pasado* 🎖` },
     ],
@@ -287,7 +287,7 @@ Imagina **tres maletas** con etiquetas de colores:
     contentBlocks: [
       { id: 'modulo3-3-titulo', type: 'titulo', title: '¿Qué pasaría si...? 🎲', subtitle: 'Condicionales 0, 1 y 2 (if + presente/pasado, will/would)', markdown: '' },
       { id: 'modulo3-3-mision', type: 'mision', markdown: `Aprender a usar el **condicional cero**, **primero** y **segundo** para expresar **hechos científicos**, **planes probables** e **hipótesis irreales**. 🔮 Al final dominarás la fórmula secreta de cada "**if**".` },
-      { id: 'modulo3-3-intro', type: 'intro', markdown: `¡Atención, aspirante a inglés! 🚌 Soy **Ozzy** y hoy lanzamos los **dados de la suerte** 🎲.
+      { id: 'modulo3-3-intro', type: 'intro', markdown: `¡Atención, aspirante a inglés! 🤖 Soy **Boti** y hoy lanzamos los **dados de la suerte** 🎲.
 
 Los **condicionales** nos permiten hablar de hechos reales y de posibilidades. Imagina tres portales:
 
@@ -412,7 +412,7 @@ Sirve para **situaciones hipotéticas o irreales** en presente o futuro: sueños
 
 ¡Lo lograste! 👏 Ahora puedes crear **frases mágicas que dependen del "si"** 🪄. Sabes cuándo el resultado es un **hecho** (0), un **plan probable** (1) o un **sueño** (2).
 
-🚍 **Misión cumplida:** completa esta frase soñadora:
+✅ **Misión cumplida:** completa esta frase soñadora:
 
 > *"If I **had** more time, I **would** learn three languages."* 🌍
 
@@ -444,8 +444,8 @@ Sirve para **situaciones hipotéticas o irreales** en presente o futuro: sueños
     audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
     contentBlocks: [
       { id: 'modulo3-4-titulo', type: 'titulo', title: '¿Cómo cuento lo que otros dijeron? 🗣️', subtitle: 'Reported Speech (Estilo Indirecto)', markdown: '' },
-      { id: 'modulo3-4-mision', type: 'mision', markdown: `## Practicar el **reported speech** cambiando oraciones **directas** por **indirectas**, incluyendo **afirmaciones**, **preguntas de sí/no** y **de información (wh-)**, y **mandatos/órdenes**. 🚌` },
-      { id: 'modulo3-4-intro', type: 'intro', markdown: `¡Hey, buen trabajo hasta ahora! Soy **Ozzy** 🚌. En nuestra siguiente misión aprenderás a **contar lo que otros dijeron**, pero usando tus propias palabras.
+      { id: 'modulo3-4-mision', type: 'mision', markdown: `## Practicar el **reported speech** cambiando oraciones **directas** por **indirectas**, incluyendo **afirmaciones**, **preguntas de sí/no** y **de información (wh-)**, y **mandatos/órdenes**. ⚙️` },
+      { id: 'modulo3-4-intro', type: 'intro', markdown: `¡Hey, buen trabajo hasta ahora! Soy **Boti** 🤖. En nuestra siguiente misión aprenderás a **contar lo que otros dijeron**, pero usando tus propias palabras.
 
 Es como jugar al **teléfono descompuesto** 📞… pero de manera correcta. 😎
 
@@ -504,7 +504,7 @@ Usamos **ask for**:
 
 ---
 
-🎙️ **Metáfora de Ozzy:** Imagina que **grabas la voz** de alguien (estilo directo) y luego la **reproduces con tu voz** (estilo indirecto). Debes **adelantar el tiempo** un poco: presente → pasado, *future* → *would*. Atención a los **discursivos mágicos**: **if** para preguntas sí/no y verbos como **told/asked + to** para órdenes. ✨`,
+🎙️ **Metáfora de Boti:** Imagina que **grabas la voz** de alguien (estilo directo) y luego la **reproduces con tu voz** (estilo indirecto). Debes **adelantar el tiempo** un poco: presente → pasado, *future* → *would*. Atención a los **discursivos mágicos**: **if** para preguntas sí/no y verbos como **told/asked + to** para órdenes. ✨`,
         miniQuiz: [
           mc('"Stop smoking!" He told me ___ stop smoking.', ['to', 'that', 'for', 'if'], 0),
           mc('"Don\'t use your phone." The teacher told us ___ use our phones.', ['to not', 'not to', 'no to', "don't"], 1),
@@ -553,7 +553,7 @@ Usamos **ask for**:
 
 ¡Fantástico! 🎉 Ahora puedes **contar chismes en inglés** de forma correcta. Ya sabes adelantar el tiempo, meter **if** en las preguntas sí/no, mantener el orden afirmativo en las wh-, y usar **told/asked + to** para las órdenes.
 
-¡A seguir practicando y viendo el mundo con otros ojos! 👀🚌
+¡A seguir practicando y viendo el mundo con otros ojos! 👀
 
 **🏅 Insignia obtenida:** *Detective del Discurso* 🕵️‍♂️🗣️✨` },
     ],
@@ -590,12 +590,12 @@ Usamos **ask for**:
 * 💻 **Tecnología**
 * ❤️ **Relaciones personales**
 
-Con estas palabras vas a poder describir tu profesión, tus estudios y todo lo que pasa en tu día a día digital y social. ¡Vamos a empacar, ruter@!` },
-      { id: 'modulo3-5-intro', type: 'intro', markdown: `¡Hey, ruter@! Soy **Ozzy** 🚌, y hoy seguimos avanzando en esta gran aventura.
+Con estas palabras vas a poder describir tu profesión, tus estudios y todo lo que pasa en tu día a día digital y social. ¡Vamos a empacar, ingenier@!` },
+      { id: 'modulo3-5-intro', type: 'intro', markdown: `¡Hey, ingenier@! Soy **Boti** 🤖, y hoy seguimos avanzando en esta gran aventura.
 
 En esta misión vamos a **llenar nuestro maletín de palabras útiles** 🧳. Aprenderemos vocabulario clave para hablar de **trabajo, estudios, tecnología y relaciones**.
 
-Con estas palabras podrás describir tu profesión, tus estudios o lo que ocurre en tu día a día digital y social. ¡Sube al bus que arrancamos!✨` },
+Con estas palabras podrás describir tu profesión, tus estudios o lo que ocurre en tu día a día digital y social. ¡Manos a la obra, que arrancamos! ✨` },
       { id: 'modulo3-5-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **Cajón 1: Trabajo y Estudios 💼📚**
 
 Empecemos con las palabras del mundo laboral y académico:
@@ -695,7 +695,7 @@ Mira cómo se combinan las palabras en frases reales:
         ] },
       { id: 'modulo3-5-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
-¡Cuidado con estas trampas, ruter@! 🕳️
+¡Cuidado con estas trampas, ingenier@! 🕳️
 
 * **Falsos amigos 🎭:** *"lecture"* NO es *"lectura"*, sino **conferencia / clase**. (Lectura = *reading*.)
 * **Pronunciación 🗣️:** *"Salary"* (salario) NO se pronuncia *"salad-ry"*. ¡No es una ensalada! 🥗
@@ -731,13 +731,13 @@ Imagina **cuatro cajones en tu armario mental**, uno por tema. Cada palabra nuev
 * En el día a día, ¡usa estas palabras para sonar como parte de la tribu! 🌎` },
       { id: 'modulo3-5-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**
 
-¡Impresionante, ruter@! 🎉 Tu **maletín de vocabulario** está más lleno que nunca 🧳✨. Ya tienes palabras para hablar de **trabajo, estudios, tecnología y relaciones**.
+¡Impresionante, ingenier@! 🎉 Tu **maletín de vocabulario** está más lleno que nunca 🧳✨. Ya tienes palabras para hablar de **trabajo, estudios, tecnología y relaciones**.
 
 Recuerda los **cuatro cajones**: *Work, Education, Tech, Relations*. Mete cada palabra nueva en el suyo y nunca se te perderá. 🗄️
 
 Así que la próxima vez que alguien te pregunte por tu *career*, tu *degree* o tu *partner*… ¡tú ya sabes qué decir! 👀🗣️
 
-🚍 **Misión cumplida:** Sigue practicando estas palabras en tu día a día.
+✅ **Misión cumplida:** Sigue practicando estas palabras en tu día a día.
 
 **🏅 Insignia obtenida:** *Vocabulario Funcional* 🧳✨` },
     ],
@@ -768,7 +768,7 @@ Así que la próxima vez que alguien te pregunte por tu *career*, tu *degree* o 
     contentBlocks: [
       { id: 'modulo3-6-titulo', type: 'titulo', title: '¿Le escribo con traje o con jeans? 🤵👕', subtitle: 'Cartas y correos formales e informales', markdown: '' },
       { id: 'modulo3-6-mision', type: 'mision', markdown: `## Aprender a **diferenciar y practicar la estructura y el lenguaje de la correspondencia formal vs informal en inglés**. Vas a descubrir cuándo usar cada estilo, qué saludos y despedidas elegir, y cómo ajustar el tono según a quién le escribes. ✍️` },
-      { id: 'modulo3-6-intro', type: 'intro', markdown: `¡Nos vamos acercando a la cima, ruter@! 🏔️ Soy **Ozzy** 🚌, y hoy toca poner por escrito todo lo aprendido.
+      { id: 'modulo3-6-intro', type: 'intro', markdown: `¡Nos vamos acercando a la cima, ingenier@! 🏔️ Soy **Boti** 🤖, y hoy toca poner por escrito todo lo aprendido.
 
 En esta misión aprenderás a **redactar cartas y correos electrónicos formales e informales** en inglés. Veremos **cuándo usar cada estilo**, los **saludos**, las **despedidas** y el **tono apropiado** para cada situación.
 
@@ -855,7 +855,7 @@ Otro ejemplo relajado y amistoso:
         ] },
       { id: 'modulo3-6-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
-¡Ojo, ruter@! 👀 Estos son los tropiezos más frecuentes al escribir cartas:
+¡Ojo, ingenier@! 👀 Estos son los tropiezos más frecuentes al escribir cartas:
 
 * **Mezclar tonos** 🤵👕: empezar informal y terminar formal (o al revés). Mal: *"Dear John, I hope all is well. Sincerely, Jane."* — el saludo va con nombre suelto pero la despedida es súper formal. ¡No combines traje con sandalias!
 * **Abreviaturas en cartas formales:** no uses *"u"* por *you* ni emoticonos en lo formal. Mantén el **inglés estándar**.
@@ -885,7 +885,7 @@ Otro ejemplo relajado y amistoso:
 **🧠 Mnemotecnia:** La carta **formal lleva traje elegante y maletín** 🤵💼: ordenada, sin sorpresas, sin contracciones. La **informal lleva camiseta y jeans** 👕👖: cómoda y casual. **Formal = "usted", informal = "tú"** — ¡nunca mezclar los dos!` },
       { id: 'modulo3-6-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**
 
-¡Muy bien redactado, ruter@! 🎉 Ahora sabes ponerle a cada carta el **vestuario correcto**: el **traje elegante** 🤵 para lo formal y la **camiseta y jeans** 👕 para lo cercano.
+¡Muy bien redactado, ingenier@! 🎉 Ahora sabes ponerle a cada carta el **vestuario correcto**: el **traje elegante** 🤵 para lo formal y la **camiseta y jeans** 👕 para lo cercano.
 
 Recuerda:
 
@@ -923,10 +923,10 @@ Ahora estarás list@ para **impresionar con tus cartas y correos**. ¡Nos vemos 
     audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
     contentBlocks: [
       { id: 'modulo3-7-titulo', type: 'titulo', title: '¿Cómo uno mis ideas para que suenen fluidas? 🌉', subtitle: 'Conectores discursivos', markdown: '' },
-      { id: 'modulo3-7-mision', type: 'mision', markdown: `## Usar **conectores en inglés** para dar **fluidez y coherencia** al hablar y escribir, identificando cuándo usar palabras de **adición**, **contraste** y **causa**. 🚌💬
+      { id: 'modulo3-7-mision', type: 'mision', markdown: `## Usar **conectores en inglés** para dar **fluidez y coherencia** al hablar y escribir, identificando cuándo usar palabras de **adición**, **contraste** y **causa**. ⚙️💬
 
 Al terminar, tus oraciones dejarán de sonar sueltas y separadas, y empezarán a fluir como un viaje sin baches. 🛣️✨` },
-      { id: 'modulo3-7-intro', type: 'intro', markdown: `¡Hola, ruter@! Soy **Ozzy** 🚌, y… ¡estamos a punto de terminar! 🎉
+      { id: 'modulo3-7-intro', type: 'intro', markdown: `¡Hola, ingenier@! Soy **Boti** 🤖, y… ¡estamos a punto de terminar! 🎉
 
 Para cerrar con broche de oro necesitamos **atar todas nuestras ideas con conectores**. 🪢
 
@@ -953,7 +953,7 @@ Empecemos con dos tipos de ladrillos.
 | however | sin embargo | I like tea. **However**, I love coffee more. |
 | on the other hand | por otro lado | It's cheap. **On the other hand**, it's not very good. |
 
-🚌 **Tip de Ozzy:** *yet* también contrasta, como en *"He loves music, **yet** he never goes to concerts."* (Le encanta la música, **aunque** nunca va a conciertos.)`,
+🤖 **Tip de Boti:** *yet* también contrasta, como en *"He loves music, **yet** he never goes to concerts."* (Le encanta la música, **aunque** nunca va a conciertos.)`,
         miniQuiz: [
           mc('¿Qué conector usas para AÑADIR una idea?', ['but', 'however', 'and', 'because'], 2),
           mc('"He is young, ___ very responsible." (pero)', ['and', 'but', 'also', 'so'], 1),
@@ -984,7 +984,7 @@ Empecemos con dos tipos de ladrillos.
 | first / second | primero / segundo | **First**, we went shopping. |
 | finally | finalmente | **Finally**, we went home. |
 
-🚌 **Recuerda:** *because* responde *¿por qué?* (la causa 🔴) y *so* responde *¿y entonces?* (la consecuencia ➡️).`,
+📌 **Recuerda:** *because* responde *¿por qué?* (la causa 🔴) y *so* responde *¿y entonces?* (la consecuencia ➡️).`,
         miniQuiz: [
           mc('¿Qué significa "because"?', ['así que', 'porque', 'sin embargo', 'además'], 1),
           mc('"I studied hard, ___ I passed the exam." (así que)', ['so', 'but', 'and', 'because'], 0),
@@ -1042,7 +1042,7 @@ Recuerda los colores de tus ladrillos:
 * ⚫ **but / however** contrastan,
 * 🔴 **because / so** explican causa y efecto.
 
-¡Tu inglés brilla con **lógica y orden**! Sigue construyendo, ruter@. 🚌💨
+¡Tu inglés brilla con **lógica y orden**! Sigue construyendo, ingenier@. ⚡
 
 **🏅 Insignia obtenida:** *Constructor de Ideas* 👷‍♂️🧱✨` },
     ],
@@ -1072,8 +1072,8 @@ Recuerda los colores de tus ladrillos:
     audioCues: ['Escucha el contenido de la lección.', 'Fíjate en los puntos clave.', 'Ahora vienen tus ejercicios.'],
     contentBlocks: [
       { id: 'modulo3-8-titulo', type: 'titulo', title: '¿Listo para correr la carrera del PET? 🏁', subtitle: 'Estrategias para el PET: reading, listening y writing', markdown: '' },
-      { id: 'modulo3-8-mision', type: 'mision', markdown: `## Aprender **estrategias clave de lectura, escucha y escritura** para el examen **PET (Preliminary English Test, nivel B1)**, mejorando la comprensión y la producción escrita **bajo presión**. ⏱️🚌` },
-      { id: 'modulo3-8-intro', type: 'intro', markdown: `¡Lo hicimos hasta el final del viaje! 🥹🚌 Soy **Ozzy**, y hoy somos exploradores listos para el **PET**. Para una buena ruta no basta con saber inglés: necesitas **herramientas estratégicas**. 🧰
+      { id: 'modulo3-8-mision', type: 'mision', markdown: `## Aprender **estrategias clave de lectura, escucha y escritura** para el examen **PET (Preliminary English Test, nivel B1)**, mejorando la comprensión y la producción escrita **bajo presión**. ⏱️⚙️` },
+      { id: 'modulo3-8-intro', type: 'intro', markdown: `¡Lo hicimos hasta el final del viaje! 🥹🤖 Soy **Boti**, y hoy somos exploradores listos para el **PET**. Para una buena ruta no basta con saber inglés: necesitas **herramientas estratégicas**. 🧰
 
 En esta misión veremos **trucos para exámenes**: cómo **leer y escuchar inteligentemente**, y cómo **escribir bien en poco tiempo**. ¡Sube, que arrancamos! 🏁` },
       { id: 'modulo3-8-teoria-1', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1.** **Reading y Listening: escucha y lee como un detective 🕵️‍♀️**
@@ -1147,7 +1147,7 @@ En el PET escribes un **correo corto** (carta informal) y otro **texto breve** (
           tap('Corrige el saludo de un email formal:', ['Dears', 'Sir', 'or', 'Madam,', 'I', 'am', 'writing', 'to', 'you.'], 0, 'Dear'),
           tap('Una palabra está mal. Corrígela:', ['Hi,', 'long', 'time', 'no', 'sea!'], 4, 'see'),
           tap('Hay un error de tiempo verbal. Tócalo:', ['Yesterday', 'I', 'go', 'to', 'the', 'cinema.'], 2, 'went'),
-          tap('Corrige el cierre de la carta formal:', ['Yours', 'faithful,', 'Ozzy'], 1, 'faithfully,'),
+          tap('Corrige el cierre de la carta formal:', ['Yours', 'faithful,', 'Boti'], 1, 'faithfully,'),
           tap('Una palabra sobra en esta frase. Tócala:', ['I', 'am', 'really', 'looking', 'very', 'forward', 'to', 'it.'], 4, '(quítalo)'),
           tap('Hay un error de tiempo verbal. Tócalo:', ['Last', 'week', 'I', 'visit', 'my', 'family.'], 3, 'visited'),
           tap('Toca la palabra incorrecta:', ['Dear', 'Sir,', 'I', 'are', 'writing', 'to', 'apply.'], 3, 'am'),
@@ -1161,12 +1161,12 @@ El examen es una **carrera contrarreloj**. Memoriza tu estrategia de piloto:
 * 🎧 **Adelanta el volante:** en Listening, lee las preguntas **antes** de oír el audio (y escucha dos veces).
 * 🗺️ **Haz un mapa mental:** en Writing, planea un **esquema rápido** antes de soltar teclas, cuida el **registro** y revisa al final.
 
-> 🧠 **Mnemotecnia – Carrera contrarreloj:** *Lee la META antes de correr, adelanta el VOLANTE leyendo, dibuja el MAPA antes de teclear.* 🚌💨` },
+> 🧠 **Mnemotecnia – Carrera contrarreloj:** *Lee la META antes de correr, adelanta el VOLANTE leyendo, dibuja el MAPA antes de teclear.* ⚡` },
       { id: 'modulo3-8-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**
 
 ¡Lo has dado todo! 💪 Con estas **estrategias de experto**, el examen **PET será pan comido** 🍞✨. Lee como detective, escucha cazando palabras clave y escribe con tu mapa mental listo.
 
-🎉 **¡Felicidades por completar el Módulo 3!** Sigue brillando en tu ruta hacia la certificación. 🚌🌟
+🎉 **¡Felicidades por completar el Módulo 3!** Sigue brillando en tu camino hacia la certificación. ⚙️🌟
 
 **🏅 Insignia obtenida:** ✨ *Maestro del PET* 🎖️` },
     ],
@@ -1183,7 +1183,7 @@ El examen es una **carrera contrarreloj**. Memoriza tu estrategia de piloto:
       tap('Toca la palabra incorrecta:', ['Dear', 'Sir', 'or', 'Madam,', 'I', 'are', 'writing', 'to', 'apply.'], 5, 'am'),
       tap('Toca la palabra incorrecta:', ['I', 'look', 'forward', 'to', 'hear', 'from', 'you.'], 4, 'hearing'),
       rebuild('🎧 Reconstruye el saludo informal:', 'Hi, long time no see!', ['Hi,', 'long', 'time', 'no', 'see!', 'Dear', 'soon', 'faithfully']),
-      rebuild('🎧 Reconstruye el cierre formal:', 'Yours faithfully, Ozzy', ['Yours', 'faithfully,', 'Ozzy', 'See', 'soon', 'Hi']),
+      rebuild('🎧 Reconstruye el cierre formal:', 'Yours faithfully, Boti', ['Yours', 'faithfully,', 'Boti', 'See', 'soon', 'Hi']),
       rebuild('🎧 Reconstruye:', 'Read the questions before listening', ['Read', 'the', 'questions', 'before', 'listening', 'after', 'audio', 'answers']),
       rebuild('🎧 Reconstruye:', 'I am writing to apply', ['I', 'am', 'writing', 'to', 'apply', 'are', 'write', 'applying']),
     ],
