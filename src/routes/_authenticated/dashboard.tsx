@@ -16,20 +16,22 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const navigate = useNavigate();
+  const isFake = typeof window !== "undefined" && localStorage.getItem("fake_login") === "1";
+  const fakeRole = typeof window !== "undefined" ? localStorage.getItem("fake_role") : null;
   const profileFn = useServerFn(getMyProfile);
-  const profile = useQuery({ queryKey: ["me", "profile"], queryFn: () => profileFn() });
+  const profile = useQuery({ queryKey: ["me", "profile"], queryFn: () => profileFn(), enabled: !isFake });
 
-  const roles = profile.data?.roles ?? [];
+  const roles = isFake ? [fakeRole ?? "parent"] : (profile.data?.roles ?? []);
   const isStudentOnly = roles.includes("student") && !roles.includes("parent") && !roles.includes("teacher");
-  const canView = roles.includes("parent") || roles.includes("teacher");
+  const canView = isFake ? true : roles.includes("parent") || roles.includes("teacher");
 
   useEffect(() => {
-    if (profile.data && isStudentOnly) {
+    if ((isFake || profile.data) && isStudentOnly) {
       navigate({ to: "/app", replace: true });
     }
-  }, [profile.data, isStudentOnly, navigate]);
+  }, [profile.data, isStudentOnly, navigate, isFake]);
 
-  if (profile.isLoading || isStudentOnly || !canView) return null;
+  if ((!isFake && profile.isLoading) || isStudentOnly || !canView) return null;
 
   return (
     <iframe
