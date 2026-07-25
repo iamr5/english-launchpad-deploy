@@ -82,7 +82,7 @@ function LoginPage() {
           <h1 className="text-2xl font-bold mt-3 tracking-wide">
             <span className="text-black">Aprendo</span>
             <span className="text-[#539bec]">English</span>
-            <span className="text-[#ea4e57] text-[0.72em] align-top">.com</span>
+            <span className="text-[#ea4e57] text-[0.72em]">.com</span>
           </h1>
           <p className="text-sm text-slate-500">{mode === "signin" ? "Inicia sesión" : "Crea tu cuenta"}</p>
         </div>
