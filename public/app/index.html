@@ -818,6 +818,7 @@
   .debug-fab.mq { bottom: 130px; }
   .debug-fab.undo { bottom: 182px; }
   .debug-fab.wipe { bottom: 234px; }
+  .debug-fab.logout { bottom: 286px; }
   /* The FABs are z-index:60, above the quiz overlay/sheet (z-index:50) and pinned
      bottom-right — exactly where the quiz's Confirmar/Siguiente button sits. Hide
      them whenever a sheet (mini-quiz, cierre, dialog) or the final-quiz screen is
@@ -1010,6 +1011,9 @@
 </button>
 <button class="debug-fab wipe" title="Borrar TODO (progreso + perfil) y ver el onboarding" aria-label="Borrar todos los datos" onclick="resetAllData()">
   <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+</button>
+<button class="debug-fab logout" title="Cerrar sesión" aria-label="Cerrar sesión" onclick="debugLogout()">
+  <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
 </button>
 
 <!-- (Rive runtime + wasm + Busi .riv removed — the module mascot is now the pure-CSS/SVG
@@ -2632,6 +2636,12 @@ function resetProgress() {
 function resetAllData() {
   try { localStorage.removeItem(PK); localStorage.removeItem(PROFILE_KEY); } catch (e) {}
   location.reload();
+}
+
+// DEBUG: log out of the host session (the parent app owns auth). Ask the parent
+// frame to sign out, then it will redirect to /login.
+function debugLogout() {
+  try { window.parent.postMessage({ type: 'logout' }, '*'); } catch (e) {}
 }
 
 // DEBUG: complete the next pending mini-quiz of the currently open lesson, then

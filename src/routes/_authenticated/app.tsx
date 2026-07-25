@@ -1,4 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/app")({
   head: () => ({
@@ -11,6 +13,19 @@ export const Route = createFileRoute("/_authenticated/app")({
 });
 
 function StudentApp() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleMessage = async (event: MessageEvent) => {
+      if (event.data?.type === "logout") {
+        await supabase.auth.signOut();
+        navigate({ to: "/login", replace: true });
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [navigate]);
+
   return (
     <iframe
       src="/app/index.html"
