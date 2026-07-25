@@ -2638,6 +2638,12 @@ function resetAllData() {
   location.reload();
 }
 
+// DEBUG: log out of the host session (the parent app owns auth). Ask the parent
+// frame to sign out, then it will redirect to /login.
+function debugLogout() {
+  try { window.parent.postMessage({ type: 'logout' }, '*'); } catch (e) {}
+}
+
 // DEBUG: complete the next pending mini-quiz of the currently open lesson, then
 // re-render and re-sync progress exactly like passing it for real would. Finishing
 // a module's last microlección auto-completes the module (see markQuizCompleted).
