@@ -79,7 +79,11 @@ function LoginPage() {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center mb-6">
           <img src="/head.png" alt="Aprendo English" className="w-16 h-16 mx-auto" />
-          <h1 className="text-2xl font-bold mt-3">Aprendo English</h1>
+          <h1 className="text-2xl font-bold mt-3 tracking-wide">
+            <span className="text-black">Aprendo</span>
+            <span className="text-[#539bec]">English</span>
+            <span className="text-[#ea4e57] text-[0.72em] align-top">.com</span>
+          </h1>
           <p className="text-sm text-slate-500">{mode === "signin" ? "Inicia sesión" : "Crea tu cuenta"}</p>
         </div>
 
