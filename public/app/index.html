@@ -936,7 +936,7 @@
   <section id="screen-placement" class="screen">
     <div class="ob-wrap">
       <div class="ob-top" style="flex-direction:column;align-items:stretch;gap:7px">
-        <div class="pbar" style="height:10px"><div class="fill" id="pl-bar" style="width:0"></div></div>
+        <div class="pbar"><div class="fill" id="pl-bar" style="width:0"></div><div class="pct" id="pl-bar-pct">0%</div></div>
         <div class="pl-meta"><span id="pl-count">Pregunta 1</span><span id="pl-time">0:00</span></div>
       </div>
       <div class="ob-talk">
@@ -2795,7 +2795,12 @@ function plItem() {
   plProgress();
 }
 function plProgress() {
-  document.getElementById('pl-bar').style.width = ((PL.idx / PL.order.length) * 100).toFixed(1) + '%';
+  const pct = (PL.idx / PL.order.length) * 100;
+  const bar = document.getElementById('pl-bar');
+  bar.style.width = pct.toFixed(1) + '%';
+  const pctEl = document.getElementById('pl-bar-pct');
+  pctEl.textContent = Math.round(pct) + '%';
+  bar.classList.remove('done'); pctEl.classList.remove('done');
   document.getElementById('pl-count').textContent = 'Pregunta ' + (PL.idx + 1) + ' de ' + PL.order.length;
   const s = Math.round((Date.now() - PL.t0) / 1000);
   document.getElementById('pl-time').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
@@ -2812,7 +2817,8 @@ function plNext() {
 function plFinish() {
   const P = window.PLACEMENT, res = P.level(PL.answers);
   PL.finished = true; PL.result = res;
-  document.getElementById('pl-bar').style.width = '100%';
+  const plBar = document.getElementById('pl-bar'); plBar.style.width = '100%'; plBar.classList.add('done');
+  const plPct = document.getElementById('pl-bar-pct'); plPct.textContent = '100%'; plPct.classList.add('done');
   document.getElementById('pl-count').textContent = 'Completado';
   document.getElementById('pl-bubble').innerHTML = '¡Listo! Ya sé por dónde<br>te conviene empezar.';
   document.getElementById('pl-q').hidden = true;
