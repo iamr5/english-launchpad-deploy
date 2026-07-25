@@ -245,9 +245,9 @@
 
           <div class="ring-card">
             <div class="ring-info">
-              <h3><span class="u-name">Valeria</span> está en nivel B1</h3>
+              <h3><span class="u-name">Valeria</span> está en nivel <span id="p-level">B1</span></h3>
               <p id="p-sub">Muy cerca de B2 — le faltan 550 XP</p>
-              <div class="track">
+              <div class="track" id="p-track">
                 <div class="tk done">A1</div>
                 <div class="tk done">A2</div>
                 <div class="tk now">B1</div>
@@ -523,6 +523,30 @@
   WK_SELS.forEach(s=>{ const p=document.getElementById(s.p), n=document.getElementById(s.n); if(!p||!n) return;
     p.addEventListener('click',()=>{ if(wkIdx>0){wkIdx--; wkRender();} });
     n.addEventListener('click',()=>{ if(wkIdx<WEEKS.length-1){wkIdx++; wkRender();} }); });
+
+  // ── Puente de datos reales ──────────────────────────────────────────────
+  // Si la app del alumno dejó un resumen en localStorage (mismo origen que este
+  // dashboard), úsalo para el alumno y la SEMANA ACTUAL. Las demás semanas y la
+  // vista de profesor siguen con datos de ejemplo (eso ya requiere backend).
+  (function () {
+    var S; try { S = JSON.parse(localStorage.getItem('ingles_web_summary_v1') || 'null'); } catch (e) { S = null; }
+    if (!S) return;
+    var LV = ['A1', 'A2', 'B1', 'B2', 'C1'], li = S.levelIdx || 0, pct = function (v) { return v == null ? 100 : v; };
+    document.querySelectorAll('.u-name').forEach(function (el) { el.textContent = S.name || 'tu hijo/a'; });
+    var pl = document.getElementById('p-level'); if (pl) pl.textContent = S.level;
+    var tk = document.getElementById('p-track');
+    if (tk) tk.innerHTML = LV.slice(0, 4).map(function (l, i) {
+      var c = i < li ? 'done' : (i === li ? 'now' : ''); return '<div class="tk ' + c + '">' + l + '</div>';
+    }).join('');
+    PWEEK[1] = {
+      racha: S.streak,
+      sub: (li >= 4 ? '¡Nivel máximo alcanzado!' : 'Avanzando en nivel ' + S.level),
+      dias: (S.daysThisWeek || 0) + ' / 7', tiempo: '—', lecc: S.lessonsDone,
+      sk: [pct(S.skills.listening), pct(S.skills.reading), pct(S.skills.writing)],
+      help: ['Va en nivel ' + S.level + ' · ' + S.lessonsDone + ' lecciones', 'Acompáñalo/a con un «¡sigue así!»'],
+      cert: 'Nivel actual · ' + S.level
+    };
+  })();
   wkRender();
 </script>
 </body>

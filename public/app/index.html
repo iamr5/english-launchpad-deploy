@@ -1180,7 +1180,34 @@ const course = window.COURSE_DATA;
 const allLessons = course.modules.flatMap(m => m.lessons);
 
 function loadProgress() { try { return JSON.parse(localStorage.getItem(PK)) || {}; } catch (e) { return {}; } }
-function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); }
+function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); try { saveSummary(); } catch (e) {} }
+
+// Compact real-progress summary written to localStorage for the family/teacher
+// dashboard. /app and /dashboard are same-origin iframes so they SHARE localStorage
+// — no backend needed for the same browser. This is also exactly the shape you'd
+// sync to Supabase later (the `progress` row).
+const SUMMARY_KEY = 'ingles_web_summary_v1';
+function computeSummary() {
+  const prof = loadProfile() || {};
+  const LEVEL = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const allDone = allLessons.every(l => isLessonCompleted(l.id));
+  let ai = course.modules.reduce((a, m, i) => (isLessonUnlocked(m.lessons[0].id) && !m.lessons.every(l => isLessonCompleted(l.id))) ? i : a, -1);
+  if (ai < 0) ai = allDone ? course.modules.length - 1 : 0;
+  const sk = moduleSkill(course.modules[ai]);
+  const days = PROGRESS['__days'] || [];
+  const wa = new Date(); wa.setHours(0, 0, 0, 0); wa.setDate(wa.getDate() - 6);
+  const daysThisWeek = days.filter(ds => new Date(ds + 'T00:00:00') >= wa).length;
+  return {
+    name: prof.name || '', goal: prof.goal || 10,
+    levelIdx: ai, level: LEVEL[ai],
+    streak: streakDays(), daysThisWeek: daysThisWeek,
+    lessonsDone: allLessons.filter(l => isLessonCompleted(l.id)).length,
+    lessonsTotal: allLessons.length,
+    skills: { listening: sk.listening, reading: sk.reading, writing: sk.writing },
+    updated: Date.now()
+  };
+}
+function saveSummary() { try { localStorage.setItem(SUMMARY_KEY, JSON.stringify(computeSummary())); } catch (e) {} }
 let PROGRESS = loadProgress();
 
 function lp(id) { if (!PROGRESS[id]) PROGRESS[id] = { blocks: {} }; if (!PROGRESS[id].blocks) PROGRESS[id].blocks = {}; return PROGRESS[id]; }
@@ -3000,6 +3027,7 @@ document.querySelectorAll('.ob-opt').forEach(b => b.addEventListener('click', ()
 function obSaveProfile() {
   saveProfile({ name: OB.name, goal: +OB.goal || 10, level: OB.placedLevel || 'A1',
     placedModule: OB.placedModule || 0, motive: OB.mot || '', created: new Date().toISOString() });
+  saveSummary();
 }
 function obFinish() { obFinishToLesson(); }
 // Finish onboarding: apply the placement, then celebrate → module map (placed above
