@@ -2817,7 +2817,8 @@ function plNext() {
 function plFinish() {
   const P = window.PLACEMENT, res = P.level(PL.answers);
   PL.finished = true; PL.result = res;
-  document.getElementById('pl-bar').style.width = '100%';
+  const plBar = document.getElementById('pl-bar'); plBar.style.width = '100%'; plBar.classList.add('done');
+  const plPct = document.getElementById('pl-bar-pct'); plPct.textContent = '100%'; plPct.classList.add('done');
   document.getElementById('pl-count').textContent = 'Completado';
   document.getElementById('pl-bubble').innerHTML = '¡Listo! Ya sé por dónde<br>te conviene empezar.';
   document.getElementById('pl-q').hidden = true;
