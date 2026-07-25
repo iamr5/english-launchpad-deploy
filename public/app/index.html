@@ -1,0 +1,3024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>Inglés para moverte</title>
+<style>
+  :root {
+    --accent: #7C1C56;
+    --blue: #1CB0F6;
+    --blueDark: #1488C0;
+    --green: #3FAA24;
+    --greenDark: #2E7D1A;
+    --amber: #F4A720;
+    --amberInk: #7A4D06;
+    --red: #F44336;
+    --red2: #FF4D6A;
+    --gray: #E0E0E0;
+    --line: #E6E6EA;       /* neutral hairline for cards / chrome */
+    --canvas: #F4F4F6;     /* neutral light surface (cards stay white) */
+    --card: #F5F5F5;
+    --ink: #1A1A1A;
+    --muted: #5C5159;
+    --muted2: #7A7A7A;
+    /* Rounded UI typeface (ui-rounded → SF Pro Rounded on Apple; rounded fallbacks
+       elsewhere, no web fetch → offline-safe). Used for ALL chrome/UI text. */
+    --font-round: ui-rounded, 'SF Pro Rounded', 'Baloo 2', 'Quicksand', 'Varela Round',
+      'Segoe UI Variable Display', system-ui, sans-serif;
+    /* Legible sans for the lesson reading content only (paragraphs, tables, lists). */
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  @keyframes tr-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes tr-pop  { 0% { transform: scale(.7); opacity: 0; } 60% { transform: scale(1.06); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes tr-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; scrollbar-width: none; -ms-overflow-style: none; }
+  *::-webkit-scrollbar { width: 0; height: 0; display: none; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: var(--font-round); /* rounded everywhere by default; .md opts back to --font-body */
+    color: var(--ink); background: var(--canvas);
+    overscroll-behavior: none; /* kill the page-level rubber-band bounce */
+  }
+  #app { height: 100%; display: flex; flex-direction: column; }
+  .screen { display: none; flex-direction: column; height: 100%; }
+  .screen.active { display: flex; animation: tr-fade .28s ease; }
+
+  /* App bar */
+  .appbar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 12px 14px; border-bottom: 1px solid var(--line);
+    background: #fff; flex: 0 0 auto;
+  }
+  .appbar .back, .ob-top .back {
+    border: none; background: none; padding: 0; cursor: pointer;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  }
+  /* Material arrow_back (Icons.arrow_back) — matches the Flutter AppBar back icon */
+  .appbar .back::before, .ob-top .back::before {
+    content: ''; width: 24px; height: 24px; background: var(--ink);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z'/%3E%3C/svg%3E") center / 24px 24px no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z'/%3E%3C/svg%3E") center / 24px 24px no-repeat;
+  }
+  .appbar .title { font-size: 21px; font-weight: 800; flex: 1; }
+  /* "AprendoEnglish.com" wordmark — rounded typeface (ui-rounded → SF Pro Rounded on Apple;
+     rounded fallbacks elsewhere, no web fetch so it stays offline-safe). Per-word colors. */
+  .brand { font-family: var(--font-round); font-weight: 700; letter-spacing: .01em; font-size: 1.2em; } /* scales the whole wordmark up; .com stays proportional (em-based) */
+  .brand .b-aprendo { color: #000; }
+  .brand .b-english { color: #539bec; }
+  .brand .b-com     { color: #ea4e57; font-size: .72em; } /* smaller than the wordmark */
+  .appbar-en { height: 40px; margin: -2px -5px -2px 0; } /* bear-head logo; negative right margin pulls the title closer; top/bottom overflow the bar instead of growing it */
+  /* Module app bar: title row + a module-progress bar underneath */
+  .appbar.appbar-col { flex-direction: column; align-items: stretch; gap: 5px; }
+  .appbar-row { display: flex; align-items: center; gap: 6px; }
+  .appbar-progress { width: 95%; margin: 0 auto; }
+  .appbar-progress .pbar { height: 24px; }
+  .appbar-progress .pbar > .fill { height: 24px; }
+  /* Module screen header styled as the prototype's floating plum banner */
+  .appbar.appbar-module { background: var(--mod, var(--accent)); color: #fff;
+    border-bottom: none; margin: 20px 16px 8px; border-radius: 16px; padding: 10px 16px;
+    box-shadow: 0 5px 0 var(--mod-d, #5A123E); }
+  .appbar.appbar-module .appbar-row { min-height: 46px; }
+  .appbar.appbar-module .back::before { background: #fff; }
+  .appbar.appbar-module .mod-head { display: flex; flex-direction: column; min-width: 0; }
+  .appbar.appbar-module .mod-kicker { font-size: 13px; font-weight: 800; letter-spacing: .8px;
+    text-transform: uppercase; opacity: .92; margin-bottom: 2px; }
+  .appbar.appbar-module .title { color: #fff; font-size: 21px; font-weight: 800; line-height: 1.15; }
+  .appbar.appbar-module .appbar-progress .pbar { background: rgba(0,0,0,.20); }
+  .appbar.appbar-module .appbar-progress .pbar > .fill,
+  .appbar.appbar-module .appbar-progress .pbar > .fill.done { background: #fff; }
+  .appbar.appbar-module .appbar-progress .pct,
+  .appbar.appbar-module .appbar-progress .pct.done { color: rgba(0,0,0,.55); }
+  /* Inline Material icons (svg) align with adjacent text on buttons/labels */
+  .ic { vertical-align: middle; flex: 0 0 auto; }
+  .btn .ic { margin-right: 4px; }
+  .scroll { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: none; }
+  .pad { padding: 16px 19px 40px; }
+
+  /* Progress bar */
+  .pbar { height: 24px; background: var(--gray); border-radius: 9px; position: relative; overflow: hidden; }
+  .pbar > .fill { height: 24px; border-radius: 9px; background: var(--blue); min-width: 18px; transition: width .3s; }
+  .pbar > .fill.done { background: var(--green); }
+  .pbar > .pct {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; line-height: 1; color: rgba(0,0,0,.7);
+  }
+  .pbar > .pct.done { color: rgba(255,255,255,.85); font-weight: 700; }
+
+  /* Course / module / lesson cards */
+  .card {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 20px;
+    padding: 16px; margin-bottom: 14px; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    animation: tr-rise .3s ease both;
+  }
+  /* Outline style (same flat 2px outline as the streak chip): applied to the
+     course-screen module cards and every card/stat tile on Mi progreso. */
+  #screen-course .card, #screen-progress .card, #screen-progress .pg-chip {
+    border-width: 2px; box-shadow: none;
+  }
+  .card h2 { margin: 0 0 4px; font-size: 21px; font-weight: 800; }
+  .mod-card { position: relative; }
+  .mod-card.locked { cursor: default; }
+  /* Section ("Etapa") cards — course screen, Duolingo "Secciones" look */
+  .sec-card .sec-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .sec-card .sec-name { font-size: 21px; font-weight: 800; line-height: 1.15; }
+  .sec-card .sec-chip { display: inline-block; margin-top: 7px; background: var(--accent); color: #fff;
+    border-radius: 9px; padding: 4px 11px; font-size: 12.5px; font-weight: 800; letter-spacing: .3px; }
+  .sec-card .sec-crown { width: 42px; height: 42px; flex: 0 0 auto; }
+  .sec-card .sec-crown svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+  .sec-card .sec-bar { position: relative; }
+  .sec-card .sec-emblem { position: absolute; right: -2px; top: 50%; transform: translateY(-50%);
+    width: 44px; height: auto; pointer-events: none; }
+  /* completed sections get the diagonal "shine" stripe background (≈ Duolingo _2adxk) */
+  .card.sec-card.completed { background:
+    linear-gradient(136deg, transparent 10%, #EBF5E4 10%, #EBF5E4 40%, transparent 40%,
+      transparent 53%, #EBF5E4 53%, #EBF5E4 71%, transparent 71%), #fff; }
+  .card .sub { color: var(--muted); font-size: 15px; margin-bottom: 12px; }
+  .card h2 { padding-right: 44px; }
+  .card .meta-mini { color: var(--muted2); font-size: 14.5px; font-weight: 600; margin: -2px 0 10px; }
+  /* Colored number badge, top-right of module/lesson cards */
+  .num-badge {
+    position: absolute; top: 14px; right: 14px;
+    min-width: 30px; height: 30px; padding: 0 8px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800; font-size: 15px; line-height: 1;
+    pointer-events: none;
+  }
+  .cover {
+    height: 120px; border-radius: 14px; margin-bottom: 14px;
+    background: linear-gradient(135deg, #7C1C56, #b8347e);
+    display: flex; align-items: center; justify-content: center; font-size: 56px;
+  }
+  .section-title { font-size: 22px; font-weight: 800; margin: 8px 0 12px; }
+
+  /* ===== Lesson PATH (module screen) — ported from path prototype ===== */
+  /* Backdrop: fixed 490px-wide image, centered behind the (centered, fixed-size)
+     path nodes and pinned to the top. Negative margins cancel the .pad padding
+     (16px top, 19px sides) so the box is full-width — the 490px image centers in it
+     and starts at the very top. padding-top = 26 (base) + 16 (absorb the -16 margin)
+     + 55 (lower the path nodes by 55px, leaving the backdrop pinned to the top). */
+  .lpath { position: relative; padding: 97px 16px 108px 0; margin: -16px -19px 0;
+    background-size: 490px auto; background-position: center top; background-repeat: no-repeat; }
+  /* "TuRuta Bear" mascot — anchored to the path's horizontal CENTER (same reference as
+     the centered PNG) so its position stays consistent vs the backdrop on any screen width.
+     left:50% + margin-left:(offset − halfWidth) puts the bear's center at screen-center+offset.
+     Per-module X/Y offset + size are applied inline in renderModule (BUSI_POS / BUSI_SIZE).
+     pointer-events:none so it never blocks taps; z above caps(2), below pop(6).
+     The block below is the animation from turuta-bear-animated_1.html, ported VERBATIM —
+     every keyframe/transform-origin/timing is unchanged; selectors are scoped under
+     .tr-bear (shared by the module path's #busi-mascot and the onboarding bear) so the
+     generic class names can't leak into the rest of the app. */
+  .lpath #busi-mascot { position: absolute; left: 50%; z-index: 4; pointer-events: none; }
+  /* ground shadow stays constant — the bear is planted */
+  .tr-bear .shadow{position:absolute;left:50%;bottom:3.6%;width:66%;height:6%;
+    transform:translateX(-50%);border-radius:50%;
+    background:rgba(0,0,0,.23);}
+  .tr-bear .bear{position:absolute;inset:0;}
+  .tr-bear .group{position:absolute;inset:0;}
+  .tr-bear .layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+  /* the torso bobs from the hips upward; feet (legs) stay planted */
+  .tr-bear .torso{animation:torsobob 3.6s ease-in-out infinite;}
+  .tr-bear .head    {transform-origin:49.9% 47.3%;    animation:head    3.6s ease-in-out infinite;}
+  .tr-bear .glassesfollow{position:absolute;inset:0;transform-origin:49.9% 47.3%;animation:head 3.6s ease-in-out infinite;}
+  .tr-bear .bowtie  {transform-origin:45.6% 49.6%;  animation:bowtie  3.6s ease-in-out infinite;}
+  .tr-bear .leftarm {transform-origin:67.2% 47.6%; animation:leftarm 4.8s ease-in-out infinite;}
+  .tr-bear .rightarm{transform-origin:34.8% 47.6%;animation:rightarm 3.6s ease-in-out infinite;}
+  .tr-bear .leftleg {transform-origin:65.3% 96.5%; animation:legstretch 3.6s ease-in-out infinite;}
+  .tr-bear .rightleg{transform-origin:33.4% 94.3%; animation:legstretch 3.6s ease-in-out infinite;}
+  .tr-bear .body,
+  .tr-bear .tummy   {transform-origin:50.0% 76.6%;    animation:breathe 3.6s ease-in-out infinite;}
+  /* grounded bob: vertical rise of the torso only, feet unaffected */
+  @keyframes torsobob{0%,100%{transform:translateY(0);}50%{transform:translateY(-1.3%);}}
+  @keyframes breathe{0%,100%{transform:scale(1);}50%{transform:scaleX(1.02) scaleY(.985);}}
+  @keyframes head{0%,100%{transform:rotate(0deg) translateY(0);}30%{transform:rotate(-1.7deg) translateY(-.3%);}70%{transform:rotate(1.5deg) translateY(-.3%);}}
+  @keyframes bowtie{0%,100%{transform:rotate(0deg) scale(1);}50%{transform:rotate(2.5deg) scale(1.05);}}
+  /* relaxed harmonic pendulum: tighter ROM, less outward, resting a hair higher */
+  @keyframes leftarm{
+    0%,100%{transform:translateY(-0.9%) rotate(2deg);}
+    50%{transform:translateY(-0.9%) rotate(-5deg);}}
+  @keyframes rightarm{0%,100%{transform:rotate(0deg) translateY(0);}50%{transform:rotate(-3.2deg) translateY(-1.1%);}}
+  /* legs stretch upward from the planted foot to follow the torso's rise */
+  @keyframes legstretch{0%,100%{transform:scaleY(1);}50%{transform:scaleY(1.05);}}
+  .lpath .row { position: relative; display: flex; justify-content: center; }
+  /* Shift with `left` (not transform) so the node is NOT its own stacking context —
+     that lets the popover (z6) layer above sibling nodes globally, while the button
+     (cap z2) still sits below the floating EMPEZAR chip (z5). */
+  .lpath .row > .node { left: var(--x, 0); }
+  .lpath .node { position: relative; width: 71px; height: 67px; border: none; background: none; padding: 0; cursor: pointer; }
+  .lpath .base { position: absolute; left: 0; right: 0; bottom: 0; height: 58px; border-radius: 50%; z-index: 0; }
+  .lpath .cap { position: absolute; left: 0; right: 0; top: 0; height: 58px; border-radius: 50%; z-index: 2;
+    display: flex; align-items: center; justify-content: center; transition: transform .07s; }
+  .lpath .node .ic { width: 34px; height: 34px; }
+  .lpath .cap .shine { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 62px; height: 49px; color: rgba(255,255,255,.16); pointer-events: none; }
+  .lpath .cap .shine svg { width: 100%; height: 100%; display: block; }
+  .lpath .cap .swoosh { position: relative; z-index: 1; width: 44px; height: auto; display: block; }
+  .lpath .cap .star { position: relative; z-index: 1; width: 37px; height: auto; display: block; }
+  .lpath .node .ic svg { width: 100%; height: 100%; display: block; }
+  .lpath .node.done .cap, .lpath .node.active .cap, .lpath .node.avail .cap { background: var(--mod, var(--green)); }
+  .lpath .node.done .base, .lpath .node.active .base, .lpath .node.avail .base { background: var(--mod-d, var(--greenDark)); }
+  .lpath .node.locked .cap { background: #DADAE0; } .lpath .node.locked .base { background: #C2C2CC; }
+  .lpath .node.locked { cursor: default; } .lpath .node.locked .ic { opacity: .5; }
+  .lpath .node:active .cap { transform: translateY(9px); }
+
+  .lpath .ring { position: absolute; left: 50%; top: 50%; width: 106px; height: 100px;
+    transform: translate(-50%, -50%) rotate(-90deg); z-index: 1; pointer-events: none; }
+  .lpath .ring circle { fill: none; stroke-width: 8; }
+  .lpath .ring .track { stroke: rgba(0,0,0,.15); }
+  .lpath .ring .prog { stroke: var(--mod, var(--green)); stroke-linecap: round; transition: stroke-dashoffset .5s; }
+
+  .lpath .startpill { position: absolute; left: 50%; bottom: 80px; transform: translateX(-50%); z-index: 5;
+    font-family: var(--font-round); background: #fff; color: var(--mod-d, var(--greenDark)); font-weight: 800; font-size: 12px; letter-spacing: .7px;
+    padding: 8px 14px; border-radius: 13px; white-space: nowrap; box-shadow: 0 4px 0 rgba(0,0,0,.12);
+    animation: lp-bob 1.5s ease-in-out infinite; }
+  .lpath .startpill::after { content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
+    margin-top: -1px; border: 8px solid transparent; border-top-color: #fff; }
+  .lpath.has-open .startpill { display: none; }
+  @keyframes lp-bob { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-6px); } }
+
+  .lpath .pop { display: none; font-family: var(--font-round); position: absolute; left: 50%; bottom: 74px; transform: translateX(-50%); width: 244px; z-index: 6;
+    background: var(--mod, var(--green)); border-radius: 21px; padding: 16px; text-align: left; box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+  .lpath .node.open .pop { display: block; animation: lp-pop .18s ease both; }
+  .lpath .pop .t { display: block; font-size: 17px; font-weight: 800; color: #fff; line-height: 1.25; margin: 0 0 3px; }
+  .lpath .pop .s { display: block; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.85); margin: 0 0 14px; }
+  .lpath .pop .s:last-child { margin-bottom: 0; }
+  .lpath .pop .cta { display: block; background: #fff; color: var(--mod-d, var(--greenDark)); font-weight: 800; font-size: 14px; letter-spacing: .3px;
+    text-align: center; padding: 12px; border-radius: 13px; box-shadow: 0 4px 0 #c7c7cf; cursor: pointer; }
+  .lpath .pop::after { content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: -1px;
+    border: 9px solid transparent; border-top-color: var(--mod, var(--green)); }
+  .lpath .node.locked .pop { background: #5F5866; } .lpath .node.locked .pop::after { border-top-color: #5F5866; }
+  /* when a node sits near the top, open its popover downward instead (pointer flips up) */
+  .lpath .node.below .pop { bottom: auto; top: 74px; }
+  .lpath .node.below .pop::after { top: auto; bottom: 100%; margin-top: 0; margin-bottom: -1px;
+    border-top-color: transparent; border-bottom-color: var(--mod, var(--green)); }
+  .lpath .node.locked.below .pop::after { border-bottom-color: #5F5866; }
+  @keyframes lp-pop { from { opacity: 0; transform: translateX(-50%) translateY(6px) scale(.96); } to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } }
+
+  .lpath .mascot { position: absolute; top: 132px; width: 92px; height: 92px; display: flex; align-items: center; justify-content: center;
+    font-size: 52px; pointer-events: none; filter: drop-shadow(0 6px 10px rgba(0,0,0,.12)); }
+  .lpath .mascot.left { left: 4px; } .lpath .mascot.right { right: 4px; }
+
+  /* Next-lesson hero + primary CTA (Módulos entry screen) */
+  .hero {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 22px;
+    padding: 18px; margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.07);
+    animation: tr-rise .35s ease both;
+  }
+  .hero-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .hero-icon {
+    width: 56px; height: 56px; border-radius: 18px; flex: 0 0 auto;
+    background: rgba(63,170,36,.10); display: flex; align-items: center; justify-content: center;
+    animation: tr-pop .4s ease both;
+  }
+  .hero-icon-gold { background: rgba(224,168,0,.12); }
+  .hero-info { min-width: 0; }
+  .hero-kicker { font-size: 12px; font-weight: 800; letter-spacing: .8px; color: var(--green); text-transform: uppercase; margin-bottom: 3px; }
+  .hero-title { font-size: 24px; font-weight: 800; color: var(--ink); line-height: 1.15; }
+  .hero-sub { font-size: 14.5px; font-weight: 600; color: var(--muted2); margin-bottom: 16px; }
+  .hero-done { text-align: center; }
+  .hero-done .hero-icon { margin: 0 auto 12px; }
+  .hero-done .hero-sub { margin-bottom: 0; }
+  .cta-btn {
+    width: 100%; border: none; cursor: pointer; font-family: inherit;
+    background: var(--green); color: #fff; font-weight: 800; font-size: 17px;
+    padding: 15px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    /* lip color via --lip so per-module inline styles set only the COLOR; the CSS owns the
+       4px→2px offset so :active compresses the top face onto a fixed lip (top face moves, lip doesn't). */
+    box-shadow: 0 4px 0 var(--lip, #2E7D1A), 0 7px 14px rgba(0,0,0,.16);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .cta-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--lip, #2E7D1A), 0 4px 10px rgba(0,0,0,.14); }
+
+  /* Pinned "next lesson" bar at the bottom of the course screen */
+  .course-foot { flex: 0 0 auto; background: #fff; border-top: 1px solid var(--line); border-radius: 20px 20px 0 0;
+    padding: 24px 18px calc(34px + env(safe-area-inset-bottom)); box-shadow: 0 -3px 12px rgba(0,0,0,.05); }
+  .course-foot .foot-kicker { font-size: 13px; font-weight: 800; letter-spacing: .6px;
+    text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
+  .course-foot .foot-title { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.2; margin-bottom: 18px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .course-foot .cta-btn { margin: 0; }
+  .course-foot .foot-done { display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-weight: 700; color: var(--muted2); padding: 10px 0; }
+
+  .lesson-card { position: relative; min-height: 120px; }
+  .lesson-card .meta { font-size: 14.5px; font-weight: 500; color: var(--muted2); margin-bottom: 12px; }
+  .lesson-quiz-btn { margin-top: 14px; }
+  /* Completed cards have no progress bar, so tuck the button up under the subtitle */
+  .lesson-card.completed .meta { margin-bottom: 6px; }
+  .lesson-card.completed .lesson-quiz-btn { margin-top: 2px; }
+  /* Locked module card: fade the content, lock badge pinned top-right at full opacity */
+  .mod-card.locked .sec-top, .mod-card.locked .sec-bar { opacity: .4; }
+  .card-lock { position: absolute; top: 14px; right: 14px; width: 40px; height: auto; z-index: 2; }
+  .card-play { position: absolute; top: 13px; right: 15px; width: 33px; height: 33px; z-index: 2; opacity: .5; }
+  .card-play svg { width: 100%; height: 100%; display: block; }
+  .lock-img { width: 62px; height: 62px; }
+  .connector { width: 10px; height: 15px; background: var(--gray); margin: 0 auto; }
+
+  .quiz-card {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 36px;
+    padding: 20px; margin-bottom: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  }
+
+  .btn {
+    width: 100%; border: none; border-radius: 18px; padding: 14px;
+    font-family: inherit; font-size: 18px; font-weight: 700; color: #fff;
+    cursor: pointer; min-height: 52px;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:disabled { cursor: default; }
+  /* Tactile "go" buttons — darker bottom edge that depresses on tap */
+  /* Lip color via --lip so inline per-button colors set only the COLOR; the CSS keeps the
+     4px→2px offset so :active moves the top face onto a fixed lip (lip itself doesn't shift). */
+  .btn.green { background: var(--green); box-shadow: 0 4px 0 var(--lip, var(--greenDark)), 0 6px 14px rgba(0,0,0,.16); }
+  .btn.blue { background: var(--blue); box-shadow: 0 4px 0 var(--lip, var(--blueDark)), 0 6px 14px rgba(0,0,0,.16); }
+  .btn.amber { background: #FF9600; box-shadow: 0 4px 0 var(--lip, #CC7800), 0 6px 14px rgba(0,0,0,.16); }
+  .btn.amber:not(:disabled):active { transform: translateY(2px); box-shadow: 0 2px 0 var(--lip, #CC7800), 0 3px 8px rgba(0,0,0,.14); }
+  .btn.green:not(:disabled):active { transform: translateY(2px); box-shadow: 0 2px 0 var(--lip, var(--greenDark)), 0 3px 8px rgba(0,0,0,.14); }
+  .btn.blue:not(:disabled):active { transform: translateY(2px); box-shadow: 0 2px 0 var(--lip, var(--blueDark)), 0 3px 8px rgba(0,0,0,.14); }
+  .btn.green30 { background: rgba(63,170,36,.3); }
+  .btn.disabled { background: var(--gray); color: #888; }
+
+  /* Lesson content */
+  .block { margin-bottom: 8px; }
+  .titulo h1 { font-size: 27px; font-weight: 800; margin: 0 0 2px; letter-spacing: -.3px; line-height: 1.3; }
+  .titulo .tsub { font-size: 18px; font-weight: 600; color: rgba(0,0,0,.45); margin-bottom: 18px; }
+  .block-label { font-size: 18px; font-weight: 800; letter-spacing: .5px; margin-bottom: 12px; }
+  .block-label.teoria { color: #0A8FCC; }
+  .block-label.intro { color: #43992E; }
+  .accent-card { border-radius: 16px; padding: 14px; margin-bottom: 12px; border: 1.5px solid; }
+  .accent-card .ac-head { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .md { font-size: 17px; line-height: 1.6; font-weight: 500; }
+  /* Only the LESSON reading prose opts back to the legible sans; .md used in sheets/popups
+     (cierre, etc.) keeps the rounded UI font so those messages match the rest of the chrome. */
+  #lesson-body .md { font-family: var(--font-body); }
+  .md p { margin: 0 0 12px; }
+  .md strong { font-weight: 700; }
+  .md em { font-style: italic; }
+  .md h1, .md h2, .md h3, .md h4 { font-weight: 800; margin: 10px 0; line-height: 1.3; }
+  .md h1 { font-size: 24px; } .md h2 { font-size: 21px; } .md h3, .md h4 { font-size: 19px; }
+  .md ul { margin: 0 0 12px; padding-left: 22px; } .md li { margin-bottom: 6px; }
+  /* 💡 callouts — tinted rounded card matching the section/toggle style philosophy */
+  .md blockquote {
+    background: rgba(242,230,55,.16); border: none; border-radius: 14px;
+    padding: 13px 15px; margin: 16px 0; color: #612700;
+  }
+  .md blockquote p:last-child { margin-bottom: 0; }
+  /* Gridlines = translucent black (multiply: darken the bg behind);
+     header bg = translucent white (screen: lighten the bg behind). */
+  .md table { border-collapse: separate; border-spacing: 0; width: 100%; border: 2px solid rgba(0,0,0,.15); border-radius: 12px; overflow: hidden; margin: 18px 0; }
+  .md th, .md td { padding: 8px; text-align: left; font-size: 16px; border-right: 2px solid rgba(0,0,0,.15); border-bottom: 2px solid rgba(0,0,0,.15); }
+  .md th:last-child, .md td:last-child { border-right: none; }
+  .md tr:last-child td { border-bottom: none; }
+  .md thead th { background: rgba(255,255,255,.55); font-weight: 700; }
+  .md tbody td { font-weight: 400; }
+
+  .divider { height: 2px; background: var(--gray); margin: 16px 24px; }
+  .miniquiz-btn { margin: 8px 0 20px; }
+
+  /* Guidebook-style lesson formatting (≈ Duolingo "ver detalles") */
+  /* Full-bleed module-colored hero band (≈ Duolingo guidebook top section) */
+  .g-head { margin: -16px -19px 20px; padding: calc(58px + env(safe-area-inset-top)) 22px 26px;
+    color: #fff; text-align: center; }
+  .g-chip { display: inline-block; background: rgba(255,255,255,.22); color: #fff; border-radius: 10px;
+    padding: 6px 13px; font-size: 13px; font-weight: 800; letter-spacing: .3px; margin-top: 14px; }
+  .g-title { font-size: 30px; font-weight: 800; line-height: 1.12; letter-spacing: -.4px; margin: 0 0 6px; }
+  .g-sub { color: rgba(255,255,255,.92); font-size: 16.5px; font-weight: 600; line-height: 1.35; }
+  /* Lesson header overlays the hero: only the back arrow shows at top; the bar (bg +
+     title + progress) fades in once the colored hero scrolls out of view. */
+  #screen-lesson { position: relative; }
+  #screen-lesson > .appbar.appbar-col { position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+    background: transparent; border-bottom-color: transparent; pointer-events: none;
+    padding-top: calc(12px + env(safe-area-inset-top)); }
+  #screen-lesson > .appbar.appbar-col .back { pointer-events: auto; }
+  #screen-lesson > .appbar.appbar-col .back::before { background: #fff; }
+  #screen-lesson > .appbar.appbar-col #lesson-title,
+  #screen-lesson > .appbar.appbar-col .appbar-progress { opacity: 0; }
+  #screen-lesson > .appbar.appbar-col.scrolled { background: #fff; pointer-events: auto; }
+  #screen-lesson > .appbar.appbar-col.scrolled .back::before { background: var(--ink); }
+  #screen-lesson > .appbar.appbar-col.scrolled #lesson-title,
+  #screen-lesson > .appbar.appbar-col.scrolled .appbar-progress { opacity: 1; }
+  .g-cap { display: flex; align-items: center; gap: 11px; margin: 30px 0 8px; }
+  .g-cap img { height: 29px; width: auto; flex: 0 0 auto; }
+  .g-cap h3 { font-size: 21px; font-weight: 800; margin: 0; color: var(--ink); line-height: 1.2; }
+  /* Collapsible toggle headers inside lesson content (≈ Duolingo guidebook .AdHI2) */
+  .collap { border-top: 2px solid var(--line); }
+  .collap.div-hidden { border-top-color: transparent; }
+  .collap-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 2px; cursor: pointer; }
+  .collap-h h4 { font-size: 18px; font-weight: 800; margin: 0; color: var(--ink); line-height: 1.3; }
+  .collap-h h4 strong { font-weight: 800; }
+  .collap .chev { width: 22px; height: 22px; color: var(--muted2); transition: transform .2s; flex: 0 0 auto; }
+  .collap.open .chev { transform: rotate(180deg); }
+  .collap-b { display: none; padding: 0 2px 12px; }
+  .collap.open .collap-b { display: block; }
+  .collap-b .md > :first-child { margin-top: 0; }
+  .collap-b .md > :last-child { margin-bottom: 0; }
+  /* Section-level toggle headers (Misión, Introducción, Vista previa, Teoría N, …) */
+  .sec-collap .collap-h { padding: 16px 2px; }
+  .sec-collap:not(.open) .collap-h { padding-bottom: 10px; }
+  .collap-h .sc-head { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .collap-h h3 { font-size: 20px; font-weight: 800; margin: 0; color: var(--ink); line-height: 1.2; }
+  .collap-h .sc-ic { height: 27px; width: auto; flex: 0 0 auto; }
+  .collap-h .sc-ic-sm { height: 20px; }
+  .collap-h .sc-ic-m { display: inline-flex; align-items: center; flex: 0 0 auto; }
+  /* Accent sections (Misión, Vista previa, Resumen) get a tinted rounded card when open.
+     The negative side margin + equal side padding bleed the bg outward WITHOUT moving the
+     header; border-top stays (transparent) so the header keeps its exact open/closed spot. */
+  .sec-collap.accent-collap.open { background: var(--tint-bg); border-radius: 16px;
+    border-top-color: transparent; margin: 0 -10px 6px; padding: 0 10px 12px; }
+  .sec-collap.accent-collap.open .chev { color: var(--tint); }
+  .sec-collap.accent-collap .collap-b .md { font-size: 16px; }
+  /* Locked section teaser — same row layout as a section header, but greyed + a lock */
+  .locked-sec .collap-h { cursor: default; }
+  .locked-sec .sc-head { align-items: center; }
+  .locked-sec .ls-lock { height: 40px; width: auto; flex: 0 0 auto; }
+  .locked-sec h3 { font-size: 19px; font-weight: 800; margin: 0; color: var(--muted2); line-height: 1.2; }
+  .locked-sec .ls-sub { font-size: 13px; font-weight: 600; color: #9a9aa6; margin-top: 3px; }
+
+  .locked-teaser {
+    background: var(--card); border: 1px solid var(--gray); border-radius: 16px;
+    padding: 20px; margin-bottom: 20px; text-align: center;
+  }
+  .locked-teaser .lb { width: 83px; height: 83px; margin: 0 auto 16px; background: #fff;
+    border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.1); display:flex; align-items:center; justify-content:center; font-size: 40px; }
+  .locked-teaser .lt { font-size: 16px; font-weight: 700; color: #333; }
+  .locked-teaser .ls { font-size: 13px; color: #888; margin-top: 6px; white-space: pre-line; }
+
+  /* Langles banner */
+  .langles {
+    text-align: center; margin: 24px 0; cursor: pointer;
+  }
+  .langles .collab { font-size: 15px; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
+  .langles .collab-svg { width: 220px; max-width: 100%; display: block; margin: 0 auto 12px; }
+  /* White rounded container around the two logos (iso + logo); inline-flex shrink-wraps
+     it and the parent's text-align:center keeps it centered. Image sizes/gap unchanged. */
+  .langles .logos { display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    background: #fff; border-radius: 32px; padding: 14px 24px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  .langles img.iso { height: 50px; } .langles img.logo { height: 40px; }
+
+  /* Completion sheet (bottom bar) */
+  .completion {
+    flex: 0 0 auto; background: #fff; border-top: 1px solid var(--line);
+    border-top-left-radius: 22px; border-top-right-radius: 22px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,.08);
+    padding: 18px 16px calc(48px + env(safe-area-inset-bottom, 0px));
+    animation: slideup .3s ease;
+  }
+
+  /* Quiz screen */
+  .quiz-wrap { flex: 1 1 auto; display: flex; flex-direction: column; padding: 20px; overflow: hidden; }
+  .quiz-body { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; overflow-y: auto; overscroll-behavior: none; }
+  /* Quiz — segmented top progress, left-aligned question + kicker, option pills */
+  .q-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .segs { display: flex; gap: 5px; flex: 1 1 auto; }
+  .seg { flex: 1; height: 5px; border-radius: 3px; background: var(--line); transition: background .3s; }
+  .seg.done { background: var(--green); }
+  .seg.fail { background: var(--red); }
+  .seg.now { background: var(--amber); animation: seg-pulse 1.3s ease-in-out infinite; }
+  @keyframes seg-pulse { 0%,100% { background: var(--amber); } 50% { background: var(--line); } }
+  .q-counter { font-size: 13px; font-weight: 800; color: var(--muted); flex: 0 0 auto; min-width: 36px; text-align: right; }
+  .q-kicker { font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin: 0 0 10px; }
+  .q-question {
+    font-size: 23px; font-weight: 800; text-align: left; color: var(--ink);
+    line-height: 1.3; margin-bottom: 22px;
+  }
+  .q-options { display: flex; flex-direction: column; gap: 11px; }
+  .opt {
+    border: 2px solid var(--line); background: #fff; border-radius: 16px; color: var(--ink);
+    padding: 16px 18px; font-size: 17px; font-weight: 700; text-align: left; cursor: pointer; font-family: inherit;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .opt:disabled { cursor: default; }
+  /* Always reserve the icon slot (fixed size) so showing the check/x never re-flows the card */
+  .opt .opt-ic { flex: 0 0 22px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .opt.sel { background: rgba(28,176,246,.10); border-color: var(--blue); color: var(--blue); }
+  .opt.correct { background: rgba(63,170,36,.12); border-color: var(--green); color: var(--greenDark); }
+  .opt.wrong { background: rgba(244,67,54,.08); border-color: var(--red); color: #B3261E; }
+
+  .fb-slot { height: 48px; margin: 14px 2px 2px; display: flex; align-items: flex-start; overflow: hidden; }
+  /* Pin the quiz action button to the bottom, lifted off the edge for safe areas */
+  .quiz-body > .btn, .quiz-host > .btn { margin-top: auto; margin-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
+  .fb-line { font-size: 16px; font-weight: 800; line-height: 1.4; text-align: left; animation: fbFade .25s ease; }
+  .fb-line.ok { color: var(--greenDark); }
+  .fb-line.no { color: #B3261E; }
+  @keyframes fbFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* Rebuild quiz */
+  .speaker {
+    width: 100px; height: 100px; margin: 0 auto 20px; border-radius: 20px;
+    background: rgba(28,176,246,.1); border: 2px solid rgba(28,176,246,.33); color: var(--blue);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-size: 40px;
+  }
+  .speaker .lbl { font-size: 13px; font-weight: 600; margin-top: 4px; }
+  .speaker .spk-svg { display: block; transform-origin: center center; }
+  .speaker.playing { background: rgba(28,176,246,.16); }
+  .speaker.playing .spk-svg { animation: spk-vib .28s ease-in-out infinite; }
+  @keyframes spk-vib { 0%,100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+  .speaker.spent { background: #f5f5f5; border-color: #e2e2e2; color: #bbb; cursor: default; }
+  .answer-area {
+    /* Pre-sized to exactly one chip row (chip 39px + 20px padding + 3px border)
+       so dropping the first chip doesn't nudge the height. */
+    min-height: 62px; padding: 10px 12px; background: var(--card); border: 1.5px solid var(--gray);
+    border-radius: 16px; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px; margin-bottom: 20px;
+  }
+  /* Mini-quiz renders inside the white sheet → keep the rebuild answer area white. */
+  .sheet .answer-area { background: #fff; }
+  .word-chip {
+    background: #fff; border: 1.5px solid var(--gray); border-radius: 10px; padding: 8px 14px;
+    font-size: 16px; line-height: 20px; font-weight: 600; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
+  .blocks { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .block-chip {
+    background: #fff; border: 1.5px solid var(--gray); border-radius: 12px; padding: 10px 16px;
+    font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 3px rgba(0,0,0,.08); color: #333;
+  }
+  .block-chip.used { opacity: .35; background: #eee; color: #999; cursor: default; box-shadow: none; }
+
+  /* Tap-to-highlight */
+  .tokens { display: flex; flex-wrap: wrap; gap: 10px 12px; justify-content: center; }
+  .token {
+    border: 2px solid var(--gray); background: #fff; border-radius: 14px; padding: 12px 18px;
+    font-size: 19px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 3px rgba(0,0,0,.08); transition: all .2s;
+  }
+  .token.sel { background: var(--red2); border-color: var(--red2); color: #fff; }
+  .token.err { background: var(--red2); border-color: var(--red2); color: #fff; }
+  .token.dim { background: #d6d6d6; border-color: #aaa; color: #fff; }
+
+  /* Modal sheet */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+    align-items: flex-end; z-index: 50;
+  }
+  .overlay.active { display: flex; }
+  /* Question sheet is full-size; the intermediate (Repasemos / success / fallaste)
+     sheets adapt to their content height. */
+  .sheet {
+    background: #fff; width: 100%; border-radius: 20px 20px 0 0; max-height: 94%; min-height: 80%;
+    display: flex; flex-direction: column; padding: 16px 20px calc(28px + env(safe-area-inset-bottom)); animation: slideup .25s ease;
+  }
+  .sheet.result { min-height: 0; }
+  /* Lift both sheets' action buttons 6px so the chunky bottom lip clears the quiz-host
+     overflow clip (the result button matches it to stay aligned). */
+  .sheet.result .btn { margin-bottom: 6px; }
+  @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .sheet .handle { position: relative; width: 40px; height: 5px; background: var(--gray); border-radius: 3px; margin: 2px auto 16px; cursor: grab; touch-action: none; }
+  .sheet .handle::before { content: ''; position: absolute; left: -60px; right: -60px; top: -14px; bottom: -14px; }
+  .sheet .handle:active { cursor: grabbing; }
+  /* Confirmation popup, layered above the quiz sheet */
+  .confirm-pop { position: fixed; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.45); padding: 24px; }
+  .confirm-pop.show { display: flex; }
+  .confirm-card { background: #fff; border-radius: 20px; padding: 22px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,.25); animation: tr-pop .2s ease both; }
+  .confirm-card .confirm-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--ink); }
+  .confirm-card .confirm-sub { font-size: 15px; color: var(--muted); margin-bottom: 18px; line-height: 1.4; }
+  .confirm-card .btn { margin-top: 8px; }
+  .sheet h3 { text-align: center; font-size: 20px; font-weight: 800; margin: 0 0 16px; }
+  .sheet .quiz-host { flex: 1 1 auto; overflow-y: auto; display: flex; flex-direction: column; overscroll-behavior: none; }
+  /* The shared `.quiz-host > .btn` rule adds margin-bottom: 30px+safe for the FULL-SCREEN
+     final quiz (no sheet padding there). Inside the sheet the 28px padding already covers
+     it, so the extra margin makes the question button float ~30px above the result sheets'
+     button. Drop it here so both buttons share the same gap to the bottom. */
+  .sheet .quiz-host > .btn { margin-top: auto; margin-bottom: 6px; }
+  .center-col { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .big-emoji { font-size: 22px; }
+
+  /* Quiz result / success message */
+  .result-icon {
+    width: 84px; height: 84px; border-radius: 50%; margin: 4px auto 18px;
+    display: flex; align-items: center; justify-content: center;
+    animation: tr-pop .45s ease both;
+  }
+  .result-icon.ok { background: rgba(63,170,36,.12); }
+  .result-icon.no { background: rgba(0,0,0,.05); }
+  .result-title { font-size: 26px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  .result-sub { font-size: 17px; font-weight: 500; color: var(--muted); white-space: pre-line; line-height: 1.5; margin-bottom: 24px; }
+
+  /* ===== MI PROGRESO (student dashboard) ===== */
+  /* Streak chip in the course app bar — doubles as the entry to "Mi progreso" */
+  .streak-chip { border: 2px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 13px;
+    font-family: inherit; font-size: 15px; font-weight: 800; color: var(--ink); cursor: pointer;
+    display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+  .streak-chip:active { background: var(--card); }
+  .pg-hero { cursor: default; }
+  .pg-hero .pg-row { display: flex; align-items: center; gap: 16px; }
+  .pg-ring { position: relative; width: 104px; height: 104px; flex: 0 0 auto; }
+  .pg-ring svg { transform: rotate(-90deg); display: block; }
+  .pg-ring circle { fill: none; stroke-width: 10; }
+  .pg-ring .track { stroke: #EDEDF1; }
+  .pg-ring .prog { stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .pg-ring .cap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .pg-ring .cap b { font-size: 27px; font-weight: 800; line-height: 1; }
+  .pg-ring .cap span { font-size: 12px; font-weight: 700; color: var(--muted2); margin-top: 2px; }
+  .pg-info { min-width: 0; flex: 1 1 auto; }
+  .pg-hello { font-size: 21px; font-weight: 800; margin: 0 0 2px; }
+  .pg-sub { font-size: 14.5px; font-weight: 600; color: var(--muted2); margin-bottom: 11px; }
+  .pg-track { display: flex; gap: 5px; }
+  .pg-track .tk { flex: 1; text-align: center; font-size: 11px; font-weight: 800; color: var(--muted2);
+    padding: 5px 0; border-radius: 9px; background: var(--card); border: 1.5px solid var(--line); }
+  .pg-track .tk.done { background: var(--green); border-color: var(--green); color: #fff; }
+  .pg-track .tk.now { background: var(--amber); border-color: var(--amber); color: #5A3D00; }
+  .pg-band { display: flex; gap: 10px; margin-bottom: 14px; }
+  .pg-chip { flex: 1; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 11px 8px;
+    text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.05); animation: tr-rise .3s ease both; }
+  .pg-chip .em { display: block; font-size: 20px; margin-bottom: 2px; }
+  .pg-chip .k { font-size: 17px; font-weight: 800; }
+  .pg-chip .l { font-size: 11.5px; font-weight: 700; color: var(--muted2); margin-top: 1px; }
+  .pg-flame { display: flex; align-items: center; gap: 9px; background: rgba(244,167,32,.14);
+    border: 1.5px solid rgba(244,167,32,.34); border-radius: 15px; padding: 8px 14px 8px 12px; flex: 0 0 auto; }
+  .pg-flame .fl { font-size: 26px; line-height: 1; }
+  .pg-flame .txt { display: flex; flex-direction: column; }
+  .pg-flame b { font-size: 22px; font-weight: 800; line-height: 1; color: var(--amberInk); }
+  .pg-flame span { font-size: 11px; font-weight: 700; color: var(--muted2); line-height: 1; margin-top: 3px; white-space: nowrap; }
+  .pg-sect-t { font-size: 17px; font-weight: 800; margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; }
+  .pg-sect-t .lnk { font-size: 13px; font-weight: 800; color: var(--blue); }
+  .pg-skill { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .pg-skill:last-child { margin-bottom: 2px; }
+  .pg-skill .sic { width: 38px; height: 38px; border-radius: 12px; background: var(--card); border: 1.5px solid var(--line);
+    display: flex; align-items: center; justify-content: center; font-size: 18px; flex: 0 0 auto; }
+  .pg-skill .sbar { flex: 1 1 auto; min-width: 0; }
+  .pg-skill .slab { display: flex; justify-content: space-between; font-size: 14.5px; font-weight: 700; margin-bottom: 5px; }
+  .pg-skill .slab i { font-style: normal; color: var(--muted2); font-weight: 700; }
+  .pg-meter { height: 10px; border-radius: 99px; background: var(--gray); overflow: hidden; }
+  .pg-meter i { display: block; height: 100%; border-radius: 99px; background: var(--blue); }
+  .pg-medal { font-size: 18px; flex: 0 0 auto; }
+  .pg-mission { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+  .pg-mission + .pg-mission { border-top: 1.5px solid var(--line); }
+  .pg-mission:last-child { padding-bottom: 2px; }
+  .pg-mission .mbox { width: 26px; height: 26px; border-radius: 8px; border: 2.5px solid var(--gray); flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; font-weight: 800; }
+  .pg-mission.done .mbox { background: var(--green); border-color: var(--green); }
+  .pg-mission.done .mt { color: var(--muted2); }
+  .pg-mission .mt { flex: 1 1 auto; font-size: 15px; font-weight: 700; min-width: 0; }
+  .pg-mission .mt small { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted2); }
+  .pg-mission .mxp { font-size: 13px; font-weight: 800; color: var(--amberInk); background: rgba(244,167,32,.18);
+    padding: 4px 9px; border-radius: 9px; flex: 0 0 auto; }
+  .pg-lbr { display: flex; align-items: center; gap: 11px; padding: 10px 2px; }
+  .pg-lbr + .pg-lbr { border-top: 1.5px solid var(--line); }
+  .pg-lbr .pos { width: 18px; font-size: 14px; font-weight: 800; color: var(--muted2); flex: 0 0 auto; }
+  .pg-lbr .av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 13px; font-weight: 800; flex: 0 0 auto; }
+  .pg-lbr .nm { flex: 1 1 auto; font-size: 15px; font-weight: 700; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pg-lbr .xp { font-size: 13.5px; font-weight: 800; color: var(--muted2); flex: 0 0 auto; }
+  .pg-lbr.me { background: rgba(28,176,246,.10); margin: 0 -8px; padding: 10px 10px; border-radius: 12px; }
+  .pg-lbr.me .nm { color: var(--blueDark); }
+  .pg-cert { background: linear-gradient(120deg, #7C1C56, #A3286F); color: #fff; border: none;
+    display: flex; align-items: center; gap: 13px; position: relative; overflow: hidden; cursor: default; }
+  .pg-cert::after { content: "🎓"; position: absolute; right: -4px; bottom: -16px; font-size: 72px; opacity: .18; }
+  .pg-cert .lk { font-size: 24px; flex: 0 0 auto; }
+  .pg-cert b { display: block; font-size: 16px; }
+  .pg-cert p { margin: 2px 0 0; font-size: 12.5px; opacity: .9; }
+  .pg-cert .go { margin-left: auto; z-index: 1; font-size: 12.5px; font-weight: 800; background: var(--amber); color: #5A3D00;
+    padding: 6px 10px; border-radius: 9px; white-space: nowrap; flex: 0 0 auto; }
+
+  /* ===== ONBOARDING (first run — no saved profile) =====
+     Busi greets and asks for the user's data one question at a time, in the same
+     visual language as the rest of the app (speech bubble + chunky buttons +
+     quiz-style option pills). Profile is saved to localStorage (PROFILE_KEY). */
+  #screen-onboard { background: #fff; }
+  .ob-wrap { flex: 1 1 auto; display: flex; flex-direction: column; width: 100%; max-width: 470px;
+    margin: 0 auto; padding: calc(12px + env(safe-area-inset-top)) 20px calc(30px + env(safe-area-inset-bottom));
+    overflow-y: auto; }
+  .ob-top { display: flex; align-items: center; gap: 12px; min-height: 40px; margin-bottom: 14px; transition: opacity .4s ease; }
+  .ob-top .back { visibility: hidden; }
+  .ob-top.can-back .back { visibility: visible; }
+  .ob-top .segs { flex: 1 1 auto; }
+  /* Busi + speech bubble ("talk row") — bear planted left, bubble at head height */
+  .ob-talk { display: flex; align-items: flex-end; gap: 14px; margin-bottom: 24px; }
+  .ob-bear { position: relative; flex: 0 0 auto; width: 96px; height: 141px; }
+  .ob-bubble { position: relative; flex: 1 1 auto; background: #fff; border: 2px solid var(--line);
+    border-radius: 18px; padding: 14px 16px; margin-bottom: 34px;
+    font-size: 18px; font-weight: 800; line-height: 1.35; color: var(--ink); animation: tr-pop .25s ease both; }
+  /* bubble tail: two stacked triangles (line color under white) pointing at Busi */
+  .ob-bubble::before { content: ''; position: absolute; left: -20px; bottom: 16px; border: 10px solid transparent; border-right-color: var(--line); }
+  .ob-bubble::after  { content: ''; position: absolute; left: -15px; bottom: 17px; border: 9px solid transparent; border-right-color: #fff; }
+  .ob-body { flex: 1 1 auto; display: flex; flex-direction: column; }
+  /* Step-0 hero: Ozzy + bubble enlarged and centered, no progress bar, no logo.
+     On continue, obFlip() morphs both elements to the resting talk-row layout. */
+  .ob-intro .ob-top { opacity: 0; pointer-events: none; }
+  .ob-intro .ob-talk { flex: 1 1 auto; flex-direction: column-reverse; align-items: center; justify-content: center; gap: 22px; margin-bottom: 0; }
+  .ob-intro .ob-body { flex: 0 0 auto; }
+  .ob-intro .ob-bear { width: 172px; height: 253px; }
+  .ob-intro .ob-bubble { flex: 0 0 auto; margin-bottom: 0; font-size: 22px; text-align: center; max-width: 320px; }
+  /* intro tail points DOWN toward Ozzy (bubble sits above him) */
+  .ob-intro .ob-bubble::before { left: 50%; top: 100%; bottom: auto; transform: translateX(-50%);
+    border: 11px solid transparent; border-bottom: 0; border-top-color: var(--line); }
+  .ob-intro .ob-bubble::after { left: 50%; top: 100%; bottom: auto; transform: translateX(-50%); margin-top: -2px;
+    border: 9px solid transparent; border-bottom: 0; border-top-color: #fff; }
+  .ob-step { display: none; flex: 1 1 auto; flex-direction: column; }
+  .ob-step.on { display: flex; animation: tr-fade .25s ease; }
+  .ob-brandbox { text-align: center; margin: 2px 0 20px; }
+  .ob-brandbox .brand { font-size: 1.7em; }
+  .ob-tag { font-size: 13.5px; font-weight: 700; color: var(--muted2); margin-top: 5px; }
+  .ob-points { display: flex; flex-direction: column; gap: 10px; }
+  .ob-point { display: flex; align-items: center; gap: 12px; background: #fff; border: 1.5px solid var(--line);
+    border-radius: 16px; padding: 13px 15px; font-size: 15.5px; font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05); animation: tr-rise .3s ease both; }
+  .ob-point .em { font-size: 24px; flex: 0 0 auto; }
+  /* payoff variant: colored icon tile + stacked title/subtitle */
+  .ob-point.big { align-items: center; gap: 14px; padding: 15px 16px; border-width: 2px; border-radius: 18px; }
+  .ob-point.big .em { width: 52px; height: 52px; border-radius: 15px; font-size: 26px; margin: 0;
+    display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .ob-point.big.p1 .em { background: rgba(184,117,245,.18); }
+  .ob-point.big.p2 .em { background: rgba(28,176,246,.15); }
+  .ob-point.big.p3 .em { background: rgba(244,167,32,.18); }
+  /* color-code each value prop by its accent */
+  .ob-point.big.p1 { border-color: rgba(184,117,245,.42); background: rgba(184,117,245,.07); }
+  .ob-point.big.p2 { border-color: rgba(28,176,246,.40); background: rgba(28,176,246,.06); }
+  .ob-point.big.p3 { border-color: rgba(244,167,32,.44); background: rgba(244,167,32,.07); }
+  .ob-point.big.p1 b { color: #7c3fd0; }
+  .ob-point.big.p2 b { color: var(--blueDark); }
+  .ob-point.big.p3 b { color: #b5730a; }
+  .ob-point b { display: block; font-size: 16.5px; font-weight: 800; }
+  .ob-point small { display: block; font-size: 13.5px; font-weight: 600; color: var(--muted2); margin-top: 3px; line-height: 1.3; }
+  .ob-input { width: 100%; border: 2px solid var(--line); border-radius: 16px; padding: 16px 18px;
+    font-family: inherit; font-size: 20px; font-weight: 700; color: var(--ink); background: var(--card);
+    text-align: center; outline: none; }
+  .ob-input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(28,176,246,.15); }
+  .ob-opts { display: flex; flex-direction: column; gap: 11px; }
+  .ob-opt { border: 2px solid var(--line); background: #fff; border-radius: 16px; padding: 14px 17px;
+    font-family: inherit; font-size: 17px; font-weight: 700; color: var(--ink); text-align: left; cursor: pointer;
+    display: flex; align-items: center; gap: 13px; box-shadow: 0 2px 0 var(--line);
+    transition: transform .1s ease; }
+  .ob-opt:active { transform: translateY(1px); }
+  .ob-opt .em { font-size: 27px; flex: 0 0 auto; }
+  .ob-opt small { display: block; font-size: 13.5px; font-weight: 600; color: var(--muted2); }
+  .ob-opt.sel { border-color: var(--blue); background: rgba(28,176,246,.10); color: var(--blue); box-shadow: 0 2px 0 rgba(28,176,246,.45); }
+  .ob-opt.sel small { color: var(--blue); opacity: .75; }
+  /* onboarding progress: current segment pulses BLUE (quiz keeps its amber) */
+  #ob-segs .seg.now { background: var(--blue); animation: ob-seg-pulse 1.3s ease-in-out infinite; }
+  @keyframes ob-seg-pulse { 0%,100% { background: var(--blue); } 50% { background: var(--line); } }
+  .ob-sum { display: flex; gap: 12px; margin: 6px 0 16px; }
+  .ob-sum .ob-chip { flex: 1; border: 2px solid; border-radius: 18px; padding: 16px 10px 14px; text-align: center;
+    animation: tr-pop .3s ease both; }
+  .ob-sum .ob-chip .em { display: block; font-size: 30px; line-height: 1; margin-bottom: 7px; }
+  .ob-sum .ob-chip .lb { display: block; font-size: 19px; font-weight: 800; line-height: 1.1; }
+  .ob-sum .ob-chip .sb { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
+    color: var(--muted2); margin-top: 5px; }
+  .ob-sum .ob-chip.lvl { background: rgba(28,176,246,.10); border-color: rgba(28,176,246,.32); }
+  .ob-sum .ob-chip.lvl .lb { color: var(--blueDark); }
+  .ob-sum .ob-chip.goal { background: rgba(244,167,32,.13); border-color: rgba(244,167,32,.34); }
+  .ob-sum .ob-chip.goal .lb { color: var(--amberInk); }
+  /* the last step shows the real course-foot bar pinned at the bottom (#ob-foot) */
+  #screen-onboard .course-foot { margin-top: auto; }
+
+  /* ===== PLACEMENT TEST (#screen-placement) ===== */
+  .pl-meta { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: var(--muted2); }
+  .pl-qtext { font-size: 20px; font-weight: 800; line-height: 1.45; margin: 2px 0 16px; color: var(--ink); }
+  .pl-qtext .gap { color: var(--blue); }
+  #screen-placement .ob-bubble { font-size: 15.5px; }
+  #screen-placement .btn { margin-top: auto; }
+  /* result */
+  .pl-cap { text-align: center; font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--muted2); }
+  .pl-lv { text-align: center; font-size: 54px; font-weight: 800; color: var(--green); line-height: 1; margin: 4px 0 2px; }
+  .pl-desc { text-align: center; font-size: 14.5px; font-weight: 600; color: var(--muted); margin: 6px auto 18px; max-width: 300px; }
+  .pl-prof { display: flex; flex-direction: column; gap: 9px; }
+  .pl-prow { display: flex; align-items: center; gap: 11px; }
+  .pl-prow .lb { width: 26px; font-size: 13px; font-weight: 800; color: var(--muted2); }
+  .pl-prow .track { flex: 1; height: 10px; border-radius: 99px; background: var(--gray); overflow: hidden; }
+  .pl-prow .track i { display: block; height: 100%; border-radius: 99px; background: var(--green); }
+  .pl-prow .track i.low { background: var(--amber); } .pl-prow .track i.bad { background: var(--red); }
+  .pl-prow .n { width: 36px; text-align: right; font-size: 12.5px; font-weight: 700; color: var(--muted2); }
+
+  /* ===== PLACEMENT CELEBRATION overlay ===== */
+  .celebrate { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center;
+    background: rgba(26,26,26,.55); animation: tr-fade .3s ease; padding: 24px; }
+  .cel-card { background: #fff; border-radius: 26px; padding: 30px 26px; max-width: 340px; width: 100%; text-align: center;
+    box-shadow: 0 24px 70px rgba(0,0,0,.35); animation: tr-pop .4s ease both; position: relative; z-index: 2; }
+  .cel-emoji { font-size: 54px; line-height: 1; animation: tr-pop .55s ease both; }
+  .cel-kick { font-size: 13px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--green); margin-top: 8px; }
+  .cel-lv { font-size: 40px; font-weight: 800; color: var(--ink); line-height: 1; margin: 4px 0 16px; }
+  .cel-track { display: flex; gap: 7px; justify-content: center; margin-bottom: 22px; }
+  .cel-tk { width: 46px; height: 40px; border-radius: 12px; background: var(--green); color: #fff; font-weight: 800; font-size: 15px;
+    display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(.5);
+    animation: cel-pop .42s cubic-bezier(.22,1.5,.4,1) forwards; }
+  @keyframes cel-pop { to { opacity: 1; transform: scale(1); } }
+  .cel-confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+  .cel-confetti i { position: absolute; top: -12px; width: 9px; height: 15px; border-radius: 2px; animation: cel-fall 1.9s linear forwards; }
+  @keyframes cel-fall { to { transform: translateY(112vh) rotate(540deg); opacity: .5; } }
+  @media (prefers-reduced-motion: reduce) { .cel-tk, .cel-confetti i, .cel-emoji, .cel-card { animation: none !important; opacity: 1 !important; transform: none !important; } }
+  #screen-onboard .btn { margin-top: auto; }
+
+  /* DEBUG-only floating buttons (reset progress / complete lesson / undo).
+     Shown only when body.debug-fabs is set — see the startup code near the
+     bottom of the page. Remove that class toggle to hide them for a demo. */
+  .debug-fab {
+    position: fixed; right: 14px; bottom: 78px; z-index: 60;
+    width: 44px; height: 44px; border-radius: 50%; cursor: pointer; padding: 0;
+    background: rgba(26,26,26,.55); border: 1.5px dashed rgba(255,255,255,.7);
+    display: none; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,.3);
+    opacity: .2; transition: opacity .15s;
+  }
+  body.debug-fabs .debug-fab { display: flex; }
+  .debug-fab svg { width: 22px; height: 22px; fill: #fff; pointer-events: none; }
+  .debug-fab { touch-action: none; }
+  .debug-fab:active { background: rgba(26,26,26,.8); opacity: 1; }
+  .debug-fab.mq { bottom: 130px; }
+  .debug-fab.undo { bottom: 182px; }
+  .debug-fab.wipe { bottom: 234px; }
+  /* The FABs are z-index:60, above the quiz overlay/sheet (z-index:50) and pinned
+     bottom-right — exactly where the quiz's Confirmar/Siguiente button sits. Hide
+     them whenever a sheet (mini-quiz, cierre, dialog) or the final-quiz screen is
+     open, so they can't steal taps from the quiz button.
+     ORDER MATTERS: body.in-quiz ties with body.debug-fabs on specificity and only
+     wins because it comes later — keep these two hide rules AFTER that rule. */
+  .overlay.active ~ .debug-fab { display: none; }
+  body.in-quiz .debug-fab { display: none; }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- COURSE (entry screen — the single-course landing was removed as redundant) -->
+  <section id="screen-course" class="screen active">
+    <div class="appbar"><img class="appbar-en" src="head.png" alt=""><div class="title" id="course-title"></div>
+      <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()">🔥<b id="streak-n">0</b></button>
+    </div>
+    <div class="scroll"><div class="pad" id="course-body"></div></div>
+    <div class="course-foot" id="course-foot"></div>
+  </section>
+
+  <!-- MI PROGRESO (student dashboard — everything shown is real tracked data:
+       streak from PROGRESS.__days, level/lesson state from PROGRESS, goal from
+       the onboarding profile) -->
+  <section id="screen-progress" class="screen">
+    <div class="appbar"><button class="back" data-nav="course" aria-label="Atrás"></button><div class="title">Mi progreso</div></div>
+    <div class="scroll"><div class="pad" id="progress-body"></div></div>
+  </section>
+
+  <!-- MODULE -->
+  <section id="screen-module" class="screen">
+    <div class="appbar appbar-col appbar-module">
+      <div class="appbar-row"><button class="back" data-nav="course" aria-label="Atrás"></button>
+        <div class="mod-head"><div class="mod-kicker" id="module-kicker"></div><div class="title" id="module-title"></div></div>
+      </div>
+    </div>
+    <div class="scroll"><div class="pad" id="module-body"></div></div>
+  </section>
+
+  <!-- LESSON -->
+  <section id="screen-lesson" class="screen">
+    <div class="appbar appbar-col">
+      <div class="appbar-row"><button class="back" data-nav="module" aria-label="Atrás"></button><div class="title" id="lesson-title"></div></div>
+      <div class="appbar-progress"><div class="pbar"><div class="fill" id="lesson-bar-fill"></div><div class="pct" id="lesson-bar-pct"></div></div></div>
+    </div>
+    <div class="scroll" id="lesson-scroll"><div class="pad" id="lesson-body"></div></div>
+    <div class="completion" id="lesson-completion"></div>
+  </section>
+
+  <!-- ONBOARDING (first run — shown at boot when there is no saved profile;
+       Busi presents the app and collects name + daily goal one question at a
+       time. See the "Onboarding" script block near the bottom.) -->
+  <section id="screen-onboard" class="screen">
+    <div class="ob-wrap">
+      <div class="ob-top"><button class="back" id="ob-back" aria-label="Atrás"></button><div class="segs" id="ob-segs"></div></div>
+      <div class="ob-talk">
+        <div class="tr-bear ob-bear" aria-hidden="true"><div class="shadow"></div><div class="bear">
+          <div class="group torso"><img class="layer body" src="body.svg" alt=""></div>
+          <img class="layer rightleg" src="rightleg.svg" alt="">
+          <img class="layer leftleg" src="leftleg.svg" alt="">
+          <div class="group torso">
+            <img class="layer div" src="div.svg" alt="">
+            <img class="layer leftarm" src="leftarm.svg" alt="">
+            <img class="layer rightarm" src="rightarm.svg" alt="">
+            <img class="layer head" src="head.svg" alt="">
+            <div class="glassesfollow"><img class="layer glasses" src="glasses.svg" alt=""></div>
+            <img class="layer bowtie" src="bowtie.svg" alt="">
+            <img class="layer tummy" src="tummy.svg" alt="">
+          </div>
+        </div></div>
+        <div class="ob-bubble" id="ob-bubble"></div>
+      </div>
+      <div class="ob-body">
+        <!-- 0 · saludo (hero: Ozzy + globo grandes y centrados; se transforman
+             a su sitio de descanso al continuar — ver obFlip) -->
+        <div class="ob-step" data-step="0"></div>
+        <!-- 1 · motivación (tap para avanzar) -->
+        <div class="ob-step" data-step="1">
+          <div class="ob-opts">
+            <button class="ob-opt" data-mot="🧠 Ejercitar mi mente"><span class="em">🧠</span><span>Ejercitar mi mente</span></button>
+            <button class="ob-opt" data-mot="📚 Impulsar mis estudios"><span class="em">📚</span><span>Impulsar mis estudios</span></button>
+            <button class="ob-opt" data-mot="🌍 Conectar con personas"><span class="em">🌍</span><span>Conectar con personas</span></button>
+            <button class="ob-opt" data-mot="✈️ Prepararme para viajar"><span class="em">✈️</span><span>Prepararme para viajar</span></button>
+            <button class="ob-opt" data-mot="💼 Impulsar mi carrera"><span class="em">💼</span><span>Impulsar mi carrera</span></button>
+            <button class="ob-opt" data-mot="🎉 Por diversión"><span class="em">🎉</span><span>Por diversión</span></button>
+          </div>
+        </div>
+        <!-- 2 · ubicación: tomar el test (placement) o empezar de cero -->
+        <div class="ob-step" data-step="2">
+          <div class="ob-opts">
+            <button class="ob-opt" data-choice="test"><span class="em">🎯</span><span>Tomar el test de ubicación<small>Te ubicamos en tu nivel exacto</small></span></button>
+            <button class="ob-opt" data-choice="skip"><span class="em">🌱</span><span>Empezar desde cero<small>Desde el nivel A1</small></span></button>
+          </div>
+        </div>
+        <!-- 3 · nombre -->
+        <div class="ob-step" data-step="3">
+          <input class="ob-input" id="ob-name" placeholder="Escribe tu nombre" maxlength="24" autocomplete="off">
+        </div>
+        <!-- 4 · payoff (lo que lograrás) -->
+        <div class="ob-step" data-step="4">
+          <div class="ob-points">
+            <div class="ob-point big p1"><span class="em">💬</span><div><b>Conversa con confianza</b><small>Practica conversación y comprensión relajadamente</small></div></div>
+            <div class="ob-point big p2"><span class="em">🔤</span><div><b>Expande tu vocabulario</b><small>Palabras comunes y frases útiles</small></div></div>
+            <div class="ob-point big p3"><span class="em">⏰</span><div><b>Crea un hábito de aprendizaje</b><small>Recordatorios, misiones y una racha que cuidar</small></div></div>
+          </div>
+        </div>
+        <!-- 5 · meta diaria (tap para avanzar) -->
+        <div class="ob-step" data-step="5">
+          <div class="ob-opts">
+            <button class="ob-opt" data-goal="5"><span class="em">⚡</span><span>5 min al día<small>Relajado</small></span></button>
+            <button class="ob-opt" data-goal="10"><span class="em">🔥</span><span>10 min al día<small>Normal</small></span></button>
+            <button class="ob-opt" data-goal="15"><span class="em">🚀</span><span>15 min al día<small>Serio</small></span></button>
+            <button class="ob-opt" data-goal="20"><span class="em">💪</span><span>20 min al día<small>Intenso</small></span></button>
+          </div>
+        </div>
+        <!-- 6 · listo -->
+        <div class="ob-step" data-step="6">
+          <div class="ob-sum" id="ob-sum"></div>
+        </div>
+        <button class="btn green" id="ob-next">¡Empecemos!</button>
+      </div>
+    </div>
+    <!-- last-step footer: the real "tu primera lección" bar; its CTA drops into the lesson -->
+    <div class="course-foot" id="ob-foot" hidden></div>
+  </section>
+
+  <!-- PLACEMENT TEST (test de ubicación) — launched from onboarding step 2;
+       item bank + scoring in placement.js, Ozzy + app styling here. -->
+  <section id="screen-placement" class="screen">
+    <div class="ob-wrap">
+      <div class="ob-top" style="flex-direction:column;align-items:stretch;gap:7px">
+        <div class="pbar" style="height:10px"><div class="fill" id="pl-bar" style="width:0"></div></div>
+        <div class="pl-meta"><span id="pl-count">Pregunta 1</span><span id="pl-time">0:00</span></div>
+      </div>
+      <div class="ob-talk">
+        <div class="tr-bear ob-bear" aria-hidden="true"><div class="shadow"></div><div class="bear">
+          <div class="group torso"><img class="layer body" src="body.svg" alt=""></div>
+          <img class="layer rightleg" src="rightleg.svg" alt="">
+          <img class="layer leftleg" src="leftleg.svg" alt="">
+          <div class="group torso">
+            <img class="layer div" src="div.svg" alt="">
+            <img class="layer leftarm" src="leftarm.svg" alt="">
+            <img class="layer rightarm" src="rightarm.svg" alt="">
+            <img class="layer head" src="head.svg" alt="">
+            <div class="glassesfollow"><img class="layer glasses" src="glasses.svg" alt=""></div>
+            <img class="layer bowtie" src="bowtie.svg" alt="">
+            <img class="layer tummy" src="tummy.svg" alt="">
+          </div>
+        </div></div>
+        <div class="ob-bubble" id="pl-bubble"></div>
+      </div>
+      <div class="ob-body">
+        <div id="pl-q">
+          <div class="pl-qtext" id="pl-qtext"></div>
+          <div class="q-options" id="pl-opts"></div>
+        </div>
+        <div id="pl-result" hidden></div>
+      </div>
+      <button class="btn green" id="pl-next" disabled>Continuar</button>
+    </div>
+  </section>
+
+  <!-- FINAL QUIZ -->
+  <section id="screen-quiz" class="screen">
+    <div class="appbar">
+      <button class="back" data-nav="lesson" aria-label="Atrás"></button>
+      <div class="segs" id="quiz-segs"></div>
+      <span class="q-counter" id="quiz-counter"></span>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-body" id="quiz-host"></div>
+    </div>
+  </section>
+</div>
+
+<!-- Mini-quiz / dialog overlay -->
+<div class="overlay" id="overlay"><div class="sheet" id="sheet"></div></div>
+
+<!-- DEBUG buttons (dev only — display:none unless body.debug-fabs is set at
+     startup). Stacked bottom-right; auto-hidden during quizzes by the
+     .debug-fab rules. -->
+<button class="debug-fab" title="Completar lección" aria-label="Completar lección" onclick="debugFinishNextMiniQuiz()">
+  <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+</button>
+<button class="debug-fab mq" title="Reiniciar progreso" aria-label="Reiniciar progreso" onclick="resetProgress()">
+  <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+</button>
+<button class="debug-fab undo" title="Deshacer último quiz" aria-label="Deshacer último quiz" onclick="debugUndoLastQuiz()">
+  <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+</button>
+<button class="debug-fab wipe" title="Borrar TODO (progreso + perfil) y ver el onboarding" aria-label="Borrar todos los datos" onclick="resetAllData()">
+  <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+</button>
+
+<!-- (Rive runtime + wasm + Busi .riv removed — the module mascot is now the pure-CSS/SVG
+     "TuRuta Bear", so there is no Rive dependency to load. rive.js / rive_wasm.js /
+     busi_act_riv.js remain in the folder but are no longer referenced.) -->
+<script src="data.js"></script>
+<script src="data_modulo3.js"></script>
+<script src="data_modulo4.js"></script>
+<script src="data_modulo5.js"></script>
+<script src="placement.js"></script>
+<script>
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Markdown renderer (subset: headings, bold/italic, lists, tables, blockquotes)
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Material icons — same glyphs (Icons.*) the Flutter implementation uses,
+// inlined as SVG so they render crisply and tint via `fill`.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+const ICON_PATHS = {
+  flag_outlined: 'M12.36 6l.4 2H18v6h-3.36l-.4-2H7V6h5.36M14 4H5v17h2v-7h5.6l.4 2H20V6h-5.6L14 4z',
+  visibility_outlined: 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z',
+  checklist: 'M22 7h-9v2h9V7zm0 8h-9v2h9v-2zM5.54 11L2 7.46l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41L5.54 11zm0 8L2 15.46l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41L5.54 19z',
+  emoji_events: 'M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z',
+  article_outlined: 'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 12H7v-2h10v2zm0-4H7v-2h10v2zm0-4H7V7h10v2z',
+  volume_up: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z',
+  volume_up_outlined: 'M3 9v6h4l5 5V4L7 9H3zm7-.17v6.34L7.83 13H5v-2h2.83L10 8.83zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zM16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z',
+  favorite: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
+  chat: 'M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z',
+  public: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z',
+  arrow_forward: 'M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z',
+  play_arrow: 'M8 5v14l11-7z',
+  directions_bus: 'M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z',
+  check: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',
+  close: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+  refresh: 'M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z',
+};
+function icon(name, size, color) {
+  return `<svg class="ic" viewBox="0 0 24 24" width="${size || 20}" height="${size || 20}" fill="${color || 'currentColor'}" aria-hidden="true"><path d="${ICON_PATHS[name]}"/></svg>`;
+}
+// Stroke-based check (lucide-style) so the weight is controllable — the filled
+// check glyph looks too thin on the "Lección completada" button.
+function checkBold(size, color, sw) {
+  return `<svg class="ic" viewBox="0 0 24 24" width="${size || 20}" height="${size || 20}" fill="none" stroke="${color || 'currentColor'}" stroke-width="${sw || 3}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4 4L19 7"/></svg>`;
+}
+// Stroke-based forward arrow (lucide-style) so weight is controllable — used on the
+// Continuar/Empezar CTAs where we want a larger, thicker arrow than the filled glyph.
+function arrowFwd(size, color, sw) {
+  size = size || 24; color = color || 'currentColor'; sw = sw || 2.8;
+  return `<svg class="ic" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+}
+// Rounded "play" triangle — shared by the active module card and the quiz CTAs.
+function playIcon(size, color) {
+  const c = color || '#fff';
+  return `<svg class="ic" width="${size || 20}" height="${size || 20}" viewBox="0 0 24 24" fill="${c}" stroke="${c}" stroke-width="5" stroke-linejoin="round" aria-hidden="true"><path d="M9 6.5 18 12 9 17.5 Z"/></svg>`;
+}
+// Duolingo-style speaker glyph (path is centered on the origin → offset viewBox).
+const SPK_PATH = 'M-8.293000221252441,-11.675000190734863 C-8.293000221252441,-11.675000190734863 -0.12300000339746475,-11.675000190734863 -0.12300000339746475,-11.675000190734863 C2.9070000648498535,-11.675000190734863 5.367000102996826,-9.21500015258789 5.367000102996826,-6.184999942779541 C5.367000102996826,-6.184999942779541 5.367000102996826,6.425000190734863 5.367000102996826,6.425000190734863 C5.367000102996826,9.454999923706055 2.9070000648498535,11.914999961853027 -0.12300000339746475,11.914999961853027 C-0.12300000339746475,11.914999961853027 -8.293000221252441,11.914999961853027 -8.293000221252441,11.914999961853027 C-11.322999954223633,11.914999961853027 -13.782999992370605,9.454999923706055 -13.782999992370605,6.425000190734863 C-13.782999992370605,6.425000190734863 -13.782999992370605,-6.184999942779541 -13.782999992370605,-6.184999942779541 C-13.782999992370605,-9.21500015258789 -11.322999954223633,-11.675000190734863 -8.293000221252441,-11.675000190734863z M-4.980999946594238,-11.656999588012695 C-4.980999946594238,-11.656999588012695 10.218999862670898,-22.32699966430664 10.218999862670898,-22.32699966430664 C11.24899959564209,-23.047000885009766 12.659000396728516,-22.797000885009766 13.369000434875488,-21.777000427246094 C13.638999938964844,-21.39699935913086 13.779000282287598,-20.937000274658203 13.779000282287598,-20.476999282836914 C13.779000282287598,-20.476999282836914 13.779000282287598,20.472999572753906 13.779000282287598,20.472999572753906 C13.779000282287598,21.722999572753906 12.769000053405762,22.732999801635742 11.519000053405762,22.732999801635742 C11.059000015258789,22.732999801635742 10.609000205993652,22.593000411987305 10.218999862670898,22.322999954223633 C10.218999862670898,22.322999954223633 -4.980999946594238,11.652999877929688 -4.980999946594238,11.652999877929688 C-5.580999851226807,11.232999801635742 -5.940999984741211,10.543000221252441 -5.940999984741211,9.803000450134277 C-5.940999984741211,9.803000450134277 -5.940999984741211,-9.807000160217285 -5.940999984741211,-9.807000160217285 C-5.940999984741211,-10.536999702453613 -5.580999851226807,-11.22700023651123 -4.980999946594238,-11.656999588012695z';
+function speakerSvg(size, color) {
+  // Full "listening" speaker = body + two sound-wave arcs. Embed the original Lottie
+  // transforms verbatim and let SVG flatten them; viewBox is the computed bounding box.
+  return `<svg class="spk-svg" width="${size}" height="${size}" viewBox="-3 -2 99 78" fill="none" aria-hidden="true">` +
+    `<g transform="matrix(0.265,0,0,0.265,-84.5,-101.535)">` +
+      `<g transform="matrix(1.36,0,0,1.36,516.22,522.4)"><path fill="none" stroke="${color}" stroke-opacity="0.66" stroke-width="22.49" stroke-linecap="round" d="M48.881,-88.134 C79.823,-70.922 100.779,-37.888 100.779,0 C100.779,37.911 79.798,70.962 48.825,88.165"/></g>` +
+      `<g transform="matrix(1.36,0,0,1.36,516.22,522.4)"><path fill="none" stroke="${color}" stroke-opacity="0.66" stroke-width="20.5" stroke-linecap="round" d="M24.131,-42.809 C39.056,-34.371 49.141,-18.354 49.141,0 C49.141,18.387 39.02,34.429 24.05,42.854"/></g>` +
+      `<g transform="matrix(1.037,0,0,0.963,136.536,163.668)"><g transform="matrix(6,0,0,6,260.937,373.678)"><path fill="${color}" d="${SPK_PATH}"/></g></g>` +
+    `</g></svg>`;
+}
+function inlineMd(s) {
+  s = escapeHtml(s);
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  return s;
+}
+function flagFor(header) {
+  const h = header.toLowerCase();
+  if (h.includes('español')) return ' 🇪🇸';
+  if (h.includes('inglés') || h.includes('ingles')) return ' 🇬🇧';
+  return '';
+}
+function renderTable(lines) {
+  const cells = (l) => l.split('|').map(c => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''));
+  const header = cells(lines[0]);
+  let html = '<table><thead><tr>';
+  header.forEach(h => { html += '<th>' + inlineMd(h) + flagFor(h) + '</th>'; });
+  html += '</tr></thead><tbody>';
+  for (let i = 2; i < lines.length; i++) {
+    const row = cells(lines[i]);
+    if (!row.length) continue;
+    html += '<tr>';
+    for (let c = 0; c < header.length; c++) html += '<td>' + inlineMd(row[c] || '') + '</td>';
+    html += '</tr>';
+  }
+  return html + '</tbody></table>';
+}
+function renderMarkdown(text) {
+  if (!text) return '';
+  const lines = text.split('\n');
+  let html = '', i = 0;
+  const isTable = (l) => { const t = l.trim(); return t.startsWith('|') && t.endsWith('|'); };
+  const isSep = (l) => /^\|[\s\-:|]+\|$/.test(l.trim());
+  while (i < lines.length) {
+    const raw = lines[i];
+    const line = raw.trim();
+    if (!line) { i++; continue; }
+    // Table
+    if (isTable(raw) && i + 1 < lines.length && isSep(lines[i + 1])) {
+      const tbl = []; while (i < lines.length && isTable(lines[i])) { tbl.push(lines[i].trim()); i++; }
+      html += renderTable(tbl); continue;
+    }
+    // Blockquote
+    if (line.startsWith('>')) {
+      const bq = [];
+      while (i < lines.length && lines[i].trim().startsWith('>')) { bq.push(lines[i].trim().replace(/^>\s?/, '')); i++; }
+      html += '<blockquote>' + renderMarkdown(bq.join('\n')) + '</blockquote>'; continue;
+    }
+    // Heading
+    const hm = line.match(/^(#{1,6})\s+(.*)$/);
+    if (hm) { const lvl = Math.min(hm[1].length, 4); html += '<h' + lvl + '>' + inlineMd(hm[2]) + '</h' + lvl + '>'; i++; continue; }
+    // List
+    if (/^[*\-]\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^[*\-]\s+/.test(lines[i].trim())) { items.push(lines[i].trim().replace(/^[*\-]\s+/, '')); i++; }
+      html += '<ul>' + items.map(it => '<li>' + inlineMd(it) + '</li>').join('') + '</ul>'; continue;
+    }
+    // Paragraph (gather until blank / special)
+    const para = [];
+    while (i < lines.length) {
+      const l = lines[i]; const t = l.trim();
+      if (!t || t.startsWith('>') || /^(#{1,6})\s/.test(t) || /^[*\-]\s+/.test(t) || isTable(l)) break;
+      para.push(t); i++;
+    }
+    html += '<p>' + para.map(inlineMd).join('<br>') + '</p>';
+  }
+  return html;
+}
+// Like renderMarkdown, but every heading (####, ##, …) becomes a collapsible toggle
+// row (chevron) whose body holds the content up to the next heading. Content before
+// the first heading renders normally. Headingless markdown is unchanged.
+const CHEV_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+function renderCollapsibleMarkdown(text) {
+  if (!text) return '';
+  const pre = [], sections = [];
+  let cur = null;
+  for (const line of text.split('\n')) {
+    const hm = line.trim().match(/^#{1,6}\s+(.*)$/);
+    if (hm) { cur = { title: hm[1], body: [] }; sections.push(cur); }
+    else if (cur) cur.body.push(line);
+    else pre.push(line);
+  }
+  let html = '';
+  if (pre.join('\n').trim()) html += `<div class="md">${renderMarkdown(pre.join('\n'))}</div>`;
+  for (const s of sections) {
+    html += `<div class="collap open"><div class="collap-h"><h4>${inlineMd(s.title)}</h4><span class="chev">${CHEV_SVG}</span></div>` +
+      `<div class="collap-b"><div class="md">${renderMarkdown(s.body.join('\n'))}</div></div></div>`;
+  }
+  return html;
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Progress (localStorage) — mirrors ElearningProgressManager
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+const PK = 'ingles_web_progress_v1';
+const course = window.COURSE_DATA;
+const allLessons = course.modules.flatMap(m => m.lessons);
+
+function loadProgress() { try { return JSON.parse(localStorage.getItem(PK)) || {}; } catch (e) { return {}; } }
+function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); }
+let PROGRESS = loadProgress();
+
+function lp(id) { if (!PROGRESS[id]) PROGRESS[id] = { blocks: {} }; if (!PROGRESS[id].blocks) PROGRESS[id].blocks = {}; return PROGRESS[id]; }
+function isLessonUnlocked(id) { return allLessons[0].id === id || !!(PROGRESS[id] && PROGRESS[id].unlocked); }
+function isQuizCompleted(id) { return !!(PROGRESS[id] && PROGRESS[id].quizCompleted); }
+function isReadingCompleted(id) { return !!(PROGRESS[id] && PROGRESS[id].readingCompleted); }
+function getScroll(id) { return (PROGRESS[id] && PROGRESS[id].scroll) || 0; }
+function nextLessonId(id) { const i = allLessons.findIndex(l => l.id === id); return (i >= 0 && i < allLessons.length - 1) ? allLessons[i + 1].id : null; }
+function isLessonCompleted(id) {
+  if (isQuizCompleted(id)) return true;
+  const n = nextLessonId(id); return n ? isLessonUnlocked(n) : false;
+}
+let _saveT = null;
+function scheduleSave() { if (_saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
+
+// --- Daily activity + streak (real data, recorded from first use on) ---
+// Meaningful learning actions (opening a lesson, passing a quiz) stamp today's
+// date into PROGRESS.__days. Streak = consecutive active days ending today —
+// or yesterday, so today's pending practice doesn't already show a broken streak.
+function dayKey(d) {
+  const x = d || new Date();
+  return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+}
+function touchDay() {
+  const days = PROGRESS['__days'] = PROGRESS['__days'] || [];
+  const t = dayKey();
+  if (days[days.length - 1] !== t) {
+    days.push(t);
+    if (days.length > 400) days.splice(0, days.length - 400);
+    saveProgress(PROGRESS);
+    const chip = document.getElementById('streak-n'); if (chip) chip.textContent = streakDays();
+  }
+}
+function streakDays() {
+  const days = PROGRESS['__days'] || [];
+  if (!days.length) return 0;
+  const set = new Set(days), d = new Date();
+  if (!set.has(dayKey(d))) d.setDate(d.getDate() - 1);
+  let n = 0;
+  while (set.has(dayKey(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+
+// --- XP ---
+// Base XP is earned from lesson progress: 20 per mini-quiz, 50 per final quiz.
+// Level thresholds derive from the SAME numbers (a level's XP span = the sum of
+// its module's lessons), so the level ring always mirrors where you are in the
+// course. Missions add BONUS XP on top (PROGRESS.__missionXP — engine pending):
+// that bonus is deliberately excluded from the level and only counts toward the
+// leaderboard, because two students at the same microlección have identical base
+// XP — missions are what break the tie and give the league meaning.
+const XP_MINI = 20, XP_FINAL = 50;
+function xpQuizBlocks(l) { return l.contentBlocks.filter(b => b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length); }
+function lessonXpMax(l) { return xpQuizBlocks(l).length * XP_MINI + XP_FINAL; }
+function lessonXpEarned(l) {
+  let xp = xpQuizBlocks(l).filter(b => isMiniQuizCompleted(l.id, b.id)).length * XP_MINI;
+  if (isQuizCompleted(l.id)) xp += XP_FINAL;
+  return xp;
+}
+function moduleXpMax(m) { return m.lessons.reduce((s, l) => s + lessonXpMax(l), 0); }
+function lessonXpTotal() { return allLessons.reduce((s, l) => s + lessonXpEarned(l), 0); }
+function missionXp() { return PROGRESS['__missionXP'] || 0; }
+function totalXp() { return lessonXpTotal() + missionXp(); }
+function fmtXp(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+// --- Destrezas: accuracy from first-try mistakes, scoped per module ---
+// Each quiz question type maps to one MCER skill. A question that needed a retry
+// counts as ONE error (mistakes don't stack; extra retries on the same question
+// add nothing). On passing a lesson's final quiz we store that first round's
+// per-skill tally in PROGRESS[id].skillErr. The dashboard averages those tallies
+// across the CURRENT module ONLY — so the score naturally resets each module.
+// Score = 100% at zero errors, sliding down to 25% when every question was missed.
+// Entirely independent of XP (which comes from completion, not correctness).
+function qSkill(type) { return type === 'rebuild' ? 'listening' : type === 'mc' ? 'reading' : 'writing'; }
+function moduleSkill(mod) {
+  const agg = { listening: { t: 0, e: 0 }, reading: { t: 0, e: 0 }, writing: { t: 0, e: 0 } };
+  mod.lessons.forEach(l => {
+    const se = PROGRESS[l.id] && PROGRESS[l.id].skillErr; if (!se) return;
+    for (const k in agg) if (se[k]) { agg[k].t += se[k].t; agg[k].e += se[k].e; }
+  });
+  const pct = k => agg[k].t ? Math.round(100 - 75 * (agg[k].e / agg[k].t)) : null; // null = nothing attempted yet
+  return { listening: pct('listening'), reading: pct('reading'), writing: pct('writing'), agg };
+}
+function setScroll(id, v) { lp(id).scroll = Math.min(1, Math.max(0, v)); scheduleSave(); }
+function markReadingCompleted(id) { lp(id).readingCompleted = true; lp(id).scroll = 1; saveProgress(PROGRESS); }
+function unlockLesson(id) { lp(id).unlocked = true; saveProgress(PROGRESS); }
+function markQuizCompleted(id) {
+  touchDay();
+  lp(id).quizCompleted = true; lp(id).readingCompleted = true;
+  const n = nextLessonId(id); if (n) unlockLesson(n);
+  // A module is completed automatically once its last microlección's final quiz is done.
+  const m = course.modules.find(mm => mm.lessons.some(l => l.id === id));
+  if (m && m.lessons.every(l => isLessonCompleted(l.id))) {
+    if (!PROGRESS['__modules']) PROGRESS['__modules'] = {};
+    PROGRESS['__modules'][m.id] = true;
+  }
+  saveProgress(PROGRESS);
+}
+function isMiniQuizCompleted(id, blockId) { const b = lp(id).blocks[blockId]; return !!(b && b.mq); }
+
+function lastUnlockedBlockIndex(lesson) {
+  const blocks = lesson.contentBlocks;
+  const p = PROGRESS[lesson.id];
+  if (!p || !p.blocks || Object.keys(p.blocks).length === 0) {
+    let first = 0;
+    for (let i = 0; i < blocks.length; i++) if (blocks[i].type === 'teoria' && blocks[i].requiresQuizToUnlockNext) { first = i; break; }
+    return first;
+  }
+  let last = 0;
+  for (let i = 0; i < blocks.length; i++) { const b = p.blocks[blocks[i].id]; if (b && b.unlocked) last = i; }
+  return last;
+}
+function markMiniQuizCompleted(lesson, blockId) {
+  touchDay();
+  const blocks = lesson.contentBlocks;
+  const L = lp(lesson.id);
+  L.blocks[blockId] = Object.assign({}, L.blocks[blockId], { unlocked: true, mq: true });
+  const idx = blocks.findIndex(b => b.id === blockId);
+  const teoriaQuiz = blocks.filter(b => b.type === 'teoria' && b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length);
+  const isLast = teoriaQuiz.length && teoriaQuiz[teoriaQuiz.length - 1].id === blockId;
+  if (isLast) {
+    for (let i = idx + 1; i < blocks.length; i++) L.blocks[blocks[i].id] = Object.assign({}, L.blocks[blocks[i].id], { unlocked: true });
+  } else if (idx >= 0 && idx < blocks.length - 1) {
+    const nx = blocks[idx + 1]; L.blocks[nx.id] = Object.assign({}, L.blocks[nx.id], { unlocked: true });
+  }
+  saveProgress(PROGRESS);
+}
+function allMiniQuizzesDone(lesson) {
+  const need = lesson.contentBlocks.filter(b => b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length);
+  return need.every(b => isMiniQuizCompleted(lesson.id, b.id));
+}
+// Like the Flutter app, the displayed lesson progress is whole-lesson based, NOT
+// per-segment: scroll within the currently-unlocked content only counts toward the
+// fraction of the whole lesson that's unlocked. Internally we still track the raw
+// per-segment scroll (for mini-quiz gating + scroll restore); this only scales the
+// number shown on the progress bars. Mirrors ModularScrollProgressNotifier
+// (scroll / fullMax, where fullMax spans every renderable block, cierre excluded).
+function renderableBlockCount(lesson) {
+  return lesson.contentBlocks.filter(b => b.type !== 'cierre').length || 1;
+}
+function unlockedFraction(lesson) {
+  const total = renderableBlockCount(lesson);
+  const unlocked = Math.min(lastUnlockedBlockIndex(lesson) + 1, total);
+  return Math.min(1, Math.max(0, unlocked / total));
+}
+function wholeProgress(lesson, segmentScroll) {
+  if (isLessonCompleted(lesson.id)) return 1;
+  const s = typeof segmentScroll === 'number' ? segmentScroll : getScroll(lesson.id);
+  return Math.min(1, Math.max(0, s * unlockedFraction(lesson)));
+}
+// Whole-lesson progress for the bars on the OPEN lesson screen.
+//
+// The full-lesson scroll height must stay STABLE across unlocks, otherwise the % jumps
+// or drops the instant a mini-quiz reveals a new block. We estimate it from the live
+// DOM as: (actual rendered content height) + (remaining locked blocks × average
+// UNLOCKED block height). Only the per-block content is extrapolated — fixed overhead
+// (banner, padding, teaser) is counted once. When a block unlocks, the rendered height
+// grows by ~one block while the remaining estimate shrinks by ~one block, so the total
+// (and thus the %) holds steady at the unlock instant and only moves as you scroll.
+function lessonDisplayProgress(lesson) {
+  if (isLessonCompleted(lesson.id)) return 1;
+  const total = renderableBlockCount(lesson);
+  const sc = document.getElementById('lesson-scroll');
+  if (!sc) return Math.min(1, getScroll(lesson.id) * unlockedFraction(lesson));
+  const clientH = sc.clientHeight;
+  const blocks = document.querySelectorAll('#lesson-body .block');
+  let sum = 0; blocks.forEach(b => { sum += b.offsetHeight; });
+  const n = blocks.length;
+  const remaining = Math.max(0, total - n);
+  if (remaining === 0 || n === 0) {
+    const max = sc.scrollHeight - clientH;
+    return max >= 100 ? Math.min(1, Math.max(0, sc.scrollTop / max)) : 1;
+  }
+  const avg = sum / n;
+  const fullMax = Math.max(1, sc.scrollHeight + remaining * avg - clientH);
+  return Math.min(1, Math.max(0, sc.scrollTop / fullMax));
+}
+function moduleProgress(mod) {
+  if (!mod.lessons.length) return 0;
+  let t = 0;
+  for (const l of mod.lessons) { if (isQuizCompleted(l.id)) t += 1; else t += wholeProgress(l); }
+  return t / mod.lessons.length;
+}
+function quizCount(lesson) {
+  let n = lesson.quizQuestions.length;
+  for (const b of lesson.contentBlocks) n += (b.miniQuiz ? b.miniQuiz.length : 0);
+  return n;
+}
+function readingMinutes(lesson) {
+  let chars = 0; for (const b of lesson.contentBlocks) chars += (b.markdown || '').length;
+  return Math.max(1, Math.ceil(chars / 1000));
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// TTS
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+let _speaking = false;
+function speak(text, onStart, onEnd) {
+  try {
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    if (_speaking) { synth.cancel(); _speaking = false; if (onEnd) onEnd(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = 0.45; u.pitch = 1.0;
+    u.onstart = () => { _speaking = true; if (onStart) onStart(); };
+    u.onend = () => { _speaking = false; if (onEnd) onEnd(); };
+    u.onerror = () => { _speaking = false; if (onEnd) onEnd(); };
+    synth.cancel(); synth.speak(u);
+  } catch (e) {}
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Navigation
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+let CURRENT = { module: null, lesson: null };
+function show(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  // Hide debug FABs on the full-screen final quiz so they can't overlap its button.
+  document.body.classList.toggle('in-quiz', screen === 'quiz');
+}
+// Standalone build: the course screen is the root, so its (removed) back button
+// has nothing to navigate to. All other back buttons stay in-page.
+document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => {
+  const dest = b.getAttribute('data-nav');
+  if (dest === 'exit') return; // no host app to exit to
+  if (dest === 'course') renderCourse();
+  else if (dest === 'module') renderModule(CURRENT.module);
+  else if (dest === 'lesson') openLesson(CURRENT.lesson, CURRENT.module, true); // back from quiz: jump, don't animate
+  show(dest);
+}));
+// Enable the in-page debug controls (complete lesson / reset progress / undo /
+// wipe ALL data). Comment the line below out to hide them for a demo.
+document.body.classList.add('debug-fabs');
+
+function pbar(progress, completed, color) {
+  const pct = Math.round(progress * 100);
+  const label = completed
+    ? `<div class="pct done">Completado</div>`
+    : `<div class="pct">${pct}%</div>`;
+  const bg = (color && !completed) ? `;background:${color}` : '';
+  const w = completed ? 98 : (pct > 0 ? Math.max(pct, 8) : 0);
+  return `<div class="pbar"><div class="fill ${completed ? 'done' : ''}" style="width:${w}%${w === 0 ? ';min-width:12px' : ''}${bg}"></div>${label}</div>`;
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// COURSE (entry screen)
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// The next thing the learner should do: first unlocked, not-yet-completed
+// lesson (with its module). Null when the whole route is finished.
+function nextActiveLesson() {
+  for (const m of course.modules) {
+    for (const l of m.lessons) {
+      if (isLessonUnlocked(l.id) && !isLessonCompleted(l.id)) return { lesson: l, mod: m };
+    }
+  }
+  return null;
+}
+// Display helpers: a meaningful lesson name (the titulo "hook") + its topic
+// subtitle, module names without the "Módulo N:" prefix, and the colored number
+// badges — modules use a fixed tasteful palette; lessons ramp green→orange-red.
+const MODULE_COLORS = ['#3FAA24', '#1CB0F6', '#CE82FF', '#FF9600', '#FF6FA5'];
+function tituloOf(lesson) { return lesson.contentBlocks.find(b => b.type === 'titulo') || {}; }
+function lessonName(lesson) { return tituloOf(lesson).title || lesson.title; }
+function lessonTopic(lesson) { return tituloOf(lesson).subtitle || ''; }
+function moduleName(m) { return m.title.replace(/^M[oó]dulo\s*\d+\s*[:.\-–—]?\s*/i, ''); }
+function moduleMinutes(m) { return m.lessons.reduce((s, l) => s + readingMinutes(l), 0); }
+// Under an hour → exact minutes; an hour or more → hours, with minutes rounded to
+// the closest multiple of 5 (e.g. 61→"1 h", 69→"1 h 10 min").
+function fmtMinutes(min) {
+  if (min < 60) return `${min} min`;
+  const r = Math.round(min / 5) * 5, h = Math.floor(r / 60), m = r % 60;
+  return m ? `${h} h ${m} min` : `${h} h`;
+}
+function moduleBadgeColor(idx) { return MODULE_COLORS[idx] || MODULE_COLORS[MODULE_COLORS.length - 1]; }
+function lessonBadgeColor(i, total) { const t = total > 1 ? i / (total - 1) : 0; return `hsl(${Math.round(120 - 108 * t)} 70% 46%)`; }
+
+function courseHero() {
+  const na = nextActiveLesson();
+  if (!na) {
+    return `<div class="foot-done">${icon('emoji_events', 22, '#E0A800')}<span>¡Completaste el curso! Pronto habrá más.</span></div>`;
+  }
+  const started = getScroll(na.lesson.id) > 0.02 || isReadingCompleted(na.lesson.id);
+  const col = modAccent(course.modules.indexOf(na.mod)), cold = shadeHex(col, -0.24);
+  const isFirst = na.lesson.id === allLessons[0].id;
+  const kicker = isFirst ? 'Tu primera lección' : `Tu próxima lección · ${escapeHtml(moduleName(na.mod))}`;
+  return `<div class="foot-kicker" style="color:${col}">${kicker}</div>
+    <div class="foot-title">${escapeHtml(lessonName(na.lesson))}</div>
+    <button class="cta-btn" id="cta-continue" style="background:${col};--lip:${cold}">${started ? 'Continuar' : 'Empezar'} ${arrowFwd(19, '#fff', 2.8)}</button>`;
+}
+// Per-module accent color (the module's main color: top bar, button caps, ring, popovers,
+// AND the module cards on the course list). Keyed by image number; falls back to the badge
+// color. The page background is separate (BG_TINT).
+const MOD_ACCENT = { 1: '#3faa24', 2: '#ff6ba0', 3: '#b875f5', 4: '#1cb0f6', 5: '#fd5d04' };
+function modAccent(i) { return MOD_ACCENT[(i % 5) + 1] || moduleBadgeColor(i); }
+// Preload the per-module backdrops (modulebg1..5) once while the user is on the modules
+// list, holding references so they stay in the browser's image cache — entering a module
+// then paints its PNG immediately instead of fetching/decoding on first view.
+let _bgPrecached = false;
+function precacheModuleBgs() {
+  if (_bgPrecached) return;
+  _bgPrecached = true;
+  window._bgCache = [];
+  for (let n = 1; n <= 5; n++) {
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = 'modulebg' + n + '.png';
+    window._bgCache.push(img); // keep a reference so it isn't evicted
+  }
+}
+function renderCourse() {
+  show('course');
+  precacheModuleBgs(); // warm the module backdrops while on the modules list
+  document.getElementById('course-title').innerHTML =
+    '<span class="brand"><span class="b-aprendo">Aprendo</span><span class="b-english">English</span><span class="b-com">.com</span></span>';
+  document.getElementById('streak-n').textContent = streakDays();
+  const na = nextActiveLesson();
+  let html = '';
+  const LEVEL = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const CROWN = '<svg viewBox="0 0 24 24" fill="#F4A720" stroke="#D98E00" stroke-width="1" stroke-linejoin="round"><path d="M2.6 7.2l4.3 3.3L12 3.4l5.1 7.1 4.3-3.3-1.9 11.1a1 1 0 0 1-1 .8H5.5a1 1 0 0 1-1-.8L2.6 7.2z"/></svg>';
+  // The current module = latest unlocked one that isn't fully completed → gets a play triangle.
+  const activeIdx = course.modules.reduce((acc, m, i) =>
+    (isLessonUnlocked(m.lessons[0].id) && !m.lessons.every(l => isLessonCompleted(l.id))) ? i : acc, -1);
+  const PLAY_TRI = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="5" stroke-linejoin="round"><path d="M9 6.5 18 12 9 17.5 Z"/></svg>';
+  course.modules.forEach((m, idx) => {
+    const unlocked = isLessonUnlocked(m.lessons[0].id);
+    const total = m.lessons.length;
+    const done = m.lessons.filter(l => isLessonCompleted(l.id)).length;
+    const mp = total ? done / total : 0;
+    const completed = done === total;
+    const lvl = LEVEL[idx] || LEVEL[LEVEL.length - 1];
+    html += `<div class="card mod-card sec-card ${unlocked ? '' : 'locked'}${completed ? ' completed' : ''}" data-mod="${idx}">
+      <div class="sec-top">
+        <div>
+          <div class="sec-name">${moduleName(m)}</div>
+          <span class="sec-chip" style="background:${completed ? '#3FAA24' : modAccent(idx)}">Nivel ${lvl} · ${total} lecciones</span>
+        </div>
+      </div>
+      <div style="height:11px"></div>
+      <div class="sec-bar">${pbar(mp, mp >= 1, modAccent(idx))}${completed ? '<img class="sec-emblem" src="completed.png" alt="">' : ''}</div>
+      ${unlocked ? '' : `<img class="card-lock" src="lock.svg" alt="">`}
+      ${idx === activeIdx ? `<span class="card-play" style="color:${modAccent(idx)}">${PLAY_TRI}</span>` : ''}
+    </div>`;
+  });
+  document.getElementById('course-body').innerHTML = html;
+  document.getElementById('course-foot').innerHTML = courseHero();
+  document.querySelectorAll('.mod-card').forEach(c => c.onclick = () => {
+    const m = course.modules[+c.getAttribute('data-mod')];
+    renderModule(m); // allow viewing locked modules (levels visible); lessons inside stay locked / unplayable
+  });
+  const cta = document.getElementById('cta-continue');
+  if (cta && na) cta.onclick = () => openLesson(na.lesson, na.mod);
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// MI PROGRESO (student dashboard)
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Same sections as the original student-dashboard exploration (ring + XP, skills,
+// missions, classroom league, certificate), rebuilt in the app's visual language.
+// REAL data: name + daily goal (profile), streak (PROGRESS.__days), XP + level
+// (derived from lesson progress — see the XP helpers), the "Tus niveles" list.
+// DEMO data until their systems exist: skill %, the mission list, and the league
+// PEERS (scaled to this course's real XP range; your own row is your real XP).
+function renderProgress() {
+  show('progress');
+  const prof = loadProfile() || {};
+  const name = prof.name || 'crack';
+  const streak = streakDays();
+  const LEVEL = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  // Level = the module you're in; progress within it = base lesson XP against the
+  // module's XP span (mission bonus excluded — that only competes on the league).
+  const xpLessons = lessonXpTotal(), xp = totalXp();
+  let cum = 0;
+  const bounds = course.modules.map(m => { const s = cum; cum += moduleXpMax(m); return { start: s, end: cum }; });
+  const allDone = allLessons.every(l => isLessonCompleted(l.id));
+  let ai = course.modules.reduce((a, m, i) =>
+    (isLessonUnlocked(m.lessons[0].id) && !m.lessons.every(l => isLessonCompleted(l.id))) ? i : a, -1);
+  if (ai < 0) ai = allDone ? course.modules.length - 1 : 0;
+  const bd = bounds[ai], span = bd.end - bd.start;
+  const mp = allDone ? 1 : (span ? Math.min(1, Math.max(0, (xpLessons - bd.start) / span)) : 1);
+  const lvl = LEVEL[ai];
+  const ringTitle = allDone ? '¡Completaste la ruta! 🏆'
+    : mp < 0.34 ? `Iniciando ${lvl}`
+    : mp < 0.8 ? `Camino a ${lvl}`
+    : `Ya casi en ${lvl}`;
+  const track = course.modules.map((m, i) => {
+    const done = m.lessons.every(l => isLessonCompleted(l.id));
+    return `<div class="tk ${done ? 'done' : (i === ai && !allDone ? 'now' : '')}">${LEVEL[i] || ''}</div>`;
+  }).join('');
+  const C = 2 * Math.PI * 45; // ring circumference (r = 45)
+  // Real skill scores from this module's first-try mistakes (100% until a quiz is
+  // taken).
+  const sk = moduleSkill(course.modules[ai]);
+  const skill = (em, nm, key) => {
+    const p = sk[key] == null ? 100 : sk[key];
+    return `<div class="pg-skill"><div class="sic">${em}</div><div class="sbar"><div class="slab"><span>${nm}</span><i>${p}%</i></div>` +
+      `<div class="pg-meter"><i style="width:${p}%"></i></div></div></div>`;
+  };
+  // League: DEMO peers scaled to the course's total XP (backend pending); your
+  // row is your REAL XP (lessons + mission bonus), sorted into place.
+  const T = bounds[bounds.length - 1].end;
+  const peer = f => Math.round(T * f / 10) * 10;
+  const rows = [
+    { nm: 'Mateo R.', xp: peer(.28), col: '#FF9600' }, { nm: 'Luciana P.', xp: peer(.22), col: '#3FAA24' },
+    { nm: 'Diego S.', xp: peer(.15), col: '#FF6FA5' }, { nm: 'Camila T.', xp: peer(.08), col: '#CE82FF' },
+    { nm: 'Joaquín V.', xp: peer(.03), col: '#F4A720' },
+    { nm: escapeHtml(name) + ' (tú)', xp, col: '#1CB0F6', me: true }];
+  rows.sort((a, b) => b.xp - a.xp);
+  const myPos = rows.findIndex(r => r.me) + 1;
+  const lbRows = rows.map((r, i) =>
+    `<div class="pg-lbr ${r.me ? 'me' : ''}"><span class="pos">${i + 1}</span><span class="av" style="background:${r.col}">${r.nm[0]}</span>` +
+    `<span class="nm">${r.nm}</span><span class="xp">${fmtXp(r.xp)}</span></div>`).join('');
+  // Certificate: unlocks by COMPLETING the B2 module — its final quizzes ARE the
+  // "evaluación de nivel". Gated on real lesson completion (linear course, so this
+  // is every not-yet-done lesson up to and including B2), never on farmable XP.
+  const b2idx = Math.min(3, course.modules.length - 1);
+  const b2Lessons = course.modules.slice(0, b2idx + 1).flatMap(m => m.lessons);
+  const b2Remain = b2Lessons.filter(l => !isLessonCompleted(l.id)).length;
+  let html = `
+  <div class="card pg-hero">
+    <div class="pg-row">
+      <div class="pg-info">
+        <h2 class="pg-hello">¡Hola, ${escapeHtml(name)}!</h2>
+        <div class="pg-sub" style="margin-bottom:0">Sigamos con tu inglés 👋</div>
+      </div>
+      <div class="pg-flame"><span class="fl">🔥</span><div class="txt"><b>${streak}</b><span>días de racha</span></div></div>
+    </div>
+  </div>
+
+  <div class="card pg-hero">
+    <div class="pg-row">
+      <div class="pg-ring">
+        <svg width="104" height="104" viewBox="0 0 104 104">
+          <circle class="track" cx="52" cy="52" r="45"/>
+          <circle class="prog" cx="52" cy="52" r="45" stroke="${modAccent(ai)}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - mp)).toFixed(1)}"/>
+        </svg>
+        <div class="cap"><b>${LEVEL[ai]}</b></div>
+      </div>
+      <div class="pg-info">
+        <h2 class="pg-hello" style="font-size:18px">${ringTitle}</h2>
+        <div class="pg-sub">${fmtXp(Math.min(xpLessons, bd.end))} / ${fmtXp(bd.end)} XP para tu próximo nivel</div>
+        <div class="pg-track">${track}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pg-band">
+    <div class="pg-chip"><span class="em">⭐</span><div class="k">${fmtXp(xp)}</div><div class="l">XP total</div></div>
+    <div class="pg-chip"><span class="em">🏆</span><div class="k">#${myPos}</div><div class="l">Puesto en el aula</div></div>
+  </div>
+
+  <div class="card" style="cursor:default">
+    <div class="pg-sect-t">Tus destrezas <span class="lnk">MCER</span></div>
+    ${skill('🎧', 'Listening', 'listening')}${skill('📖', 'Reading', 'reading')}${skill('✍️', 'Writing', 'writing')}
+  </div>
+
+  <div class="card" style="cursor:default">
+    <div class="pg-sect-t">Misiones de la semana</div>
+    <div class="pg-mission done"><div class="mbox">✓</div><div class="mt">Practica listening 10 min<small>Completada</small></div><div class="mxp">+100</div></div>
+    <div class="pg-mission"><div class="mbox"></div><div class="mt">Completa 3 lecciones<small>2 de 3 · ¡casi!</small></div><div class="mxp">+100</div></div>
+    <div class="pg-mission"><div class="mbox"></div><div class="mt">Repasa tus errores de Writing<small>1 de 2</small></div><div class="mxp">+60</div></div>
+  </div>
+
+  <div class="card" style="cursor:default">
+    <div class="pg-sect-t">Liga de tu aula <span class="lnk">5.º A</span></div>
+    ${lbRows}
+  </div>
+
+  <div class="card pg-cert">
+    <span class="lk">${b2Remain ? '🔒' : '🎉'}</span>
+    <div><b>Constancia de logro B2</b><p>Se desbloquea al completar el nivel B2</p></div>
+    <span class="go">${b2Remain ? 'Faltan ' + b2Remain + (b2Remain === 1 ? ' lección' : ' lecciones') : '¡Desbloqueada!'}</span>
+  </div>`;
+  document.getElementById('progress-body').innerHTML = html;
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// MODULE
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function langlesBanner() {
+  return `<div class="langles" id="langles-banner">
+    <img class="collab-svg" src="langles_colaboracion.svg" alt="En colaboración con Langles">
+    <div class="logos"><img class="iso" src="langles_iso.png" alt=""><img class="logo" src="langles_logo.png" alt=""></div>
+  </div>`;
+}
+// Tint a hex toward black (amt<0) or white (amt>0); |amt| is the mix fraction.
+function shadeHex(hex, amt) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+  const t = amt < 0 ? 0 : 255, p = Math.abs(amt), c = v => ('0' + Math.round(v).toString(16)).slice(-2);
+  return '#' + c(r + (t - r) * p) + c(g + (t - g) * p) + c(b + (t - b) * p);
+}
+// Hue (0–360) of a hex color — used to tint the blue guidebook icons per module.
+function hexHue(hex) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16) / 255, g = parseInt(h.slice(2, 4), 16) / 255, b = parseInt(h.slice(4, 6), 16) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+  if (!d) return 0;
+  let hue = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  hue *= 60; if (hue < 0) hue += 360;
+  return hue;
+}
+// === DEBUG: live per-button horizontal offset tuner =====================
+// Fixed top-left panel: a number input per node (B1..BN) that moves that button
+// live, plus a top read-only field that emits the BTN_ADJ line to copy back into
+// modulePathHTML. Click the header to collapse. Remove this fn + its call when done.
+function setupBtnTuner(scope, bgN) {
+  const prev = document.getElementById('btn-tuner'); if (prev) prev.remove();
+  const nodes = Array.from(scope.querySelectorAll('.lpath .node'));
+  if (!nodes.length) return;
+  const adj = {};
+  const panel = document.createElement('div');
+  panel.id = 'btn-tuner';
+  panel.style.cssText = 'position:fixed;top:0;left:0;z-index:95;width:176px;max-height:90vh;overflow:auto;' +
+    'background:rgba(18,18,22,.93);color:#fff;font:600 12px/1.25 sans-serif;padding:8px;border-radius:0 0 12px 0;' +
+    'display:flex;flex-direction:column;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,.45);';
+  const head = document.createElement('div');
+  head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;';
+  head.innerHTML = '<span>🔧 btn offsets · bg' + bgN + '</span><span id="bt-caret">▾</span>';
+  const copyRow = document.createElement('div');
+  copyRow.style.cssText = 'display:flex;gap:5px;';
+  const out = document.createElement('input');
+  out.readOnly = true; out.style.cssText = 'flex:1;min-width:0;font:600 11px monospace;padding:5px;border:none;border-radius:6px;';
+  const copyBtn = document.createElement('button');
+  copyBtn.textContent = 'Copy';
+  copyBtn.style.cssText = 'padding:5px 8px;border:none;border-radius:6px;background:#3FAA24;color:#fff;font-weight:700;cursor:pointer;';
+  copyBtn.onclick = () => {
+    out.select(); out.setSelectionRange(0, 99999); let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    try { if (navigator.clipboard) { navigator.clipboard.writeText(out.value); ok = true; } } catch (e) {}
+    copyBtn.textContent = ok ? 'Copied' : 'Sel ↑'; setTimeout(() => copyBtn.textContent = 'Copy', 1000);
+  };
+  copyRow.appendChild(out); copyRow.appendChild(copyBtn);
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:flex;flex-direction:column;gap:4px;';
+  function refresh() {
+    const parts = [];
+    nodes.forEach((n, i) => { if (adj[i]) parts.push(i + ': ' + adj[i]); });
+    out.value = bgN + ': { ' + parts.join(', ') + ' },';
+  }
+  nodes.forEach((node, i) => {
+    const sway = parseFloat(node.dataset.sway) || 0;
+    const curX = parseFloat(node.style.getPropertyValue('--x')) || 0;
+    adj[i] = Math.round(curX - sway);
+    const row = document.createElement('label');
+    row.style.cssText = 'display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);padding:3px 6px;border-radius:6px;';
+    row.innerHTML = '<span style="flex:1;opacity:.85">B' + (i + 1) + ' <small style="opacity:.5">sway ' + sway + '</small></span>';
+    const inp = document.createElement('input');
+    inp.type = 'number'; inp.step = 1; inp.value = adj[i];
+    inp.style.cssText = 'width:58px;font:600 12px monospace;padding:4px;border:none;border-radius:5px;text-align:center;';
+    inp.oninput = () => {
+      const v = parseFloat(inp.value); adj[i] = isNaN(v) ? 0 : v;
+      node.style.setProperty('--x', (sway + adj[i]) + 'px'); refresh();
+    };
+    row.appendChild(inp); grid.appendChild(row);
+  });
+  head.onclick = () => {
+    const hidden = grid.style.display === 'none';
+    grid.style.display = hidden ? 'flex' : 'none';
+    copyRow.style.display = hidden ? 'flex' : 'none';
+    document.getElementById('bt-caret').textContent = hidden ? '▾' : '▸';
+  };
+  panel.appendChild(head); panel.appendChild(copyRow); panel.appendChild(grid);
+  refresh();
+  document.body.appendChild(panel);
+}
+// === Rive "Busi" mascot (State Machine 1) — WASM/JS runtime, offline-safe ==========
+// rive.js (runtime) + rive_wasm.js (wasm as a data URL) + busi_act_riv.js (the .riv as
+// base64) are all bundled. The .riv is handed to Rive as a `buffer` — NOT a URL —
+// because the @rive-app/canvas runtime refuses to fetch file:// URLs in a WebView.
+// Ports PoiTutorialOverlay: state machine 'State Machine 1', inputs Expressions /
+// Arm Right / Arm Left.
+if (typeof rive !== 'undefined' && rive.RuntimeLoader && window.__RIVE_WASM_URL) {
+  try { rive.RuntimeLoader.setWasmUrl(window.__RIVE_WASM_URL); } catch (e) {}
+}
+const BUSI_SM = 'State Machine 1';
+// Per-image Busi placement (dialed in with the tuner): x = horizontal offset from the
+// screen's center, y = vertical nudge from the 3rd button's center. Uniform size.
+// Keyed by image number (bgN). Applied inline in renderModule.
+const BUSI_SIZE = 100; // bear WIDTH in px (height follows the 416.52×613.16 ratio → ~147px)
+const BUSI_POS = {
+  1: { x: 57, y: 16 },
+  2: { x: 59, y: 16 },
+  3: { x: 68, y: -148 },
+  4: { x: 77, y: 50 },
+  5: { x: 70, y: 27 },
+};
+let _busiRive = null, _busiBuf = null;
+window.busiInputs = {}; // populated on load: 'Expressions', 'Arm Right', 'Arm Left'
+function _busiB64ToBuf(b64) {
+  const bin = atob(b64), u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return u.buffer;
+}
+function initBusi() {
+  const canvas = document.getElementById('busi-canvas');
+  if (!canvas || typeof rive === 'undefined' || !window.__BUSI_ACT_RIV) return;
+  try { if (_busiRive && _busiRive.cleanup) _busiRive.cleanup(); } catch (e) {}
+  try { _busiBuf = _busiBuf || _busiB64ToBuf(window.__BUSI_ACT_RIV); } catch (e) { return; }
+  _busiRive = new rive.Rive({
+    buffer: _busiBuf,
+    canvas: canvas,
+    autoplay: true,
+    stateMachines: BUSI_SM,
+    fit: rive.Fit.contain,
+    alignment: rive.Alignment.center,
+    onLoad: () => {
+      try { _busiRive.resizeDrawingSurfaceToCanvas(); } catch (e) {}
+      const inputs = _busiRive.stateMachineInputs(BUSI_SM) || [];
+      window.busiInputs = {};
+      inputs.forEach((inp) => { window.busiInputs[inp.name] = inp; });
+    },
+    onLoadError: (e) => { try { console.error('[busi] load error', e); } catch (_) {} },
+  });
+}
+// Helpers mirroring the Flutter inputs (call after onLoad). Expressions = number;
+// Arm Right / Arm Left fire if triggers, else set true if booleans.
+function busiSetExpression(n) { const i = window.busiInputs['Expressions']; if (i) i.value = n; }
+function busiArmRight() { const i = window.busiInputs['Arm Right']; if (i) (i.fire ? i.fire() : (i.value = true)); }
+function busiArmLeft()  { const i = window.busiInputs['Arm Left'];  if (i) (i.fire ? i.fire() : (i.value = true)); }
+// === DEBUG: live Busi offset/size tuner ============================================
+// X = Busi center offset from the screen's horizontal center (matches the centered PNG),
+// Y = vertical nudge from the 3rd button's center, Size = px. Tweak live, Copy, send me
+// the line and I'll bake it. Remove this fn + its call (in renderModule) when done.
+function setupBusiTuner(scope) {
+  const prev = document.getElementById('busi-tuner'); if (prev) prev.remove();
+  const canvas = scope.querySelector('#busi-canvas');
+  const rows = scope.querySelectorAll('.lpath .row');
+  const row = rows[2] || rows[rows.length - 1];
+  if (!canvas || !row) return;
+  const rowCenter = row.offsetTop + row.offsetHeight / 2;
+  const cs = getComputedStyle(canvas);
+  let size = Math.round(parseFloat(cs.width)) || 280;
+  let x = Math.round(parseFloat(cs.marginLeft) || 0) + size / 2; // center offset from screen-center
+  let y = 0;                                                        // vertical nudge from button-3 center
+  const out = document.createElement('input'); out.readOnly = true;
+  out.style.cssText = 'font:600 11px monospace;padding:5px;border:none;border-radius:6px;width:100%;box-sizing:border-box;';
+  function apply() {
+    canvas.style.width = size + 'px'; canvas.style.height = size + 'px';
+    canvas.style.marginLeft = (x - size / 2) + 'px';
+    canvas.style.top = (rowCenter - size / 2 + y) + 'px';
+    out.value = 'busi x:' + x + ' y:' + y + ' size:' + size;
+  }
+  function mkRow(label, get, set) {
+    const r = document.createElement('label');
+    r.style.cssText = 'display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);padding:3px 6px;border-radius:6px;';
+    r.innerHTML = '<span style="flex:1;opacity:.85">' + label + '</span>';
+    const inp = document.createElement('input'); inp.type = 'number'; inp.step = 1; inp.value = get();
+    inp.style.cssText = 'width:62px;font:600 12px monospace;padding:4px;border:none;border-radius:5px;text-align:center;';
+    inp.oninput = () => { const v = parseFloat(inp.value); set(isNaN(v) ? 0 : v); apply(); };
+    r.appendChild(inp); return r;
+  }
+  const panel = document.createElement('div'); panel.id = 'busi-tuner';
+  panel.style.cssText = 'position:fixed;right:0;top:0;z-index:96;width:148px;background:rgba(18,18,22,.93);color:#fff;' +
+    'font:600 12px sans-serif;padding:8px;border-radius:0 0 0 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,.45);';
+  const head = document.createElement('div'); head.textContent = '🐤 busi offset';
+  const copyBtn = document.createElement('button'); copyBtn.textContent = 'Copy';
+  copyBtn.style.cssText = 'padding:5px 8px;border:none;border-radius:6px;background:#3FAA24;color:#fff;font-weight:700;cursor:pointer;';
+  copyBtn.onclick = () => {
+    out.select(); out.setSelectionRange(0, 9999); let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    try { if (navigator.clipboard) { navigator.clipboard.writeText(out.value); ok = true; } } catch (e) {}
+    copyBtn.textContent = ok ? 'Copied' : 'Sel↑'; setTimeout(() => copyBtn.textContent = 'Copy', 900);
+  };
+  const copyRow = document.createElement('div'); copyRow.style.cssText = 'display:flex;gap:5px;';
+  copyRow.appendChild(out); copyRow.appendChild(copyBtn);
+  panel.appendChild(head);
+  panel.appendChild(mkRow('X →', () => x, (v) => x = v));
+  panel.appendChild(mkRow('Y ↓', () => y, (v) => y = v));
+  panel.appendChild(mkRow('Size', () => size, (v) => size = v));
+  panel.appendChild(copyRow);
+  apply();
+  document.body.appendChild(panel);
+}
+function renderModule(mod) {
+  CURRENT.module = mod;
+  show('module');
+  const modDone = mod.lessons.every(l => isLessonCompleted(l.id));
+  document.getElementById('module-title').innerHTML = escapeHtml(moduleName(mod)) + (modDone ? ` ${checkBold(21, '#fff', 3)}` : '');
+  const _mi = course.modules.indexOf(mod), _lv = ['A1', 'A2', 'B1', 'B2', 'C1'][_mi] || 'C1';
+  document.getElementById('module-kicker').textContent = `Módulo ${_mi + 1} · Nivel ${_lv}`;
+  const _sm = document.getElementById('screen-module');
+  const _col = modAccent(_mi); // per-module accent (--mod): top bar, button caps, ring, popovers
+  _sm.style.setProperty('--mod', _col);
+  _sm.style.setProperty('--mod-d', shadeHex(_col, -0.24));
+  // Per-image page background so the backdrop PNG blends into the whole module screen —
+  // sits behind the appbar, scroll, path, nodes and shows through the PNG's transparency.
+  const BG_TINT = { 1: '#d5d0cd', 2: '#77b005', 3: '#5c960a', 4: '#e0f2fe', 5: '#373538' };
+  _sm.style.background = BG_TINT[(_mi % 5) + 1] || '';
+  let html = modulePathHTML(mod);
+  html += `<div style="height:18px"></div>${langlesBanner()}`;
+  const body = document.getElementById('module-body');
+  body.innerHTML = html;
+  // Per-module: trim the path's bottom clearance (108px base) so the Langles banner sits closer.
+  const LANGLES_CLEAR = { 1: 60, 2: 60, 3: 60, 4: 30, 5: 60 }; // px LESS than the 108px base
+  const LPATH_MINH = { 4: 990 }; // floor the path height so the full ~980px backdrop shows (no bottom clip)
+  const _bgi = (_mi % 5) + 1;
+  const _lpEl = body.querySelector('.lpath');
+  if (_lpEl) {
+    _lpEl.style.paddingBottom = (108 - (LANGLES_CLEAR[_bgi] || 0)) + 'px';
+    _lpEl.style.minHeight = (LPATH_MINH[_bgi] || 0) + 'px';
+  }
+  // Per-module: lift the Langles banner UP via a negative margin — this does NOT shrink
+  // .lpath, so the PNG keeps its full height and is never clipped; the banner just rises
+  // into the gap below the path (overlapping the PNG's empty bottom if needed).
+  const LANGLES_SHIFT = { 4: 120 }; // px to raise the banner per module (base .langles margin-top = 24)
+  const _lbEl = body.querySelector('#langles-banner');
+  if (_lbEl) _lbEl.style.marginTop = (24 - (LANGLES_SHIFT[_bgi] || 0)) + 'px';
+  // setupBtnTuner(body, (_mi % 5) + 1); // DEBUG: live per-button offset tuner (unplugged — uncomment to re-enable)
+  // Place the bear at the 3rd lesson's vertical level (right side). BUSI_SIZE is the bear's
+  // WIDTH; height follows its natural artboard ratio (416.52 × 613.16) so it isn't squashed.
+  const _busiC = document.getElementById('busi-mascot');
+  const _rows = body.querySelectorAll('.lpath .row');
+  const _busiRow = _rows[2] || _rows[_rows.length - 1];
+  if (_busiC && _busiRow) {
+    const _bp = BUSI_POS[(_mi % 5) + 1] || { x: 62, y: 0 };
+    const _bw = BUSI_SIZE, _bh = BUSI_SIZE * 613.16 / 416.52;
+    const BUSI_DROP = 40; // global downward nudge (px) applied to every module — raise/lower here
+    const BUSI_NUDGE_X = 6; // global rightward nudge (px) applied to every module — +right / -left
+    _busiC.style.width = _bw + 'px';
+    _busiC.style.height = _bh + 'px';
+    _busiC.style.marginLeft = (_bp.x - _bw / 2 + BUSI_NUDGE_X) + 'px';
+    _busiC.style.top = (_busiRow.offsetTop + _busiRow.offsetHeight / 2 - _bh / 2 + _bp.y + BUSI_DROP) + 'px';
+  }
+  // setupBusiTuner(body); // DEBUG: live Busi X/Y/size tuner (unplugged — uncomment to re-tune)
+
+  // Tap a node to open its popover (one at a time); the popover CTA opens the lesson.
+  const lp = body.querySelector('.lpath');
+  lp.addEventListener('click', (e) => {
+    const cta = e.target.closest('.cta');
+    if (cta) {
+      const lesson = mod.lessons[+cta.getAttribute('data-open')];
+      if (isLessonUnlocked(lesson.id)) openLesson(lesson, mod);
+      return;
+    }
+    const node = e.target.closest('.node');
+    const wasOpen = node && node.classList.contains('open');
+    lp.querySelectorAll('.node.open').forEach(n => n.classList.remove('open', 'below'));
+    if (node && !wasOpen) {
+      node.classList.add('open');
+      // not enough room above? flip the popover below the node.
+      const sc = node.closest('.scroll');
+      if (sc) {
+        const nr = node.getBoundingClientRect(), sr = sc.getBoundingClientRect();
+        node.classList.toggle('below', (nr.top - sr.top) < 150);
+      }
+    }
+    const _on = lp.querySelector('.node.open'); // hide EMPEZAR chips when a popover is open, but NOT for a locked lesson
+    lp.classList.toggle('has-open', !!_on && !_on.classList.contains('locked'));
+  });
+  document.getElementById('langles-banner').onclick = openLanglesSheet;
+}
+
+// Renders this module's lessons as the Duolingo-style winding path of nodes.
+function modulePathHTML(mod) {
+  const SWAY = [0, -44, -70, -44, 0, 44, 70, 44];
+  // Per-image horizontal button nudges (px; +right / -left) to line nodes up with the
+  // path drawn in a specific backdrop. Keyed by image number, then 0-based button index.
+  // Per-image horizontal button offsets (px; +right / -left), dialed in with the live
+  // tuner so each node lands on the path drawn in that backdrop. Key = image number,
+  // then 0-based button index.
+  const BTN_ADJ = {
+    1: { 0: -2, 1: 6, 2: -1, 3: -17, 4: -20, 5: -16, 6: -12, 7: 1, 8: 3, 9: -5 },
+    2: { 0: 1, 1: 5, 3: -10, 4: -13, 5: -9, 6: -14, 7: -3, 8: 1, 9: -2 },
+    3: { 0: -4, 1: 6, 2: 4, 3: -11, 4: -15, 5: -11, 6: -11, 7: -2 },
+    4: { 1: 5, 2: -2, 3: -13, 4: -10, 5: -12, 6: -13, 7: -9 },
+    5: { 0: 1, 1: 2, 2: 2, 3: -11, 4: -18, 5: -14, 6: -18 },
+  };
+  const STAR = '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.6l2.82 5.72 6.31.92-4.57 4.45 1.08 6.29L12 17.93l-5.64 2.95 1.08-6.29L2.87 9.24l6.31-.92z"/></svg>';
+  const SHINE = '<svg viewBox="0 0 56 46" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M34.2346 3.25135C35.3157 2.1269 34.7053 0.276787 33.1512 0.143156C32.0512 0.0485729 30.9331 0 29.8002 0C13.342 0 0 10.2517 0 22.8979C0 26.3985 1.02236 29.7157 2.85016 32.6827C3.47761 33.7012 4.88715 33.7751 5.71626 32.9128L34.2346 3.25135Z"/><path d="M55.0954 12.5231C53.3548 9.61289 49.8186 6.8733 47.2219 5.21074C46.2417 4.58319 44.9772 4.77038 44.1616 5.60066C34.5035 15.4328 18.3374 31.8498 12.05 38.0427C10.9724 39.1041 10.996 40.8688 12.249 41.716C16.2271 44.4058 20.9121 45.5851 23.4852 45.9072C24.1853 45.9949 24.8657 45.7259 25.3691 45.2315C34.775 35.9934 50.2041 19.9015 54.7166 15.0879C55.3787 14.3818 55.5923 13.3539 55.0954 12.5231Z"/></svg>';
+  const LOCK = '<svg viewBox="0 0 24 24" fill="#7c7c86" stroke="#7c7c86" stroke-width="0.8" stroke-linejoin="round"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3z"/></svg>';
+  const N = mod.lessons.length;
+  const currentIdx = mod.lessons.findIndex(l => isLessonUnlocked(l.id) && !isLessonCompleted(l.id));
+  // Per-module backdrop (modulebg1..5) painted directly on the path container.
+  // The lesson nodes are positioned children, so they render ON TOP of it.
+  const bgN = (course.modules.indexOf(mod) % 5) + 1;
+  // modulebg1's art sits a touch high — nudge just that image down 3px (others stay at top).
+  const bgPos = bgN === 1 ? 'background-position:center 3px;' : '';
+  let html = `<div class="lpath" style="background-image:url('modulebg${bgN}.png');${bgPos}">`;
+  // Animated "TuRuta Bear" mascot — layered SVGs + pure-CSS animation (ported verbatim from
+  // turuta-bear-animated_1.html). DOM grouping matches the source exactly: the body and the
+  // upper-body cluster each sit in a .group.torso (which bobs), the legs stay planted between
+  // them (they stretch), and the glasses ride in .glassesfollow. Positioned in renderModule.
+  html += `<div id="busi-mascot" class="tr-bear" aria-hidden="true"><div class="shadow"></div><div class="bear">` +
+    `<div class="group torso"><img class="layer body" src="body.svg" alt=""></div>` +
+    `<img class="layer rightleg" src="rightleg.svg" alt="">` +
+    `<img class="layer leftleg" src="leftleg.svg" alt="">` +
+    `<div class="group torso">` +
+      `<img class="layer div" src="div.svg" alt="">` +
+      `<img class="layer leftarm" src="leftarm.svg" alt="">` +
+      `<img class="layer rightarm" src="rightarm.svg" alt="">` +
+      `<img class="layer head" src="head.svg" alt="">` +
+      `<div class="glassesfollow"><img class="layer glasses" src="glasses.svg" alt=""></div>` +
+      `<img class="layer bowtie" src="bowtie.svg" alt="">` +
+      `<img class="layer tummy" src="tummy.svg" alt="">` +
+    `</div>` +
+    `</div></div>`;
+  mod.lessons.forEach((lesson, i) => {
+    const unlocked = isLessonUnlocked(lesson.id), completed = isLessonCompleted(lesson.id), isCur = i === currentIdx;
+    const state = completed ? 'done' : (!unlocked ? 'locked' : (isCur ? 'active' : 'avail'));
+    const x = SWAY[i % SWAY.length] + ((BTN_ADJ[bgN] && BTN_ADJ[bgN][i]) || 0);
+    // gap derived from the horizontal step so spacing stays even (no step → more room)
+    const mt = i === 0 ? 22 : Math.round(30 - 0.45 * Math.abs(SWAY[i % SWAY.length] - SWAY[(i - 1) % SWAY.length]));
+    const capInner = completed
+      ? `<span class="shine">${SHINE}</span><img class="swoosh" src="completed_new.svg" alt="">`
+      : (unlocked ? `<img class="star" src="star.svg" alt="">` : `<span class="ic">${LOCK}</span>`);
+    let ring = '';
+    if (isCur) {
+      const p = Math.max(0.04, Math.min(0.96, wholeProgress(lesson, getScroll(lesson.id))));
+      const r = 46, c = 2 * Math.PI * r, off = c * (1 - p);
+      ring = `<svg class="ring" viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="${r}"/><circle class="prog" cx="50" cy="50" r="${r}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>`;
+    }
+    const started = getScroll(lesson.id) > 0 || allMiniQuizzesDone(lesson);
+    const pill = isCur ? `<span class="startpill">${started ? 'CONTINUAR' : 'EMPEZAR'}</span>` : '';
+    let pop;
+    if (state === 'locked') pop = `<span class="t">${escapeHtml(lessonName(lesson))}</span><span class="s">Completa la lección anterior para desbloquear.</span>`;
+    else if (state === 'done') pop = `<span class="t">${escapeHtml(lessonName(lesson))}</span><span class="s">¡Completada!</span><span class="cta" data-open="${i}">Repasar</span>`;
+    else pop = `<span class="t">${escapeHtml(lessonName(lesson))}</span><span class="s">Lección ${i + 1} de ${N}</span><span class="cta" data-open="${i}">${started ? 'Continuar' : 'Empezar'}</span>`;
+    html += `<div class="row" style="margin-top:${mt}px"><button class="node ${state}" data-lesson="${i}" data-sway="${SWAY[i % SWAY.length]}" style="--x:${x}px">${ring}${pill}<span class="pop">${pop}</span><span class="base"></span><span class="cap">${capInner}</span></button></div>`;
+  });
+  return html + '</div>';
+}
+function quizBtnClass(lesson) {
+  if (isLessonCompleted(lesson.id)) return 'green30';
+  if (allMiniQuizzesDone(lesson)) return 'green';
+  return 'green30';
+}
+function quizBtnText(lesson) { return isLessonCompleted(lesson.id) ? `Lección completada ${checkBold(20, '#fff', 3.2)}` : 'Hacer quiz'; }
+function onLessonQuizTap(lesson, mod) {
+  if (!isLessonUnlocked(lesson.id)) return;
+  const completed = isLessonCompleted(lesson.id);
+  // Final quiz is only reachable once all mini-quizzes are done; otherwise resume the lesson.
+  if (!completed && !allMiniQuizzesDone(lesson)) { openLesson(lesson, mod); return; }
+  openFinalQuiz(lesson, mod);
+}
+function isModuleCompleted(mod) { return !!(PROGRESS['__modules'] && PROGRESS['__modules'][mod.id]); }
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// LESSON CONTENT
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+const ACCENT = {
+  mision:   { icon: 'flag_outlined',       color: '#1CB0F6', label: 'Misión del día' },
+  sneakPeek:{ icon: 'visibility_outlined', color: '#FF9600', label: 'Vista previa' },
+  resumen:  { icon: 'checklist',           color: '#3FAA24', label: 'Resumen' },
+  cierre:   { icon: 'emoji_events',        color: '#FFD700', label: 'Cierre' },
+};
+function teoriaNumber(blocks, idx) {
+  if (blocks[idx].type !== 'teoria') return null;
+  let n = 0; for (let i = 0; i <= idx; i++) if (blocks[i].type === 'teoria') n++;
+  return n;
+}
+const COLLAPSED = {}; // data-ckey -> true when the user has collapsed that section
+function renderBlockContent(block, blocks, idx) {
+  const _lesson = allLessons.find(l => l.contentBlocks === blocks);
+  const _mi = _lesson ? course.modules.findIndex(m => m.lessons.includes(_lesson)) : -1;
+  const _col = _mi >= 0 ? modAccent(_mi) : '#1CB0F6';
+  if (block.type === 'titulo') {
+    const lvl = ['A1', 'A2', 'B1', 'B2', 'C1'][_mi] || 'C1';
+    return `<div class="g-head" style="background:${_col}">
+      <h1 class="g-title">${escapeHtml(block.title || '')}</h1>
+      ${block.subtitle ? `<div class="g-sub">${escapeHtml(block.subtitle)}</div>` : ''}
+      <span class="g-chip">Nivel ${lvl}</span>
+    </div>`;
+  }
+  // Every section block becomes a collapsible toggle: its caption (icon + label) is
+  // the clickable header, its markdown is the collapsible body.
+  const _rot = Math.round(hexHue(_col) - 199); // shift the blue icons toward the module hue
+  let ic = '', label = '', cls = '', sty = '';
+  if (block.type === 'teoria') { ic = `<img class="sc-ic" src="language.svg" alt="" style="filter:hue-rotate(${_rot}deg)">`; label = `Teoría ${teoriaNumber(blocks, idx)}`; }
+  else if (block.type === 'intro') { ic = `<img class="sc-ic sc-ic-sm" src="difficulty.svg" alt="" style="filter:hue-rotate(${_rot}deg)">`; label = 'Introducción'; }
+  else if (ACCENT[block.type]) { const a = ACCENT[block.type]; ic = `<span class="sc-ic-m" style="color:${a.color}">${icon(a.icon, 23, a.color)}</span>`; label = a.label; cls = ' accent-collap'; sty = ` style="--tint-bg:${a.color}1A;--tint:${a.color}"`; }
+  else { label = block.title || ''; }
+  const _ckey = `${_lesson ? _lesson.id : '_'}#${idx}`;
+  const _open = COLLAPSED[_ckey] ? '' : ' open'; // persist toggle state across re-renders
+  return `<div class="collap${_open} sec-collap${cls}" data-ckey="${_ckey}"${sty}>
+    <div class="collap-h"><div class="sc-head">${ic}<h3>${escapeHtml(label)}</h3></div><span class="chev">${CHEV_SVG}</span></div>
+    <div class="collap-b"><div class="md">${renderMarkdown(block.markdown)}</div></div>
+  </div>`;
+}
+function lockedTeaser(block, blocks, idx) {
+  let title = 'Sección bloqueada', sub = 'Completa el mini-quiz anterior para desbloquear';
+  if (block.type === 'teoria') { const n = teoriaNumber(blocks, idx); title = n ? `Teoría ${n} bloqueada` : 'Teoría bloqueada'; }
+  else if (block.type === 'resumen') { title = 'Resumen bloqueado'; sub = 'Completa todos los mini-quizzes para desbloquear'; }
+  else if (block.type === 'cierre') { title = 'Cierre bloqueado'; sub = 'Completa todos los mini-quizzes para desbloquear'; }
+  return `<div class="collap sec-collap locked-sec">
+    <div class="collap-h"><div class="sc-head"><img class="ls-lock" src="lock.svg" alt="">
+      <div class="ls-text"><h3>${title}</h3><div class="ls-sub">${sub}</div></div></div></div>
+  </div>`;
+}
+// Animated scroll to a target offset (mirrors Flutter's animateTo with an
+// easeInOut curve). rAF-driven; no Date.now() needed (timestamps come from rAF).
+function smoothScrollTo(el, target, duration, done) {
+  const start = el.scrollTop;
+  const dist = target - start;
+  if (Math.abs(dist) < 1 || duration <= 0) { el.scrollTop = target; if (done) done(); return; }
+  const ease = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2); // easeInOutCubic
+  let startTs = null;
+  function step(ts) {
+    if (startTs === null) startTs = ts;
+    const p = Math.min(1, (ts - startTs) / duration);
+    el.scrollTop = start + dist * ease(p);
+    if (p < 1) requestAnimationFrame(step); else if (done) done();
+  }
+  requestAnimationFrame(step);
+}
+function openLesson(lesson, mod, instant) {
+  touchDay(); // opening a lesson counts as practicing today
+  CURRENT.lesson = lesson; CURRENT.module = mod;
+  show('lesson');
+  document.getElementById('lesson-title').textContent = lessonName(lesson);
+  renderLessonBody(lesson);
+  buildCompletion(lesson, mod);
+  const sc = document.getElementById('lesson-scroll');
+  const appbarEl = document.querySelector('#screen-lesson > .appbar');
+  // Reveal the header bar once the colored hero has (mostly) scrolled out of view.
+  const syncHeader = () => {
+    const hero = sc.querySelector('.g-head');
+    const h = hero ? hero.offsetHeight : 160;
+    if (appbarEl) appbarEl.classList.toggle('scrolled', sc.scrollTop > h - 110);
+  };
+  let _restoring = true;
+  // Live progress = current position / max (NOT max-ever), so scrolling back up
+  // lowers it. Content shorter than 100px counts as fully read (matches Dart).
+  const progressFor = () => {
+    const max = sc.scrollHeight - sc.clientHeight;
+    return max >= 100 ? Math.min(1, Math.max(0, sc.scrollTop / max)) : 1;
+  };
+  sc.onscroll = () => {
+    const p = progressFor();
+    if (!_restoring) setScroll(lesson.id, p);
+    updateCompletion(lesson, mod, p);
+    syncHeader();
+  };
+  syncHeader();
+  // Instant re-entry (e.g. back from the final quiz): jump straight to the saved
+  // position synchronously — no reset-to-top, no animation, no flash.
+  if (instant) {
+    const saved = getScroll(lesson.id);
+    const max = sc.scrollHeight - sc.clientHeight;
+    sc.scrollTop = (saved > 0.05 && max > 0) ? saved * max : 0;
+    _restoring = false;
+    updateCompletion(lesson, mod, progressFor());
+    return;
+  }
+  // The scroll container is reused across lessons and keeps its previous
+  // scrollTop, so without this every re-entry would start already near the
+  // target and the restore would snap. Reset to the top so it animates each
+  // time. (Done after wiring onscroll above, but onscroll is guarded by _restoring.)
+  sc.scrollTop = 0;
+  updateCompletion(lesson, mod, progressFor()); // reflect "top" before the restore animates
+  // Restore saved scroll position with a smooth animation (mirrors the Dart
+  // animateTo(500ms, easeInOut)); don't let the restore write progress back.
+  setTimeout(() => {
+    const saved = getScroll(lesson.id);
+    const max = sc.scrollHeight - sc.clientHeight;
+    const finish = () => { _restoring = false; updateCompletion(lesson, mod, progressFor()); };
+    if (saved > 0.05 && max > 0) smoothScrollTo(sc, saved * max, 500, finish);
+    else finish();
+  }, 60);
+}
+function renderLessonBody(lesson) {
+  const blocks = lesson.contentBlocks;
+  const lastIdx = lastUnlockedBlockIndex(lesson);
+  const mqCol = modAccent(course.modules.findIndex(m => m.lessons.includes(lesson))), mqLip = shadeHex(mqCol, -0.24);
+  let html = '';
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    if (block.type === 'cierre') continue; // shown only in cierre sheet
+    if (i <= lastIdx) {
+      html += `<div class="block">${renderBlockContent(block, blocks, i)}`;
+      if (block.requiresQuizToUnlockNext && block.miniQuiz && block.miniQuiz.length && !isMiniQuizCompleted(lesson.id, block.id)) {
+        html += `<button class="btn green miniquiz-btn" data-mq="${block.id}" style="background:${mqCol};--lip:${mqLip}">${playIcon(18, '#fff')} Hacer mini-quiz</button>`;
+      }
+      html += `</div>`;
+    } else if (i === lastIdx + 1) {
+      html += lockedTeaser(block, blocks, i);
+      break;
+    }
+  }
+  html += langlesBanner();
+  document.getElementById('lesson-body').innerHTML = html;
+  document.querySelectorAll('[data-mq]').forEach(b => b.onclick = () => {
+    const block = blocks.find(x => x.id === b.getAttribute('data-mq'));
+    openMiniQuiz(lesson, block);
+  });
+  document.querySelectorAll('#lesson-body .collap-h').forEach(h => h.onclick = () => {
+    const c = h.parentElement; c.classList.toggle('open');
+    const k = c.getAttribute('data-ckey');
+    if (k) { if (c.classList.contains('open')) delete COLLAPSED[k]; else COLLAPSED[k] = true; }
+    updateAccentDividers();
+  });
+  updateAccentDividers();
+  const lb = document.getElementById('lesson-body').querySelector('#langles-banner');
+  if (lb) lb.onclick = openLanglesSheet;
+}
+// Hide a section's top divider when the section directly before it is an OPEN accent
+// card (Misión, Vista previa, Resumen) — the card's edge already separates them.
+function updateAccentDividers() {
+  let prev = null;
+  document.querySelectorAll('#lesson-body .collap').forEach(c => {
+    const hide = prev && prev.classList.contains('accent-collap') && prev.classList.contains('open');
+    c.classList.toggle('div-hidden', !!hide);
+    prev = c;
+  });
+}
+// Build the bottom completion bar ONCE with stable child nodes. During scroll we
+// only mutate those nodes' properties in place — never the container's innerHTML —
+// because rewriting a sibling's innerHTML mid-scroll resets the WebView scroller.
+let _comp = null;
+function buildCompletion(lesson, mod) {
+  const el = document.getElementById('lesson-completion');
+  el.innerHTML = `<button class="btn" id="completion-btn"></button>`;
+  _comp = {
+    el,
+    btn: document.getElementById('completion-btn'),
+    barFill: document.getElementById('lesson-bar-fill'),
+    barPct: document.getElementById('lesson-bar-pct'),
+  };
+  updateCompletion(lesson, mod);
+}
+function updateCompletion(lesson, mod, liveProgress) {
+  if (!_comp) return;
+  const completed = isLessonCompleted(lesson.id);
+  const miniDone = allMiniQuizzesDone(lesson);
+  // Top app-bar progress (whole-lesson, stable DOM estimate) always tracks scroll.
+  const dp = completed ? 1 : lessonDisplayProgress(lesson);
+  const pct = Math.round(dp * 100);
+  const fillW = (completed ? 100 : (pct > 0 ? Math.max(pct, 8) : 0)) + '%';
+  if (_comp.barFill) { _comp.barFill.style.width = fillW; _comp.barFill.style.minWidth = (!completed && pct === 0) ? '12px' : ''; _comp.barFill.style.background = completed ? '' : modAccent(course.modules.indexOf(mod)); _comp.barFill.className = 'fill' + (completed ? ' done' : ''); }
+  if (_comp.barPct) { _comp.barPct.className = 'pct' + (completed ? ' done' : ''); _comp.barPct.textContent = completed ? 'Completado' : pct + '%'; }
+  // The bottom bar only appears once the final quiz is available (mini-quizzes done)
+  // or already completed. Mini-quizzes are reached via the inline buttons in the body.
+  const show = completed || miniDone;
+  _comp.el.style.display = show ? '' : 'none';
+  if (!show) return;
+  const cls = completed ? 'green30' : 'green';
+  const text = completed ? 'Quiz completado ✓' : 'Hacer quiz final';
+  const action = () => openFinalQuiz(lesson, mod);
+  if (_comp.btn._key !== cls + '|' + text) {
+    _comp.btn._key = cls + '|' + text;
+    _comp.btn.innerHTML = completed ? text : `${playIcon(18, '#fff')} ${text}`;
+    _comp.btn.className = 'btn ' + cls;
+    _comp.btn.disabled = false;
+  }
+  _comp.btn.onclick = action;
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// QUIZ WIDGETS (render into a host element; callbacks onCorrect/onIncorrect)
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function renderMC(host, q, onCorrect, onIncorrect) {
+  // Shuffle the options once per presentation, tracking which one is correct.
+  const opts = shuffle(q.options.map((text, i) => ({ text, correct: i === q.correctIndex })));
+  const correctIndex = opts.findIndex(o => o.correct);
+  let selected = null, showing = false;
+  function draw() {
+    let html = opts.map((o, i) => {
+      let cls = 'opt', ic = '';
+      if (showing) {
+        if (i === correctIndex) { cls += ' correct'; ic = icon('check', 22, '#2E7D1A'); }
+        else if (i === selected) { cls += ' wrong'; ic = icon('close', 22, '#B3261E'); }
+      } else if (i === selected) cls += ' sel';
+      return `<button class="${cls}" data-i="${i}" ${showing ? 'disabled' : ''}><span>${escapeHtml(o.text)}</span><span class="opt-ic">${ic}</span></button>`;
+    }).join('');
+    const isCorrect = selected === correctIndex;
+    let fb = '';
+    if (showing) fb = isCorrect ? `<div class="fb-line ok">¡Bien hecho!</div>` : `<div class="fb-line no">Casi — la respuesta es "${escapeHtml(opts[correctIndex].text)}"</div>`;
+    host.innerHTML = `<div class="q-kicker">Elige la respuesta correcta</div><div class="q-question">${escapeHtml(q.question)}</div><div class="q-options">${html}</div><div class="fb-slot">${fb}</div>
+      <button class="btn blue" id="q-next" ${(!showing && selected === null) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
+    if (!showing) host.querySelectorAll('.opt').forEach(b => b.onclick = () => { selected = +b.getAttribute('data-i'); draw(); });
+    host.querySelector('#q-next').onclick = () => {
+      if (!showing) { if (selected === null) return; showing = true; draw(); }
+      else { (selected === correctIndex ? onCorrect : onIncorrect)(); }
+    };
+  }
+  draw();
+}
+
+function renderRebuild(host, q, onCorrect, onIncorrect) {
+  const correctWords = q.correctSentence.split(' ');
+  const shuffled = shuffle(q.wordBlocks);
+  const MAX_PLAYS = 2; // listening is a test — you can't brute-force by replaying
+  let selected = [], usedIdx = new Set(), showing = false, isCorrect = false, speaking = false, plays = 0;
+  function draw() {
+    const ans = selected.length ? selected.map((w, i) => `<div class="word-chip" data-si="${i}">${escapeHtml(w)}</div>`).join('') : '';
+    const blocks = shuffled.map((w, i) => `<div class="block-chip ${usedIdx.has(i) ? 'used' : ''}" data-bi="${i}">${escapeHtml(w)}</div>`).join('');
+    let fb = '';
+    if (showing) fb = isCorrect ? `<div class="fb-line ok">¡Bien hecho!</div>` : `<div class="fb-line no">Casi — la forma correcta es "${escapeHtml(q.correctSentence)}"</div>`;
+    host.innerHTML = `<div class="q-kicker">Escucha y ordena las palabras</div><div class="q-question">${escapeHtml(q.question)}</div>
+      <div class="speaker${(plays >= MAX_PLAYS && !speaking) ? ' spent' : ''}${speaking ? ' playing' : ''}" id="spk">${speakerSvg(40, speaking ? '#1488C0' : (plays >= MAX_PLAYS ? '#bbb' : '#1CB0F6'))}<div class="lbl">${plays >= MAX_PLAYS && !speaking ? 'sin más' : `escuchar · ${MAX_PLAYS - plays}`}</div></div>
+      <div class="answer-area">${ans}</div>
+      <div class="blocks">${blocks}</div><div class="fb-slot">${fb}</div>
+      <button class="btn blue" id="q-next" ${(!showing && selected.length === 0) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
+    host.querySelector('#spk').onclick = () => {
+      if (speaking || plays >= MAX_PLAYS) return;
+      plays++;
+      speak(q.correctSentence, () => { speaking = true; draw(); }, () => { speaking = false; draw(); });
+    };
+    if (!showing) {
+      host.querySelectorAll('[data-bi]').forEach(b => { const i = +b.getAttribute('data-bi'); if (!usedIdx.has(i)) b.onclick = () => { usedIdx.add(i); selected.push(shuffled[i]); draw(); }; });
+      host.querySelectorAll('[data-si]').forEach(b => b.onclick = () => {
+        const si = +b.getAttribute('data-si'); const word = selected[si]; selected.splice(si, 1);
+        for (const idx of usedIdx) { if (shuffled[idx] === word) { usedIdx.delete(idx); break; } } draw();
+      });
+    }
+    host.querySelector('#q-next').onclick = () => {
+      if (!showing) {
+        if (!selected.length) return;
+        isCorrect = selected.length === correctWords.length && selected.every((w, i) => w === correctWords[i]);
+        showing = true; draw();
+      } else { (isCorrect ? onCorrect : onIncorrect)(); }
+    };
+  }
+  draw();
+}
+
+function renderTap(host, q, onCorrect, onIncorrect) {
+  let tapped = null, showing = false, isCorrect = false;
+  function correctedSentence() { const t = q.sentenceTokens.slice(); t[q.errorTokenIndex] = q.correctedToken; return t.join(' '); }
+  function draw() {
+    const tokens = q.sentenceTokens.map((tk, i) => {
+      let cls = 'token';
+      if (!showing) { if (tapped === i) cls += ' sel'; }
+      else { if (i === q.errorTokenIndex) cls += ' err'; else if (tapped === i && !isCorrect) cls += ' dim'; }
+      return `<div class="${cls}" data-ti="${i}">${escapeHtml(tk)}</div>`;
+    }).join('');
+    let fb = '';
+    if (showing) fb = isCorrect ? `<div class="fb-line ok">¡Bien hecho!</div>` : `<div class="fb-line no">Casi — la forma correcta es "${escapeHtml(correctedSentence())}"</div>`;
+    host.innerHTML = `<div class="q-kicker">Encuentra el error</div><div class="q-question">${escapeHtml(q.question)}</div><div class="tokens">${tokens}</div><div class="fb-slot">${fb}</div>
+      <button class="btn blue" id="q-next" ${(!showing && tapped === null) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
+    if (!showing) host.querySelectorAll('[data-ti]').forEach(b => b.onclick = () => { const i = +b.getAttribute('data-ti'); tapped = (tapped === i) ? null : i; draw(); });
+    host.querySelector('#q-next').onclick = () => {
+      if (!showing) { if (tapped === null) return; isCorrect = tapped === q.errorTokenIndex; showing = true; draw(); }
+      else { (isCorrect ? onCorrect : onIncorrect)(); }
+    };
+  }
+  draw();
+}
+
+function renderQuiz(host, q, onCorrect, onIncorrect) {
+  if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
+  else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
+  else renderTap(host, q, onCorrect, onIncorrect);
+}
+// Segmented progress bar (one segment per question) + an "n/total" counter.
+// `results[i]` (true=correct, false=wrong) colors answered steps green/red;
+// the current step is highlighted; the rest are upcoming.
+function quizProgress(segEl, counterEl, n, current, results) {
+  if (segEl) segEl.innerHTML = Array.from({ length: n }, (_, i) => {
+    let cls = '';
+    if (results && results[i] !== undefined) cls = results[i] ? 'done' : 'fail';
+    else if (i === current) cls = 'now';
+    return `<div class="seg ${cls}"></div>`;
+  }).join('');
+  if (counterEl) counterEl.textContent = Math.min(current + 1, n) + '/' + n;
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// MINI-QUIZ (modal) — must pass all
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function openMiniQuiz(lesson, block) {
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  // Two-pass flow: answer the whole round, then redo only the questions you missed.
+  // Miss a question again in the redo round → repeat the entire quiz (failed state).
+  let round, redo, idx, correct, results, failedQs, answered = 0;
+  _dismissGuard = () => answered > 0; // confirm before leaving once a question is answered
+  function startRound(qs, isRedo) { round = qs; redo = isRedo; idx = 0; correct = 0; results = []; failedQs = []; step(); }
+  function step() {
+    sheet.classList.remove('result');
+    sheet.innerHTML = `<div class="handle"></div>
+      <div class="q-top"><div class="segs" id="mq-segs"></div><span class="q-counter" id="mq-counter"></span></div>
+      <div class="quiz-host" id="mq-host"></div>`;
+    renderQuiz(document.getElementById('mq-host'), round[idx],
+      () => { correct++; answered++; results[idx] = true; advance(); },
+      () => { answered++; results[idx] = false; failedQs.push(round[idx]); advance(); });
+    quizProgress(document.getElementById('mq-segs'), document.getElementById('mq-counter'), round.length, idx, results);
+  }
+  function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
+  function finish() {
+    if (failedQs.length === 0) return pass();
+    if (redo) return showFail();            // missed again in the redo round → full reset
+    return showRedo(failedQs.slice());      // first pass: redo just the missed ones
+  }
+  function result(iconName, iconColor, cls, title, sub, btnCls, btnLabel, onAction) {
+    sheet.classList.add('result');
+    sheet.innerHTML = `<div class="handle"></div><div class="center-col">
+      <div class="result-icon ${cls}">${icon(iconName, cls === 'ok' ? 40 : 38, iconColor)}</div>
+      <div class="result-title">${title}</div>
+      <div class="result-sub">${sub}</div>
+      <button class="btn ${btnCls}" id="mq-action">${btnLabel}</button>
+      </div>`;
+    document.getElementById('mq-action').onclick = onAction;
+  }
+  function pass() {
+    result('check', '#2E7D1A', 'ok', '¡Bien hecho!', '¡Siguiente sección desbloqueada!', 'green', 'Continuar', () => {
+      closeOverlay(); markMiniQuizCompleted(lesson, block.id);
+      const sc = document.getElementById('lesson-scroll');
+      const prev = sc ? sc.scrollTop : 0;
+      renderLessonBody(lesson);
+      // Keep the reader where they were after the newly unlocked block is inserted.
+      // Recompute the segment scroll against the NEW (taller) content — otherwise the
+      // bar would reuse the stale ~100% segment value and jump to the new end even
+      // though the reader is still at the old position (now mid-content).
+      requestAnimationFrame(() => {
+        if (sc) sc.scrollTop = prev;
+        const max = sc ? sc.scrollHeight - sc.clientHeight : 0;
+        const seg = max >= 100 ? Math.min(1, Math.max(0, sc.scrollTop / max)) : 1;
+        setScroll(lesson.id, seg);
+        updateCompletion(lesson, CURRENT.module, seg);
+      });
+    });
+  }
+  function showRedo(failed) {
+    const one = failed.length === 1;
+    result('refresh', '#5C5159', 'no', 'Repasemos',
+      `Fallaste ${failed.length} ${one ? 'pregunta' : 'preguntas'}. Vuelve a intentarla${one ? '' : 's'} para continuar.`,
+      'amber', `Repasar${one ? '' : ` (${failed.length})`}`, () => startRound(shuffle(failed), true));
+  }
+  function showFail() {
+    result('refresh', '#5C5159', 'no', 'Casi lo tienes',
+      'Fallaste otra vez. Repite el quiz completo para continuar.',
+      'blue', 'Reintentar', () => startRound(shuffle(block.miniQuiz), false));
+  }
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+  startRound(shuffle(block.miniQuiz), false);
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// FINAL QUIZ (full screen) — must pass all
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function openFinalQuiz(lesson, mod) {
+  CURRENT.lesson = lesson; CURRENT.module = mod;
+  show('quiz');
+  const host = document.getElementById('quiz-host');
+  const segs = document.getElementById('quiz-segs'), counter = document.getElementById('quiz-counter');
+  // Same two-pass flow as the mini-quiz: redo only the missed questions; miss any of
+  // them a second time and the whole quiz restarts (failed state).
+  let round, redo, idx, correct, results, failedQs, skillAgg;
+  // Skill tally captures the FIRST full pass through the quiz (redo rounds and
+  // clean-slate retries don't stack): reset it whenever a non-redo round starts.
+  function recSkill(q, ok) { const s = skillAgg[qSkill(q.type)]; s.t++; if (!ok) s.e++; }
+  function startRound(qs, isRedo) {
+    if (!isRedo) skillAgg = { listening: { t: 0, e: 0 }, reading: { t: 0, e: 0 }, writing: { t: 0, e: 0 } };
+    round = qs; redo = isRedo; idx = 0; correct = 0; results = []; failedQs = []; step();
+  }
+  function step() {
+    renderQuiz(host, round[idx],
+      () => { correct++; results[idx] = true; if (!redo) recSkill(round[idx], true); advance(); },
+      () => { results[idx] = false; failedQs.push(round[idx]); if (!redo) recSkill(round[idx], false); advance(); });
+    quizProgress(segs, counter, round.length, idx, results);
+  }
+  function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
+  function finish() {
+    if (failedQs.length === 0) return pass();
+    if (redo) return showFail();
+    return showRedo(failedQs.slice());
+  }
+  function pass() {
+    const was = isQuizCompleted(lesson.id);
+    lp(lesson.id).skillErr = skillAgg; // record this lesson's per-skill first-try mistakes
+    markQuizCompleted(lesson.id);
+    showDialog(`<div class="center-col">
+      <div class="result-icon ok" style="background:var(--green)"><img src="completed_new.svg" style="width:48px;height:auto" alt=""></div>
+      <div class="result-title">¡Lección completada!</div>
+      <div class="result-sub">¡Vas muy bien!</div>
+      <button class="btn green" id="dlg-ok">Continuar</button></div>`, () => {
+      closeOverlay();
+      const cierre = lesson.contentBlocks.find(b => b.type === 'cierre');
+      if (!was && cierre) openCierreSheet(cierre);
+      else { renderModule(mod); }
+    });
+  }
+  function showRedo(failed) {
+    const one = failed.length === 1;
+    showDialog(`<div class="center-col">
+      <div class="result-icon no">${icon('refresh', 40, '#5C5159')}</div>
+      <div class="result-title">Repasemos</div>
+      <div class="result-sub">Fallaste ${failed.length} ${one ? 'pregunta' : 'preguntas'}. Vuelve a intentarla${one ? '' : 's'} para terminar.</div>
+      <button class="btn amber" id="dlg-ok">Repasar${one ? '' : ` (${failed.length})`}</button>
+      <div style="height:12px"></div><button class="btn" style="background:none;color:var(--blue)" id="dlg-back">Volver al módulo</button></div>`,
+      () => { closeOverlay(); startRound(shuffle(failed), true); },
+      () => { closeOverlay(); renderModule(mod); });
+  }
+  function showFail() {
+    showDialog(`<div class="center-col">
+      <div class="result-icon no">${icon('refresh', 40, '#5C5159')}</div>
+      <div class="result-title">Casi lo tienes</div>
+      <div class="result-sub">Fallaste otra vez. Repite el quiz completo para pasar.</div>
+      <button class="btn blue" id="dlg-ok">Reintentar</button>
+      <div style="height:12px"></div><button class="btn" style="background:none;color:var(--blue)" id="dlg-back">Volver al módulo</button></div>`,
+      () => { closeOverlay(); startRound(shuffle(lesson.quizQuestions), false); },
+      () => { closeOverlay(); renderModule(mod); });
+  }
+  startRound(shuffle(lesson.quizQuestions), false);
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// SHEETS / DIALOGS
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+let _dismissGuard = null; // when set, returns true if dismissing the sheet needs confirmation
+function closeOverlay() {
+  _dismissGuard = null;
+  document.getElementById('overlay').classList.remove('active');
+  const s = document.getElementById('sheet');
+  s.classList.remove('result');
+  s.style.transform = ''; s.style.transition = '';
+}
+// Slide the sheet down then tear it down — for user-initiated dismissals only
+// (tap-outside / drag). Internal handoffs keep calling closeOverlay() directly.
+function animateDismiss() {
+  const s = document.getElementById('sheet');
+  s.style.transition = 'transform .25s ease';
+  s.style.transform = 'translateY(100%)';
+  setTimeout(closeOverlay, 240);
+}
+function confirmDismiss(onYes) {
+  let c = document.getElementById('confirm-pop');
+  if (!c) { c = document.createElement('div'); c.id = 'confirm-pop'; c.className = 'confirm-pop'; document.body.appendChild(c); }
+  c.innerHTML = `<div class="confirm-card">
+    <div class="confirm-title">¿Salir del quiz?</div>
+    <div class="confirm-sub">Si sales ahora perderás tu progreso en esta ronda.</div>
+    <button class="btn blue" id="confirm-stay">Seguir intentando</button>
+    <button class="btn" id="confirm-leave" style="background:none;color:var(--blue);font-weight:700">Salir</button>
+  </div>`;
+  c.classList.add('show');
+  document.getElementById('confirm-stay').onclick = () => c.classList.remove('show');
+  document.getElementById('confirm-leave').onclick = () => { c.classList.remove('show'); onYes(); };
+}
+function requestDismiss() {
+  const s = document.getElementById('sheet');
+  if (_dismissGuard && _dismissGuard()) {
+    s.style.transition = 'transform .2s ease'; s.style.transform = 'translateY(0)';
+    confirmDismiss(animateDismiss);
+  } else {
+    animateDismiss();
+  }
+}
+function showDialog(innerHtml, onOk, onBack) {
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  sheet.innerHTML = `<div class="handle"></div>${innerHtml}`;
+  sheet.dataset.dismissible = 'false'; overlay.classList.add('active');
+  const ok = document.getElementById('dlg-ok'); if (ok) ok.onclick = onOk;
+  const back = document.getElementById('dlg-back'); if (back) back.onclick = onBack;
+}
+function openCierreSheet(block) {
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  sheet.innerHTML = `<div class="handle"></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">${icon('emoji_events', 28, '#FFD700')}<span style="font-size:22px;font-weight:800">¡Felicitaciones!</span></div>
+    <div class="quiz-host"><div class="md">${renderMarkdown(block.markdown)}</div></div>
+    <div style="height:12px"></div><button class="btn" style="background:#FFD700;color:#000" id="cierre-close">Continuar</button>`;
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+  document.getElementById('cierre-close').onclick = () => { closeOverlay(); renderModule(CURRENT.module); };
+}
+function openLanglesSheet() {
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  sheet.innerHTML = `<div class="handle"></div>
+    <div class="logos" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px">
+      <img src="langles_iso.png" style="height:64px" alt=""><img src="langles_logo.png" style="height:51px" alt=""></div>
+    <a href="https://wa.me/51985539636" target="_blank" class="btn" style="background:url('langles_green_button.svg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;margin-bottom:12px">${icon('chat', 20, '#fff')} Información de cursos</a>
+    <a href="https://www.instagram.com/langlesenglish?igsh=MXZ4eTB1d2FibmtxZQ==" target="_blank" class="btn" style="background:url('langles_red_button.svg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none">${icon('public', 20, '#fff')} Conócenos</a>
+    <div style="height:8px"></div>`;
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+}
+// A sheet is dismissible (tap-outside / drag-down) when sheet.dataset.dismissible
+// is 'true'. Mini-quiz / Langles / cierre are dismissible; the final-quiz pass/fail
+// dialogs are not (they require an explicit button choice, matching the app).
+(function setupSheetDismiss() {
+  const overlay = document.getElementById('overlay');
+  const sheet = document.getElementById('sheet');
+  const dismissible = () => sheet.dataset.dismissible === 'true';
+  overlay.addEventListener('click', (e) => { if (e.target.id === 'overlay' && dismissible()) requestDismiss(); });
+  // Drag the grab handle downward to dismiss — mouse + touch via Pointer Events.
+  let startY = null, dragging = false;
+  const snapBack = () => { sheet.style.transition = 'transform .2s ease'; sheet.style.transform = 'translateY(0)'; };
+  sheet.addEventListener('pointerdown', (e) => {
+    if (!dismissible()) return;
+    const t = e.target;
+    if (!(t.classList && t.classList.contains('handle'))) return;
+    startY = e.clientY; dragging = true; sheet.style.transition = 'none';
+    if (sheet.setPointerCapture) sheet.setPointerCapture(e.pointerId);
+  });
+  sheet.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    sheet.style.transform = 'translateY(' + Math.max(0, e.clientY - startY) + 'px)';
+  });
+  sheet.addEventListener('pointerup', (e) => {
+    if (!dragging) return; dragging = false;
+    if (e.clientY - startY > 110) requestDismiss(); else snapBack();
+  });
+  sheet.addEventListener('pointercancel', () => { if (dragging) { dragging = false; snapBack(); } });
+})();
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Toast
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+let _toastT = null;
+function toast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.style.cssText = 'position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#333;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;z-index:100;max-width:80%;text-align:center'; document.body.appendChild(t); }
+  t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(_toastT); _toastT = setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; }, 2500);
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// DEBUG: wipe all saved progress and return to a fresh course screen.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function resetProgress() {
+  if (_saveT) { clearTimeout(_saveT); _saveT = null; }
+  PROGRESS = {};
+  try { localStorage.removeItem(PK); saveProgress(PROGRESS); } catch (e) {}
+  CURRENT = { module: null, lesson: null };
+  closeOverlay();
+  renderCourse();
+  toast('Progreso reiniciado');
+}
+// debug actions are wired to the floating .debug-fab buttons (see body.debug-fabs)
+
+// DEBUG: wipe EVERYTHING — course progress AND the onboarding profile — and reload,
+// so the app boots fresh into the first-run onboarding.
+function resetAllData() {
+  try { localStorage.removeItem(PK); localStorage.removeItem(PROFILE_KEY); } catch (e) {}
+  location.reload();
+}
+
+// DEBUG: complete the next pending mini-quiz of the currently open lesson, then
+// re-render and re-sync progress exactly like passing it for real would. Finishing
+// a module's last microlección auto-completes the module (see markQuizCompleted).
+function debugFinishNextMiniQuiz() {
+  const onLesson = !!CURRENT.lesson && document.getElementById('screen-lesson').classList.contains('active');
+  if (!onLesson) {
+    // Complete the next-in-line microlección ENTIRELY (mini-quizzes + final quiz) and refresh.
+    const next = allLessons.find(l => isLessonUnlocked(l.id) && !isLessonCompleted(l.id));
+    if (!next) { toast('¡Curso completado! (debug)'); return; }
+    next.contentBlocks.forEach(b => {
+      if (b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length && !isMiniQuizCompleted(next.id, b.id)) markMiniQuizCompleted(next, b.id);
+    });
+    markQuizCompleted(next.id);
+    toast('Completada (debug): ' + next.title);
+    if (document.getElementById('screen-module').classList.contains('active') && CURRENT.module) renderModule(CURRENT.module);
+    else if (document.getElementById('screen-course').classList.contains('active')) renderCourse();
+    return;
+  }
+  const lesson = CURRENT.lesson, mod = CURRENT.module;
+  const blocks = lesson.contentBlocks;
+  const lastIdx = lastUnlockedBlockIndex(lesson);
+  let target = null;
+  for (let i = 0; i <= lastIdx && i < blocks.length; i++) {
+    const b = blocks[i];
+    if (b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length && !isMiniQuizCompleted(lesson.id, b.id)) { target = b; break; }
+  }
+  if (!target) {
+    // No pending mini-quiz: complete this microlección's FINAL quiz (which also
+    // auto-completes the module if it was the last lesson). Next tap jumps onward.
+    if (!isLessonCompleted(lesson.id)) {
+      markQuizCompleted(lesson.id);
+      updateCompletion(lesson, mod);
+      toast('Quiz final completado (debug)');
+      return;
+    }
+    const nId = nextLessonId(lesson.id);
+    const nl = nId ? allLessons.find(l => l.id === nId) : null;
+    if (nl) {
+      const nmod = course.modules.find(mm => mm.lessons.some(l => l.id === nId)) || mod;
+      openLesson(nl, nmod);
+      toast('Siguiente microlección (debug)');
+    } else {
+      toast('¡Curso completado! (debug)');
+    }
+    return;
+  }
+  const sc = document.getElementById('lesson-scroll');
+  const prev = sc ? sc.scrollTop : 0;
+  markMiniQuizCompleted(lesson, target.id);
+  renderLessonBody(lesson);
+  requestAnimationFrame(() => {
+    if (sc) sc.scrollTop = prev;
+    const max = sc ? sc.scrollHeight - sc.clientHeight : 0;
+    const seg = max >= 100 ? Math.min(1, Math.max(0, sc.scrollTop / max)) : 1;
+    setScroll(lesson.id, seg);
+    updateCompletion(lesson, mod, seg);
+  });
+  toast('Mini-quiz completado (debug)');
+}
+
+// DEBUG: rebuild every block's `unlocked` flag of a lesson purely from which
+// mini-quizzes are currently marked done. This is the deterministic inverse of
+// markMiniQuizCompleted's incremental unlocking, so clearing one `mq` flag and
+// recomputing correctly re-locks whatever that mini-quiz had opened.
+function debugRecomputeBlockLocks(lesson) {
+  const blocks = lesson.contentBlocks;
+  const L = lp(lesson.id);
+  let firstGated = blocks.findIndex(b => b.type === 'teoria' && b.requiresQuizToUnlockNext);
+  if (firstGated < 0) firstGated = 0;
+  const gated = blocks.filter(b => b.type === 'teoria' && b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length);
+  const lastGatedId = gated.length ? gated[gated.length - 1].id : null;
+  const unlocked = new Set();
+  for (let i = 0; i <= firstGated && i < blocks.length; i++) unlocked.add(blocks[i].id);
+  gated.forEach(tb => {
+    if (!(L.blocks[tb.id] && L.blocks[tb.id].mq)) return;
+    const idx = blocks.findIndex(b => b.id === tb.id);
+    if (tb.id === lastGatedId) { for (let i = idx + 1; i < blocks.length; i++) unlocked.add(blocks[i].id); }
+    else if (idx >= 0 && idx < blocks.length - 1) unlocked.add(blocks[idx + 1].id);
+  });
+  blocks.forEach(b => { L.blocks[b.id] = Object.assign({}, L.blocks[b.id], { unlocked: unlocked.has(b.id) }); });
+  saveProgress(PROGRESS);
+}
+
+// DEBUG: re-render the current screen after an undo, preserving lesson scroll.
+function debugRefresh(onLesson, lesson, mod) {
+  if (onLesson) {
+    const sc = document.getElementById('lesson-scroll');
+    const prev = sc ? sc.scrollTop : 0;
+    renderLessonBody(lesson);
+    requestAnimationFrame(() => { if (sc) sc.scrollTop = prev; updateCompletion(lesson, mod); });
+  } else if (document.getElementById('screen-module').classList.contains('active') && CURRENT.module) {
+    renderModule(CURRENT.module);
+  } else if (document.getElementById('screen-course').classList.contains('active')) {
+    renderCourse();
+  }
+}
+
+// DEBUG: undo exactly ONE quiz completion, in reverse of the forward stepper:
+// final quiz -> last mini-quiz -> earlier mini-quizzes -> step to previous lesson.
+function debugUndoLastQuiz() {
+  const onLesson = !!CURRENT.lesson && document.getElementById('screen-lesson').classList.contains('active');
+  let lesson = null, mod = null;
+  if (onLesson) { lesson = CURRENT.lesson; mod = CURRENT.module; }
+  else {
+    for (let i = allLessons.length - 1; i >= 0; i--) {
+      const l = allLessons[i], p = PROGRESS[l.id];
+      const hasMq = p && p.blocks && Object.keys(p.blocks).some(k => p.blocks[k] && p.blocks[k].mq);
+      if (isQuizCompleted(l.id) || hasMq) { lesson = l; mod = course.modules.find(m => m.lessons.some(x => x.id === l.id)); break; }
+    }
+    if (!lesson) { toast('Nada que deshacer (debug)'); return; }
+  }
+
+  // 1) Final quiz completed -> undo it. Re-locks the next lesson AND clears the
+  //    module-completed flag, since the module auto-completes with the last quiz.
+  if (isQuizCompleted(lesson.id)) {
+    const L = lp(lesson.id);
+    L.quizCompleted = false;
+    const nId = nextLessonId(lesson.id);
+    if (nId && allLessons[0].id !== nId) lp(nId).unlocked = false; // re-lock next lesson (forward step had unlocked it)
+    if (mod && PROGRESS['__modules'] && PROGRESS['__modules'][mod.id]) PROGRESS['__modules'][mod.id] = false;
+    saveProgress(PROGRESS);
+    debugRefresh(onLesson, lesson, mod);
+    toast('Quiz final deshecho (debug): ' + lesson.title);
+    return;
+  }
+
+  // 2) Undo the most recently completed mini-quiz.
+  const gated = lesson.contentBlocks.filter(b => b.type === 'teoria' && b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length);
+  let target = null;
+  for (let i = gated.length - 1; i >= 0; i--) { if (isMiniQuizCompleted(lesson.id, gated[i].id)) { target = gated[i]; break; } }
+  if (target) {
+    const L = lp(lesson.id);
+    L.blocks[target.id] = Object.assign({}, L.blocks[target.id], { mq: false });
+    debugRecomputeBlockLocks(lesson);
+    debugRefresh(onLesson, lesson, mod);
+    toast('Mini-quiz deshecho (debug): ' + target.id);
+    return;
+  }
+
+  // 3) Nothing left on this lesson -> step back to the previous microlección.
+  const idx = allLessons.findIndex(l => l.id === lesson.id);
+  const prev = idx > 0 ? allLessons[idx - 1] : null;
+  if (prev && onLesson) {
+    const pmod = course.modules.find(m => m.lessons.some(l => l.id === prev.id)) || mod;
+    openLesson(prev, pmod);
+    toast('Microlección anterior (debug)');
+  } else {
+    toast('Inicio del curso (debug)');
+  }
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Onboarding (first run) — Ozzy guides a Duolingo-style flow, one thing per step.
+// The app is student-only (families/teachers get the web dashboard). Steps:
+//   0 saludo · 1 motivación · 2 nivel de partida · 3 nombre · 4 payoff ·
+//   5 meta diaria · 6 listo.
+// Steps 1/2/5 are option lists that advance ON TAP (no button); the rest use the
+// big button. The name gates the button until typed. The placement answer (step 2)
+// is saved for context only — everyone starts from the very first lesson.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+const PROFILE_KEY = 'ingles_web_profile_v1';
+function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)); } catch (e) { return null; } }
+function saveProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// PLACEMENT TEST UI — drives #screen-placement using window.PLACEMENT (placement.js).
+// Presents items A1→C1, stops early on a weak band, then calls onDone(result)
+// where result = { nivel, module, porBanda, desc }.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+let PL = null;
+function startPlacement(onDone) {
+  const P = window.PLACEMENT;
+  PL = { order: P.order(), idx: 0, chosen: null, answers: [], t0: Date.now(), onDone: onDone, finished: false, result: null };
+  document.getElementById('pl-result').hidden = true;
+  document.getElementById('pl-q').hidden = false;
+  show('placement');
+  plItem();
+}
+function plItem() {
+  const it = PL.order[PL.idx];
+  PL.chosen = null;
+  document.getElementById('pl-bubble').innerHTML = 'Completa la frase 👇';
+  document.getElementById('pl-qtext').innerHTML = it.q.replace(/___/g, '<span class="gap">_____</span>');
+  const host = document.getElementById('pl-opts'); host.innerHTML = '';
+  const pick = (val, el) => { PL.chosen = val; [...host.children].forEach(c => c.classList.remove('sel')); el.classList.add('sel'); document.getElementById('pl-next').disabled = false; };
+  window.PLACEMENT.shuffle(it.opts.length).forEach(oi => {
+    const b = document.createElement('button'); b.className = 'opt';
+    b.innerHTML = `<span>${escapeHtml(it.opts[oi])}</span><span class="opt-ic"></span>`;
+    b.onclick = () => pick(oi, b); host.appendChild(b);
+  });
+  const ns = document.createElement('button'); ns.className = 'opt';
+  ns.innerHTML = `<span style="color:var(--muted2);font-weight:600">No lo sé</span><span class="opt-ic"></span>`;
+  ns.onclick = () => pick(-1, ns); host.appendChild(ns);
+  const btn = document.getElementById('pl-next');
+  btn.textContent = (PL.idx === PL.order.length - 1) ? 'Terminar' : 'Continuar';
+  btn.disabled = true;
+  plProgress();
+}
+function plProgress() {
+  document.getElementById('pl-bar').style.width = ((PL.idx / PL.order.length) * 100).toFixed(1) + '%';
+  document.getElementById('pl-count').textContent = 'Pregunta ' + (PL.idx + 1) + ' de ' + PL.order.length;
+  const s = Math.round((Date.now() - PL.t0) / 1000);
+  document.getElementById('pl-time').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+function plNext() {
+  const it = PL.order[PL.idx];
+  PL.answers.push({ id: it.id, band: it.band, ok: PL.chosen === it.a });
+  const endOfBand = !PL.order[PL.idx + 1] || PL.order[PL.idx + 1].band !== it.band;
+  if (endOfBand && window.PLACEMENT.shouldStop(PL.answers, it.band)) return plFinish();
+  PL.idx++;
+  if (PL.idx >= PL.order.length) return plFinish();
+  plItem();
+}
+function plFinish() {
+  const P = window.PLACEMENT, res = P.level(PL.answers);
+  PL.finished = true; PL.result = res;
+  document.getElementById('pl-bar').style.width = '100%';
+  document.getElementById('pl-count').textContent = 'Completado';
+  document.getElementById('pl-bubble').innerHTML = '¡Listo! Ya sé por dónde<br>te conviene empezar.';
+  document.getElementById('pl-q').hidden = true;
+  const shown = res.nivel === 'Pre-A1' ? 'A1' : res.nivel;
+  const r = document.getElementById('pl-result'); r.hidden = false;
+  r.innerHTML = `<div class="pl-cap">Tu nivel estimado</div><div class="pl-lv">${shown}</div>`
+    + `<div class="pl-desc">${res.desc}</div>`
+    + `<div class="pl-prof">` + P.BANDS.map(b => {
+        const d = res.porBanda[b];
+        if (!d) return `<div class="pl-prow"><span class="lb">${b}</span><span class="track"><i style="width:0"></i></span><span class="n">—</span></div>`;
+        const pct = Math.round(d.ok / d.n * 100), cls = d.ok >= P.UMBRAL ? '' : (d.ok >= P.CORTE_ABANDONO + 1 ? 'low' : 'bad');
+        return `<div class="pl-prow"><span class="lb">${b}</span><span class="track"><i class="${cls}" style="width:${pct}%"></i></span><span class="n">${d.ok}/${d.n}</span></div>`;
+      }).join('') + `</div>`;
+  const btn = document.getElementById('pl-next');
+  btn.textContent = 'Continuar'; btn.disabled = false;
+}
+document.getElementById('pl-next').addEventListener('click', () => {
+  if (!PL) return;
+  if (PL.finished) { const res = PL.result, cb = PL.onDone; PL = null; cb(res); return; }
+  if (PL.chosen !== null) plNext();
+});
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Placement unlock + celebration.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Open the course at module `lvl`: mark modules[0..lvl-1] complete + unlocked so
+// the ring / level / Mi progreso reflect the placement. lvl 0 = fresh A1 start.
+function applyPlacement(lvl) {
+  if (!lvl || lvl < 1) return;
+  const idx = Math.min(lvl, course.modules.length - 1);
+  for (let i = 0; i < idx; i++) {
+    course.modules[i].lessons.forEach(l => { lp(l.id).quizCompleted = true; lp(l.id).readingCompleted = true; lp(l.id).unlocked = true; });
+    if (!PROGRESS['__modules']) PROGRESS['__modules'] = {};
+    PROGRESS['__modules'][course.modules[i].id] = true;
+  }
+  const first = course.modules[idx].lessons[0];
+  if (first) lp(first.id).unlocked = true;
+  saveProgress(PROGRESS);
+}
+// Celebration overlay for placing above A1 → then reveal the module map.
+function celebratePlacement(mIdx, mod) {
+  const lvl = OB_LEVELS[mIdx] || 'A1';
+  const ov = document.createElement('div'); ov.className = 'celebrate';
+  ov.innerHTML = `<div class="cel-confetti"></div><div class="cel-card">
+    <div class="cel-emoji">🎉</div>
+    <div class="cel-kick">¡Te ubicamos!</div>
+    <div class="cel-lv">Empiezas en ${lvl}</div>
+    <div class="cel-track">${OB_LEVELS.slice(0, mIdx + 1).map((l, i) => `<span class="cel-tk" style="animation-delay:${(i * 0.16).toFixed(2)}s">${l}</span>`).join('')}</div>
+    <button class="btn green cel-go">Ver mi ruta ${arrowFwd(18, '#fff', 2.8)}</button>
+  </div>`;
+  document.body.appendChild(ov);
+  const cc = ov.querySelector('.cel-confetti'), colors = ['#3FAA24', '#1CB0F6', '#F4A720', '#FF6FA5', '#CE82FF'];
+  for (let i = 0; i < 44; i++) { const p = document.createElement('i');
+    p.style.cssText = `left:${(Math.random() * 100).toFixed(1)}%;background:${colors[i % 5]};animation-delay:${(Math.random() * 0.7).toFixed(2)}s`; cc.appendChild(p); }
+  ov.querySelector('.cel-go').onclick = () => { ov.remove(); renderModule(mod); };
+}
+
+const OB_LAST = 6;
+const OB_TAP_STEPS = [1, 2, 5];     // option lists: selecting advances, no button
+const OB_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'];
+let OB = { step: 0, name: '', mot: '', goal: '', placedModule: 0, placedLevel: 'A1' };
+const OB_BUBBLES = [
+  () => '¡Hola! Soy <b>Ozzy el Osito.</b><br>Empezemos.',
+  () => '¿Por qué quieres aprender inglés?',
+  () => '¿Empezamos por ubicarte?<br>Un test corto y sé tu nivel.',
+  () => '¿Cómo te llamas?',
+  () => OB.name ? `Mira, <b>${escapeHtml(OB.name)}</b>, esto vamos a practicar:` : 'Esto es lo que vamos a practicar:',
+  () => '¿Cuál es tu meta diaria?',
+  () => `¡Listo, <b>${escapeHtml(OB.name)}</b>!<br>Tu ruta ya está preparada. `,
+];
+
+function obRender() {
+  document.querySelector('#screen-onboard .ob-wrap').classList.toggle('ob-intro', OB.step === 0);
+  document.querySelector('#screen-onboard .ob-top').classList.toggle('can-back', OB.step > 0);
+  document.getElementById('ob-segs').innerHTML = Array.from({ length: OB_LAST + 1 }, (_, i) =>
+    `<div class="seg ${i < OB.step ? 'done' : (i === OB.step ? 'now' : '')}"></div>`).join('');
+  document.getElementById('ob-bubble').innerHTML = OB_BUBBLES[OB.step]();
+  document.querySelectorAll('#screen-onboard .ob-step').forEach(s =>
+    s.classList.toggle('on', +s.dataset.step === OB.step));
+  // keep the option pills' selected state in sync (matters when stepping back)
+  document.querySelectorAll('.ob-opt[data-mot]').forEach(b => b.classList.toggle('sel', b.dataset.mot === OB.mot));
+  document.querySelectorAll('.ob-opt[data-goal]').forEach(b => b.classList.toggle('sel', b.dataset.goal === OB.goal));
+  // footer: the big button on most steps; on the LAST step the real course-foot
+  // "tu primera lección" bar takes over — its CTA drops straight into the lesson.
+  const isLast = OB.step === OB_LAST;
+  const next = document.getElementById('ob-next');
+  const foot = document.getElementById('ob-foot');
+  foot.hidden = !isLast;
+  next.style.display = (isLast || OB_TAP_STEPS.includes(OB.step)) ? 'none' : '';
+  next.textContent = OB.step === 0 ? '¡Empecemos!' : 'Continuar';
+  const needName = OB.step === 3 && !document.getElementById('ob-name').value.trim();
+  next.disabled = needName;
+  next.className = 'btn ' + (needName ? 'disabled' : 'green');
+  if (OB.step === 3) setTimeout(() => document.getElementById('ob-name').focus(), 120);
+  if (isLast) {
+    const mIdx = OB.placedModule || 0;
+    document.getElementById('ob-sum').innerHTML =
+      `<div class="ob-chip lvl"><span class="em">🏁</span><span class="lb">Nivel ${OB_LEVELS[mIdx]}</span><div class="sb">Empiezas aquí</div></div>` +
+      `<div class="ob-chip goal"><span class="em">🎯</span><span class="lb">${OB.goal || 10} min</span><div class="sb">Meta diaria</div></div>`;
+    const mod = course.modules[mIdx], fl = mod.lessons[0];
+    const col = modAccent(mIdx), cold = shadeHex(col, -0.24);
+    const kicker = mIdx > 0 ? 'Tu punto de partida' : 'Tu primera lección';
+    const title = mIdx > 0 ? ('Nivel ' + OB_LEVELS[mIdx] + ' · ' + escapeHtml(moduleName(mod))) : escapeHtml(lessonName(fl));
+    const label = mIdx > 0 ? 'Ver mi ruta' : 'Empezar';
+    foot.innerHTML = fl
+      ? `<div class="foot-kicker" style="color:${col}">${kicker}</div>
+         <div class="foot-title">${title}</div>
+         <button class="cta-btn" id="ob-start" style="background:${col};--lip:${cold}">${label} ${arrowFwd(19, '#fff', 2.8)}</button>`
+      : '';
+    const start = document.getElementById('ob-start');
+    if (start) start.onclick = obFinishToLesson;
+  }
+}
+function obAdvance() { if (OB.step < OB_LAST) { OB.step++; obRender(); } }
+// FLIP: record each element's box, run `mutate` (which relayouts them via a class
+// change), then play the inverted delta so they glide from old → new geometry.
+// Used to morph the big centered intro Ozzy + bubble into the small talk row.
+function obFlip(els, mutate) {
+  const first = els.map(el => el.getBoundingClientRect());
+  mutate();
+  els.forEach((el, i) => {
+    const last = el.getBoundingClientRect();
+    const dx = first[i].left - last.left, dy = first[i].top - last.top;
+    const sx = last.width ? first[i].width / last.width : 1, sy = last.height ? first[i].height / last.height : 1;
+    el.style.transformOrigin = 'top left';
+    el.style.transition = 'none';
+    el.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+    el.getBoundingClientRect(); // flush the inverted start before animating
+    requestAnimationFrame(() => {
+      el.style.transition = 'transform .5s cubic-bezier(.22,1,.36,1)';
+      el.style.transform = '';
+    });
+    el.addEventListener('transitionend', function te() { el.style.transition = ''; el.style.transformOrigin = ''; el.removeEventListener('transitionend', te); });
+  });
+}
+document.getElementById('ob-next').addEventListener('click', () => {
+  if (OB.step === 3) {
+    const v = document.getElementById('ob-name').value.trim();
+    if (!v) return;
+    OB.name = v.split(/\s+/)[0];
+  }
+  if (OB.step === OB_LAST) { obFinish(); return; }
+  if (OB.step === 0) { // morph the hero Ozzy + bubble into the talk row
+    obFlip([document.querySelector('.ob-bear'), document.getElementById('ob-bubble')], obAdvance);
+    return;
+  }
+  obAdvance();
+});
+document.getElementById('ob-back').addEventListener('click', () => { if (OB.step > 0) { OB.step--; obRender(); } });
+document.getElementById('ob-name').addEventListener('input', () => {
+  if (OB.step === 3) {
+    const empty = !document.getElementById('ob-name').value.trim();
+    const next = document.getElementById('ob-next');
+    next.disabled = empty; next.className = 'btn ' + (empty ? 'disabled' : 'green');
+  }
+});
+document.getElementById('ob-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('ob-next').click(); }
+});
+document.querySelectorAll('.ob-opt').forEach(b => b.addEventListener('click', () => {
+  b.parentElement.querySelectorAll('.ob-opt').forEach(x => x.classList.toggle('sel', x === b));
+  if (b.dataset.choice != null) {           // step 2: take the placement test, or start fresh
+    if (b.dataset.choice === 'skip') { OB.placedModule = 0; OB.placedLevel = 'A1'; setTimeout(obAdvance, 220); }
+    else setTimeout(() => startPlacement(res => {
+      OB.placedModule = res.module; OB.placedLevel = (res.nivel === 'Pre-A1') ? 'A1' : res.nivel;
+      show('onboard'); OB.step = 3; obRender();
+    }), 200);
+    return;
+  }
+  if (b.dataset.mot != null) OB.mot = b.dataset.mot;
+  else if (b.dataset.goal != null) OB.goal = b.dataset.goal;
+  setTimeout(obAdvance, 220); // let the selected state read before sliding on
+}));
+function obSaveProfile() {
+  saveProfile({ name: OB.name, goal: +OB.goal || 10, level: OB.placedLevel || 'A1',
+    placedModule: OB.placedModule || 0, motive: OB.mot || '', created: new Date().toISOString() });
+}
+function obFinish() { obFinishToLesson(); }
+// Finish onboarding: apply the placement, then celebrate → module map (placed above
+// A1) or drop into the very first lesson (fresh A1 start). Called by the last-step bar.
+function obFinishToLesson() {
+  const mIdx = OB.placedModule || 0;
+  const mod = course.modules[mIdx], fl = mod.lessons[0];
+  applyPlacement(mIdx);
+  obSaveProfile();
+  renderCourse();
+  if (mIdx > 0) celebratePlacement(mIdx, mod);
+  else if (fl) openLesson(fl, mod);
+  toast('¡Hola, ' + OB.name + '! Ozzy te espera 🐻');
+}
+function startOnboarding() { OB = { step: 0, name: '', mot: '', goal: '', placedModule: 0, placedLevel: 'A1' }; show('onboard'); obRender(); }
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Boot: first run (no profile) → onboarding; otherwise straight to the course.
+if (loadProfile()) renderCourse(); else startOnboarding();
+</script>
+</body>
+</html>
