@@ -33,9 +33,11 @@ function Dashboard() {
 
   if ((!isFake && profile.isLoading) || isStudentOnly || !canView) return null;
 
+  const role = roles.includes("teacher") ? "teacher" : roles.includes("parent") ? "parent" : "student";
+
   return (
     <iframe
-      src="/dashboard/index.html"
+      src={`/dashboard/index.html?role=${role}`}
       title="Aprendo English Dashboard"
       style={{ border: 0, position: "fixed", inset: 0, width: "100%", height: "100%" }}
     />
