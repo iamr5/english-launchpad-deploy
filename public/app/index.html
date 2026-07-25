@@ -2777,7 +2777,7 @@ function startPlacement(onDone) {
 function plItem() {
   const it = PL.order[PL.idx];
   PL.chosen = null;
-  document.getElementById('pl-bubble').innerHTML = 'Completa la frase 👇';
+  document.getElementById('pl-bubble').innerHTML = 'Examen en progreso.';
   document.getElementById('pl-qtext').innerHTML = it.q.replace(/___/g, '<span class="gap">_____</span>');
   const host = document.getElementById('pl-opts'); host.innerHTML = '';
   const pick = (val, el) => { PL.chosen = val; [...host.children].forEach(c => c.classList.remove('sel')); el.classList.add('sel'); document.getElementById('pl-next').disabled = false; };
