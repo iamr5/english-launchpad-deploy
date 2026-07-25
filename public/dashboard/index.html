@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototipo · Seguimiento para familias y profesores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#201a4b; --violet:#5b4be6; --violet2:#8175f4; --violet-soft:#efedfd;
+    --amber:#f4a51e; --amber-soft:#fff2d8;
+    --teal:#12b0a0; --teal-soft:#dcf6f2;
+    --pink:#ec5b8b; --pink-soft:#fde3ec;
+    --bg:#f3f2fb; --surface:#ffffff; --line:#e7e4f5; --muted:#6b6790;
+    --ok:#1f9d6b; --warn:#d98324; --risk:#d1495b;
+    --shadow:0 18px 40px -22px rgba(32,26,75,.45);
+    --shadow-sm:0 8px 20px -14px rgba(32,26,75,.4);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(1100px 500px at 12% -8%, #ece9ff 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, #e2fbf6 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:"Inter",system-ui,sans-serif; line-height:1.5;
+    -webkit-font-smoothing:antialiased; min-height:100vh;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:26px 20px 70px}
+
+  /* header */
+  .top{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:8px}
+  .brand{display:flex; align-items:center; gap:12px}
+  .brand .mark{width:42px; height:42px; border-radius:13px; background:linear-gradient(135deg,var(--violet),var(--violet2));
+    display:grid; place-items:center; color:#fff; font-family:"Bricolage Grotesque"; font-weight:800; font-size:20px;
+    box-shadow:var(--shadow-sm)}
+  .brand h1{font-family:"Bricolage Grotesque"; font-weight:800; font-size:19px; margin:0; letter-spacing:-.02em}
+  .brand span{display:block; font-size:12px; color:var(--muted); font-weight:500; letter-spacing:.02em}
+  .wl{font-size:11px; color:var(--muted); background:var(--surface); border:1px solid var(--line);
+    padding:6px 11px; border-radius:999px; font-weight:600}
+  .wl b{color:var(--violet)}
+
+  .lede{margin:18px 2px 20px; max-width:660px}
+  .lede p{margin:0; color:var(--muted); font-size:14px}
+  .eyebrow{font-family:"DM Mono",monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--violet); font-weight:500}
+
+  /* toggle */
+  .seg{display:inline-flex; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:5px; gap:4px;
+    box-shadow:var(--shadow-sm)}
+  .seg button{border:0; background:transparent; font-family:"Inter"; font-weight:600; font-size:14px; color:var(--muted);
+    padding:9px 18px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:8px; transition:.18s}
+  .seg button .dot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.5}
+  .seg button[aria-selected="true"]{background:linear-gradient(135deg,var(--violet),var(--violet2)); color:#fff; box-shadow:var(--shadow-sm)}
+  .seg button[aria-selected="true"] .dot{opacity:1;background:#fff}
+
+  .view{display:none; margin-top:26px; animation:rise .4s ease both}
+  .view.on{display:block}
+  @keyframes rise{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+
+  /* ===== STUDENT (phone) ===== */
+  .stage{display:flex; gap:34px; align-items:flex-start; flex-wrap:wrap; justify-content:center}
+  .phone{width:390px; max-width:100%; background:var(--surface); border-radius:38px; padding:14px;
+    box-shadow:var(--shadow); border:1px solid var(--line); position:relative}
+  .notch{width:130px; height:26px; background:var(--ink); border-radius:0 0 16px 16px; margin:0 auto 10px; opacity:.9}
+  .screen{border-radius:26px; overflow:hidden; background:linear-gradient(180deg,#fbfaff,#f4f2fd)}
+  .s-head{padding:18px 18px 18px; background:linear-gradient(135deg,var(--violet),#6f5cf1);
+    color:#fff; border-radius:26px 26px 22px 22px}
+  .s-head .row{display:flex; align-items:center; justify-content:space-between}
+  .hi{font-family:"Bricolage Grotesque"; font-weight:700; font-size:20px; letter-spacing:-.01em}
+  .hi small{display:block; font-family:"Inter"; font-weight:500; font-size:12px; opacity:.85}
+  .streak{display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.16); padding:8px 12px; border-radius:14px;
+    backdrop-filter:blur(4px)}
+  .streak .flame{font-size:17px}
+  .streak b{font-family:"DM Mono"; font-size:16px}
+  .streak span{font-size:10px; opacity:.85; line-height:1.1}
+  /* racha badge — Mi progreso layout, adapted to sit on the dark/violet headers
+     (glass fill + white text) and kept compact so it doesn't crowd the title */
+  .rachabadge{display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.22); border-radius:13px; padding:6px 11px; flex:none}
+  .rachabadge .fl{font-size:19px; line-height:1}
+  .rachabadge .txt{display:flex; flex-direction:column; gap:2px}
+  .rachabadge b{font-family:"DM Mono"; font-size:16px; font-weight:500; line-height:1; color:#fff}
+  .rachabadge span{font-size:9.5px; font-weight:600; color:rgba(255,255,255,.82); line-height:1; white-space:nowrap}
+  /* week selector (teacher header) */
+  .wksel{display:inline-flex; align-items:center; gap:2px; margin-top:12px; background:rgba(255,255,255,.12); border-radius:999px; padding:4px}
+  .wksel button{border:0; background:transparent; color:#fff; width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:17px; font-weight:700; display:grid; place-items:center; line-height:1}
+  .wksel button:hover{background:rgba(255,255,255,.18)}
+  .wksel button:disabled{opacity:.35; cursor:default}
+  .wksel .wklabel{font-family:"DM Mono"; font-size:12px; font-weight:500; color:#fff; padding:0 8px; white-space:nowrap}
+
+  /* ring hero */
+  .ring-card{margin:14px 14px 0; background:var(--surface); border-radius:22px; padding:18px; box-shadow:var(--shadow-sm);
+    border:1px solid var(--line)}
+  .ring-info h3{margin:0 0 3px; font-family:"Bricolage Grotesque"; font-size:16px; letter-spacing:-.01em}
+  .ring-info p{margin:0 0 10px; font-size:12.5px; color:var(--muted)}
+  .track{display:flex; gap:5px}
+  .tk{flex:1; text-align:center; font-size:10px; font-weight:700; color:var(--muted); padding:5px 0; border-radius:8px;
+    background:var(--violet-soft)}
+  .tk.done{background:var(--violet); color:#fff}
+  .tk.now{background:var(--amber); color:#5a3d00; box-shadow:0 0 0 3px var(--amber-soft)}
+
+  .band{display:flex; gap:9px; padding:14px 16px 4px}
+  .chip{flex:1; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:11px 12px; text-align:center}
+  .chip .k{font-family:"DM Mono"; font-weight:500; font-size:18px; color:var(--ink)}
+  .chip .l{font-size:10.5px; color:var(--muted); font-weight:600; margin-top:2px}
+  .chip .ico{font-size:15px; margin-bottom:2px}
+
+  .sect{padding:14px 16px 4px}
+  .sect h4{font-family:"Bricolage Grotesque"; font-size:13px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--muted); margin:6px 0 10px; display:flex; align-items:center; justify-content:space-between}
+  .sect h4 a{font-family:"Inter"; text-transform:none; letter-spacing:0; color:var(--violet); font-size:12px; font-weight:600; text-decoration:none}
+
+  .skill{display:flex; align-items:center; gap:11px; margin-bottom:11px}
+  .skill .ic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:16px;flex:none}
+  .skill .bar{flex:1}
+  .skill .bar .lab{display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px}
+  .skill .bar .lab i{font-style:normal; color:var(--muted); font-family:"DM Mono"; font-weight:500}
+  .meter{height:8px; border-radius:99px; background:#eceafa; overflow:hidden}
+  .meter i{display:block; height:100%; border-radius:99px}
+  .badge-done{margin-left:auto; font-size:15px}
+
+  .mission{display:flex; align-items:center; gap:11px; padding:11px; border:1px solid var(--line); border-radius:14px; margin-bottom:9px; background:var(--surface)}
+  .mission .box{width:22px;height:22px;border-radius:7px;border:2px solid var(--line); flex:none; display:grid; place-items:center; font-size:13px; color:#fff}
+  .mission.done .box{background:var(--teal); border-color:var(--teal)}
+  .mission .t{font-size:13px; font-weight:600; flex:1}
+  .mission .t small{display:block; font-weight:500; color:var(--muted); font-size:11px}
+  .mission .pts{font-family:"DM Mono"; font-size:12px; color:var(--amber); font-weight:500; background:var(--amber-soft); padding:3px 8px; border-radius:8px}
+
+  .cert{margin:14px 16px 18px; border-radius:16px; padding:15px; color:#fff; display:flex; gap:13px; align-items:center;
+    background:linear-gradient(120deg,#241d55,#413593); position:relative; overflow:hidden}
+  .cert::after{content:"🎓"; position:absolute; right:-6px; bottom:-14px; font-size:74px; opacity:.16}
+  .cert .lock{font-size:22px}
+  .cert b{font-family:"Bricolage Grotesque"; font-size:14px; display:block}
+  .cert p{margin:2px 0 0; font-size:11.5px; opacity:.85}
+  .cert .go{margin-left:auto; z-index:1; font-family:"DM Mono"; font-size:12px; background:var(--amber); color:#5a3d00;
+    padding:6px 10px; border-radius:9px; font-weight:500; white-space:nowrap}
+
+  /* annotations beside phone */
+  .notes{flex:1; min-width:250px; max-width:340px; padding-top:6px}
+  .notes .eyebrow{margin-bottom:12px; display:block}
+  .note{background:var(--surface); border:1px solid var(--line); border-radius:15px; padding:14px 15px; margin-bottom:12px; box-shadow:var(--shadow-sm)}
+  .note h5{margin:0 0 5px; font-family:"Bricolage Grotesque"; font-size:14px; display:flex; align-items:center; gap:8px}
+  .note p{margin:0; font-size:12.5px; color:var(--muted)}
+
+  /* ===== TEACHER REPORT ===== */
+  .report{background:var(--surface); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); overflow:hidden; max-width:920px; margin:0 auto}
+  .r-head{padding:22px 26px; background:linear-gradient(135deg,#201a4b,#3a2f7e); color:#fff; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:wrap}
+  .r-head .capa{font-family:"DM Mono"; font-size:11px; letter-spacing:.14em; text-transform:uppercase; background:rgba(255,255,255,.14); padding:5px 11px; border-radius:999px; display:inline-block; margin-bottom:12px}
+  .r-head h2{font-family:"Bricolage Grotesque"; font-weight:800; font-size:24px; margin:0 0 4px; letter-spacing:-.02em}
+  .r-head p{margin:0; font-size:13px; opacity:.85}
+  .r-head .who{text-align:left; font-size:12.5px; opacity:.9}
+  .r-head .who b{display:block; font-size:14px; font-family:"Bricolage Grotesque"}
+
+  .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line)}
+  .kpi{background:var(--surface); padding:18px 20px}
+  .kpi .k{font-family:"Bricolage Grotesque"; font-weight:800; font-size:28px; letter-spacing:-.02em; line-height:1}
+  .kpi .l{font-size:12px; color:var(--muted); margin-top:6px; font-weight:600}
+  .kpi .sub{font-size:11px; margin-top:3px; font-family:"DM Mono"}
+  .kpi .k{color:var(--ink)} .kpi.d .k{color:var(--risk)}
+  .up{color:var(--ok)} .down{color:var(--risk)}
+
+  .r-body{padding:22px 26px 26px}
+  .r-body h3{font-family:"Bricolage Grotesque"; font-size:15px; margin:4px 0 14px; display:flex; align-items:center; gap:9px}
+  .r-body h3 .tag{font-family:"DM Mono"; font-size:10px; font-weight:500; color:var(--violet); background:var(--violet-soft); padding:3px 8px; border-radius:7px; letter-spacing:.04em}
+
+  table{width:100%; border-collapse:collapse; font-size:13px}
+  thead th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); font-weight:700; padding:0 12px 10px}
+  thead th.c{text-align:center} 
+  tbody td{padding:11px 12px; border-top:1px solid var(--line); vertical-align:middle}
+  tbody tr:hover{background:#faf9ff}
+  td.c{text-align:center}
+  .stud{display:flex; align-items:center; gap:10px}
+  .stud .av{width:30px;height:30px;border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:700; font-size:12px; flex:none}
+  .stud b{font-weight:600}
+  .use{display:inline-flex; gap:3px; align-items:center}
+  .use .d{width:7px;height:14px;border-radius:2px;background:#e6e3f5}
+  .use .d.on{background:var(--teal)}
+  .lvl{font-family:"DM Mono"; font-weight:500; padding:3px 9px; border-radius:8px; font-size:12px; background:var(--violet-soft); color:var(--violet)}
+  .lvl.b2{background:var(--amber-soft); color:#8a5a00}
+  .avg{font-family:"DM Mono"; font-weight:500}
+  .flag{font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px}
+  .flag.ok{background:var(--teal-soft); color:#0b6b60}
+  .flag.watch{background:var(--amber-soft); color:#8a5a00}
+  .flag.risk{background:var(--pink-soft); color:#a8264b}
+
+  .callout{margin-top:18px; border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:12px; padding:14px 16px; background:#fffdf6; display:flex; gap:12px}
+  .callout .i{font-size:18px}
+  .callout p{margin:0; font-size:12.5px; color:#5a4a2a}
+  .callout b{color:var(--ink)}
+  .foot{margin-top:14px; font-size:11px; color:var(--muted); font-family:"DM Mono"; text-align:center}
+
+  .disc{max-width:920px; margin:22px auto 0; font-size:11.5px; color:var(--muted); text-align:center; line-height:1.6}
+
+  @media (max-width:520px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .hide-sm{display:none}
+    .r-head{flex-direction:column}
+    .r-head .who{text-align:left}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand">
+      <div>
+        <h1>englishlab</h1>
+        <span>Curso de inglés · alineado al MCER</span>
+      </div>
+    </div>
+    <div class="wl"><b>Colegio San Ignacio</b></div>
+  </div>
+
+  <div class="lede">
+    <span class="eyebrow">Prototipo navegable · Seguimiento</span>
+    <p style="margin-top:8px">El alumno aprende en la app; este es el producto de <b style="color:var(--ink)">seguimiento</b> que la acompaña: el resumen semanal para la <b style="color:var(--ink)">familia</b> y el reporte de aula para el <b style="color:var(--ink)">profesor</b> — con los mismos datos del juego, sin costo adicional. Los datos son de ejemplo.</p>
+  </div>
+
+  <div class="seg" role="tablist" id="seg">
+    <button role="tab" aria-selected="true" data-v="parent"><span class="dot"></span>Familia</button>
+    <button role="tab" aria-selected="false" data-v="teacher"><span class="dot"></span>Profesor</button>
+  </div>
+
+  <!-- ================= PARENT (vista por defecto) ================= -->
+  <section class="view on" id="parent">
+    <div class="stage">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="s-head">
+            <div class="row">
+              <div class="hi">Resumen de <span class="u-name">Valeria</span></div>
+              <div class="rachabadge"><span class="fl">🔥</span><div class="txt"><b id="p-racha">24</b><span>Racha</span></div></div>
+            </div>
+            <div class="wksel" id="wksel-p">
+              <button id="wk-prev-p" aria-label="Semana anterior">‹</button>
+              <span class="wklabel" id="wk-label-p">7 – 13 jul 2026</span>
+              <button id="wk-next-p" aria-label="Semana siguiente">›</button>
+            </div>
+          </div>
+
+          <div class="ring-card">
+            <div class="ring-info">
+              <h3><span class="u-name">Valeria</span> está en nivel <span id="p-level">B1</span></h3>
+              <p id="p-sub">Muy cerca de B2 — le faltan 550 XP</p>
+              <div class="track" id="p-track">
+                <div class="tk done">A1</div>
+                <div class="tk done">A2</div>
+                <div class="tk now">B1</div>
+                <div class="tk">B2</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="band">
+            <div class="chip"><div class="ico">📅</div><div class="k" id="p-dias">6 / 7</div><div class="l">Días activos</div></div>
+            <div class="chip"><div class="ico">⏱️</div><div class="k" id="p-tiempo">1 h 45</div><div class="l">Esta semana</div></div>
+            <div class="chip"><div class="ico">📚</div><div class="k" id="p-lecc">9</div><div class="l">Lecciones</div></div>
+          </div>
+
+          <div class="sect">
+            <h4>Sus destrezas</h4>
+            <div class="skill">
+              <div class="ic" style="background:var(--violet-soft)">🎧</div>
+              <div class="bar"><div class="lab"><span>Listening</span><i id="p-l-pct">90%</i></div><div class="meter"><i id="p-l-bar" style="width:90%;background:linear-gradient(90deg,#5b4be6,#8175f4)"></i></div></div>
+            </div>
+            <div class="skill">
+              <div class="ic" style="background:var(--violet-soft)">📖</div>
+              <div class="bar"><div class="lab"><span>Reading</span><i id="p-r-pct">78%</i></div><div class="meter"><i id="p-r-bar" style="width:78%;background:linear-gradient(90deg,#5b4be6,#8175f4)"></i></div></div>
+            </div>
+            <div class="skill">
+              <div class="ic" style="background:var(--violet-soft)">✍️</div>
+              <div class="bar"><div class="lab"><span>Writing</span><i id="p-w-pct">65%</i></div><div class="meter"><i id="p-w-bar" style="width:65%;background:linear-gradient(90deg,#5b4be6,#8175f4)"></i></div></div>
+            </div>
+          </div>
+
+          <div class="sect">
+            <h4>Cómo ayudar en casa</h4>
+            <div class="mission">
+              <div class="box" style="border:0;font-size:17px">💬</div>
+              <div class="t" id="p-help0">Practicó 6 de 7 días <small>Un «¡sigue así!» en casa refuerza el hábito</small></div>
+            </div>
+            <div class="mission">
+              <div class="box" style="border:0;font-size:17px">✍️</div>
+              <div class="t" id="p-help1">Writing es su punto a reforzar <small>Esta semana el juego se lo repasará solo</small></div>
+            </div>
+          </div>
+
+          <div class="cert">
+            <span class="lock">🔒</span>
+            <div>
+              <b>Constancia de logro B2</b>
+              <p>Se desbloquea al aprobar su evaluación de nivel</p>
+            </div>
+            <span class="go" id="p-cert">Faltan 550 XP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TEACHER ================= -->
+  <section class="view" id="teacher">
+    <div class="report">
+      <div class="r-head">
+        <div>
+          <span class="capa">Capa 1 · Reporte automático</span>
+          <h2>Reporte semanal del aula</h2>
+          <p>Inglés · 5.º A</p>
+          <div class="wksel" id="wksel">
+            <button id="wk-prev" aria-label="Semana anterior">‹</button>
+            <span class="wklabel" id="wk-label">7 – 13 jul 2026</span>
+            <button id="wk-next" aria-label="Semana siguiente">›</button>
+          </div>
+        </div>
+        <div class="who">
+          <b>Prof. Rosa Delgado</b>
+          Colegio San Ignacio<br>
+          <span style="font-family:'DM Mono';font-size:11px;opacity:.8">Enviado: lun 14 jul, 7:00 a. m.</span>
+        </div>
+      </div>
+
+      <div class="kpis" id="kpis">
+        <div class="kpi a"><div class="k">87%</div><div class="l">Alumnos activos</div><div class="sub"><span class="up">▲ 4%</span> vs. semana previa</div></div>
+        <div class="kpi b"><div class="k">B1</div><div class="l">Nivel promedio</div><div class="sub" style="color:var(--muted)">3 alumnos ya en B2</div></div>
+        <div class="kpi c"><div class="k">214</div><div class="l">Lecciones completadas</div><div class="sub"><span class="up">▲ 18</span> esta semana</div></div>
+        <div class="kpi d"><div class="k">3</div><div class="l">Sin ingresar +5 días</div><div class="sub down">requieren atención</div></div>
+      </div>
+
+      <div class="r-body">
+        <h3>Detalle por alumno <span class="tag">30 alumnos · muestra de 8</span></h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Alumno</th>
+              <th class="c">Uso (días activos)</th>
+              <th class="c">Racha</th>
+              <th class="c">Nivel MCER</th>
+              <th class="c hide-sm">Lecciones</th>
+              <th class="c">Promedio</th>
+              <th class="c">Estado</th>
+            </tr>
+          </thead>
+          <tbody id="t-body">
+            <tr>
+              <td><div class="stud"><span class="av" style="background:#f4a51e">M</span><b>Mateo Rivas</b></div></td>
+              <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i></span></td>
+              <td class="c avg">31</td>
+              <td class="c"><span class="lvl b2">B2</span></td>
+              <td class="c hide-sm avg">12</td>
+              <td class="c avg">94%</td>
+              <td class="c"><span class="flag ok">Al día</span></td>
+            </tr>
+            <tr>
+              <td><div class="stud"><span class="av" style="background:#12b0a0">L</span><b>Luciana Paredes</b></div></td>
+              <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d"></i></span></td>
+              <td class="c avg">18</td>
+              <td class="c"><span class="lvl b2">B2</span></td>
+              <td class="c hide-sm avg">11</td>
+              <td class="c avg">91%</td>
+              <td class="c"><span class="flag ok">Al día</span></td>
+            </tr>
+            <tr>
+              <td><div class="stud"><span class="av" style="background:#5b4be6">V</span><b>Valeria Quispe</b></div></td>
+              <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i></span></td>
+              <td class="c avg">24</td>
+              <td class="c"><span class="lvl">B1</span></td>
+              <td class="c hide-sm avg">9</td>
+              <td class="c avg">88%</td>
+              <td class="c"><span class="flag ok">Al día</span></td>
+            </tr>
+            <tr>
+              <td><div class="stud"><span class="av" style="background:#ec5b8b">D</span><b>Diego Salas</b></div></td>
+              <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d"></i><i class="d on"></i><i class="d"></i><i class="d"></i></span></td>
+              <td class="c avg">3</td>
+              <td class="c"><span class="lvl">B1</span></td>
+              <td class="c hide-sm avg">6</td>
+              <td class="c avg">79%</td>
+              <td class="c"><span class="flag watch">Bajó ritmo</span></td>
+            </tr>
+            <tr>
+              <td><div class="stud"><span class="av" style="background:#8175f4">C</span><b>Camila Torres</b></div></td>
+              <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d"></i><i class="d"></i></span></td>
+              <td class="c avg">12</td>
+              <td class="c"><span class="lvl">B1</span></td>
+              <td class="c hide-sm avg">8</td>
+              <td class="c avg">84%</td>
+              <td class="c"><span class="flag ok">Al día</span></td>
+            </tr>
+            <tr>
+              <td><div class="stud"><span class="av" style="background:#12b0a0">J</span><b>Joaquín Vega</b></div></td>
+              <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></td>
+              <td class="c avg">0</td>
+              <td class="c"><span class="lvl">A2</span></td>
+              <td class="c hide-sm avg">2</td>
+              <td class="c avg">71%</td>
+              <td class="c"><span class="flag risk">Sin ingresar 6 d</span></td>
+            </tr>
+            <tr>
+              <td><div class="stud"><span class="av" style="background:#f4a51e">A</span><b>Ariana Flores</b></div></td>
+              <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d"></i></span></td>
+              <td class="c avg">15</td>
+              <td class="c"><span class="lvl">B1</span></td>
+              <td class="c hide-sm avg">10</td>
+              <td class="c avg">86%</td>
+              <td class="c"><span class="flag ok">Al día</span></td>
+            </tr>
+            <tr>
+              <td><div class="stud"><span class="av" style="background:#ec5b8b">S</span><b>Sebastián Ríos</b></div></td>
+              <td class="c"><span class="use"><i class="d"></i><i class="d"></i><i class="d on"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></td>
+              <td class="c avg">0</td>
+              <td class="c"><span class="lvl">A2</span></td>
+              <td class="c hide-sm avg">1</td>
+              <td class="c avg">68%</td>
+              <td class="c"><span class="flag risk">Sin ingresar 5 d</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span class="i">💡</span>
+          <p id="t-callout"><b>Sugerencia automática:</b> 3 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y uno más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio — considera reforzarla en clase.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const btns=document.querySelectorAll('.seg button');
+  const views={parent:document.getElementById('parent'),teacher:document.getElementById('teacher')};
+  function show(name){
+    Object.values(views).forEach(v=>v.classList.remove('on'));
+    views[name].classList.add('on');
+    btns.forEach(b=>b.setAttribute('aria-selected', String(b.dataset.v===name)));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  btns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
+  // El ROL decide la vista. La ruta /dashboard pasa ?role=parent|teacher desde la
+  // sesión: la familia sólo ve su resumen, el profesor sólo su aula, y el selector
+  // desaparece. Sin ?role (acceso directo, sólo para revisar) se mantienen ambas.
+  const role=new URLSearchParams(location.search).get('role');
+  // student y parent ven el mismo resumen personal; teacher ve el aula.
+  const ROLE_VIEW={ student:'parent', parent:'parent', teacher:'teacher' };
+  const roleView = ROLE_VIEW[role] || null;
+  if(roleView){
+    document.getElementById('seg').style.display='none';
+    const lede=document.querySelector('.lede'); if(lede) lede.style.display='none';
+    show(roleView);
+  } else {
+    const initial=location.hash.replace('#','');
+    show(views[initial] ? initial : 'parent');
+  }
+
+  // week selector — shared week state across the teacher + parent tabs, and it
+  // swaps the dashboard data so each week shows different (dummy) numbers.
+  const WEEKS=['30 jun – 6 jul 2026','7 – 13 jul 2026','14 – 20 jul 2026'];
+  let wkIdx=1;
+
+  // Parent (Valeria) — per week
+  const PWEEK=[
+    {racha:17, sub:'En camino a B2 — le faltan 780 XP', dias:'5 / 7', tiempo:'1 h 20', lecc:6, sk:[84,72,60],
+     help:['Practicó 5 de 7 días','Reading es su punto a reforzar'], cert:'Faltan 780 XP'},
+    {racha:24, sub:'Muy cerca de B2 — le faltan 550 XP', dias:'6 / 7', tiempo:'1 h 45', lecc:9, sk:[90,78,65],
+     help:['Practicó 6 de 7 días','Writing es su punto a reforzar'], cert:'Faltan 550 XP'},
+    {racha:31, sub:'Muy cerca de B2 — le faltan 300 XP', dias:'7 / 7', tiempo:'2 h 10', lecc:11, sk:[93,82,71],
+     help:['Practicó 7 de 7 días · ¡racha perfecta!','Writing sigue mejorando'], cert:'Faltan 300 XP'},
+  ];
+  const P_HELP_SUB=['Un «¡sigue así!» en casa refuerza el hábito','Esta semana el juego se lo repasará solo'];
+
+  // Teacher (5.º A) — per week. Row: [díasActivos, racha, nivel, lecciones, promedio, estadoClase, estadoTexto]
+  const T_STUD=[['Mateo Rivas','M','#f4a51e'],['Luciana Paredes','L','#12b0a0'],['Valeria Quispe','V','#5b4be6'],
+    ['Diego Salas','D','#ec5b8b'],['Camila Torres','C','#8175f4'],['Joaquín Vega','J','#12b0a0'],
+    ['Ariana Flores','A','#f4a51e'],['Sebastián Ríos','S','#ec5b8b']];
+  const TWEEK=[
+    { kpi:['79%','B1','176','5'], ksub:['<span style="color:var(--muted)">≈ estable</span>','2 alumnos ya en B2','<span class="up">▲ 9</span> esta semana','requieren atención'],
+      callout:'5 alumnos no ingresan hace más de 5 días. Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio — considera reforzarla en clase.',
+      rows:[[7,24,'B2',10,91,'ok','Al día'],[5,11,'B1',9,88,'ok','Al día'],[6,17,'B1',7,85,'ok','Al día'],
+            [2,0,'B1',4,74,'risk','Sin ingresar 5 d'],[5,5,'B1',6,81,'ok','Al día'],[3,3,'A2',2,69,'watch','Bajó ritmo'],
+            [6,8,'B1',8,83,'ok','Al día'],[1,0,'A2',1,66,'risk','Sin ingresar 7 d']] },
+    { kpi:['87%','B1','214','3'], ksub:['<span class="up">▲ 4%</span> vs. semana previa','3 alumnos ya en B2','<span class="up">▲ 18</span> esta semana','requieren atención'],
+      callout:'3 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y uno más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio — considera reforzarla en clase.',
+      rows:[[7,31,'B2',12,94,'ok','Al día'],[6,18,'B2',11,91,'ok','Al día'],[7,24,'B1',9,88,'ok','Al día'],
+            [3,3,'B1',6,79,'watch','Bajó ritmo'],[5,12,'B1',8,84,'ok','Al día'],[2,0,'A2',2,71,'risk','Sin ingresar 6 d'],
+            [6,15,'B1',10,86,'ok','Al día'],[1,0,'A2',1,68,'risk','Sin ingresar 5 d']] },
+    { kpi:['91%','B1','238','2'], ksub:['<span class="up">▲ 4%</span> vs. semana previa','4 alumnos ya en B2','<span class="up">▲ 24</span> esta semana','requieren atención'],
+      callout:'2 alumnos no ingresan hace más de 5 días. <b>Writing</b> sigue siendo la destreza más floja del aula, pero va mejorando — ¡buen ritmo esta semana!',
+      rows:[[7,38,'B2',13,95,'ok','Al día'],[7,25,'B2',12,92,'ok','Al día'],[7,31,'B2',11,90,'ok','Al día'],
+            [6,9,'B1',8,83,'ok','Al día'],[6,19,'B1',9,86,'ok','Al día'],[4,4,'A2',4,75,'watch','Bajó ritmo'],
+            [7,22,'B1',11,88,'ok','Al día'],[3,2,'A2',3,72,'watch','Bajó ritmo']] },
+  ];
+  const KLABEL=['Alumnos activos','Nivel promedio','Lecciones completadas','Sin ingresar +5 días'];
+
+  function set(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; }
+  function renderParent(wk){
+    const d=PWEEK[wk];
+    set('p-racha',d.racha); set('p-sub',d.sub); set('p-dias',d.dias); set('p-tiempo',d.tiempo); set('p-lecc',d.lecc); set('p-cert',d.cert);
+    ['l','r','w'].forEach((k,i)=>{ set('p-'+k+'-pct',d.sk[i]+'%'); const bar=document.getElementById('p-'+k+'-bar'); if(bar) bar.style.width=d.sk[i]+'%'; });
+    const h0=document.getElementById('p-help0'), h1=document.getElementById('p-help1');
+    if(h0) h0.innerHTML=d.help[0]+' <small>'+P_HELP_SUB[0]+'</small>';
+    if(h1) h1.innerHTML=d.help[1]+' <small>'+P_HELP_SUB[1]+'</small>';
+  }
+  function renderTeacher(wk){
+    const d=TWEEK[wk];
+    const kpis=document.getElementById('kpis');
+    if(kpis) kpis.innerHTML=['a','b','c','d'].map((c,i)=>
+      `<div class="kpi ${c}"><div class="k">${d.kpi[i]}</div><div class="l">${KLABEL[i]}</div><div class="sub${i===3?' down':''}">${d.ksub[i]}</div></div>`).join('');
+    const tb=document.getElementById('t-body');
+    if(tb) tb.innerHTML=d.rows.map((r,i)=>{
+      const s=T_STUD[i], dots=Array.from({length:7},(_,j)=>`<i class="d${j<r[0]?' on':''}"></i>`).join('');
+      return `<tr>
+        <td><div class="stud"><span class="av" style="background:${s[2]}">${s[1]}</span><b>${s[0]}</b></div></td>
+        <td class="c"><span class="use">${dots}</span></td>
+        <td class="c avg">${r[1]}</td>
+        <td class="c"><span class="lvl${r[2]==='B2'?' b2':''}">${r[2]}</span></td>
+        <td class="c hide-sm avg">${r[3]}</td>
+        <td class="c avg">${r[4]}%</td>
+        <td class="c"><span class="flag ${r[5]}">${r[6]}</span></td>
+      </tr>`; }).join('');
+    const co=document.getElementById('t-callout');
+    if(co) co.innerHTML='<b>Sugerencia automática:</b> '+d.callout;
+  }
+
+  const WK_SELS=[{l:'wk-label',p:'wk-prev',n:'wk-next'},{l:'wk-label-p',p:'wk-prev-p',n:'wk-next-p'}];
+  function wkRender(){
+    WK_SELS.forEach(s=>{ const l=document.getElementById(s.l); if(!l) return;
+      l.textContent=WEEKS[wkIdx]; document.getElementById(s.p).disabled=wkIdx===0; document.getElementById(s.n).disabled=wkIdx===WEEKS.length-1; });
+    renderParent(wkIdx); renderTeacher(wkIdx);
+  }
+  WK_SELS.forEach(s=>{ const p=document.getElementById(s.p), n=document.getElementById(s.n); if(!p||!n) return;
+    p.addEventListener('click',()=>{ if(wkIdx>0){wkIdx--; wkRender();} });
+    n.addEventListener('click',()=>{ if(wkIdx<WEEKS.length-1){wkIdx++; wkRender();} }); });
+
+  // ── Puente de datos reales ──────────────────────────────────────────────
+  // Si la app del alumno dejó un resumen en localStorage (mismo origen que este
+  // dashboard), úsalo para el alumno y la SEMANA ACTUAL. Las demás semanas y la
+  // vista de profesor siguen con datos de ejemplo (eso ya requiere backend).
+  (function () {
+    var S; try { S = JSON.parse(localStorage.getItem('ingles_web_summary_v1') || 'null'); } catch (e) { S = null; }
+    if (!S) return;
+    var LV = ['A1', 'A2', 'B1', 'B2', 'C1'], li = S.levelIdx || 0, pct = function (v) { return v == null ? 100 : v; };
+    document.querySelectorAll('.u-name').forEach(function (el) { el.textContent = S.name || 'tu hijo/a'; });
+    var pl = document.getElementById('p-level'); if (pl) pl.textContent = S.level;
+    var tk = document.getElementById('p-track');
+    if (tk) tk.innerHTML = LV.slice(0, 4).map(function (l, i) {
+      var c = i < li ? 'done' : (i === li ? 'now' : ''); return '<div class="tk ' + c + '">' + l + '</div>';
+    }).join('');
+    PWEEK[1] = {
+      racha: S.streak,
+      sub: (li >= 4 ? '¡Nivel máximo alcanzado!' : 'Avanzando en nivel ' + S.level),
+      dias: (S.daysThisWeek || 0) + ' / 7', tiempo: '—', lecc: S.lessonsDone,
+      sk: [pct(S.skills.listening), pct(S.skills.reading), pct(S.skills.writing)],
+      help: ['Va en nivel ' + S.level + ' · ' + S.lessonsDone + ' lecciones', 'Acompáñalo/a con un «¡sigue así!»'],
+      cert: 'Nivel actual · ' + S.level
+    };
+  })();
+  wkRender();
+</script>
+</body>
+</html>
