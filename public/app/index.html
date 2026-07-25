@@ -818,7 +818,6 @@
   .debug-fab.mq { bottom: 130px; }
   .debug-fab.undo { bottom: 182px; }
   .debug-fab.wipe { bottom: 234px; }
-  .debug-fab.logout { bottom: 286px; }
   /* The FABs are z-index:60, above the quiz overlay/sheet (z-index:50) and pinned
      bottom-right — exactly where the quiz's Confirmar/Siguiente button sits. Hide
      them whenever a sheet (mini-quiz, cierre, dialog) or the final-quiz screen is
@@ -875,20 +874,7 @@
     <div class="ob-wrap">
       <div class="ob-top"><button class="back" id="ob-back" aria-label="Atrás"></button><div class="segs" id="ob-segs"></div></div>
       <div class="ob-talk">
-        <div class="tr-bear ob-bear" aria-hidden="true"><div class="shadow"></div><div class="bear">
-          <div class="group torso"><img class="layer body" src="body.svg" alt=""></div>
-          <img class="layer rightleg" src="rightleg.svg" alt="">
-          <img class="layer leftleg" src="leftleg.svg" alt="">
-          <div class="group torso">
-            <img class="layer div" src="div.svg" alt="">
-            <img class="layer leftarm" src="leftarm.svg" alt="">
-            <img class="layer rightarm" src="rightarm.svg" alt="">
-            <img class="layer head" src="head.svg" alt="">
-            <div class="glassesfollow"><img class="layer glasses" src="glasses.svg" alt=""></div>
-            <img class="layer bowtie" src="bowtie.svg" alt="">
-            <img class="layer tummy" src="tummy.svg" alt="">
-          </div>
-        </div></div>
+        <div class="tr-bear ob-bear" aria-hidden="true"><!-- mascota inyectada por mascot.js --></div>
         <div class="ob-bubble" id="ob-bubble"></div>
       </div>
       <div class="ob-body">
@@ -954,20 +940,7 @@
         <div class="pl-meta"><span id="pl-count">Pregunta 1</span><span id="pl-time">0:00</span></div>
       </div>
       <div class="ob-talk">
-        <div class="tr-bear ob-bear" aria-hidden="true"><div class="shadow"></div><div class="bear">
-          <div class="group torso"><img class="layer body" src="body.svg" alt=""></div>
-          <img class="layer rightleg" src="rightleg.svg" alt="">
-          <img class="layer leftleg" src="leftleg.svg" alt="">
-          <div class="group torso">
-            <img class="layer div" src="div.svg" alt="">
-            <img class="layer leftarm" src="leftarm.svg" alt="">
-            <img class="layer rightarm" src="rightarm.svg" alt="">
-            <img class="layer head" src="head.svg" alt="">
-            <div class="glassesfollow"><img class="layer glasses" src="glasses.svg" alt=""></div>
-            <img class="layer bowtie" src="bowtie.svg" alt="">
-            <img class="layer tummy" src="tummy.svg" alt="">
-          </div>
-        </div></div>
+        <div class="tr-bear ob-bear" aria-hidden="true"><!-- mascota inyectada por mascot.js --></div>
         <div class="ob-bubble" id="pl-bubble"></div>
       </div>
       <div class="ob-body">
@@ -1012,9 +985,6 @@
 <button class="debug-fab wipe" title="Borrar TODO (progreso + perfil) y ver el onboarding" aria-label="Borrar todos los datos" onclick="resetAllData()">
   <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
 </button>
-<button class="debug-fab logout" title="Cerrar sesión" aria-label="Cerrar sesión" onclick="debugLogout()">
-  <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-</button>
 
 <!-- (Rive runtime + wasm + Busi .riv removed — the module mascot is now the pure-CSS/SVG
      "TuRuta Bear", so there is no Rive dependency to load. rive.js / rive_wasm.js /
@@ -1024,6 +994,7 @@
 <script src="data_modulo4.js"></script>
 <script src="data_modulo5.js"></script>
 <script src="placement.js"></script>
+<script src="mascot.js"></script>
 <script>
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Markdown renderer (subset: headings, bold/italic, lists, tables, blockquotes)
@@ -1995,20 +1966,7 @@ function modulePathHTML(mod) {
   // turuta-bear-animated_1.html). DOM grouping matches the source exactly: the body and the
   // upper-body cluster each sit in a .group.torso (which bobs), the legs stay planted between
   // them (they stretch), and the glasses ride in .glassesfollow. Positioned in renderModule.
-  html += `<div id="busi-mascot" class="tr-bear" aria-hidden="true"><div class="shadow"></div><div class="bear">` +
-    `<div class="group torso"><img class="layer body" src="body.svg" alt=""></div>` +
-    `<img class="layer rightleg" src="rightleg.svg" alt="">` +
-    `<img class="layer leftleg" src="leftleg.svg" alt="">` +
-    `<div class="group torso">` +
-      `<img class="layer div" src="div.svg" alt="">` +
-      `<img class="layer leftarm" src="leftarm.svg" alt="">` +
-      `<img class="layer rightarm" src="rightarm.svg" alt="">` +
-      `<img class="layer head" src="head.svg" alt="">` +
-      `<div class="glassesfollow"><img class="layer glasses" src="glasses.svg" alt=""></div>` +
-      `<img class="layer bowtie" src="bowtie.svg" alt="">` +
-      `<img class="layer tummy" src="tummy.svg" alt="">` +
-    `</div>` +
-    `</div></div>`;
+  html += `<div id="busi-mascot" class="tr-bear" aria-hidden="true">${mascotHTML()}</div>`;
   mod.lessons.forEach((lesson, i) => {
     const unlocked = isLessonUnlocked(lesson.id), completed = isLessonCompleted(lesson.id), isCur = i === currentIdx;
     const state = completed ? 'done' : (!unlocked ? 'locked' : (isCur ? 'active' : 'avail'));
@@ -2638,12 +2596,6 @@ function resetAllData() {
   location.reload();
 }
 
-// DEBUG: log out of the host session (the parent app owns auth). Ask the parent
-// frame to sign out, then it will redirect to /login.
-function debugLogout() {
-  try { window.parent.postMessage({ type: 'logout' }, '*'); } catch (e) {}
-}
-
 // DEBUG: complete the next pending mini-quiz of the currently open lesson, then
 // re-render and re-sync progress exactly like passing it for real would. Finishing
 // a module's last microlección auto-completes the module (see markQuizCompleted).
@@ -3055,8 +3007,35 @@ function obFinishToLesson() {
 function startOnboarding() { OB = { step: 0, name: '', mot: '', goal: '', placedModule: 0, placedLevel: 'A1' }; show('onboard'); obRender(); }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// DEV/DEMO: ?seed=1 llena datos de ejemplo (una alumna con progreso real) y, con
+// &go=parent|teacher, salta a ese dashboard (mismo origen → comparte localStorage).
+// Sólo se activa con el parámetro; para producción puedes quitar esta función.
+function devSeed() {
+  const q = new URLSearchParams(location.search);
+  if (!q.has('seed')) return false;
+  try { localStorage.removeItem(PK); localStorage.removeItem(PROFILE_KEY); localStorage.removeItem(SUMMARY_KEY); } catch (e) {}
+  PROGRESS = {};
+  applyPlacement(2); // ubicada en B1 → módulos A1 y A2 completos
+  course.modules[2].lessons.slice(0, 3).forEach((l, i) => {
+    l.contentBlocks.forEach(b => { if (b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length) lp(l.id).blocks[b.id] = { unlocked: true, mq: true }; });
+    lp(l.id).quizCompleted = true; lp(l.id).readingCompleted = true;
+    lp(l.id).skillErr = { listening: { t: 3, e: i === 0 ? 1 : 0 }, reading: { t: 6, e: 0 }, writing: { t: 5, e: 1 } };
+  });
+  const days = [];
+  for (let d = 23; d >= 0; d--) { const dt = new Date(); dt.setDate(dt.getDate() - d); days.push(dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0')); }
+  PROGRESS['__days'] = days; PROGRESS['__missionXP'] = 160;
+  saveProgress(PROGRESS);
+  saveProfile({ name: 'Valeria', goal: 10, level: 'B1', placedModule: 2, motive: '📚 Impulsar mis estudios', created: new Date().toISOString() });
+  saveSummary();
+  const go = q.get('go');
+  if (go === 'parent') { location.replace('Prototipo_Ingles.html?role=parent'); return true; }
+  if (go === 'teacher') { location.replace('Prototipo_Ingles.html?role=teacher'); return true; }
+  return false; // alumno: continúa al curso ya con datos
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Boot: first run (no profile) → onboarding; otherwise straight to the course.
-if (loadProfile()) renderCourse(); else startOnboarding();
+if (!devSeed()) { if (loadProfile()) renderCourse(); else startOnboarding(); }
 </script>
 </body>
 </html>

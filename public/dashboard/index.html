@@ -441,9 +441,21 @@
     window.scrollTo({top:0,behavior:'smooth'});
   }
   btns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
-  // deep link: #parent / #teacher
-  const initial=location.hash.replace('#','');
-  if(views[initial]) show(initial);
+  // El ROL decide la vista. La ruta /dashboard pasa ?role=parent|teacher desde la
+  // sesión: la familia sólo ve su resumen, el profesor sólo su aula, y el selector
+  // desaparece. Sin ?role (acceso directo, sólo para revisar) se mantienen ambas.
+  const role=new URLSearchParams(location.search).get('role');
+  // student y parent ven el mismo resumen personal; teacher ve el aula.
+  const ROLE_VIEW={ student:'parent', parent:'parent', teacher:'teacher' };
+  const roleView = ROLE_VIEW[role] || null;
+  if(roleView){
+    document.getElementById('seg').style.display='none';
+    const lede=document.querySelector('.lede'); if(lede) lede.style.display='none';
+    show(roleView);
+  } else {
+    const initial=location.hash.replace('#','');
+    show(views[initial] ? initial : 'parent');
+  }
 
   // week selector — shared week state across the teacher + parent tabs, and it
   // swaps the dashboard data so each week shows different (dummy) numbers.
