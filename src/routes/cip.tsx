@@ -3,8 +3,8 @@ import html from "../assets/cip.html?raw";
 
 const headTags = `
 <link rel="icon" href="/head.png" type="image/png">
-<meta property="og:title" content="Inglés para todos los ingenieros del Perú · AprendoEnglish × CIP">
-<meta property="og:description" content="Presentación especial para ingenieros del CIP — AprendoEnglish">
+<meta property="og:title" content="Todos los Ingenieros del Perú hablarán Inglés en 1 año · AprendoEnglish × CIP">
+<meta property="og:description" content="El Colegio de ingenieros tendrá su propia plataforma completa de inglés, con el nombre, colores y la marca del Colegio de Ingenieros">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://aprendoenglish.com/social-preview.jpg">
 <meta property="og:image:secure_url" content="https://aprendoenglish.com/social-preview.jpg">
@@ -13,8 +13,8 @@ const headTags = `
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:alt" content="AprendoEnglish × CIP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Inglés para todos los ingenieros del Perú · AprendoEnglish × CIP">
-<meta name="twitter:description" content="Presentación especial para ingenieros del CIP — AprendoEnglish">
+<meta name="twitter:title" content="Todos los Ingenieros del Perú hablarán Inglés en 1 año · AprendoEnglish × CIP">
+<meta name="twitter:description" content="El Colegio de ingenieros tendrá su propia plataforma completa de inglés, con el nombre, colores y la marca del Colegio de Ingenieros">
 <meta name="twitter:image" content="https://aprendoenglish.com/social-preview.jpg">
 `;
 
