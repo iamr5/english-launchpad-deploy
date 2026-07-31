@@ -16,6 +16,7 @@ import { Route as DemocipRouteImport } from './routes/democip'
 import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as CipRouteImport } from './routes/cip'
+import { Route as CIPPresentaRouteImport } from './routes/CIP-presenta'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -56,6 +57,11 @@ const CipRoute = CipRouteImport.update({
   path: '/cip',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CIPPresentaRoute = CIPPresentaRouteImport.update({
+  id: '/CIP-presenta',
+  path: '/CIP-presenta',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -78,6 +84,7 @@ const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
   '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -118,6 +127,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/CIP-presenta'
     | '/cip'
     | '/demo'
     | '/demo-dashboard'
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/CIP-presenta'
     | '/cip'
     | '/demo'
     | '/demo-dashboard'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/CIP-presenta'
     | '/cip'
     | '/demo'
     | '/demo-dashboard'
@@ -157,6 +169,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  CIPPresentaRoute: typeof CIPPresentaRoute
   CipRoute: typeof CipRoute
   DemoRoute: typeof DemoRoute
   DemoDashboardRoute: typeof DemoDashboardRoute
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CipRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/CIP-presenta': {
+      id: '/CIP-presenta'
+      path: '/CIP-presenta'
+      fullPath: '/CIP-presenta'
+      preLoaderRoute: typeof CIPPresentaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -264,6 +284,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  CIPPresentaRoute: CIPPresentaRoute,
   CipRoute: CipRoute,
   DemoRoute: DemoRoute,
   DemoDashboardRoute: DemoDashboardRoute,
