@@ -2246,19 +2246,10 @@ function openMiniQuiz(lesson, block) {
     result('check', '#2E7D1A', 'ok', '¡Bien hecho!', '¡Siguiente sección desbloqueada!', 'green', 'Continuar', () => {
       closeOverlay(); markMiniQuizCompleted(lesson, block.id);
       const sc = document.getElementById('lesson-scroll');
-      const prev = sc ? sc.scrollTop : 0;
+      const prevCount = document.querySelectorAll('#lesson-body .block').length;
       renderLessonBody(lesson);
-      // Keep the reader where they were after the newly unlocked block is inserted.
-      // Recompute the segment scroll against the NEW (taller) content — otherwise the
-      // bar would reuse the stale ~100% segment value and jump to the new end even
-      // though the reader is still at the old position (now mid-content).
-      requestAnimationFrame(() => {
-        if (sc) sc.scrollTop = prev;
-        const max = sc ? sc.scrollHeight - sc.clientHeight : 0;
-        const seg = max >= 100 ? Math.min(1, Math.max(0, sc.scrollTop / max)) : 1;
-        setScroll(lesson.id, seg);
-        updateCompletion(lesson, CURRENT.module, seg);
-      });
+      celebrateUnlock(lesson, prevCount);
+      return;
     });
   }
   function showRedo(failed) {
