@@ -1,77 +1,62 @@
-## Goal
+# Mejoras al demo `/democip`
 
-Wire real auth + backend for the Instant English deploy: `/login` (email/password + role selector), `/app` (student home, guarded), `/dashboard` (family/teacher home, guarded), keep the existing static HTML routes (`/`, `/presentacion`, `/presentation`, `/cip`, `/demo`, `/democip`, `/demo-dashboard`) untouched.
+Todo ocurre dentro del HTML estático del demo (`src/assets/democip-index.html`, que es lo que sirve la ruta) más los archivos del test de ubicación que subiste, copiados a `public/democip/`. No se toca el backend, ni `/app`, `/dashboard`, `/demo`, `/cip` ni las presentaciones.
 
-## Steps
+## 1. Botones de debug ocultos tras 7 toques
 
-### 1. Enable Lovable Cloud
-Call `supabase--enable`. This provisions the backend and gives us the auth-middleware, managed `_authenticated` layout, and env vars (`SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, etc.) automatically.
+Los 4 FABs (Completar lección, Reiniciar progreso, Deshacer último quiz, Borrar TODO) dejan de mostrarse al arrancar. Se activan solo con 7 toques consecutivos sobre el fondo (no sobre botones, enlaces, inputs ni tarjetas interactivas), dentro de una ventana de ~2.5 s entre toques; si pasa más tiempo, el contador se reinicia. Al llegar a 7 aparecen con un aviso breve; 7 toques más los vuelven a ocultar.
 
-### 2. Database schema (single migration)
-```text
-enum app_role: 'student' | 'parent' | 'teacher'
+## 2. Área clicable completa en todos los botones
 
-profiles           (id uuid PK → auth.users, role app_role, name text,
-                    level int default 1, daily_goal int default 15,
-                    created_at timestamptz default now())
+Auditoría de los botones del demo para que toda la superficie responda al toque, no solo el texto:
+- El texto y los iconos interiores pasan a `pointer-events: none` y los contenedores a área completa.
+- Se elimina `touch-action: none` de los FABs (causa toques perdidos en móvil).
+- El "Confirmar/Siguiente" del quiz se ancla con `touch-action: manipulation` y sin elementos flotantes que le roben el toque; con los FABs ocultos por defecto ya no puede quedarse trabado.
 
-user_roles         (id uuid PK, user_id uuid → auth.users, role app_role,
-                    unique(user_id, role))    -- separate table per security rules
+## 3. Resultado del quiz más notorio + auto-avance tipo Waze
 
-progress           (user_id uuid PK → profiles, xp int default 0,
-                    level int default 1, streak_days jsonb default '[]',
-                    lessons jsonb default '{}', skill_errors jsonb default '{}',
-                    updated_at timestamptz default now())
+- El bloque de resultado ("¡Bien hecho!" / "Casi — la respuesta es…") gana un banner de color a pantalla ancha, tipografía mayor e icono grande: verde para acierto, ámbar/rojo para error.
+- El botón "Siguiente" muestra un anillo/barra de 1 segundo que se completa y auto-avanza. Tocarlo antes avanza de inmediato; el temporizador se cancela si el usuario interactúa con la explicación.
+- En caso de error el auto-avance se alarga (o se desactiva) para que dé tiempo a leer la respuesta correcta.
 
-links              (id uuid PK, guardian_id uuid → profiles,
-                    student_id uuid → profiles,
-                    kind text check in ('parent','teacher'),
-                    unique(guardian_id, student_id))
-```
-- GRANTs for `authenticated` + `service_role` on every table.
-- RLS ON everywhere.
-- `has_role(_user_id, _role)` SECURITY DEFINER function (per user-roles rules).
-- Trigger `on_auth_user_created` → inserts `profiles` row (role from `raw_user_meta_data.role`), a `user_roles` row, and empty `progress` row.
-- RLS policies:
-  - `profiles`, `progress`: user selects/updates own row; guardians (parents/teachers) select linked students' rows via `EXISTS (select 1 from links where guardian_id = auth.uid() and student_id = profiles.id)`.
-  - `user_roles`: user selects own; no client writes.
-  - `links`: guardian selects rows where `guardian_id = auth.uid()`; student selects rows where `student_id = auth.uid()`.
+## 4. Onboarding reordenado y ajustado
 
-### 3. Auth & role helpers
-- `src/lib/auth.ts` — thin wrapper around `supabase.auth` (`signIn`, `signUp(email, pw, role, name)`, `signOut`, `getSession`) matching the signatures the external Lovable integration expects.
-- Root route: `onAuthStateChange` listener (filtered to SIGNED_IN/OUT/USER_UPDATED) → `router.invalidate()` + `queryClient.invalidateQueries()` per integration rules.
-- Register `attachSupabaseAuth` in `src/start.ts` `functionMiddleware`.
+- "¿Cómo te llamas?" pasa a ser la segunda pantalla, justo después del saludo.
+- Meta diaria: solo tres opciones — 15 min al día "Calentando", 30 min al día "Decidido", 1 hora al día "Imparable". Se eliminan 5/10/20.
+- La pantalla "¿Cuánto inglés sabes?" se reemplaza por el test de ubicación de `test-ubicacion_1.zip` (banco de 40 ítems, 5 bandas, parada temprana, opción "No lo sé"), integrado dentro del flujo del onboarding y guardando el nivel estimado en el perfil local.
+- "Esto vamos a practicar": los 3 elementos pierden borde/sombra para que no parezcan botones; el único botón sigue siendo el CTA inferior.
 
-### 4. Routes
-Managed by integration: `src/routes/_authenticated/route.tsx` (do not author).
+## 5. Quitar la marca "En colaboración con"
 
-New files:
-- `src/routes/login.tsx` — public. Tabs: Sign in / Sign up. Sign up includes role radio (Alumno / Familia / Profesor) → passes role via `options.data.role`. After sign-in, look up role and `navigate({ to: role === 'student' ? '/app' : '/dashboard', replace: true })`. Honors `?redirect=` search param.
-- `src/routes/_authenticated/app.tsx` — student home. Loader calls `getMyProgress` server fn (requires `student` role, else redirect to `/dashboard`). Shows XP, level, streak, daily goal.
-- `src/routes/_authenticated/dashboard.tsx` — parent/teacher home. Loader calls `getLinkedStudents` server fn. Lists linked students + their progress snapshots. If caller is `student` role, redirect to `/app`.
+Se elimina el badge `langles_colaboracion.svg` y los logos `langles_iso.png` / `langles_logo.png` de todas las pantallas del demo.
 
-Keep `src/routes/index.tsx` serving `landing.html` unchanged (public landing).
+## 6. Temporizador de meta diaria + insignia
 
-### 5. Server functions (`src/lib/*.functions.ts`)
-All use `.middleware([requireSupabaseAuth])`; RLS enforces access.
-- `getMyProfile` — returns `profiles` row + role from `user_roles`.
-- `getMyProgress` — returns `progress` row for `context.userId`.
-- `getLinkedStudents` — joins `links` + `profiles` + `progress` for guardian.
-- `updateMyProgress({ xp, level, streak_days, lessons, skill_errors })` — upsert own progress row.
-- `linkStudent({ studentEmail, kind })` — parent/teacher inserts row in `links` after resolving student by email (via a SECURITY DEFINER lookup limited to id/email match).
+Chip discreto en la barra superior que cuenta el tiempo activo del día contra la meta elegida. Solo suma tiempo cuando hay actividad real (scroll de lectura o respuestas de quiz) y se pausa con la pestaña en segundo plano. Al cumplir la meta, con progreso registrado, aparece una celebración breve y se otorga la insignia del día; nunca bloquea ni interrumpe la lección.
 
-### 6. Verify
-- Build passes.
-- `curl` `/login`, `/app` (should redirect to `/auth` via managed gate), `/dashboard` (same).
-- Sign up as each role in the preview → confirm correct redirect target.
+## 7. Desbloqueo de teoría evidente
 
-## Technical notes
+Al aprobar un mini-quiz: Boti aparece con un mensaje ("¡Ahora vamos por aquí!"), la nueva sección entra con animación, se hace scroll suave hacia ella y el siguiente quiz se marca como recién desbloqueado con un realce temporal.
 
-- Roles live in `user_roles` per security rules — NOT on `profiles` — to avoid privilege escalation and RLS recursion. The `role` column on `profiles` is just a display convenience mirrored by the signup trigger; all authorization checks use `has_role()`.
-- The managed `_authenticated/route.tsx` uses `ssr: false` and redirects unauthenticated users to `/auth` (the integration's built-in auth page). `/login` in this plan is our own signup/role-selection flow that lives alongside it; if the user prefers using the integration's `/auth` page exclusively, we can drop `/login` and add the role selector there instead.
-- Static HTML routes are untouched.
+## 8. Enlace al dashboard desde el lobby
 
-## What I need from you before building
+Botón/tarjeta "Ver mi progreso" en la pantalla principal del demo que lleva a `/dashboard`. Al estar el demo dentro de un iframe, la navegación se hace hacia la ventana superior para que abra la ruta real.
 
-1. Confirm enabling Lovable Cloud is OK (it provisions Supabase-backed infra behind the scenes).
-2. Confirm you want a custom `/login` with the 3-role selector, OR use the integration's default `/auth` page (simpler, less UI to maintain).
+## 9. Chips de palabras con icono ✕
+
+En el quiz de reconstruir frases, las palabras ya colocadas muestran una ✕ discreta dentro de la tarjeta, junto a la palabra, para que se entienda que se pueden quitar.
+
+## 10. Progreso por sección (0–100% por bloque)
+
+La barra de progreso se recalcula por sección desbloqueada: cada bloque de teoría llega a 100% al terminarlo, se marca como completado en la barra segmentada de la lección, y la nueva sección arranca en 0%. La barra general de la lección pasa a mostrarse por segmentos completados.
+
+## 11. Audio sin límite
+
+Se elimina el contador `MAX_PLAYS`: el botón "escuchar" se puede pulsar las veces que se quiera y desaparece el estado "sin más".
+
+## Detalles técnicos
+
+- Archivos a editar: `src/assets/democip-index.html` (fuente servida por `src/routes/democip.tsx`), copia espejo en `public/democip/index.html`.
+- Archivos nuevos en `public/democip/`: `placement_items.js` y el motor del test extraído de `placement.html` (adaptado para vivir dentro del onboarding en vez de ser una página aparte).
+- Se conserva el registro local `placement_log_v1` en `localStorage`; sin backend, tal como indica el README del test.
+- Verificación final con Playwright en viewport móvil: onboarding completo, test de ubicación, quiz con auto-avance, temporizador y desbloqueo.
