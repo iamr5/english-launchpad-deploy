@@ -761,6 +761,86 @@
      wins because it comes later — keep these two hide rules AFTER that rule. */
   .overlay.active ~ .debug-fab { display: none; }
   body.in-quiz .debug-fab { display: none; }
+  /* ===== Ajustes demo (área táctil, feedback, meta diaria, secciones) ===== */
+  /* Toda la superficie del botón responde al toque: el texto/iconos internos no
+     interceptan el evento y se elimina el retardo de 300 ms. */
+  button, .btn, .cta-btn, .opt, .ob-opt, .node, .card, .streak-chip, .goal-chip { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .btn > *, .cta-btn > *, .opt > *, .ob-opt > *, .dash-cta > *, .pl-skip > *, .miniquiz-btn > * { pointer-events: none; }
+  .btn, .cta-btn { position: relative; overflow: hidden; }
+
+  /* Feedback de respuesta: banner grande e imposible de ignorar */
+  .fb-slot { height: auto; min-height: 56px; overflow: visible; }
+  .fb-banner { display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 13px 15px; border-radius: 16px; font-size: 17px; font-weight: 800; line-height: 1.25;
+    color: #fff; animation: fbPop .28s cubic-bezier(.2,1.2,.3,1) both; }
+  .fb-banner b { font-weight: 900; }
+  .fb-banner.ok { background: var(--green, #3FAA24); box-shadow: 0 6px 16px rgba(63,170,36,.32); }
+  .fb-banner.no { background: #E23B34; box-shadow: 0 6px 16px rgba(226,59,52,.30); }
+  @keyframes fbPop { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+  /* Auto-avance tipo Waze: la barra recorre el botón y al llenarse continúa sola */
+  .btn.timing::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 100%;
+    background: rgba(255,255,255,.28); transform-origin: left center; transform: scaleX(0);
+    animation: autoFill var(--auto-dur, 1200ms) linear forwards; pointer-events: none; }
+  @keyframes autoFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  /* Fichas de palabras: la ✕ deja claro que se pueden quitar */
+  .word-chip { display: inline-flex; align-items: center; gap: 7px; }
+  .word-chip .wx { font-size: 12px; font-weight: 800; color: #9aa0a6; line-height: 1; }
+
+  /* Meta diaria (chip discreto en la barra superior) */
+  .goal-chip { flex: 0 0 auto; border: none; background: none; padding: 0 2px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; position: relative; width: 34px; height: 34px; }
+  .goal-chip .gc-ring { position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(#1CB0F6 var(--gp, 0%), rgba(0,0,0,.08) 0); }
+  .goal-chip .gc-ring::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: #fff; }
+  .goal-chip .gc-t { position: relative; font-size: 11px; font-weight: 800; color: #5C5159; }
+  .goal-chip.done .gc-ring { background: conic-gradient(#3FAA24 100%, #3FAA24 0); }
+  .goal-chip.done .gc-t { color: #2E7D1A; }
+
+  /* Progreso por sección */
+  .secsegs { display: flex; gap: 4px; margin-bottom: 6px; }
+  .secsegs .ssg { flex: 1; height: 4px; border-radius: 3px; background: rgba(0,0,0,.10); }
+  .secsegs .ssg.done { background: var(--green, #3FAA24); }
+  .secsegs .ssg.now { background: rgba(28,176,246,.55); }
+
+  /* Sección recién desbloqueada */
+  .block.just-unlocked { animation: unlockIn .7s cubic-bezier(.2,1,.3,1) both; }
+  @keyframes unlockIn { from { opacity: 0; transform: translateY(22px) scale(.98); } to { opacity: 1; transform: none; } }
+  .boti-cheer { position: fixed; left: 50%; top: 14px; transform: translateX(-50%); z-index: 80;
+    display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 999px;
+    padding: 8px 16px 8px 8px; box-shadow: 0 8px 22px rgba(0,0,0,.18); animation: cheerIn .35s cubic-bezier(.2,1.3,.3,1) both; }
+  .boti-cheer img { width: 34px; height: 34px; }
+  .boti-cheer .bc-txt { font-size: 15px; font-weight: 800; color: var(--ink); }
+  .boti-cheer.out { animation: cheerOut .35s ease forwards; }
+  @keyframes cheerIn { from { opacity: 0; transform: translate(-50%, -14px) scale(.9); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+  @keyframes cheerOut { to { opacity: 0; transform: translate(-50%, -14px) scale(.94); } }
+
+  /* CTA al panel completo (ruta /dashboard) */
+  .dash-cta { display: flex; align-items: center; gap: 12px; width: 100%; margin: 6px 0 18px;
+    background: #fff; border: 1.5px solid var(--line); border-radius: 18px; padding: 14px 16px;
+    cursor: pointer; text-align: left; font-family: inherit; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+  .dash-cta .dc-em { font-size: 24px; }
+  .dash-cta .dc-txt { flex: 1; }
+  .dash-cta b { display: block; font-size: 16.5px; font-weight: 800; color: var(--ink); }
+  .dash-cta small { display: block; font-size: 13px; font-weight: 600; color: var(--muted2); margin-top: 2px; }
+
+  /* Lista "esto vamos a practicar": sin contorno de botón */
+  .ob-point.plain, .ob-point.big.plain { border: none; background: transparent; box-shadow: none; padding-left: 0; padding-right: 0; }
+
+  /* Test de ubicación dentro del onboarding */
+  .pl-count { font-size: 12.5px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
+    color: var(--muted2); margin-bottom: 8px; }
+  .pl-q { font-size: 19px; font-weight: 800; line-height: 1.3; color: var(--ink); margin-bottom: 14px; }
+  .ob-opt.pl-opt { font-size: 16px; }
+  .pl-skip { display: block; margin: 14px auto 0; border: none; background: none; cursor: pointer;
+    font-family: inherit; font-size: 14.5px; font-weight: 700; color: var(--muted2); text-decoration: underline; }
+  .pl-result { text-align: center; padding: 10px 0; }
+  .pl-badge { width: 96px; height: 96px; margin: 0 auto 14px; border-radius: 28px; background: rgba(28,176,246,.12);
+    border: 2px solid rgba(28,176,246,.35); color: var(--blueDark, #1488C0);
+    display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 900;
+    animation: fbPop .4s cubic-bezier(.2,1.3,.3,1) both; }
+  .pl-txt { font-size: 18px; font-weight: 800; color: var(--ink); }
+  .pl-sub { font-size: 14px; font-weight: 600; color: var(--muted2); margin-top: 6px; line-height: 1.4; }
 </style>
 </head>
 <body>
