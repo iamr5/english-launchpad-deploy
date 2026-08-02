@@ -1183,8 +1183,11 @@ const PK = 'ingles_web_progress_v1';
 const course = window.COURSE_DATA;
 const allLessons = course.modules.flatMap(m => m.lessons);
 
+// WIPED: una vez que el usuario pide "Borrar TODO", ninguna escritura tardía
+// (guardado diferido, cronómetro) puede resucitar el progreso viejo.
+let WIPED = false;
 function loadProgress() { try { return JSON.parse(localStorage.getItem(PK)) || {}; } catch (e) { return {}; } }
-function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); try { saveSummary(); } catch (e) {} }
+function saveProgress(p) { if (WIPED) return; localStorage.setItem(PK, JSON.stringify(p)); try { saveSummary(); } catch (e) {} }
 
 // Resumen compacto para el panel de familia/profe (/dashboard). Mismo origen ⇒
 // comparten localStorage, sin backend. Incluye el TIEMPO DE HOY para que el panel
