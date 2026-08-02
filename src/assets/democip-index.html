@@ -2804,19 +2804,19 @@ document.querySelectorAll('.ob-opt[data-mot], .ob-opt[data-goal]').forEach(b => 
 // The placement answer (step 2) is saved for context but does NOT skip content —
 // everyone starts from the very first lesson so no one misses the fundamentals.
 function obFinish() {
-  saveProfile({ name: OB.name, goal: +OB.goal || 10, level: OB.lvl || 0, motive: OB.mot || '', created: new Date().toISOString() });
+  saveProfile({ name: OB.name, goal: +OB.goal || 15, level: OB.lvl || 0, motive: OB.mot || '', created: new Date().toISOString() });
   renderCourse();
   toast('¡Hola, ' + OB.name + '! Boti te espera 🤖');
 }
 // Finish onboarding and drop straight into the very first lesson (from the last-step bar).
 function obFinishToLesson() {
   const mod = course.modules[0], fl = mod.lessons[0];
-  saveProfile({ name: OB.name, goal: +OB.goal || 10, level: OB.lvl || 0, motive: OB.mot || '', created: new Date().toISOString() });
+  saveProfile({ name: OB.name, goal: +OB.goal || 15, level: OB.lvl || 0, motive: OB.mot || '', created: new Date().toISOString() });
   renderCourse();
   if (fl) openLesson(fl, mod);
   toast('¡Hola, ' + OB.name + '! Boti te espera 🤖');
 }
-function startOnboarding() { OB = { step: 0, name: '', mot: '', lvl: null, goal: '' }; show('onboard'); obRender(); }
+function startOnboarding() { OB = { step: 0, name: '', mot: '', lvl: null, goal: '' }; PL = { state: 'intro', items: [], i: 0, sel: null, ok: {} }; show('onboard'); obRender(); }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Boot: first run (no profile) → onboarding; otherwise straight to the course.
