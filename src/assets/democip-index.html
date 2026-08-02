@@ -2992,7 +2992,7 @@ function goalTick() {
 }
 document.addEventListener('scroll', markActivity, true);
 document.addEventListener('pointerdown', markActivity, true);
-setInterval(goalTick, 1000);
+window._goalTimer = setInterval(goalTick, 1000);
 setTimeout(renderGoalChips, 0);
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
