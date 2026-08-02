@@ -1391,6 +1391,11 @@ function precacheModuleBgs() {
     window._bgCache.push(img); // keep a reference so it isn't evicted
   }
 }
+// El panel completo vive fuera del demo (ruta /dashboard de la app).
+function openDashboard() {
+  try { (window.top || window).location.href = '/dashboard'; }
+  catch (e) { window.location.href = '/dashboard'; }
+}
 function renderCourse() {
   show('course');
   precacheModuleBgs(); // warm the module backdrops while on the modules list
@@ -1425,6 +1430,11 @@ function renderCourse() {
       ${idx === activeIdx ? `<span class="card-play" style="color:${modAccent(idx)}">${PLAY_TRI}</span>` : ''}
     </div>`;
   });
+  html += `<button class="dash-cta" onclick="openDashboard()">
+      <span class="dc-em">📊</span>
+      <span class="dc-txt"><b>Ver mi panel de progreso</b><small>Racha, XP, niveles y logros</small></span>
+      ${arrowFwd(20, '#1CB0F6', 2.6)}
+    </button>`;
   document.getElementById('course-body').innerHTML = html;
   document.getElementById('course-foot').innerHTML = courseHero();
   document.querySelectorAll('.mod-card').forEach(c => c.onclick = () => {
