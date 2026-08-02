@@ -1682,6 +1682,37 @@ function renderProgress() {
 
 }
 
+// --- Observadores del progreso (demo: se guardan en el navegador) ---------
+function shareList() { try { return JSON.parse(localStorage.getItem('ae_share') || '[]'); } catch (e) { return []; } }
+function saveShareList(a) { localStorage.setItem('ae_share', JSON.stringify(a)); }
+function shareListHTML() {
+  const l = shareList();
+  if (!l.length) return '<div class="pg-sub" style="margin:0">Aún no invitaste a nadie.</div>';
+  return l.map(m => `<div class="share-item"><span>👀 ${escapeHtml(m)}</span><button class="share-x" data-mail="${escapeHtml(m)}" aria-label="Quitar">✕</button></div>`).join('');
+}
+function bindShare() {
+  const inp = document.getElementById('share-mail');
+  const add = document.getElementById('share-add');
+  const list = document.getElementById('share-list');
+  if (!inp || !add || !list) return;
+  const refresh = () => { list.innerHTML = shareListHTML(); };
+  add.onclick = () => {
+    const v = (inp.value || '').trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { toast('Escribe un correo válido'); return; }
+    const l = shareList();
+    if (!l.includes(v)) l.push(v);
+    saveShareList(l); inp.value = ''; refresh();
+    toast('Invitación enviada · verá solo tu progreso');
+  };
+  list.onclick = (e) => {
+    const b = e.target.closest('.share-x'); if (!b) return;
+    saveShareList(shareList().filter(m => m !== b.getAttribute('data-mail')));
+    refresh();
+  };
+}
+
+
+
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // MODULE
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
