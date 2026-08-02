@@ -1743,13 +1743,34 @@ function bindShare() {
   const list = document.getElementById('share-list');
   if (!inp || !add || !list) return;
   const refresh = () => { list.innerHTML = shareListHTML(); };
-  add.onclick = () => {
+  add.onclick = async () => {
     const v = (inp.value || '').trim();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { toast('Escribe un correo válido'); return; }
     const l = shareList();
     if (!l.includes(v)) l.push(v);
     saveShareList(l); inp.value = ''; refresh();
-    toast('Invitación enviada · verá solo tu progreso');
+    add.disabled = true; toast('Enviando invitación…');
+    try {
+      const s = (typeof computeSummary === 'function') ? computeSummary() : {};
+      const r = await fetch('/api/public/share-invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: v,
+          studentName: s.name || 'Un alumno',
+          level: s.level || 'A1',
+          streak: s.streak || 0,
+          todayMin: s.todayMin || 0,
+          lessonsDone: s.lessonsDone || 0
+        })
+      });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.ok) toast('Invitación enviada a ' + v);
+      else toast('No pudimos enviar la invitación. Intenta de nuevo.');
+    } catch (e) {
+      toast('No pudimos enviar la invitación. Intenta de nuevo.');
+    }
+    add.disabled = false;
   };
   list.onclick = (e) => {
     const b = e.target.closest('.share-x'); if (!b) return;
@@ -1757,6 +1778,7 @@ function bindShare() {
     refresh();
   };
 }
+
 
 
 
