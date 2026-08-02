@@ -2871,8 +2871,11 @@ function renderGoalChips() {
     c.classList.toggle('done', done);
     c.style.setProperty('--gp', pctv + '%');
     const t = c.querySelector('.gc-t');
-    if (t) t.textContent = done ? '✓' : Math.floor(secs / 60) + "'";
-    c.title = done ? 'Meta diaria cumplida' : `Meta diaria: ${Math.floor(secs / 60)} / ${Math.round(target / 60)} min`;
+    const mins = Math.floor(secs / 60);
+    // Texto explícito ("13 min") en vez de un número suelto: el chip debe leerse solo.
+    if (t) t.textContent = done ? `✓ ${mins} min` : `${mins} min`;
+    c.title = done ? `Meta diaria cumplida (${mins} min)` : `Meta diaria: ${mins} / ${Math.round(target / 60)} min`;
+
   });
 }
 function goalTick() {
