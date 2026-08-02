@@ -184,8 +184,9 @@
   .lpath .cap .shine { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
     width: 62px; height: 49px; color: rgba(255,255,255,.16); pointer-events: none; }
   .lpath .cap .shine svg { width: 100%; height: 100%; display: block; }
-  .lpath .cap .swoosh { position: relative; z-index: 1; width: 44px; height: auto; display: block; }
-  .lpath .cap .star { position: relative; z-index: 1; width: 37px; height: auto; display: block; }
+  .lpath .cap .swoosh { position: relative; z-index: 1; width: 44px; height: 35.6px; display: block; }
+  .lpath .cap .star { position: relative; z-index: 1; width: 37px; height: 30px; display: block; }
+
   .lpath .node .ic svg { width: 100%; height: 100%; display: block; }
   .lpath .node.done .cap, .lpath .node.active .cap, .lpath .node.avail .cap { background: var(--mod, var(--green)); }
   .lpath .node.done .base, .lpath .node.active .base, .lpath .node.avail .base { background: var(--mod-d, var(--greenDark)); }
@@ -787,15 +788,30 @@
   .word-chip { display: inline-flex; align-items: center; gap: 7px; }
   .word-chip .wx { font-size: 12px; font-weight: 800; color: #9aa0a6; line-height: 1; }
 
-  /* Meta diaria (chip discreto en la barra superior) */
-  .goal-chip { flex: 0 0 auto; border: none; background: none; padding: 0 2px; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center; position: relative; width: 34px; height: 34px; }
-  .goal-chip .gc-ring { position: absolute; inset: 0; border-radius: 50%;
-    background: conic-gradient(#1CB0F6 var(--gp, 0%), rgba(0,0,0,.08) 0); }
+  /* Meta diaria (píldora legible en la barra superior: anillo + "13 min") */
+  .goal-chip { flex: 0 0 auto; border: 2px solid var(--line, #E6E4EA); background: #fff; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; border-radius: 999px; height: 32px; }
+  .goal-chip .gc-ring { position: relative; flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+    background: conic-gradient(#1CB0F6 var(--gp, 0%), rgba(0,0,0,.10) 0); }
   .goal-chip .gc-ring::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: #fff; }
-  .goal-chip .gc-t { position: relative; font-size: 11px; font-weight: 800; color: #5C5159; }
+  .goal-chip .gc-t { position: relative; font-size: 13px; font-weight: 800; color: #5C5159; white-space: nowrap; }
+  .goal-chip.done { border-color: #BFE6B2; background: #F1FBEC; }
   .goal-chip.done .gc-ring { background: conic-gradient(#3FAA24 100%, #3FAA24 0); }
   .goal-chip.done .gc-t { color: #2E7D1A; }
+  .appbar.appbar-module .goal-chip { border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.92); }
+
+  /* Compartir progreso con un observador */
+  .share-row { display: flex; gap: 8px; align-items: stretch; }
+  .share-row input { flex: 1 1 auto; min-width: 0; border: 2px solid var(--line, #E6E4EA); border-radius: 14px;
+    padding: 12px 14px; font: inherit; font-size: 15px; background: #fff; color: var(--ink); }
+  .share-row input:focus { outline: none; border-color: #1CB0F6; }
+  .share-row .btn { width: auto; flex: 0 0 auto; padding: 0 18px; height: auto; min-height: 46px; }
+  .share-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .share-item { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: #F7F7FA; border-radius: 12px; padding: 9px 12px; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .share-x { border: none; background: none; cursor: pointer; font-size: 14px; font-weight: 800; color: #9aa0a6; padding: 4px 6px; }
+
+
 
   /* Progreso por sección */
   .secsegs { display: flex; gap: 4px; margin-bottom: 6px; }
@@ -814,6 +830,26 @@
   .boti-cheer.out { animation: cheerOut .35s ease forwards; }
   @keyframes cheerIn { from { opacity: 0; transform: translate(-50%, -14px) scale(.9); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
   @keyframes cheerOut { to { opacity: 0; transform: translate(-50%, -14px) scale(.94); } }
+
+  /* Celebración de lección completada — la recompensa "grande" del curso */
+  .win { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px; padding: 24px;
+    background: radial-gradient(120% 90% at 50% 20%, #EAFBE2 0%, #FFFFFF 62%); animation: winIn .28s ease both; }
+  @keyframes winIn { from { opacity: 0 } to { opacity: 1 } }
+  .win.out { animation: winOut .3s ease both; }
+  @keyframes winOut { to { opacity: 0 } }
+  .win .w-boti { width: 132px; height: 132px; animation: winPop .7s cubic-bezier(.2,1.5,.4,1) both; }
+  @keyframes winPop { 0% { transform: scale(.2) rotate(-14deg); opacity: 0 } 60% { transform: scale(1.12) rotate(6deg); opacity: 1 } 100% { transform: scale(1) rotate(0) } }
+  .win .w-t { font-family: var(--font-round); font-size: 30px; font-weight: 800; color: var(--greenDark, #2E7D1A); text-align: center; margin-top: 8px; }
+  .win .w-s { font-size: 16px; font-weight: 700; color: var(--muted2, #5C5159); text-align: center; max-width: 320px; }
+  .win .w-stats { display: flex; gap: 10px; margin: 16px 0 4px; }
+  .win .w-chip { background: #fff; border: 2px solid var(--line, #E6E4EA); border-radius: 16px;
+    padding: 10px 16px; text-align: center; box-shadow: 0 2px 0 rgba(0,0,0,.05); animation: winIn .4s .25s ease both; }
+  .win .w-chip b { display: block; font-size: 20px; font-weight: 800; color: var(--ink); }
+  .win .w-chip span { font-size: 12px; font-weight: 700; color: var(--muted2, #5C5159); }
+  .win .btn { max-width: 320px; width: 100%; margin-top: 18px; }
+  .win .cft { position: absolute; top: -12px; width: 10px; height: 16px; border-radius: 3px; animation: cft 2.6s linear infinite; }
+  @keyframes cft { 0% { transform: translateY(-20px) rotate(0) } 100% { transform: translateY(105vh) rotate(720deg) } }
 
   /* CTA al panel completo (ruta /dashboard) */
   .dash-cta { display: flex; align-items: center; gap: 12px; width: 100%; margin: 6px 0 18px;
@@ -848,7 +884,7 @@
   <!-- COURSE (entry screen — the single-course landing was removed as redundant) -->
   <section id="screen-course" class="screen active">
     <div class="appbar"><img class="appbar-en" src="boti_head.svg" alt=""><div class="title" id="course-title"></div>
-      <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0'</span></button>
+      <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0 min</span></button>
       <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()">🔥<b id="streak-n">0</b></button>
     </div>
     <div class="scroll"><div class="pad" id="course-body"></div></div>
@@ -868,7 +904,7 @@
     <div class="appbar appbar-col appbar-module">
       <div class="appbar-row"><button class="back" data-nav="course" aria-label="Atrás"></button>
         <div class="mod-head"><div class="mod-kicker" id="module-kicker"></div><div class="title" id="module-title"></div></div>
-        <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0'</span></button>
+        <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0 min</span></button>
       </div>
     </div>
     <div class="scroll"><div class="pad" id="module-body"></div></div>
@@ -877,7 +913,7 @@
   <!-- LESSON -->
   <section id="screen-lesson" class="screen">
     <div class="appbar appbar-col">
-      <div class="appbar-row"><button class="back" data-nav="module" aria-label="Atrás"></button><div class="title" id="lesson-title"></div><button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0'</span></button></div>
+      <div class="appbar-row"><button class="back" data-nav="module" aria-label="Atrás"></button><div class="title" id="lesson-title"></div><button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0 min</span></button></div>
       <div class="appbar-progress"><div class="secsegs" id="lesson-secsegs"></div><div class="pbar"><div class="fill" id="lesson-bar-fill"></div><div class="pct" id="lesson-bar-pct"></div></div></div>
     </div>
     <div class="scroll" id="lesson-scroll"><div class="pad" id="lesson-body"></div></div>
@@ -1148,7 +1184,39 @@ const course = window.COURSE_DATA;
 const allLessons = course.modules.flatMap(m => m.lessons);
 
 function loadProgress() { try { return JSON.parse(localStorage.getItem(PK)) || {}; } catch (e) { return {}; } }
-function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); }
+function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); try { saveSummary(); } catch (e) {} }
+
+// Resumen compacto para el panel de familia/profe (/dashboard). Mismo origen ⇒
+// comparten localStorage, sin backend. Incluye el TIEMPO DE HOY para que el panel
+// pueda decir "hoy practicó X min".
+const SUMMARY_KEY = 'ingles_web_summary_v1';
+function computeSummary() {
+  const prof = loadProfile() || {};
+  const LEVEL = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const allDone = allLessons.every(l => isLessonCompleted(l.id));
+  let ai = course.modules.reduce((a, m, i) => (isLessonUnlocked(m.lessons[0].id) && !m.lessons.every(l => isLessonCompleted(l.id))) ? i : a, -1);
+  if (ai < 0) ai = allDone ? course.modules.length - 1 : 0;
+  const sk = moduleSkill(course.modules[ai]);
+  const days = PROGRESS['__days'] || [];
+  const wa = new Date(); wa.setHours(0, 0, 0, 0); wa.setDate(wa.getDate() - 6);
+  const daysThisWeek = days.filter(ds => new Date(ds + 'T00:00:00') >= wa).length;
+  const tmap = PROGRESS['__time'] || {};
+  const weekSecs = Object.keys(tmap).filter(ds => new Date(ds + 'T00:00:00') >= wa).reduce((s, k) => s + (tmap[k] || 0), 0);
+  return {
+    name: prof.name || '', goal: prof.goal || 15,
+    levelIdx: ai, level: LEVEL[ai],
+    streak: streakDays(), daysThisWeek: daysThisWeek,
+    todayMin: Math.floor((tmap[dayKey()] || 0) / 60),
+    weekMin: Math.floor(weekSecs / 60),
+    goalMin: +prof.goal || 15,
+    lessonsDone: allLessons.filter(l => isLessonCompleted(l.id)).length,
+    lessonsTotal: allLessons.length,
+    skills: { listening: sk.listening, reading: sk.reading, writing: sk.writing },
+    updated: Date.now()
+  };
+}
+function saveSummary() { try { localStorage.setItem(SUMMARY_KEY, JSON.stringify(computeSummary())); } catch (e) {} }
+
 let PROGRESS = loadProgress();
 
 function lp(id) { if (!PROGRESS[id]) PROGRESS[id] = { blocks: {} }; if (!PROGRESS[id].blocks) PROGRESS[id].blocks = {}; return PROGRESS[id]; }
@@ -1583,12 +1651,14 @@ function renderProgress() {
   const lbRows = rows.map((r, i) =>
     `<div class="pg-lbr ${r.me ? 'me' : ''}"><span class="pos">${i + 1}</span><span class="av" style="background:${r.col}">${r.nm[0]}</span>` +
     `<span class="nm">${r.nm}</span><span class="xp">${fmtXp(r.xp)}</span></div>`).join('');
-  // Certificate: unlocks by COMPLETING the B2 module — its final quizzes ARE the
-  // "evaluación de nivel". Gated on real lesson completion (linear course, so this
-  // is every not-yet-done lesson up to and including B2), never on farmable XP.
-  const b2idx = Math.min(3, course.modules.length - 1);
-  const b2Lessons = course.modules.slice(0, b2idx + 1).flatMap(m => m.lessons);
-  const b2Remain = b2Lessons.filter(l => !isLessonCompleted(l.id)).length;
+  // Constancia: apunta al nivel que el alumno está cursando AHORA (no siempre B2).
+  // Se desbloquea al terminar todas las lecciones de ese módulo; luego pasa al siguiente.
+  const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  let certIdx = course.modules.findIndex(m => m.lessons.some(l => !isLessonCompleted(l.id)));
+  if (certIdx < 0) certIdx = course.modules.length - 1;
+  const certLevel = (course.modules[certIdx] && course.modules[certIdx].level) || CEFR[certIdx] || `Módulo ${certIdx + 1}`;
+  const b2Remain = course.modules[certIdx].lessons.filter(l => !isLessonCompleted(l.id)).length;
+
   let html = `
   <div class="card pg-hero">
     <div class="pg-row">
@@ -1641,11 +1711,51 @@ function renderProgress() {
 
   <div class="card pg-cert">
     <span class="lk">${b2Remain ? '🔒' : '🎉'}</span>
-    <div><b>Constancia de logro B2</b><p>Se desbloquea al completar el nivel B2</p></div>
+    <div><b>Constancia de logro ${certLevel}</b><p>Se desbloquea al completar el nivel ${certLevel}</p></div>
     <span class="go">${b2Remain ? 'Faltan ' + b2Remain + (b2Remain === 1 ? ' lección' : ' lecciones') : '¡Desbloqueada!'}</span>
+  </div>
+
+  <div class="card" style="cursor:default">
+    <div class="pg-sect-t">Comparte tu progreso</div>
+    <div class="pg-sub" style="margin:0 0 10px">Invita a alguien (familia, tutor o profe) a seguir tu avance. Solo verá tu progreso — nada más — y podrá animarte si te detienes.</div>
+    <div class="share-row"><input id="share-mail" type="email" placeholder="correo@ejemplo.com" autocomplete="email"><button class="btn green" id="share-add">Invitar</button></div>
+    <div id="share-list" class="share-list">${shareListHTML()}</div>
   </div>`;
   document.getElementById('progress-body').innerHTML = html;
+  bindShare();
+
 }
+
+// --- Observadores del progreso (demo: se guardan en el navegador) ---------
+function shareList() { try { return JSON.parse(localStorage.getItem('ae_share') || '[]'); } catch (e) { return []; } }
+function saveShareList(a) { localStorage.setItem('ae_share', JSON.stringify(a)); }
+function shareListHTML() {
+  const l = shareList();
+  if (!l.length) return '<div class="pg-sub" style="margin:0">Aún no invitaste a nadie.</div>';
+  return l.map(m => `<div class="share-item"><span>👀 ${escapeHtml(m)}</span><button class="share-x" data-mail="${escapeHtml(m)}" aria-label="Quitar">✕</button></div>`).join('');
+}
+function bindShare() {
+  const inp = document.getElementById('share-mail');
+  const add = document.getElementById('share-add');
+  const list = document.getElementById('share-list');
+  if (!inp || !add || !list) return;
+  const refresh = () => { list.innerHTML = shareListHTML(); };
+  add.onclick = () => {
+    const v = (inp.value || '').trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { toast('Escribe un correo válido'); return; }
+    const l = shareList();
+    if (!l.includes(v)) l.push(v);
+    saveShareList(l); inp.value = ''; refresh();
+    toast('Invitación enviada · verá solo tu progreso');
+  };
+  list.onclick = (e) => {
+    const b = e.target.closest('.share-x'); if (!b) return;
+    saveShareList(shareList().filter(m => m !== b.getAttribute('data-mail')));
+    refresh();
+  };
+}
+
+
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // MODULE
@@ -1855,7 +1965,8 @@ function renderModule(mod) {
   }
   // setupBotiTuner(body); // DEBUG: afinador en vivo de X/Y/tamano de Boti (desconectado — descomentar para recalibrar)
 
-  // Tap a node to open its popover (one at a time); the popover CTA opens the lesson.
+  // Un solo toque: si la lección está desbloqueada, se ENTRA directo (sin globo de
+  // confirmación). El globo queda solo para las lecciones bloqueadas (explica por qué).
   const lp = body.querySelector('.lpath');
   lp.addEventListener('click', (e) => {
     const cta = e.target.closest('.cta');
@@ -1865,9 +1976,16 @@ function renderModule(mod) {
       return;
     }
     const node = e.target.closest('.node');
-    const wasOpen = node && node.classList.contains('open');
+    if (!node) {
+      lp.querySelectorAll('.node.open').forEach(n => n.classList.remove('open', 'below'));
+      lp.classList.remove('has-open');
+      return;
+    }
+    const lesson = mod.lessons[+node.getAttribute('data-lesson')];
+    if (lesson && isLessonUnlocked(lesson.id)) { openLesson(lesson, mod); return; }
+    const wasOpen = node.classList.contains('open');
     lp.querySelectorAll('.node.open').forEach(n => n.classList.remove('open', 'below'));
-    if (node && !wasOpen) {
+    if (!wasOpen) {
       node.classList.add('open');
       // not enough room above? flip the popover below the node.
       const sc = node.closest('.scroll');
@@ -1879,6 +1997,7 @@ function renderModule(mod) {
     const _on = lp.querySelector('.node.open'); // hide EMPEZAR chips when a popover is open, but NOT for a locked lesson
     lp.classList.toggle('has-open', !!_on && !_on.classList.contains('locked'));
   });
+
   // (banner de colaboración retirado)
 }
 
@@ -1898,6 +2017,11 @@ function modulePathHTML(mod) {
     5: { 0: 1, 1: 2, 2: 2, 3: -11, 4: -18, 5: -14, 6: -18 },
   };
   const STAR = '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.6l2.82 5.72 6.31.92-4.57 4.45 1.08 6.29L12 17.93l-5.64 2.95 1.08-6.29L2.87 9.24l6.31-.92z"/></svg>';
+  // Íconos del caminito EN LÍNEA (antes eran <img src="star.svg|completed_new.svg">, que
+  // se pedían por red y aparecían con retraso al abrir el módulo).
+  const STAR_IC = '<svg class="star" viewBox="0 0 42 34" fill="none" aria-hidden="true"><path d="M18.7521 4.41157C19.6598 2.52948 22.3402 2.52948 23.2479 4.41157L25.8539 9.81517C26.225 10.5847 26.9639 11.1109 27.8125 11.2099L33.7906 11.9076C35.9269 12.1569 36.7684 14.8114 35.1658 16.2459L30.8845 20.0785C30.224 20.6697 29.9267 21.567 30.1035 22.4357L31.2468 28.053C31.6684 30.124 29.4857 31.7487 27.6228 30.7506L22.1786 27.8339C21.4424 27.4395 20.5576 27.4395 19.8214 27.8339L14.3772 30.7506C12.5143 31.7487 10.3316 30.124 10.7532 28.053L11.8965 22.4357C12.0733 21.567 11.776 20.6697 11.1155 20.0785L6.83415 16.2459C5.23162 14.8114 6.07307 12.1569 8.20939 11.9076L14.1875 11.2099C15.0361 11.1109 15.775 10.5847 16.1461 9.81517L18.7521 4.41157Z" fill="white"/></svg>';
+  const CHECK_IC = '<svg class="swoosh" viewBox="0 0 42 34" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.5239 18.112L14.4053 13.9934C13.1459 12.734 11.104 12.734 9.84455 13.9934C8.58514 15.2528 8.58514 17.2947 9.84455 18.5541L16.1331 24.8427C16.7889 25.4985 17.6569 25.8128 18.5161 25.7856C19.3802 25.817 20.2545 25.5028 20.9142 24.8432L32.2521 13.5053C33.5115 12.2459 33.5115 10.204 32.2521 8.94456C30.9927 7.68515 28.9508 7.68515 27.6914 8.94456L18.5239 18.112Z" fill="white"/></svg>';
+
   const SHINE = '<svg viewBox="0 0 56 46" preserveAspectRatio="none" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M34.2346 3.25135C35.3157 2.1269 34.7053 0.276787 33.1512 0.143156C32.0512 0.0485729 30.9331 0 29.8002 0C13.342 0 0 10.2517 0 22.8979C0 26.3985 1.02236 29.7157 2.85016 32.6827C3.47761 33.7012 4.88715 33.7751 5.71626 32.9128L34.2346 3.25135Z"/><path d="M55.0954 12.5231C53.3548 9.61289 49.8186 6.8733 47.2219 5.21074C46.2417 4.58319 44.9772 4.77038 44.1616 5.60066C34.5035 15.4328 18.3374 31.8498 12.05 38.0427C10.9724 39.1041 10.996 40.8688 12.249 41.716C16.2271 44.4058 20.9121 45.5851 23.4852 45.9072C24.1853 45.9949 24.8657 45.7259 25.3691 45.2315C34.775 35.9934 50.2041 19.9015 54.7166 15.0879C55.3787 14.3818 55.5923 13.3539 55.0954 12.5231Z"/></svg>';
   const LOCK = '<svg viewBox="0 0 24 24" fill="#7c7c86" stroke="#7c7c86" stroke-width="0.8" stroke-linejoin="round"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3z"/></svg>';
   const N = mod.lessons.length;
@@ -1918,8 +2042,9 @@ function modulePathHTML(mod) {
     // gap derived from the horizontal step so spacing stays even (no step → more room)
     const mt = i === 0 ? 22 : Math.round(30 - 0.45 * Math.abs(SWAY[i % SWAY.length] - SWAY[(i - 1) % SWAY.length]));
     const capInner = completed
-      ? `<span class="shine">${SHINE}</span><img class="swoosh" src="completed_new.svg" alt="">`
-      : (unlocked ? `<img class="star" src="star.svg" alt="">` : `<span class="ic">${LOCK}</span>`);
+      ? `<span class="shine">${SHINE}</span>${CHECK_IC}`
+      : (unlocked ? STAR_IC : `<span class="ic">${LOCK}</span>`);
+
     let ring = '';
     if (isCur) {
       const p = Math.max(0.04, Math.min(0.96, wholeProgress(lesson, getScroll(lesson.id))));
@@ -2402,17 +2527,14 @@ function openFinalQuiz(lesson, mod) {
     const was = isQuizCompleted(lesson.id);
     lp(lesson.id).skillErr = skillAgg; // record this lesson's per-skill first-try mistakes
     markQuizCompleted(lesson.id);
-    showDialog(`<div class="center-col">
-      <div class="result-icon ok" style="background:var(--green)"><img src="completed_new.svg" style="width:48px;height:auto" alt=""></div>
-      <div class="result-title">¡Lección completada!</div>
-      <div class="result-sub">¡Vas muy bien!</div>
-      <button class="btn green" id="dlg-ok">Continuar</button></div>`, () => {
-      closeOverlay();
+    closeOverlay();
+    lessonCelebration(lesson, () => {
       const cierre = lesson.contentBlocks.find(b => b.type === 'cierre');
       if (!was && cierre) openCierreSheet(cierre);
       else { renderModule(mod); }
     });
   }
+
   function showRedo(failed) {
     const one = failed.length === 1;
     showDialog(`<div class="center-col">
@@ -2717,23 +2839,44 @@ function debugUndoLastQuiz() {
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-// Progreso POR SECCIÓN: cada bloque desbloqueado tiene su propia barra 0→100%.
+// Progreso POR SECCIÓN.
+// Una "sección" NO es cada bloque: es cada tramo con candado, es decir el grupo de
+// bloques que termina en un bloque con mini-quiz (más el tramo final sin quiz). Así,
+// al entrar por primera vez estás en la sección 1 de N con 0% — antes se veían varios
+// segmentos ya verdes solo porque la intro y la vista previa vienen abiertas.
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function lessonSections(lesson) {
+  const blocks = lesson.contentBlocks.filter(b => b.type !== 'cierre');
+  const secs = []; let start = 0;
+  blocks.forEach((b, i) => {
+    const gate = b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length;
+    if (gate) { secs.push({ start, end: i, gate: b }); start = i + 1; }
+  });
+  if (start < blocks.length) secs.push({ start, end: blocks.length - 1, gate: null });
+  if (!secs.length) secs.push({ start: 0, end: Math.max(0, blocks.length - 1), gate: null });
+  return secs;
+}
 function sectionState(lesson) {
-  const total = lesson.contentBlocks.filter(b => b.type !== 'cierre').length;
-  const idx = Math.max(0, Math.min(total - 1, lastUnlockedBlockIndex(lesson)));
+  const secs = lessonSections(lesson);
+  const total = secs.length;
+  const last = lastUnlockedBlockIndex(lesson);
+  let idx = secs.findIndex(s => last <= s.end);
+  if (idx < 0) idx = total - 1;
+  const sec = secs[idx];
   const sc = document.getElementById('lesson-scroll');
-  const el = document.querySelectorAll('#lesson-body .block')[idx];
+  const els = document.querySelectorAll('#lesson-body .block');
   let p = 0;
-  if (sc && el) {
-    const top = el.offsetTop, h = el.offsetHeight || 1;
+  const first = els[sec.start], lastEl = els[Math.min(sec.end, els.length - 1)];
+  if (sc && first && lastEl) {
+    const top = first.offsetTop;
+    const h = Math.max(1, (lastEl.offsetTop + lastEl.offsetHeight) - top);
     p = Math.min(1, Math.max(0, (sc.scrollTop + sc.clientHeight - top) / h));
   }
-  const b = lesson.contentBlocks[idx];
-  if (b && b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length) {
+  if (sec.gate) {
     // la sección solo llega al 100% cuando su mini-quiz está superado
-    p = isMiniQuizCompleted(lesson.id, b.id) ? 1 : Math.min(p, 0.9);
+    p = isMiniQuizCompleted(lesson.id, sec.gate.id) ? 1 : Math.min(p, 0.9);
   }
+
   return { total, idx, p };
 }
 // Al pasar un mini-quiz: Boti celebra, la nueva sección entra con animación y la
@@ -2765,6 +2908,35 @@ function botiCheer(msg) {
   document.body.appendChild(el);
   setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 2200);
 }
+// Recompensa grande al terminar una lección: Boti aparece, confeti, XP y racha.
+function lessonCelebration(lesson, onDone) {
+  const old = document.getElementById('lesson-win'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.id = 'lesson-win'; el.className = 'win';
+  const cols = ['#3FAA24', '#1CB0F6', '#FF9600', '#FFD700', '#FF4B4B'];
+  let cft = '';
+  for (let i = 0; i < 26; i++) {
+    cft += `<span class="cft" style="left:${Math.round(Math.random() * 96)}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * 2).toFixed(2)}s;animation-duration:${(2 + Math.random() * 1.6).toFixed(2)}s"></span>`;
+  }
+  el.innerHTML = `${cft}
+    <img class="w-boti" src="boti_head.svg" alt="">
+    <div class="w-t">¡Lección completada!</div>
+    <div class="w-s">${escapeHtml(lessonName(lesson))}</div>
+    <div class="w-stats">
+      <div class="w-chip"><b>+${XP_FINAL}</b><span>XP ganada</span></div>
+      <div class="w-chip"><b>🔥 ${streakDays()}</b><span>días de racha</span></div>
+      <div class="w-chip"><b>${Math.floor(goalSecs() / 60)} min</b><span>hoy</span></div>
+    </div>
+    <button class="btn green" id="win-go">¡Seguir!</button>`;
+  document.body.appendChild(el);
+  const close = () => {
+    el.classList.add('out');
+    setTimeout(() => { el.remove(); if (onDone) onDone(); }, 300);
+  };
+  el.querySelector('#win-go').onclick = close;
+  renderGoalChips();
+}
+
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Meta diaria: cronómetro discreto. Solo cuenta mientras hay actividad real
@@ -2785,8 +2957,11 @@ function renderGoalChips() {
     c.classList.toggle('done', done);
     c.style.setProperty('--gp', pctv + '%');
     const t = c.querySelector('.gc-t');
-    if (t) t.textContent = done ? '✓' : Math.floor(secs / 60) + "'";
-    c.title = done ? 'Meta diaria cumplida' : `Meta diaria: ${Math.floor(secs / 60)} / ${Math.round(target / 60)} min`;
+    const mins = Math.floor(secs / 60);
+    // Texto explícito ("13 min") en vez de un número suelto: el chip debe leerse solo.
+    if (t) t.textContent = done ? `✓ ${mins} min` : `${mins} min`;
+    c.title = done ? `Meta diaria cumplida (${mins} min)` : `Meta diaria: ${mins} / ${Math.round(target / 60)} min`;
+
   });
 }
 function goalTick() {
