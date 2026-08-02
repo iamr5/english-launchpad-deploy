@@ -1667,7 +1667,7 @@ function renderProgress() {
 
   <div class="card pg-cert">
     <span class="lk">${b2Remain ? '🔒' : '🎉'}</span>
-    <div><b>Constancia de logro B2</b><p>Se desbloquea al completar el nivel B2</p></div>
+    <div><b>Constancia de logro ${certLevel}</b><p>Se desbloquea al completar el nivel ${certLevel}</p></div>
     <span class="go">${b2Remain ? 'Faltan ' + b2Remain + (b2Remain === 1 ? ' lección' : ' lecciones') : '¡Desbloqueada!'}</span>
   </div>`;
   document.getElementById('progress-body').innerHTML = html;
