@@ -1542,10 +1542,10 @@ function precacheModuleBgs() {
     window._bgCache.push(img); // keep a reference so it isn't evicted
   }
 }
-// El panel completo vive fuera del demo (ruta /dashboard de la app).
+// El panel de progreso del demo vive en /demo-dashboard.
 function openDashboard() {
-  try { (window.top || window).location.href = '/dashboard'; }
-  catch (e) { window.location.href = '/dashboard'; }
+  try { (window.top || window).location.href = '/demo-dashboard'; }
+  catch (e) { window.location.href = '/demo-dashboard'; }
 }
 function renderCourse() {
   show('course');
