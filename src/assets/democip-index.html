@@ -768,6 +768,7 @@
   <!-- COURSE (entry screen — the single-course landing was removed as redundant) -->
   <section id="screen-course" class="screen active">
     <div class="appbar"><img class="appbar-en" src="boti_head.svg" alt=""><div class="title" id="course-title"></div>
+      <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0'</span></button>
       <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()">🔥<b id="streak-n">0</b></button>
     </div>
     <div class="scroll"><div class="pad" id="course-body"></div></div>
@@ -787,6 +788,7 @@
     <div class="appbar appbar-col appbar-module">
       <div class="appbar-row"><button class="back" data-nav="course" aria-label="Atrás"></button>
         <div class="mod-head"><div class="mod-kicker" id="module-kicker"></div><div class="title" id="module-title"></div></div>
+        <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0'</span></button>
       </div>
     </div>
     <div class="scroll"><div class="pad" id="module-body"></div></div>
@@ -795,7 +797,7 @@
   <!-- LESSON -->
   <section id="screen-lesson" class="screen">
     <div class="appbar appbar-col">
-      <div class="appbar-row"><button class="back" data-nav="module" aria-label="Atrás"></button><div class="title" id="lesson-title"></div></div>
+      <div class="appbar-row"><button class="back" data-nav="module" aria-label="Atrás"></button><div class="title" id="lesson-title"></div><button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0'</span></button></div>
       <div class="appbar-progress"><div class="pbar"><div class="fill" id="lesson-bar-fill"></div><div class="pct" id="lesson-bar-pct"></div></div></div>
     </div>
     <div class="scroll" id="lesson-scroll"><div class="pad" id="lesson-body"></div></div>
@@ -901,6 +903,7 @@
      (El runtime de Rive y el oso anterior quedaron sin uso: rive.js / rive_wasm.js /
      busi_act_riv.js y los *.svg del oso siguen en la carpeta pero ya no se cargan.) -->
 <script src="boti.js"></script>
+<script src="placement_items.js"></script>
 <script src="data.js"></script>
 <script src="data_modulo3.js"></script>
 <script src="data_modulo4.js"></script>
@@ -1299,7 +1302,19 @@ document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click',
 }));
 // Enable the in-page debug controls (complete lesson / reset progress / undo /
 // wipe ALL data). Comment the line below out to hide them for a demo.
-document.body.classList.add('debug-fabs');
+// Los FABs de debug quedan ocultos en el demo: se muestran/ocultan tocando 7 veces
+// seguidas el FONDO (no botones ni enlaces).
+let _dbgTaps = 0, _dbgT = null;
+document.addEventListener('click', (e) => {
+  if (e.target.closest('button, a, input, .ob-opt, .opt, .card, .node, .collap-h, .block-chip, .word-chip, .token, .sheet, .overlay')) { _dbgTaps = 0; return; }
+  _dbgTaps++;
+  clearTimeout(_dbgT); _dbgT = setTimeout(() => { _dbgTaps = 0; }, 1200);
+  if (_dbgTaps >= 7) {
+    _dbgTaps = 0;
+    const on = document.body.classList.toggle('debug-fabs');
+    toast(on ? 'Modo debug activado' : 'Modo debug desactivado');
+  }
+});
 
 function pbar(progress, completed, color) {
   const pct = Math.round(progress * 100);
@@ -1545,12 +1560,7 @@ function renderProgress() {
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // MODULE
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-function langlesBanner() {
-  return `<div class="langles" id="langles-banner">
-    <img class="collab-svg" src="langles_colaboracion.svg" alt="En colaboración con Langles">
-    <div class="logos"><img class="iso" src="langles_iso.png" alt=""><img class="logo" src="langles_logo.png" alt=""></div>
-  </div>`;
-}
+function langlesBanner() { return ''; } // banner de colaboración retirado del demo
 // Tint a hex toward black (amt<0) or white (amt>0); |amt| is the mix fraction.
 function shadeHex(hex, amt) {
   const h = hex.replace('#', '');
@@ -1716,7 +1726,7 @@ function renderModule(mod) {
   const BG_TINT = { 1: '#d5d0cd', 2: '#77b005', 3: '#5c960a', 4: '#e0f2fe', 5: '#373538' };
   _sm.style.background = BG_TINT[(_mi % 5) + 1] || '';
   let html = modulePathHTML(mod);
-  html += `<div style="height:18px"></div>${langlesBanner()}`;
+  html += `<div style="height:18px"></div>`;
   const body = document.getElementById('module-body');
   body.innerHTML = html;
   // Per-module: trim the path's bottom clearance (108px base) so the Langles banner sits closer.
@@ -1779,7 +1789,7 @@ function renderModule(mod) {
     const _on = lp.querySelector('.node.open'); // hide EMPEZAR chips when a popover is open, but NOT for a locked lesson
     lp.classList.toggle('has-open', !!_on && !_on.classList.contains('locked'));
   });
-  document.getElementById('langles-banner').onclick = openLanglesSheet;
+  // (banner de colaboración retirado)
 }
 
 // Renders this module's lessons as the Duolingo-style winding path of nodes.
@@ -1993,7 +2003,6 @@ function renderLessonBody(lesson) {
       break;
     }
   }
-  html += langlesBanner();
   document.getElementById('lesson-body').innerHTML = html;
   document.querySelectorAll('[data-mq]').forEach(b => b.onclick = () => {
     const block = blocks.find(x => x.id === b.getAttribute('data-mq'));
@@ -2006,8 +2015,6 @@ function renderLessonBody(lesson) {
     updateAccentDividers();
   });
   updateAccentDividers();
-  const lb = document.getElementById('lesson-body').querySelector('#langles-banner');
-  if (lb) lb.onclick = openLanglesSheet;
 }
 // Hide a section's top divider when the section directly before it is an OPEN accent
 // card (Misión, Vista previa, Resumen) — the card's edge already separates them.
