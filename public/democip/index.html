@@ -1766,6 +1766,8 @@ function bindShare() {
       });
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.ok) toast('Invitación enviada a ' + v);
+      else if (j.reason === 'domain_not_verified') toast('Invitado guardado. El envío de correos se activa en unas horas.');
+      else if (j.reason === 'recipient_suppressed') toast('Ese correo no acepta mensajes nuestros.');
       else toast('No pudimos enviar la invitación. Intenta de nuevo.');
     } catch (e) {
       toast('No pudimos enviar la invitación. Intenta de nuevo.');
