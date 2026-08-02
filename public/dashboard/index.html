@@ -258,7 +258,7 @@
 
           <div class="band">
             <div class="chip"><div class="ico">📅</div><div class="k" id="p-dias">6 / 7</div><div class="l">Días activos</div></div>
-            <div class="chip"><div class="ico">⏱️</div><div class="k" id="p-tiempo">1 h 45</div><div class="l">Esta semana</div></div>
+            <div class="chip"><div class="ico">⏱️</div><div class="k" id="p-tiempo">1 h 45</div><div class="l" id="p-tiempo-l">Esta semana</div></div>
             <div class="chip"><div class="ico">📚</div><div class="k" id="p-lecc">9</div><div class="l">Lecciones</div></div>
           </div>
 
@@ -500,6 +500,9 @@
   function renderParent(wk){
     const d=PWEEK[wk];
     set('p-racha',d.racha); set('p-sub',d.sub); set('p-dias',d.dias); set('p-tiempo',d.tiempo); set('p-lecc',d.lecc); set('p-cert',d.cert);
+    // El tiempo de HOY viene de la app del alumno (resumen en localStorage).
+    set('p-tiempo-l', d.hoy != null ? ('Esta semana \u00b7 hoy ' + d.hoy + ' min') : 'Esta semana');
+    if (d.certTitle) set('p-cert-t', d.certTitle);
     ['l','r','w'].forEach((k,i)=>{ set('p-'+k+'-pct',d.sk[i]+'%'); const bar=document.getElementById('p-'+k+'-bar'); if(bar) bar.style.width=d.sk[i]+'%'; });
     const h0=document.getElementById('p-help0'), h1=document.getElementById('p-help1');
     if(h0) h0.innerHTML=d.help[0]+' <small>'+P_HELP_SUB[0]+'</small>';
