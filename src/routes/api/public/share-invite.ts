@@ -66,8 +66,19 @@ export const Route = createFileRoute('/api/public/share-invite')({
           }
           return Response.json({ ok: true })
         } catch (error) {
-          console.error('share-invite send failed', error)
-          return Response.json({ error: 'send_failed' }, { status: 502 })
+          const code = (error as { code?: string })?.code
+          const status = (error as { status?: number })?.status
+          console.error('share-invite send failed', code ?? error)
+          if (code === 'domain_not_verified' || code === 'emails_disabled') {
+            return Response.json(
+              { ok: false, reason: code },
+              { status: 200 },
+            )
+          }
+          if (status === 429) {
+            return Response.json({ ok: false, reason: 'rate_limited' }, { status: 200 })
+          }
+          return Response.json({ ok: false, reason: 'send_failed' }, { status: 200 })
         }
       },
     },
