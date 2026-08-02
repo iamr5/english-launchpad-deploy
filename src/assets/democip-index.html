@@ -2976,6 +2976,7 @@ function renderGoalChips() {
   });
 }
 function goalTick() {
+  if (WIPED) return;
   if (document.hidden) return;
   if (Date.now() - _lastAct > 60000) return; // sin actividad reciente: el reloj se pausa solo
   const t = PROGRESS['__time'] = PROGRESS['__time'] || {};
