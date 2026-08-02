@@ -1184,7 +1184,39 @@ const course = window.COURSE_DATA;
 const allLessons = course.modules.flatMap(m => m.lessons);
 
 function loadProgress() { try { return JSON.parse(localStorage.getItem(PK)) || {}; } catch (e) { return {}; } }
-function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); }
+function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); try { saveSummary(); } catch (e) {} }
+
+// Resumen compacto para el panel de familia/profe (/dashboard). Mismo origen ⇒
+// comparten localStorage, sin backend. Incluye el TIEMPO DE HOY para que el panel
+// pueda decir "hoy practicó X min".
+const SUMMARY_KEY = 'ingles_web_summary_v1';
+function computeSummary() {
+  const prof = loadProfile() || {};
+  const LEVEL = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const allDone = allLessons.every(l => isLessonCompleted(l.id));
+  let ai = course.modules.reduce((a, m, i) => (isLessonUnlocked(m.lessons[0].id) && !m.lessons.every(l => isLessonCompleted(l.id))) ? i : a, -1);
+  if (ai < 0) ai = allDone ? course.modules.length - 1 : 0;
+  const sk = moduleSkill(course.modules[ai]);
+  const days = PROGRESS['__days'] || [];
+  const wa = new Date(); wa.setHours(0, 0, 0, 0); wa.setDate(wa.getDate() - 6);
+  const daysThisWeek = days.filter(ds => new Date(ds + 'T00:00:00') >= wa).length;
+  const tmap = PROGRESS['__time'] || {};
+  const weekSecs = Object.keys(tmap).filter(ds => new Date(ds + 'T00:00:00') >= wa).reduce((s, k) => s + (tmap[k] || 0), 0);
+  return {
+    name: prof.name || '', goal: prof.goal || 15,
+    levelIdx: ai, level: LEVEL[ai],
+    streak: streakDays(), daysThisWeek: daysThisWeek,
+    todayMin: Math.floor((tmap[dayKey()] || 0) / 60),
+    weekMin: Math.floor(weekSecs / 60),
+    goalMin: +prof.goal || 15,
+    lessonsDone: allLessons.filter(l => isLessonCompleted(l.id)).length,
+    lessonsTotal: allLessons.length,
+    skills: { listening: sk.listening, reading: sk.reading, writing: sk.writing },
+    updated: Date.now()
+  };
+}
+function saveSummary() { try { localStorage.setItem(SUMMARY_KEY, JSON.stringify(computeSummary())); } catch (e) {} }
+
 let PROGRESS = loadProgress();
 
 function lp(id) { if (!PROGRESS[id]) PROGRESS[id] = { blocks: {} }; if (!PROGRESS[id].blocks) PROGRESS[id].blocks = {}; return PROGRESS[id]; }
