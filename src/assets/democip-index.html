@@ -788,15 +788,18 @@
   .word-chip { display: inline-flex; align-items: center; gap: 7px; }
   .word-chip .wx { font-size: 12px; font-weight: 800; color: #9aa0a6; line-height: 1; }
 
-  /* Meta diaria (chip discreto en la barra superior) */
-  .goal-chip { flex: 0 0 auto; border: none; background: none; padding: 0 2px; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center; position: relative; width: 34px; height: 34px; }
-  .goal-chip .gc-ring { position: absolute; inset: 0; border-radius: 50%;
-    background: conic-gradient(#1CB0F6 var(--gp, 0%), rgba(0,0,0,.08) 0); }
+  /* Meta diaria (píldora legible en la barra superior: anillo + "13 min") */
+  .goal-chip { flex: 0 0 auto; border: 2px solid var(--line, #E6E4EA); background: #fff; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; border-radius: 999px; height: 32px; }
+  .goal-chip .gc-ring { position: relative; flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+    background: conic-gradient(#1CB0F6 var(--gp, 0%), rgba(0,0,0,.10) 0); }
   .goal-chip .gc-ring::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: #fff; }
-  .goal-chip .gc-t { position: relative; font-size: 11px; font-weight: 800; color: #5C5159; }
+  .goal-chip .gc-t { position: relative; font-size: 13px; font-weight: 800; color: #5C5159; white-space: nowrap; }
+  .goal-chip.done { border-color: #BFE6B2; background: #F1FBEC; }
   .goal-chip.done .gc-ring { background: conic-gradient(#3FAA24 100%, #3FAA24 0); }
   .goal-chip.done .gc-t { color: #2E7D1A; }
+  .appbar.appbar-module .goal-chip { border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.92); }
+
 
   /* Progreso por sección */
   .secsegs { display: flex; gap: 4px; margin-bottom: 6px; }
