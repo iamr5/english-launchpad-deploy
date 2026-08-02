@@ -798,7 +798,7 @@
   <section id="screen-lesson" class="screen">
     <div class="appbar appbar-col">
       <div class="appbar-row"><button class="back" data-nav="module" aria-label="Atrás"></button><div class="title" id="lesson-title"></div><button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0'</span></button></div>
-      <div class="appbar-progress"><div class="pbar"><div class="fill" id="lesson-bar-fill"></div><div class="pct" id="lesson-bar-pct"></div></div></div>
+      <div class="appbar-progress"><div class="secsegs" id="lesson-secsegs"></div><div class="pbar"><div class="fill" id="lesson-bar-fill"></div><div class="pct" id="lesson-bar-pct"></div></div></div>
     </div>
     <div class="scroll" id="lesson-scroll"><div class="pad" id="lesson-body"></div></div>
     <div class="completion" id="lesson-completion"></div>
@@ -2038,6 +2038,7 @@ function buildCompletion(lesson, mod) {
     btn: document.getElementById('completion-btn'),
     barFill: document.getElementById('lesson-bar-fill'),
     barPct: document.getElementById('lesson-bar-pct'),
+    segs: document.getElementById('lesson-secsegs'),
   };
   updateCompletion(lesson, mod);
 }
@@ -2045,12 +2046,22 @@ function updateCompletion(lesson, mod, liveProgress) {
   if (!_comp) return;
   const completed = isLessonCompleted(lesson.id);
   const miniDone = allMiniQuizzesDone(lesson);
-  // Top app-bar progress (whole-lesson, stable DOM estimate) always tracks scroll.
-  const dp = completed ? 1 : lessonDisplayProgress(lesson);
+  // Top app-bar progress: SECTION by section — the bar fills 0→100% within the
+  // section you are reading and the segment row shows how many are already done.
+  const sec = sectionState(lesson);
+  const secDone = completed || sec.total === 0;
+  const dp = secDone ? 1 : sec.p;
   const pct = Math.round(dp * 100);
-  const fillW = (completed ? 100 : (pct > 0 ? Math.max(pct, 8) : 0)) + '%';
-  if (_comp.barFill) { _comp.barFill.style.width = fillW; _comp.barFill.style.minWidth = (!completed && pct === 0) ? '12px' : ''; _comp.barFill.style.background = completed ? '' : modAccent(course.modules.indexOf(mod)); _comp.barFill.className = 'fill' + (completed ? ' done' : ''); }
-  if (_comp.barPct) { _comp.barPct.className = 'pct' + (completed ? ' done' : ''); _comp.barPct.textContent = completed ? 'Completado' : pct + '%'; }
+  const fillW = (secDone ? 100 : (pct > 0 ? Math.max(pct, 8) : 0)) + '%';
+  const full = secDone || dp >= 0.999;
+  if (_comp.barFill) { _comp.barFill.style.width = fillW; _comp.barFill.style.minWidth = (!full && pct === 0) ? '12px' : ''; _comp.barFill.style.background = full ? '' : modAccent(course.modules.indexOf(mod)); _comp.barFill.className = 'fill' + (full ? ' done' : ''); }
+  if (_comp.barPct) { _comp.barPct.className = 'pct' + (full ? ' done' : ''); _comp.barPct.textContent = completed ? 'Completado' : (full ? 'Sección completa ✓' : pct + '%'); }
+  if (_comp.segs) {
+    _comp.segs.innerHTML = Array.from({ length: sec.total }, (_, i) => {
+      const cls = (completed || i < sec.idx) ? 'done' : (i === sec.idx ? 'now' : '');
+      return `<div class="ssg ${cls}"></div>`;
+    }).join('');
+  }
   // The bottom bar only appears once the final quiz is available (mini-quizzes done)
   // or already completed. Mini-quizzes are reached via the inline buttons in the body.
   const show = completed || miniDone;
@@ -2614,6 +2625,95 @@ function debugUndoLastQuiz() {
     toast('Inicio del curso (debug)');
   }
 }
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Progreso POR SECCIÓN: cada bloque desbloqueado tiene su propia barra 0→100%.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function sectionState(lesson) {
+  const total = lesson.contentBlocks.filter(b => b.type !== 'cierre').length;
+  const idx = Math.max(0, Math.min(total - 1, lastUnlockedBlockIndex(lesson)));
+  const sc = document.getElementById('lesson-scroll');
+  const el = document.querySelectorAll('#lesson-body .block')[idx];
+  let p = 0;
+  if (sc && el) {
+    const top = el.offsetTop, h = el.offsetHeight || 1;
+    p = Math.min(1, Math.max(0, (sc.scrollTop + sc.clientHeight - top) / h));
+  }
+  const b = lesson.contentBlocks[idx];
+  if (b && b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length && isMiniQuizCompleted(lesson.id, b.id)) p = 1;
+  return { total, idx, p };
+}
+// Al pasar un mini-quiz: Boti celebra, la nueva sección entra con animación y la
+// vista viaja hasta ella para que quede claro que se desbloqueó algo nuevo.
+function celebrateUnlock(lesson, prevCount) {
+  const sc = document.getElementById('lesson-scroll');
+  const blocks = document.querySelectorAll('#lesson-body .block');
+  const fresh = blocks[prevCount] || blocks[blocks.length - 1];
+  botiCheer('¡Nueva sección desbloqueada!');
+  requestAnimationFrame(() => {
+    if (fresh) {
+      fresh.classList.add('just-unlocked');
+      setTimeout(() => fresh.classList.remove('just-unlocked'), 1400);
+      if (sc) smoothScrollTo(sc, Math.max(0, fresh.offsetTop - 70), 650, () => {
+        const max = sc.scrollHeight - sc.clientHeight;
+        const seg = max >= 100 ? Math.min(1, Math.max(0, sc.scrollTop / max)) : 1;
+        setScroll(lesson.id, seg);
+        updateCompletion(lesson, CURRENT.module, seg);
+      });
+    }
+    updateCompletion(lesson, CURRENT.module);
+  });
+}
+function botiCheer(msg) {
+  const old = document.getElementById('boti-cheer'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.id = 'boti-cheer'; el.className = 'boti-cheer';
+  el.innerHTML = `<img src="boti_head.svg" alt=""><div class="bc-txt">${msg}</div>`;
+  document.body.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 2200);
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Meta diaria: cronómetro discreto. Solo cuenta mientras hay actividad real
+// (scroll = lectura, respuestas de quiz) y nunca interrumpe el aprendizaje.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+let _lastAct = 0;
+function markActivity() { _lastAct = Date.now(); }
+function goalSecs() {
+  const t = PROGRESS['__time'] || {};
+  return t[dayKey()] || 0;
+}
+function goalTarget() { const p = loadProfile() || {}; return (+p.goal || 15) * 60; }
+function goalBadged() { return !!(PROGRESS['__goalDays'] || []).includes(dayKey()); }
+function renderGoalChips() {
+  const secs = goalSecs(), target = goalTarget(), done = secs >= target;
+  const pctv = Math.min(100, Math.round(secs / target * 100));
+  document.querySelectorAll('.goal-chip').forEach(c => {
+    c.classList.toggle('done', done);
+    c.style.setProperty('--gp', pctv + '%');
+    const t = c.querySelector('.gc-t');
+    if (t) t.textContent = done ? '✓' : Math.floor(secs / 60) + "'";
+    c.title = done ? 'Meta diaria cumplida' : `Meta diaria: ${Math.floor(secs / 60)} / ${Math.round(target / 60)} min`;
+  });
+}
+function goalTick() {
+  if (document.hidden) return;
+  if (Date.now() - _lastAct > 60000) return; // sin actividad reciente: el reloj se pausa solo
+  const t = PROGRESS['__time'] = PROGRESS['__time'] || {};
+  const k = dayKey();
+  t[k] = (t[k] || 0) + 1;
+  if (t[k] % 10 === 0) scheduleSave();
+  if (t[k] >= goalTarget() && !goalBadged()) {
+    const d = PROGRESS['__goalDays'] = PROGRESS['__goalDays'] || [];
+    d.push(k); saveProgress(PROGRESS);
+    botiCheer('🏅 ¡Meta del día cumplida!');
+  }
+  renderGoalChips();
+}
+document.addEventListener('scroll', markActivity, true);
+document.addEventListener('pointerdown', markActivity, true);
+setInterval(goalTick, 1000);
+setTimeout(renderGoalChips, 0);
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Onboarding (primer arranque) — Boti guia un flujo tipo Duolingo, una cosa por paso.
