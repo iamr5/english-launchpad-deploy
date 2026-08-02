@@ -2539,7 +2539,7 @@ function openLanglesSheet() {
 let _toastT = null;
 function toast(msg) {
   let t = document.getElementById('toast');
-  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.style.cssText = 'position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#333;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;z-index:100;max-width:80%;text-align:center'; document.body.appendChild(t); }
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.style.cssText = 'position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#333;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;z-index:100;max-width:80%;text-align:center;pointer-events:none'; document.body.appendChild(t); }
   t.textContent = msg; t.style.opacity = '1';
   clearTimeout(_toastT); _toastT = setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; }, 2500);
 }
