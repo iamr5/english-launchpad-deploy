@@ -2768,9 +2768,9 @@ function sectionState(lesson) {
   }
   if (sec.gate) {
     // la sección solo llega al 100% cuando su mini-quiz está superado
-
-    p = isMiniQuizCompleted(lesson.id, b.id) ? 1 : Math.min(p, 0.9);
+    p = isMiniQuizCompleted(lesson.id, sec.gate.id) ? 1 : Math.min(p, 0.9);
   }
+
   return { total, idx, p };
 }
 // Al pasar un mini-quiz: Boti celebra, la nueva sección entra con animación y la
