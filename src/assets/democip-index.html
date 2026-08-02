@@ -2675,7 +2675,7 @@ function toast(msg) {
 function resetProgress() {
   if (_saveT) { clearTimeout(_saveT); _saveT = null; }
   PROGRESS = {};
-  try { localStorage.removeItem(PK); saveProgress(PROGRESS); } catch (e) {}
+  try { localStorage.removeItem(PK); localStorage.removeItem(SUMMARY_KEY); saveProgress(PROGRESS); } catch (e) {}
   CURRENT = { module: null, lesson: null };
   closeOverlay();
   renderCourse();
@@ -2685,9 +2685,17 @@ function resetProgress() {
 
 // DEBUG: wipe EVERYTHING — course progress AND the onboarding profile — and reload,
 // so the app boots fresh into the first-run onboarding.
+// Orden importante: primero se bloquean TODAS las escrituras (guardado diferido +
+// cronómetro de meta), luego se vacía la memoria y recién ahí se limpian las claves.
 function resetAllData() {
-  try { localStorage.removeItem(PK); localStorage.removeItem(PROFILE_KEY); } catch (e) {}
-  location.reload();
+  WIPED = true;
+  if (_saveT) { clearTimeout(_saveT); _saveT = null; }
+  if (window._goalTimer) { clearInterval(window._goalTimer); window._goalTimer = null; }
+  PROGRESS = {};
+  try {
+    [PK, PROFILE_KEY, SUMMARY_KEY, 'ae_share', 'placement_log_v1'].forEach(k => localStorage.removeItem(k));
+  } catch (e) {}
+  location.replace(location.pathname + location.search);
 }
 
 // DEBUG: complete the next pending mini-quiz of the currently open lesson, then
