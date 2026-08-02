@@ -2438,17 +2438,14 @@ function openFinalQuiz(lesson, mod) {
     const was = isQuizCompleted(lesson.id);
     lp(lesson.id).skillErr = skillAgg; // record this lesson's per-skill first-try mistakes
     markQuizCompleted(lesson.id);
-    showDialog(`<div class="center-col">
-      <div class="result-icon ok" style="background:var(--green)"><img src="completed_new.svg" style="width:48px;height:auto" alt=""></div>
-      <div class="result-title">¡Lección completada!</div>
-      <div class="result-sub">¡Vas muy bien!</div>
-      <button class="btn green" id="dlg-ok">Continuar</button></div>`, () => {
-      closeOverlay();
+    closeOverlay();
+    lessonCelebration(lesson, () => {
       const cierre = lesson.contentBlocks.find(b => b.type === 'cierre');
       if (!was && cierre) openCierreSheet(cierre);
       else { renderModule(mod); }
     });
   }
+
   function showRedo(failed) {
     const one = failed.length === 1;
     showDialog(`<div class="center-col">
