@@ -800,6 +800,18 @@
   .goal-chip.done .gc-t { color: #2E7D1A; }
   .appbar.appbar-module .goal-chip { border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.92); }
 
+  /* Compartir progreso con un observador */
+  .share-row { display: flex; gap: 8px; align-items: stretch; }
+  .share-row input { flex: 1 1 auto; min-width: 0; border: 2px solid var(--line, #E6E4EA); border-radius: 14px;
+    padding: 12px 14px; font: inherit; font-size: 15px; background: #fff; color: var(--ink); }
+  .share-row input:focus { outline: none; border-color: #1CB0F6; }
+  .share-row .btn { width: auto; flex: 0 0 auto; padding: 0 18px; height: auto; min-height: 46px; }
+  .share-list { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .share-item { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: #F7F7FA; border-radius: 12px; padding: 9px 12px; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .share-x { border: none; background: none; cursor: pointer; font-size: 14px; font-weight: 800; color: #9aa0a6; padding: 4px 6px; }
+
+
 
   /* Progreso por sección */
   .secsegs { display: flex; gap: 4px; margin-bottom: 6px; }
