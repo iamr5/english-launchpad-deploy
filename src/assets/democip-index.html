@@ -2819,6 +2819,35 @@ function botiCheer(msg) {
   document.body.appendChild(el);
   setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 2200);
 }
+// Recompensa grande al terminar una lección: Boti aparece, confeti, XP y racha.
+function lessonCelebration(lesson, onDone) {
+  const old = document.getElementById('lesson-win'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.id = 'lesson-win'; el.className = 'win';
+  const cols = ['#3FAA24', '#1CB0F6', '#FF9600', '#FFD700', '#FF4B4B'];
+  let cft = '';
+  for (let i = 0; i < 26; i++) {
+    cft += `<span class="cft" style="left:${Math.round(Math.random() * 96)}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * 2).toFixed(2)}s;animation-duration:${(2 + Math.random() * 1.6).toFixed(2)}s"></span>`;
+  }
+  el.innerHTML = `${cft}
+    <img class="w-boti" src="boti_head.svg" alt="">
+    <div class="w-t">¡Lección completada!</div>
+    <div class="w-s">${escapeHtml(lessonName(lesson))}</div>
+    <div class="w-stats">
+      <div class="w-chip"><b>+${XP_FINAL}</b><span>XP ganada</span></div>
+      <div class="w-chip"><b>🔥 ${streakDays()}</b><span>días de racha</span></div>
+      <div class="w-chip"><b>${Math.floor(goalSecs() / 60)} min</b><span>hoy</span></div>
+    </div>
+    <button class="btn green" id="win-go">¡Seguir!</button>`;
+  document.body.appendChild(el);
+  const close = () => {
+    el.classList.add('out');
+    setTimeout(() => { el.remove(); if (onDone) onDone(); }, 300);
+  };
+  el.querySelector('#win-go').onclick = close;
+  renderGoalChips();
+}
+
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Meta diaria: cronómetro discreto. Solo cuenta mientras hay actividad real
