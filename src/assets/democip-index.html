@@ -1856,7 +1856,8 @@ function renderModule(mod) {
   }
   // setupBotiTuner(body); // DEBUG: afinador en vivo de X/Y/tamano de Boti (desconectado — descomentar para recalibrar)
 
-  // Tap a node to open its popover (one at a time); the popover CTA opens the lesson.
+  // Un solo toque: si la lección está desbloqueada, se ENTRA directo (sin globo de
+  // confirmación). El globo queda solo para las lecciones bloqueadas (explica por qué).
   const lp = body.querySelector('.lpath');
   lp.addEventListener('click', (e) => {
     const cta = e.target.closest('.cta');
@@ -1866,9 +1867,16 @@ function renderModule(mod) {
       return;
     }
     const node = e.target.closest('.node');
-    const wasOpen = node && node.classList.contains('open');
+    if (!node) {
+      lp.querySelectorAll('.node.open').forEach(n => n.classList.remove('open', 'below'));
+      lp.classList.remove('has-open');
+      return;
+    }
+    const lesson = mod.lessons[+node.getAttribute('data-lesson')];
+    if (lesson && isLessonUnlocked(lesson.id)) { openLesson(lesson, mod); return; }
+    const wasOpen = node.classList.contains('open');
     lp.querySelectorAll('.node.open').forEach(n => n.classList.remove('open', 'below'));
-    if (node && !wasOpen) {
+    if (!wasOpen) {
       node.classList.add('open');
       // not enough room above? flip the popover below the node.
       const sc = node.closest('.scroll');
@@ -1880,6 +1888,7 @@ function renderModule(mod) {
     const _on = lp.querySelector('.node.open'); // hide EMPEZAR chips when a popover is open, but NOT for a locked lesson
     lp.classList.toggle('has-open', !!_on && !_on.classList.contains('locked'));
   });
+
   // (banner de colaboración retirado)
 }
 
