@@ -1183,8 +1183,11 @@ const PK = 'ingles_web_progress_v1';
 const course = window.COURSE_DATA;
 const allLessons = course.modules.flatMap(m => m.lessons);
 
+// WIPED: una vez que el usuario pide "Borrar TODO", ninguna escritura tardía
+// (guardado diferido, cronómetro) puede resucitar el progreso viejo.
+let WIPED = false;
 function loadProgress() { try { return JSON.parse(localStorage.getItem(PK)) || {}; } catch (e) { return {}; } }
-function saveProgress(p) { localStorage.setItem(PK, JSON.stringify(p)); try { saveSummary(); } catch (e) {} }
+function saveProgress(p) { if (WIPED) return; localStorage.setItem(PK, JSON.stringify(p)); try { saveSummary(); } catch (e) {} }
 
 // Resumen compacto para el panel de familia/profe (/dashboard). Mismo origen ⇒
 // comparten localStorage, sin backend. Incluye el TIEMPO DE HOY para que el panel
@@ -1215,7 +1218,7 @@ function computeSummary() {
     updated: Date.now()
   };
 }
-function saveSummary() { try { localStorage.setItem(SUMMARY_KEY, JSON.stringify(computeSummary())); } catch (e) {} }
+function saveSummary() { if (WIPED) return; try { localStorage.setItem(SUMMARY_KEY, JSON.stringify(computeSummary())); } catch (e) {} }
 
 let PROGRESS = loadProgress();
 
@@ -1230,7 +1233,7 @@ function isLessonCompleted(id) {
   const n = nextLessonId(id); return n ? isLessonUnlocked(n) : false;
 }
 let _saveT = null;
-function scheduleSave() { if (_saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
+function scheduleSave() { if (WIPED || _saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
 
 // --- Daily activity + streak (real data, recorded from first use on) ---
 // Meaningful learning actions (opening a lesson, passing a quiz) stamp today's
@@ -2672,7 +2675,7 @@ function toast(msg) {
 function resetProgress() {
   if (_saveT) { clearTimeout(_saveT); _saveT = null; }
   PROGRESS = {};
-  try { localStorage.removeItem(PK); saveProgress(PROGRESS); } catch (e) {}
+  try { localStorage.removeItem(PK); localStorage.removeItem(SUMMARY_KEY); saveProgress(PROGRESS); } catch (e) {}
   CURRENT = { module: null, lesson: null };
   closeOverlay();
   renderCourse();
@@ -2682,9 +2685,17 @@ function resetProgress() {
 
 // DEBUG: wipe EVERYTHING — course progress AND the onboarding profile — and reload,
 // so the app boots fresh into the first-run onboarding.
+// Orden importante: primero se bloquean TODAS las escrituras (guardado diferido +
+// cronómetro de meta), luego se vacía la memoria y recién ahí se limpian las claves.
 function resetAllData() {
-  try { localStorage.removeItem(PK); localStorage.removeItem(PROFILE_KEY); } catch (e) {}
-  location.reload();
+  WIPED = true;
+  if (_saveT) { clearTimeout(_saveT); _saveT = null; }
+  if (window._goalTimer) { clearInterval(window._goalTimer); window._goalTimer = null; }
+  PROGRESS = {};
+  try {
+    [PK, PROFILE_KEY, SUMMARY_KEY, 'ae_share', 'placement_log_v1'].forEach(k => localStorage.removeItem(k));
+  } catch (e) {}
+  location.replace(location.pathname + location.search);
 }
 
 // DEBUG: complete the next pending mini-quiz of the currently open lesson, then
@@ -2965,6 +2976,7 @@ function renderGoalChips() {
   });
 }
 function goalTick() {
+  if (WIPED) return;
   if (document.hidden) return;
   if (Date.now() - _lastAct > 60000) return; // sin actividad reciente: el reloj se pausa solo
   const t = PROGRESS['__time'] = PROGRESS['__time'] || {};
@@ -2980,7 +2992,7 @@ function goalTick() {
 }
 document.addEventListener('scroll', markActivity, true);
 document.addEventListener('pointerdown', markActivity, true);
-setInterval(goalTick, 1000);
+window._goalTimer = setInterval(goalTick, 1000);
 setTimeout(renderGoalChips, 0);
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
