@@ -1542,10 +1542,10 @@ function precacheModuleBgs() {
     window._bgCache.push(img); // keep a reference so it isn't evicted
   }
 }
-// El panel completo vive fuera del demo (ruta /dashboard de la app).
+// El panel de progreso del demo vive en /demo-dashboard.
 function openDashboard() {
-  try { (window.top || window).location.href = '/dashboard'; }
-  catch (e) { window.location.href = '/dashboard'; }
+  try { (window.top || window).location.href = '/demo-dashboard'; }
+  catch (e) { window.location.href = '/demo-dashboard'; }
 }
 function renderCourse() {
   show('course');
@@ -1746,10 +1746,9 @@ function bindShare() {
   add.onclick = async () => {
     const v = (inp.value || '').trim();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { toast('Escribe un correo válido'); return; }
-    const l = shareList();
-    if (!l.includes(v)) l.push(v);
-    saveShareList(l); inp.value = ''; refresh();
-    add.disabled = true; toast('Enviando invitación…');
+    const label = add.textContent;
+    add.disabled = true; add.textContent = 'Enviando…'; toast('Enviando invitación…');
+    let ok = false;
     try {
       const s = (typeof computeSummary === 'function') ? computeSummary() : {};
       const r = await fetch('/api/public/share-invite', {
@@ -1765,14 +1764,20 @@ function bindShare() {
         })
       });
       const j = await r.json().catch(() => ({}));
-      if (r.ok && j.ok) toast('Invitación enviada a ' + v);
-      else if (j.reason === 'domain_not_verified') toast('Invitado guardado. El envío de correos se activa en unas horas.');
+      if (r.ok && j.ok) { ok = true; toast('Invitación enviada a ' + v); }
+      else if (j.reason === 'domain_not_verified') { ok = true; toast('Invitado guardado. El envío de correos se activa en unas horas.'); }
       else if (j.reason === 'recipient_suppressed') toast('Ese correo no acepta mensajes nuestros.');
+      else if (j.reason === 'rate_limited') toast('Demasiados intentos. Espera un momento.');
       else toast('No pudimos enviar la invitación. Intenta de nuevo.');
     } catch (e) {
       toast('No pudimos enviar la invitación. Intenta de nuevo.');
     }
-    add.disabled = false;
+    if (ok) {
+      const l = shareList();
+      if (!l.includes(v)) l.push(v);
+      saveShareList(l); inp.value = ''; refresh();
+    }
+    add.disabled = false; add.textContent = label;
   };
   list.onclick = (e) => {
     const b = e.target.closest('.share-x'); if (!b) return;
