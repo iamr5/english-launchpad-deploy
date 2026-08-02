@@ -2611,18 +2611,102 @@ function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KE
 function saveProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
 
 const OB_LAST = 6;
-const OB_TAP_STEPS = [1, 2, 5];     // option lists: selecting advances, no button
+const OB_TAP_STEPS = [2, 5];        // option lists: selecting advances, no button
 const OB_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'];
 let OB = { step: 0, name: '', mot: '', lvl: null, goal: '' };
 const OB_BUBBLES = [
   () => '¡Hola! Soy <b>Boti.</b><br>Empecemos.',
-  () => '¿Por qué quieres aprender inglés?',
-  () => '¿Cuánto inglés sabes?<br>Conozcamos más de ti.',
   () => '¿Cómo te llamas?',
+  () => OB.name ? `<b>${escapeHtml(OB.name)}</b>, ¿por qué quieres aprender inglés?` : '¿Por qué quieres aprender inglés?',
+  () => PL.state === 'result'
+    ? `Tu nivel es <b>${OB_LEVELS[OB.lvl || 0]}</b>.`
+    : (PL.state === 'intro' ? 'Hagamos un test rápido de ubicación.' : 'Elige la mejor opción.'),
   () => OB.name ? `Mira, <b>${escapeHtml(OB.name)}</b>, esto vamos a practicar:` : 'Esto es lo que vamos a practicar:',
   () => '¿Cuál es tu meta diaria?',
   () => `¡Listo, <b>${escapeHtml(OB.name)}</b>!<br>Tu plan ya está preparado. `,
 ];
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Test de ubicación (paso 3) — banco de ítems en placement_items.js
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+const PL_PLAN = ['A1', 'A1', 'A2', 'A2', 'B1', 'B1', 'B2', 'C1'];
+let PL = { state: 'intro', items: [], i: 0, sel: null, ok: {} };
+function plBuild() {
+  const bank = window.PLACEMENT_ITEMS || [];
+  const byBand = {};
+  bank.forEach(it => { (byBand[it.band] = byBand[it.band] || []).push(it); });
+  const used = new Set(), items = [];
+  PL_PLAN.forEach(band => {
+    const pool = (byBand[band] || []).filter(it => !used.has(it.id));
+    if (!pool.length) return;
+    const it = pool[Math.floor(Math.random() * pool.length)];
+    used.add(it.id); items.push(it);
+  });
+  PL = { state: items.length ? 'q' : 'result', items, i: 0, sel: null, ok: {} };
+  if (!items.length) OB.lvl = 0;
+}
+function plLevel() {
+  // nivel = banda más alta con al menos la mitad de sus ítems correctos,
+  // siempre que todas las bandas por debajo también se hayan superado.
+  const tally = {};
+  PL.items.forEach((it, i) => {
+    const t = tally[it.band] = tally[it.band] || { t: 0, c: 0 };
+    t.t++; if (PL.ok[i]) t.c++;
+  });
+  let lvl = 0;
+  for (let b = 0; b < OB_LEVELS.length; b++) {
+    const t = tally[OB_LEVELS[b]];
+    if (!t) continue;
+    if (t.c / t.t >= 0.5) lvl = b; else break;
+  }
+  return lvl;
+}
+function plRender() {
+  const host = document.getElementById('ob-placement');
+  if (!host) return;
+  if (PL.state === 'intro') {
+    host.innerHTML = `<div class="ob-points">
+      <div class="ob-point plain"><span class="em">⏱️</span><div><b>Toma 2 minutos</b><small>8 preguntas de opción múltiple</small></div></div>
+      <div class="ob-point plain"><span class="em">🎯</span><div><b>Ubicamos tu nivel</b><small>De A1 a C1, según el marco MCER</small></div></div>
+      <div class="ob-point plain"><span class="em">🤝</span><div><b>Sin presión</b><small>Si no sabes, pasa a la siguiente</small></div></div>
+    </div>`;
+    return;
+  }
+  if (PL.state === 'result') {
+    const lvl = OB.lvl || 0;
+    host.innerHTML = `<div class="pl-result">
+      <div class="pl-badge">${OB_LEVELS[lvl]}</div>
+      <div class="pl-txt">Tu punto de partida</div>
+      <div class="pl-sub">Empezarás desde el inicio para no saltarte fundamentos, pero adaptaremos el ritmo a tu nivel.</div>
+    </div>`;
+    return;
+  }
+  const it = PL.items[PL.i];
+  host.innerHTML = `<div class="pl-count">Pregunta ${PL.i + 1} de ${PL.items.length}</div>
+    <div class="pl-q">${escapeHtml(it.q)}</div>
+    <div class="ob-opts">${it.opts.map((o, i) =>
+      `<button class="ob-opt pl-opt${PL.sel === i ? ' sel' : ''}" data-pl="${i}"><span>${escapeHtml(o)}</span></button>`).join('')}</div>
+    <button class="pl-skip" id="pl-skip">No lo sé</button>`;
+  host.querySelectorAll('[data-pl]').forEach(b => b.onclick = () => { PL.sel = +b.dataset.pl; plRender(); obSyncNext(); });
+  host.querySelector('#pl-skip').onclick = () => { PL.sel = -1; plNext(); };
+}
+function plNext() {
+  if (PL.state === 'intro') { plBuild(); if (PL.state === 'result') OB.lvl = 0; plRender(); obRender(); return; }
+  if (PL.state === 'result') { obAdvance(); return; }
+  const it = PL.items[PL.i];
+  PL.ok[PL.i] = PL.sel === it.a;
+  PL.sel = null;
+  if (PL.i < PL.items.length - 1) { PL.i++; plRender(); obRender(); }
+  else { OB.lvl = plLevel(); PL.state = 'result'; plRender(); obRender(); }
+}
+function obSyncNext() {
+  const next = document.getElementById('ob-next');
+  if (OB.step !== 3) return;
+  const blocked = PL.state === 'q' && PL.sel === null;
+  next.disabled = blocked;
+  next.className = 'btn ' + (blocked ? 'disabled' : 'green');
+  next.textContent = PL.state === 'intro' ? 'Empezar test' : (PL.state === 'result' ? 'Continuar' : 'Continuar');
+}
 
 function obRender() {
   document.querySelector('#screen-onboard .ob-wrap').classList.toggle('ob-intro', OB.step === 0);
@@ -2634,7 +2718,6 @@ function obRender() {
     s.classList.toggle('on', +s.dataset.step === OB.step));
   // keep the option pills' selected state in sync (matters when stepping back)
   document.querySelectorAll('.ob-opt[data-mot]').forEach(b => b.classList.toggle('sel', b.dataset.mot === OB.mot));
-  document.querySelectorAll('.ob-opt[data-lvl]').forEach(b => b.classList.toggle('sel', +b.dataset.lvl === OB.lvl));
   document.querySelectorAll('.ob-opt[data-goal]').forEach(b => b.classList.toggle('sel', b.dataset.goal === OB.goal));
   // footer: the big button on most steps; on the LAST step the real course-foot
   // "tu primera lección" bar takes over — its CTA drops straight into the lesson.
@@ -2644,14 +2727,15 @@ function obRender() {
   foot.hidden = !isLast;
   next.style.display = (isLast || OB_TAP_STEPS.includes(OB.step)) ? 'none' : '';
   next.textContent = OB.step === 0 ? '¡Empecemos!' : 'Continuar';
-  const needName = OB.step === 3 && !document.getElementById('ob-name').value.trim();
+  const needName = OB.step === 1 && !document.getElementById('ob-name').value.trim();
   next.disabled = needName;
   next.className = 'btn ' + (needName ? 'disabled' : 'green');
-  if (OB.step === 3) setTimeout(() => document.getElementById('ob-name').focus(), 120);
+  if (OB.step === 1) setTimeout(() => document.getElementById('ob-name').focus(), 120);
+  if (OB.step === 3) { plRender(); obSyncNext(); }
   if (isLast) {
     document.getElementById('ob-sum').innerHTML =
-      `<div class="ob-chip lvl"><span class="em">🏁</span><span class="lb">Nivel ${OB_LEVELS[0]}</span><div class="sb">Empiezas aquí</div></div>` +
-      `<div class="ob-chip goal"><span class="em">🎯</span><span class="lb">${OB.goal || 10} min</span><div class="sb">Meta diaria</div></div>`;
+      `<div class="ob-chip lvl"><span class="em">🏁</span><span class="lb">Nivel ${OB_LEVELS[OB.lvl || 0]}</span><div class="sb">Tu nivel</div></div>` +
+      `<div class="ob-chip goal"><span class="em">🎯</span><span class="lb">${OB.goal || 15} min</span><div class="sb">Meta diaria</div></div>`;
     // always the very first lesson, regardless of the placement answer
     const mod = course.modules[0], fl = mod.lessons[0];
     const col = modAccent(0), cold = shadeHex(col, -0.24);
@@ -2687,11 +2771,12 @@ function obFlip(els, mutate) {
   });
 }
 document.getElementById('ob-next').addEventListener('click', () => {
-  if (OB.step === 3) {
+  if (OB.step === 1) {
     const v = document.getElementById('ob-name').value.trim();
     if (!v) return;
     OB.name = v.split(/\s+/)[0];
   }
+  if (OB.step === 3) { plNext(); return; }
   if (OB.step === OB_LAST) { obFinish(); return; }
   if (OB.step === 0) { // morfea el Boti del hero + su globo hacia la fila de charla
     obFlip([document.querySelector('.ob-boti'), document.getElementById('ob-bubble')], obAdvance);
@@ -2701,7 +2786,7 @@ document.getElementById('ob-next').addEventListener('click', () => {
 });
 document.getElementById('ob-back').addEventListener('click', () => { if (OB.step > 0) { OB.step--; obRender(); } });
 document.getElementById('ob-name').addEventListener('input', () => {
-  if (OB.step === 3) {
+  if (OB.step === 1) {
     const empty = !document.getElementById('ob-name').value.trim();
     const next = document.getElementById('ob-next');
     next.disabled = empty; next.className = 'btn ' + (empty ? 'disabled' : 'green');
@@ -2710,9 +2795,8 @@ document.getElementById('ob-name').addEventListener('input', () => {
 document.getElementById('ob-name').addEventListener('keydown', e => {
   if (e.key === 'Enter') { e.preventDefault(); document.getElementById('ob-next').click(); }
 });
-document.querySelectorAll('.ob-opt').forEach(b => b.addEventListener('click', () => {
+document.querySelectorAll('.ob-opt[data-mot], .ob-opt[data-goal]').forEach(b => b.addEventListener('click', () => {
   if (b.dataset.mot != null) OB.mot = b.dataset.mot;
-  else if (b.dataset.lvl != null) OB.lvl = +b.dataset.lvl;
   else if (b.dataset.goal != null) OB.goal = b.dataset.goal;
   b.parentElement.querySelectorAll('.ob-opt').forEach(x => x.classList.toggle('sel', x === b));
   setTimeout(obAdvance, 220); // let the selected state read before sliding on
