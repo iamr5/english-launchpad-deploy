@@ -2073,6 +2073,23 @@ function updateCompletion(lesson, mod, liveProgress) {
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
+// Banner de resultado (grande y evidente) + auto-avance tipo Waze en "Siguiente".
+function fbBanner(isCorrect, correctText) {
+  return isCorrect
+    ? `<div class="fb-banner ok">${checkBold(26, '#fff', 3.4)}<span>¡Bien hecho!</span></div>`
+    : `<div class="fb-banner no">${icon('close', 26, '#fff')}<span>Casi — la respuesta es <b>${escapeHtml(correctText)}</b></span></div>`;
+}
+function armAutoNext(host, btn, isCorrect, run) {
+  if (host._autoT) { clearTimeout(host._autoT); host._autoT = null; }
+  const ms = isCorrect ? 1200 : 3200;
+  btn.classList.add('timing');
+  btn.style.setProperty('--auto-dur', ms + 'ms');
+  const go = () => { if (host._autoT) { clearTimeout(host._autoT); host._autoT = null; } run(); };
+  host._autoT = setTimeout(go, ms);
+  return go;
+}
+function clearAutoNext(host) { if (host && host._autoT) { clearTimeout(host._autoT); host._autoT = null; } }
+
 function renderMC(host, q, onCorrect, onIncorrect) {
   // Shuffle the options once per presentation, tracking which one is correct.
   const opts = shuffle(q.options.map((text, i) => ({ text, correct: i === q.correctIndex })));
@@ -2089,13 +2106,16 @@ function renderMC(host, q, onCorrect, onIncorrect) {
     }).join('');
     const isCorrect = selected === correctIndex;
     let fb = '';
-    if (showing) fb = isCorrect ? `<div class="fb-line ok">¡Bien hecho!</div>` : `<div class="fb-line no">Casi — la respuesta es "${escapeHtml(opts[correctIndex].text)}"</div>`;
+    if (showing) fb = fbBanner(isCorrect, opts[correctIndex].text);
     host.innerHTML = `<div class="q-kicker">Elige la respuesta correcta</div><div class="q-question">${escapeHtml(q.question)}</div><div class="q-options">${html}</div><div class="fb-slot">${fb}</div>
       <button class="btn blue" id="q-next" ${(!showing && selected === null) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
     if (!showing) host.querySelectorAll('.opt').forEach(b => b.onclick = () => { selected = +b.getAttribute('data-i'); draw(); });
-    host.querySelector('#q-next').onclick = () => {
-      if (!showing) { if (selected === null) return; showing = true; draw(); }
-      else { (selected === correctIndex ? onCorrect : onIncorrect)(); }
+    const nb = host.querySelector('#q-next');
+    let go = null;
+    if (showing) go = armAutoNext(host, nb, isCorrect, () => { markActivity(); (isCorrect ? onCorrect : onIncorrect)(); });
+    nb.onclick = () => {
+      if (!showing) { if (selected === null) return; markActivity(); showing = true; draw(); }
+      else if (go) go();
     };
   }
   draw();
@@ -2104,21 +2124,19 @@ function renderMC(host, q, onCorrect, onIncorrect) {
 function renderRebuild(host, q, onCorrect, onIncorrect) {
   const correctWords = q.correctSentence.split(' ');
   const shuffled = shuffle(q.wordBlocks);
-  const MAX_PLAYS = 2; // listening is a test — you can't brute-force by replaying
-  let selected = [], usedIdx = new Set(), showing = false, isCorrect = false, speaking = false, plays = 0;
+  let selected = [], usedIdx = new Set(), showing = false, isCorrect = false, speaking = false;
   function draw() {
-    const ans = selected.length ? selected.map((w, i) => `<div class="word-chip" data-si="${i}">${escapeHtml(w)}</div>`).join('') : '';
+    const ans = selected.length ? selected.map((w, i) => `<div class="word-chip" data-si="${i}"><span>${escapeHtml(w)}</span><span class="wx" aria-hidden="true">✕</span></div>`).join('') : '';
     const blocks = shuffled.map((w, i) => `<div class="block-chip ${usedIdx.has(i) ? 'used' : ''}" data-bi="${i}">${escapeHtml(w)}</div>`).join('');
     let fb = '';
-    if (showing) fb = isCorrect ? `<div class="fb-line ok">¡Bien hecho!</div>` : `<div class="fb-line no">Casi — la forma correcta es "${escapeHtml(q.correctSentence)}"</div>`;
+    if (showing) fb = fbBanner(isCorrect, q.correctSentence);
     host.innerHTML = `<div class="q-kicker">Escucha y ordena las palabras</div><div class="q-question">${escapeHtml(q.question)}</div>
-      <div class="speaker${(plays >= MAX_PLAYS && !speaking) ? ' spent' : ''}${speaking ? ' playing' : ''}" id="spk">${speakerSvg(40, speaking ? '#1488C0' : (plays >= MAX_PLAYS ? '#bbb' : '#1CB0F6'))}<div class="lbl">${plays >= MAX_PLAYS && !speaking ? 'sin más' : `escuchar · ${MAX_PLAYS - plays}`}</div></div>
+      <div class="speaker${speaking ? ' playing' : ''}" id="spk">${speakerSvg(40, speaking ? '#1488C0' : '#1CB0F6')}<div class="lbl">escuchar</div></div>
       <div class="answer-area">${ans}</div>
       <div class="blocks">${blocks}</div><div class="fb-slot">${fb}</div>
       <button class="btn blue" id="q-next" ${(!showing && selected.length === 0) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
     host.querySelector('#spk').onclick = () => {
-      if (speaking || plays >= MAX_PLAYS) return;
-      plays++;
+      if (speaking) return;
       speak(q.correctSentence, () => { speaking = true; draw(); }, () => { speaking = false; draw(); });
     };
     if (!showing) {
@@ -2128,12 +2146,16 @@ function renderRebuild(host, q, onCorrect, onIncorrect) {
         for (const idx of usedIdx) { if (shuffled[idx] === word) { usedIdx.delete(idx); break; } } draw();
       });
     }
-    host.querySelector('#q-next').onclick = () => {
+    const nb = host.querySelector('#q-next');
+    let go = null;
+    if (showing) go = armAutoNext(host, nb, isCorrect, () => { markActivity(); (isCorrect ? onCorrect : onIncorrect)(); });
+    nb.onclick = () => {
       if (!showing) {
         if (!selected.length) return;
+        markActivity();
         isCorrect = selected.length === correctWords.length && selected.every((w, i) => w === correctWords[i]);
         showing = true; draw();
-      } else { (isCorrect ? onCorrect : onIncorrect)(); }
+      } else if (go) go();
     };
   }
   draw();
@@ -2150,19 +2172,23 @@ function renderTap(host, q, onCorrect, onIncorrect) {
       return `<div class="${cls}" data-ti="${i}">${escapeHtml(tk)}</div>`;
     }).join('');
     let fb = '';
-    if (showing) fb = isCorrect ? `<div class="fb-line ok">¡Bien hecho!</div>` : `<div class="fb-line no">Casi — la forma correcta es "${escapeHtml(correctedSentence())}"</div>`;
+    if (showing) fb = fbBanner(isCorrect, correctedSentence());
     host.innerHTML = `<div class="q-kicker">Encuentra el error</div><div class="q-question">${escapeHtml(q.question)}</div><div class="tokens">${tokens}</div><div class="fb-slot">${fb}</div>
       <button class="btn blue" id="q-next" ${(!showing && tapped === null) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
     if (!showing) host.querySelectorAll('[data-ti]').forEach(b => b.onclick = () => { const i = +b.getAttribute('data-ti'); tapped = (tapped === i) ? null : i; draw(); });
-    host.querySelector('#q-next').onclick = () => {
-      if (!showing) { if (tapped === null) return; isCorrect = tapped === q.errorTokenIndex; showing = true; draw(); }
-      else { (isCorrect ? onCorrect : onIncorrect)(); }
+    const nb = host.querySelector('#q-next');
+    let go = null;
+    if (showing) go = armAutoNext(host, nb, isCorrect, () => { markActivity(); (isCorrect ? onCorrect : onIncorrect)(); });
+    nb.onclick = () => {
+      if (!showing) { if (tapped === null) return; markActivity(); isCorrect = tapped === q.errorTokenIndex; showing = true; draw(); }
+      else if (go) go();
     };
   }
   draw();
 }
 
 function renderQuiz(host, q, onCorrect, onIncorrect) {
+  clearAutoNext(host);
   if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
   else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
   else renderTap(host, q, onCorrect, onIncorrect);
