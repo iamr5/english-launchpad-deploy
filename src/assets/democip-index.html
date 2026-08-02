@@ -1218,7 +1218,7 @@ function computeSummary() {
     updated: Date.now()
   };
 }
-function saveSummary() { try { localStorage.setItem(SUMMARY_KEY, JSON.stringify(computeSummary())); } catch (e) {} }
+function saveSummary() { if (WIPED) return; try { localStorage.setItem(SUMMARY_KEY, JSON.stringify(computeSummary())); } catch (e) {} }
 
 let PROGRESS = loadProgress();
 
