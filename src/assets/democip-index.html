@@ -1607,12 +1607,14 @@ function renderProgress() {
   const lbRows = rows.map((r, i) =>
     `<div class="pg-lbr ${r.me ? 'me' : ''}"><span class="pos">${i + 1}</span><span class="av" style="background:${r.col}">${r.nm[0]}</span>` +
     `<span class="nm">${r.nm}</span><span class="xp">${fmtXp(r.xp)}</span></div>`).join('');
-  // Certificate: unlocks by COMPLETING the B2 module — its final quizzes ARE the
-  // "evaluación de nivel". Gated on real lesson completion (linear course, so this
-  // is every not-yet-done lesson up to and including B2), never on farmable XP.
-  const b2idx = Math.min(3, course.modules.length - 1);
-  const b2Lessons = course.modules.slice(0, b2idx + 1).flatMap(m => m.lessons);
-  const b2Remain = b2Lessons.filter(l => !isLessonCompleted(l.id)).length;
+  // Constancia: apunta al nivel que el alumno está cursando AHORA (no siempre B2).
+  // Se desbloquea al terminar todas las lecciones de ese módulo; luego pasa al siguiente.
+  const CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  let certIdx = course.modules.findIndex(m => m.lessons.some(l => !isLessonCompleted(l.id)));
+  if (certIdx < 0) certIdx = course.modules.length - 1;
+  const certLevel = (course.modules[certIdx] && course.modules[certIdx].level) || CEFR[certIdx] || `Módulo ${certIdx + 1}`;
+  const b2Remain = course.modules[certIdx].lessons.filter(l => !isLessonCompleted(l.id)).length;
+
   let html = `
   <div class="card pg-hero">
     <div class="pg-row">
