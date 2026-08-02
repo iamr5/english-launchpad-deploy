@@ -1233,7 +1233,7 @@ function isLessonCompleted(id) {
   const n = nextLessonId(id); return n ? isLessonUnlocked(n) : false;
 }
 let _saveT = null;
-function scheduleSave() { if (_saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
+function scheduleSave() { if (WIPED || _saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
 
 // --- Daily activity + streak (real data, recorded from first use on) ---
 // Meaningful learning actions (opening a lesson, passing a quiz) stamp today's
