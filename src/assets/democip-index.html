@@ -1918,8 +1918,9 @@ function modulePathHTML(mod) {
     // gap derived from the horizontal step so spacing stays even (no step → more room)
     const mt = i === 0 ? 22 : Math.round(30 - 0.45 * Math.abs(SWAY[i % SWAY.length] - SWAY[(i - 1) % SWAY.length]));
     const capInner = completed
-      ? `<span class="shine">${SHINE}</span><img class="swoosh" src="completed_new.svg" alt="">`
-      : (unlocked ? `<img class="star" src="star.svg" alt="">` : `<span class="ic">${LOCK}</span>`);
+      ? `<span class="shine">${SHINE}</span>${CHECK_IC}`
+      : (unlocked ? STAR_IC : `<span class="ic">${LOCK}</span>`);
+
     let ring = '';
     if (isCur) {
       const p = Math.max(0.04, Math.min(0.96, wholeProgress(lesson, getScroll(lesson.id))));
