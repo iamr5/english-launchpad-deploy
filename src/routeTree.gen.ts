@@ -21,6 +21,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
+import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const PresentationRoute = PresentationRouteImport.update({
@@ -82,6 +83,11 @@ const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
   path: '/app',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
+  id: '/api/public/share-invite',
+  path: '/api/public/share-invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/presentation': typeof PresentationRoute
   '/app': typeof AuthenticatedAppRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/presentation': typeof PresentationRoute
   '/app': typeof AuthenticatedAppRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/presentation': typeof PresentationRoute
   '/_authenticated/app': typeof AuthenticatedAppRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/presentation'
     | '/app'
     | '/dashboard'
+    | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/presentation'
     | '/app'
     | '/dashboard'
+    | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/presentation'
     | '/_authenticated/app'
     | '/_authenticated/dashboard'
+    | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PresentacionRoute: typeof PresentacionRoute
   PresentationRoute: typeof PresentationRoute
+  ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -279,6 +292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/share-invite': {
+      id: '/api/public/share-invite'
+      path: '/api/public/share-invite'
+      fullPath: '/api/public/share-invite'
+      preLoaderRoute: typeof ApiPublicShareInviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
       path: '/lovable/email/transactional/preview'
@@ -313,18 +333,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PresentacionRoute: PresentacionRoute,
   PresentationRoute: PresentationRoute,
+  ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
