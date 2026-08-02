@@ -2733,21 +2733,42 @@ function debugUndoLastQuiz() {
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-// Progreso POR SECCIÓN: cada bloque desbloqueado tiene su propia barra 0→100%.
+// Progreso POR SECCIÓN.
+// Una "sección" NO es cada bloque: es cada tramo con candado, es decir el grupo de
+// bloques que termina en un bloque con mini-quiz (más el tramo final sin quiz). Así,
+// al entrar por primera vez estás en la sección 1 de N con 0% — antes se veían varios
+// segmentos ya verdes solo porque la intro y la vista previa vienen abiertas.
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+function lessonSections(lesson) {
+  const blocks = lesson.contentBlocks.filter(b => b.type !== 'cierre');
+  const secs = []; let start = 0;
+  blocks.forEach((b, i) => {
+    const gate = b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length;
+    if (gate) { secs.push({ start, end: i, gate: b }); start = i + 1; }
+  });
+  if (start < blocks.length) secs.push({ start, end: blocks.length - 1, gate: null });
+  if (!secs.length) secs.push({ start: 0, end: Math.max(0, blocks.length - 1), gate: null });
+  return secs;
+}
 function sectionState(lesson) {
-  const total = lesson.contentBlocks.filter(b => b.type !== 'cierre').length;
-  const idx = Math.max(0, Math.min(total - 1, lastUnlockedBlockIndex(lesson)));
+  const secs = lessonSections(lesson);
+  const total = secs.length;
+  const last = lastUnlockedBlockIndex(lesson);
+  let idx = secs.findIndex(s => last <= s.end);
+  if (idx < 0) idx = total - 1;
+  const sec = secs[idx];
   const sc = document.getElementById('lesson-scroll');
-  const el = document.querySelectorAll('#lesson-body .block')[idx];
+  const els = document.querySelectorAll('#lesson-body .block');
   let p = 0;
-  if (sc && el) {
-    const top = el.offsetTop, h = el.offsetHeight || 1;
+  const first = els[sec.start], lastEl = els[Math.min(sec.end, els.length - 1)];
+  if (sc && first && lastEl) {
+    const top = first.offsetTop;
+    const h = Math.max(1, (lastEl.offsetTop + lastEl.offsetHeight) - top);
     p = Math.min(1, Math.max(0, (sc.scrollTop + sc.clientHeight - top) / h));
   }
-  const b = lesson.contentBlocks[idx];
-  if (b && b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length) {
+  if (sec.gate) {
     // la sección solo llega al 100% cuando su mini-quiz está superado
+
     p = isMiniQuizCompleted(lesson.id, b.id) ? 1 : Math.min(p, 0.9);
   }
   return { total, idx, p };
