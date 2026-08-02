@@ -2730,7 +2730,10 @@ function sectionState(lesson) {
     p = Math.min(1, Math.max(0, (sc.scrollTop + sc.clientHeight - top) / h));
   }
   const b = lesson.contentBlocks[idx];
-  if (b && b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length && isMiniQuizCompleted(lesson.id, b.id)) p = 1;
+  if (b && b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length) {
+    // la sección solo llega al 100% cuando su mini-quiz está superado
+    p = isMiniQuizCompleted(lesson.id, b.id) ? 1 : Math.min(p, 0.9);
+  }
   return { total, idx, p };
 }
 // Al pasar un mini-quiz: Boti celebra, la nueva sección entra con animación y la
