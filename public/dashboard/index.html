@@ -293,7 +293,7 @@
           <div class="cert">
             <span class="lock">🔒</span>
             <div>
-              <b>Constancia de logro B2</b>
+              <b id="p-cert-t">Constancia de logro B2</b>
               <p>Se desbloquea al aprobar su evaluación de nivel</p>
             </div>
             <span class="go" id="p-cert">Faltan 550 XP</span>
@@ -553,10 +553,14 @@
     PWEEK[1] = {
       racha: S.streak,
       sub: (li >= 4 ? '¡Nivel máximo alcanzado!' : 'Avanzando en nivel ' + S.level),
-      dias: (S.daysThisWeek || 0) + ' / 7', tiempo: '—', lecc: S.lessonsDone,
+      dias: (S.daysThisWeek || 0) + ' / 7',
+      tiempo: (S.weekMin != null ? (S.weekMin >= 60 ? Math.floor(S.weekMin / 60) + ' h ' + (S.weekMin % 60) : S.weekMin + ' min') : '—'),
+      hoy: (S.todayMin != null ? S.todayMin : null),
+      lecc: S.lessonsDone,
       sk: [pct(S.skills.listening), pct(S.skills.reading), pct(S.skills.writing)],
       help: ['Va en nivel ' + S.level + ' · ' + S.lessonsDone + ' lecciones', 'Acompáñalo/a con un «¡sigue así!»'],
-      cert: 'Nivel actual · ' + S.level
+      cert: 'Nivel actual · ' + S.level,
+      certTitle: 'Constancia de logro ' + S.level
     };
   })();
   wkRender();
