@@ -3093,44 +3093,59 @@ const OB_BUBBLES = [
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Test de ubicación (paso 3) — banco de ítems en placement_items.js
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-const PL_PLAN = ['A1', 'A1', 'A2', 'A2', 'B1', 'B1', 'B2', 'C1'];
-let PL = { state: 'intro', items: [], i: 0, sel: null, ok: {} };
+// Banco completo: 8 ítems por banda A1→C1 (40). Se presentan en orden de
+// dificultad; el test corta antes si una banda sale muy floja.
+const PL_UMBRAL = 5;          // aciertos (de 8) para superar una banda
+const PL_CORTE = 2;           // <= esto en una banda ⇒ se detiene el test
+let PL = { state: 'intro', items: [], i: 0, sel: null, ok: {}, stopped: false };
+function plShuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
 function plBuild() {
   const bank = window.PLACEMENT_ITEMS || [];
-  const byBand = {};
-  bank.forEach(it => { (byBand[it.band] = byBand[it.band] || []).push(it); });
-  const used = new Set(), items = [];
-  PL_PLAN.forEach(band => {
-    const pool = (byBand[band] || []).filter(it => !used.has(it.id));
-    if (!pool.length) return;
-    const it = pool[Math.floor(Math.random() * pool.length)];
-    used.add(it.id); items.push(it);
+  const items = [];
+  OB_LEVELS.forEach(band => {
+    plShuffle(bank.filter(it => it.band === band)).forEach(it => items.push(it));
   });
-  PL = { state: items.length ? 'q' : 'result', items, i: 0, sel: null, ok: {} };
+  PL = { state: items.length ? 'q' : 'result', items, i: 0, sel: null, ok: {}, stopped: false };
   if (!items.length) OB.lvl = 0;
 }
-function plLevel() {
-  // nivel = banda más alta con al menos la mitad de sus ítems correctos,
-  // siempre que todas las bandas por debajo también se hayan superado.
+// aciertos por banda, solo sobre lo efectivamente respondido
+function plTally() {
   const tally = {};
   PL.items.forEach((it, i) => {
+    if (!(i in PL.ok)) return;
     const t = tally[it.band] = tally[it.band] || { t: 0, c: 0 };
     t.t++; if (PL.ok[i]) t.c++;
   });
+  return tally;
+}
+function plLevel() {
+  const tally = plTally();
   let lvl = 0;
   for (let b = 0; b < OB_LEVELS.length; b++) {
     const t = tally[OB_LEVELS[b]];
-    if (!t) continue;
-    if (t.c / t.t >= 0.5) lvl = b; else break;
+    if (t && t.c >= PL_UMBRAL) lvl = b; else break;
   }
   return lvl;
+}
+// ¿la banda recién terminada dispara el corte por abandono?
+function plBandDone(idx) {
+  const cur = PL.items[idx].band;
+  const next = PL.items[idx + 1];
+  if (next && next.band === cur) return false;
+  const t = plTally()[cur];
+  return !!t && t.c <= PL_CORTE;
 }
 function plRender() {
   const host = document.getElementById('ob-placement');
   if (!host) return;
   if (PL.state === 'intro') {
+    const total = (window.PLACEMENT_ITEMS || []).length || 40;
     host.innerHTML = `<div class="ob-points">
-      <div class="ob-point plain"><span class="em">⏱️</span><div><b>Toma 2 minutos</b><small>8 preguntas de opción múltiple</small></div></div>
+      <div class="ob-point plain"><span class="em">⏱️</span><div><b>Unos 8 minutos</b><small>Hasta ${total} preguntas — termina antes si ya ubicamos tu nivel</small></div></div>
       <div class="ob-point plain"><span class="em">🎯</span><div><b>Ubicamos tu nivel</b><small>De A1 a C1, según el marco MCER</small></div></div>
       <div class="ob-point plain"><span class="em">🤝</span><div><b>Sin presión</b><small>Si no sabes, pasa a la siguiente</small></div></div>
     </div>`;
@@ -3148,7 +3163,7 @@ function plRender() {
     return;
   }
   const it = PL.items[PL.i];
-  host.innerHTML = `<div class="pl-count">Pregunta ${PL.i + 1} de ${PL.items.length}</div>
+  host.innerHTML = `<div class="pl-count">Pregunta ${PL.i + 1} de ${PL.items.length} · nivel ${escapeHtml(it.band)}</div>
     <div class="pl-q">${escapeHtml(it.q)}</div>
     <div class="ob-opts">${it.opts.map((o, i) =>
       `<button class="ob-opt pl-opt${PL.sel === i ? ' sel' : ''}" data-pl="${i}"><span>${escapeHtml(o)}</span></button>`).join('')}</div>
@@ -3156,15 +3171,20 @@ function plRender() {
   host.querySelectorAll('[data-pl]').forEach(b => b.onclick = () => { PL.sel = +b.dataset.pl; plRender(); obSyncNext(); });
   host.querySelector('#pl-skip').onclick = () => { PL.sel = -1; plNext(); };
 }
+function plFinish() {
+  OB.lvl = plLevel(); PL.state = 'result'; plRender(); obRender();
+}
 function plNext() {
   if (PL.state === 'intro') { plBuild(); if (PL.state === 'result') OB.lvl = 0; plRender(); obRender(); return; }
   if (PL.state === 'result') { obAdvance(); return; }
   const it = PL.items[PL.i];
   PL.ok[PL.i] = PL.sel === it.a;
   PL.sel = null;
-  if (PL.i < PL.items.length - 1) { PL.i++; plRender(); obRender(); }
-  else { OB.lvl = plLevel(); PL.state = 'result'; plRender(); obRender(); }
+  const last = PL.i >= PL.items.length - 1;
+  if (last || plBandDone(PL.i)) { PL.stopped = !last; plFinish(); return; }
+  PL.i++; plRender(); obRender();
 }
+
 function obSyncNext() {
   const next = document.getElementById('ob-next');
   if (OB.step !== 3) return;
