@@ -217,10 +217,46 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
   );
 
   if (tab === "marca") {
+    const ola = g("brand.ola");
+    const olaColor = g("colors.ola") || highlight;
     return (
       <div style={frame}>
         {AppBar}
-        <p style={caption}>La barra superior, tal cual la verá el alumno.</p>
+        {ola !== "none" && (
+          <div style={{ marginTop: 12 }}>
+            <div
+              style={{
+                height: 46,
+                borderRadius: "10px 10px 0 0",
+                border: "1px solid #E6E6EA",
+                borderBottom: "none",
+                background: "#fff",
+                color: olaColor,
+                backgroundImage: `url("${ola || "/demo-assets/ola.svg"}")`,
+                backgroundRepeat: ola ? "no-repeat" : "repeat-x",
+                backgroundSize: ola ? "100% 100%" : "auto 100%",
+                backgroundPosition: "center top",
+              }}
+            />
+            <div
+              style={{
+                border: "1px solid #E6E6EA",
+                borderTop: "none",
+                borderRadius: "0 0 10px 10px",
+                background: "#fff",
+                padding: "10px 12px",
+                fontSize: 13,
+                color: "#5C5159",
+              }}
+            >
+              ¡Hola! Soy <b>{mFull}</b> {mEmoji}.
+            </div>
+          </div>
+        )}
+        <p style={caption}>
+          La barra superior y la ola con la que abre el onboarding.
+          {!ola && " La de serie se repite sin costura a cualquier ancho."}
+        </p>
       </div>
     );
   }
@@ -890,6 +926,15 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 kind="logo"
                 value={get(cfg, "brand.logo")}
                 onChange={upd("brand.logo")}
+              />
+              <FileField
+                label="Ola de la cabecera"
+                hint='Se ve arriba del todo al empezar. Vacío usa la de serie, que repite sin costura y toma el color de resaltado. Escribe "none" para quitarla.'
+                fallbackSrc="/demo-assets/ola.svg"
+                slug={demo.slug}
+                kind="ola"
+                value={g2("brand.ola")}
+                onChange={upd("brand.ola")}
               />
               <FileField
                 label="Icono de la barra superior"

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" preserveAspectRatio="none"
+     width="120" height="40" role="presentation">
+  <!--
+    Ola de la cabecera del onboarding.
+
+    Repite sin costura al colocarla con background-repeat: repeat-x. Un periodo
+    entero mide 120 de ancho, y la curva entra y sale a la misma altura (y=20)
+    con la misma pendiente, así que dos copias seguidas empalman sin escalón:
+
+      · entrada en x=0   con tangente hacia (30,0)   → sube
+      · salida  en x=120 viniendo de (90,40)         → sube igual
+
+    Lo mismo en el punto medio (x=60), donde las dos curvas se encuentran con
+    pendiente idéntica. Por eso no se ve dónde acaba una repetición y empieza la
+    siguiente, a cualquier ancho de pantalla.
+
+    El color se hereda del contenedor (currentColor), así el demo puede pintarla
+    con el suyo sin tocar este archivo.
+  -->
+  <path fill="currentColor"
+        d="M0,20 C30,0 30,0 60,20 C90,40 90,40 120,20 L120,0 L0,0 Z"/>
+</svg>

@@ -663,6 +663,18 @@
      visual language as the rest of the app (speech bubble + chunky buttons +
      quiz-style option pills). Profile is saved to localStorage (PROFILE_KEY). */
   #screen-onboard { background: #fff; }
+  /* Ola de la cabecera del onboarding. La de serie es un SVG que repite sin
+     costura (ola.svg); un demo puede sustituirla por su propia imagen, y
+     entonces se estira de lado a lado en vez de repetirse. */
+  .ob-ola { position: absolute; top: 0; left: 0; right: 0; height: 62px; z-index: 0;
+    pointer-events: none; color: var(--ola, var(--blue));
+    background-image: var(--ola-img, none);
+    background-repeat: repeat-x; background-position: center top; background-size: auto 100%; }
+  .ob-ola.custom { background-repeat: no-repeat; background-size: 100% 100%; }
+  #screen-onboard .ob-wrap { position: relative; z-index: 1; }
+  /* El contenido baja lo justo para no quedar debajo de la ola. */
+  #screen-onboard.has-ola .ob-wrap { padding-top: 54px; }
+  @media (max-width: 380px) { .ob-ola { height: 50px; } #screen-onboard.has-ola .ob-wrap { padding-top: 44px; } }
   .ob-wrap { flex: 1 1 auto; display: flex; flex-direction: column; width: 100%; max-width: 470px;
     margin: 0 auto; padding: calc(12px + env(safe-area-inset-top)) 20px calc(30px + env(safe-area-inset-bottom));
     overflow-y: auto; }
@@ -1137,6 +1149,8 @@
        Boti presenta la app y pide el nombre + la meta diaria, una pregunta a la
        vez. Ver el bloque "Onboarding" mas abajo.) -->
   <section id="screen-onboard" class="screen">
+    <!-- Ola: decorativa, sin contenido; la pinta applyOla() al arrancar. -->
+    <div class="ob-ola" id="ob-ola" aria-hidden="true"></div>
     <div class="ob-wrap">
       <div class="ob-top"><button class="back" id="ob-back" aria-label="Atrás"></button><div class="segs" id="ob-segs"></div></div>
       <div class="ob-talk">
@@ -1344,6 +1358,23 @@ function moduleBg(n) {
   const custom = (CFG.map.backgrounds || [])[n - 1];
   return custom || ('modulebg' + n + '.png');
 }
+// La ola de la cabecera del onboarding. De serie, ola.svg repitiendo sin costura
+// y pintada del color del demo. Si el demo sube su propia imagen se usa esa y se
+// estira de lado a lado: una imagen cualquiera no empalma consigo misma.
+// brand.ola = 'none' la quita.
+function applyOla() {
+  const el = document.getElementById('ob-ola');
+  const scr = document.getElementById('screen-onboard');
+  if (!el || !scr) return;
+  const custom = CFG.brand.ola;
+  if (custom === 'none') { el.style.display = 'none'; scr.classList.remove('has-ola'); return; }
+  const url = custom || 'ola.svg';
+  el.classList.toggle('custom', !!custom);
+  el.style.setProperty('--ola-img', 'url("' + url + '")');
+  if (CFG.colors.ola) el.style.setProperty('--ola', CFG.colors.ola);
+  scr.classList.add('has-ola');
+}
+
 // Ajuste horizontal de UN boton de ese mapa (px; + derecha). Se dial desde el
 // panel arrastrando el boton sobre el previo: un fondo propio nunca trae el
 // caminito donde lo tienen los de fabrica, y cada curva cae en un sitio.
@@ -4073,6 +4104,7 @@ function startOnboarding() { OB = { step: 0, name: '', mot: '', lvl: null, goal:
 // del panel de demos, donde hace falta saltar de pantalla rapido.
 if (/[?&]debug=1\b/.test(location.search)) document.body.classList.add('debug-fabs');
 applyIcons();
+applyOla();
 mascotMountStatic();
 if (loadProfile()) renderCourse(); else startOnboarding();
 </script>
