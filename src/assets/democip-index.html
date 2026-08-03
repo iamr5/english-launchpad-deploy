@@ -3277,33 +3277,41 @@ function placementReveal(lvl, onDone) {
   document.body.appendChild(el);
 
   let done = false;
+  let verdictShown = false;
   const timers = [];
-  const later = (fn, ms) => { timers.push(setTimeout(fn, reduce ? 0 : ms)); };
+  // En modo "menos movimiento" no se elimina la secuencia: se acorta (0.35x) para
+  // que el orden se mantenga y el veredicto siga siendo el último texto.
+  const F = reduce ? 0.35 : 1;
+  const later = (fn, ms) => { timers.push(setTimeout(fn, Math.round(ms * F))); };
+  const suspense = [];
   const finish = () => {
     if (done) return; done = true;
-    timers.forEach(clearTimeout);
+    timers.forEach(clearTimeout); suspense.forEach(clearTimeout);
     el.classList.add('out');
     setTimeout(() => { el.remove(); if (onDone) onDone(); }, 350);
   };
   const buzz = ms => { try { if (!reduce && navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
+  const setTitle = (txt) => { if (!verdictShown) el.querySelector('#s-t').textContent = txt; };
 
   // Falso frenazo: Boti "duda" y nombra un nivel equivocado antes del veredicto.
   const wrong = LV.filter(l => l !== target)[0] || 'A1';
-  later(() => { if (!done) el.querySelector('#s-t').textContent = `¿${wrong}…?`; }, 1500);
-  later(() => { if (!done) el.querySelector('#s-t').textContent = 'No, esperen…'; }, 2200);
+  suspense.push(setTimeout(() => { if (!done) setTitle(`¿${wrong}…?`); }, Math.round(1500 * F)));
+  suspense.push(setTimeout(() => { if (!done) setTitle('No, esperen…'); }, Math.round(2200 * F)));
 
   const reveal = () => {
     if (done) return;
+    suspense.forEach(clearTimeout);
+    verdictShown = true;
     buzz(40);
     const stage = el.querySelector('#s-stage');
     stage.innerHTML = `<div class="s-wave"></div><div class="s-wave w2"></div>` +
       `<div class="s-final">${target}</div>` +
       `<img class="s-boti cheer" src="boti_head.svg" alt="" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">`;
-    if (!reduce) { const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 600); }
+    const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 600);
     // El nivel se anuncia letra por letra.
     const tEl = el.querySelector('#s-t'), txt = `¡${target}!`;
-    if (reduce) tEl.textContent = txt;
-    else { tEl.textContent = ''; txt.split('').forEach((ch, i) => later(() => { tEl.textContent += ch; }, 220 + i * 110)); }
+    tEl.textContent = '';
+    txt.split('').forEach((ch, i) => later(() => { tEl.textContent += ch; }, 220 + i * 110));
     el.querySelector('#s-s').innerHTML = credits.length
       ? `Ese es tu punto de partida. Damos por aprobado ${credits.map(c => c.lvl).join(' y ')}.`
       : 'Empiezas desde los fundamentos, con todo por descubrir.';
@@ -3328,29 +3336,48 @@ function placementReveal(lvl, onDone) {
         row.style.opacity = '1'; row.style.transform = 'none';
         buzz(18);
         const ck = row.querySelector('.ck');
-        setTimeout(() => { ck.style.transition = 'opacity .3s ease, transform .3s ease'; ck.style.opacity = '1'; }, reduce ? 0 : 140);
-        tickUp(row.querySelector('.n'), c.xp, reduce ? 0 : 520);
+        setTimeout(() => { ck.style.transition = 'opacity .3s ease, transform .3s ease'; ck.style.opacity = '1'; }, 140);
+        tickUp(row.querySelector('.n'), c.xp, Math.round(520 * F));
       }, base + i * step);
     });
     const totalXpCredited = credits.reduce((a, c) => a + c.xp, 0);
+    // Sin módulos convalidados (A1) la revelación tiene igual su momento: una
+    // línea propia y la ruta A1→C1 dibujándose.
+    if (!credits.length) {
+      later(() => {
+        const row = document.createElement('div');
+        row.className = 's-credit zero';
+        row.innerHTML = `<span>Desde cero</span><span>todo el camino es tuyo</span><span class="cx">A1 → C1</span>`;
+        host.appendChild(row);
+        row.classList.add('in');
+        row.style.opacity = '1'; row.style.transform = 'none';
+        const track = document.createElement('div');
+        track.className = 's-route';
+        track.innerHTML = `<i></i>` + LV.map(l => `<span>${l}</span>`).join('');
+        host.appendChild(track);
+        requestAnimationFrame(() => track.classList.add('go'));
+        buzz(30);
+      }, base);
+    }
     later(() => {
       if (!credits.length) return;
       const tot = el.querySelector('#s-total');
       tot.innerHTML = `Total convalidado: <b class="n">0</b> XP`;
       tot.classList.add('in');
-      tickUp(tot.querySelector('.n'), totalXpCredited, reduce ? 0 : 700);
+      tickUp(tot.querySelector('.n'), totalXpCredited, Math.round(700 * F));
       buzz(60);
     }, base + credits.length * step);
     later(() => {
       const cta = el.querySelector('#s-cta');
       cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
       cta.querySelector('#s-go').onclick = finish;
-    }, base + credits.length * step + (credits.length ? 850 : 400));
+    }, base + credits.length * step + (credits.length ? 850 : 1500));
   };
 
   el.querySelector('#s-skip').onclick = finish;
-  if (reduce) reveal(); else timers.push(setTimeout(reveal, 3600));
+  timers.push(setTimeout(reveal, Math.round(3600 * F)));
 }
+
 // Contador que sube de 0 a `to` en `ms` (usado en la revelación y en la cascada del mapa).
 function tickUp(node, to, ms) {
   if (!node) return;
