@@ -915,6 +915,18 @@
   .sort .s-total.in { opacity: 1; }
   .sort .s-credit.pulse { animation: tr-rise .45s ease both, sortPulse .5s ease both; }
   @keyframes sortPulse { 0% { box-shadow: 0 0 0 0 rgba(255,216,107,.55) } 100% { box-shadow: 0 0 0 14px rgba(255,216,107,0) } }
+  /* Ruta A1→C1 cuando no hay módulos convalidados */
+  .sort .s-route { position: relative; display: flex; justify-content: space-between; align-items: center;
+    width: 100%; margin-top: 14px; padding: 10px 4px 0; }
+  .sort .s-route i { position: absolute; left: 4px; right: 4px; top: 4px; height: 4px; border-radius: 999px;
+    background: rgba(255,255,255,.18); }
+  .sort .s-route i::after { content: ''; position: absolute; inset: 0; width: 0; border-radius: 999px;
+    background: linear-gradient(90deg, #FFD86B, #1CB0F6); transition: width 1.2s cubic-bezier(.3,.9,.3,1); }
+  .sort .s-route.go i::after { width: 100%; }
+  .sort .s-route span { font-weight: 800; font-size: 12px; color: rgba(255,255,255,.55); padding-top: 10px;
+    transition: color .4s ease .3s; }
+  .sort .s-route.go span:first-of-type { color: #FFD86B; }
+
   @media (prefers-reduced-motion: reduce) {
     .sort, .sort .s-orbit, .sort .s-final, .sort .s-wave, .sort .s-boti, .sort .s-credit.in,
     .sort .s-flash, .sort .s-boti.cheer, .sort .s-credit.pulse { animation: none !important; }
@@ -1386,17 +1398,35 @@ function clearPlacementReveal() {
 }
 function playPlacementFillIn(scope) {
   if (!placementRevealPending()) return;
-  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce) { clearPlacementReveal(); return; }
   if (scope === 'course') return fillInCourse();
   if (scope === 'module') return fillInModule();
+}
+// Cascada cuando no hay nada que convalidar (A1): los módulos entran igual y el
+// primero pulsa, para que la primera llegada al mapa nunca se sienta estática.
+function fillInCourseEmpty() {
+  const body = document.getElementById('course-body');
+  const cards = body ? Array.from(body.querySelectorAll('.mod-card')) : [];
+  if (!cards.length) { clearPlacementReveal(); return; }
+  cards.forEach(c => { c.style.opacity = '0'; c.style.transform = 'translateY(14px)'; });
+  cards.forEach((c, i) => setTimeout(() => {
+    c.style.transition = 'opacity .38s ease, transform .38s cubic-bezier(.2,1.5,.4,1)';
+    c.style.opacity = '1'; c.style.transform = 'none';
+  }, 120 + i * 110));
+  setTimeout(() => {
+    const first = cards[0];
+    if (first) { first.classList.add('fill-in'); first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    if (typeof toast === 'function') toast('Aquí empiezas: A1');
+    clearPlacementReveal();
+  }, 260 + cards.length * 110);
 }
 function fillInCourse() {
   const start = (PROGRESS['__placement'] || {}).lvl || 0;
   const body = document.getElementById('course-body');
-  if (!body || start <= 0) { clearPlacementReveal(); return; }
+  if (!body) { clearPlacementReveal(); return; }
+  if (start <= 0) return fillInCourseEmpty();
   const cards = Array.from(body.querySelectorAll('.mod-card')).slice(0, start);
-  if (!cards.length) { clearPlacementReveal(); return; }
+  if (!cards.length) return fillInCourseEmpty();
+
   const credits = placementCredits(start);
   const totalXpCredited = credits.reduce((a, c) => a + c.xp, 0);
   // Estado inicial: gris, anillos/barras a 0.
@@ -3259,33 +3289,41 @@ function placementReveal(lvl, onDone) {
   document.body.appendChild(el);
 
   let done = false;
+  let verdictShown = false;
   const timers = [];
-  const later = (fn, ms) => { timers.push(setTimeout(fn, reduce ? 0 : ms)); };
+  // En modo "menos movimiento" no se elimina la secuencia: se acorta (0.35x) para
+  // que el orden se mantenga y el veredicto siga siendo el último texto.
+  const F = reduce ? 0.35 : 1;
+  const later = (fn, ms) => { timers.push(setTimeout(fn, Math.round(ms * F))); };
+  const suspense = [];
   const finish = () => {
     if (done) return; done = true;
-    timers.forEach(clearTimeout);
+    timers.forEach(clearTimeout); suspense.forEach(clearTimeout);
     el.classList.add('out');
     setTimeout(() => { el.remove(); if (onDone) onDone(); }, 350);
   };
   const buzz = ms => { try { if (!reduce && navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
+  const setTitle = (txt) => { if (!verdictShown) el.querySelector('#s-t').textContent = txt; };
 
   // Falso frenazo: Boti "duda" y nombra un nivel equivocado antes del veredicto.
   const wrong = LV.filter(l => l !== target)[0] || 'A1';
-  later(() => { if (!done) el.querySelector('#s-t').textContent = `¿${wrong}…?`; }, 1500);
-  later(() => { if (!done) el.querySelector('#s-t').textContent = 'No, esperen…'; }, 2200);
+  suspense.push(setTimeout(() => { if (!done) setTitle(`¿${wrong}…?`); }, Math.round(1500 * F)));
+  suspense.push(setTimeout(() => { if (!done) setTitle('No, esperen…'); }, Math.round(2200 * F)));
 
   const reveal = () => {
     if (done) return;
+    suspense.forEach(clearTimeout);
+    verdictShown = true;
     buzz(40);
     const stage = el.querySelector('#s-stage');
     stage.innerHTML = `<div class="s-wave"></div><div class="s-wave w2"></div>` +
       `<div class="s-final">${target}</div>` +
       `<img class="s-boti cheer" src="boti_head.svg" alt="" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">`;
-    if (!reduce) { const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 600); }
+    const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 600);
     // El nivel se anuncia letra por letra.
     const tEl = el.querySelector('#s-t'), txt = `¡${target}!`;
-    if (reduce) tEl.textContent = txt;
-    else { tEl.textContent = ''; txt.split('').forEach((ch, i) => later(() => { tEl.textContent += ch; }, 220 + i * 110)); }
+    tEl.textContent = '';
+    txt.split('').forEach((ch, i) => later(() => { tEl.textContent += ch; }, 220 + i * 110));
     el.querySelector('#s-s').innerHTML = credits.length
       ? `Ese es tu punto de partida. Damos por aprobado ${credits.map(c => c.lvl).join(' y ')}.`
       : 'Empiezas desde los fundamentos, con todo por descubrir.';
@@ -3310,29 +3348,48 @@ function placementReveal(lvl, onDone) {
         row.style.opacity = '1'; row.style.transform = 'none';
         buzz(18);
         const ck = row.querySelector('.ck');
-        setTimeout(() => { ck.style.transition = 'opacity .3s ease, transform .3s ease'; ck.style.opacity = '1'; }, reduce ? 0 : 140);
-        tickUp(row.querySelector('.n'), c.xp, reduce ? 0 : 520);
+        setTimeout(() => { ck.style.transition = 'opacity .3s ease, transform .3s ease'; ck.style.opacity = '1'; }, 140);
+        tickUp(row.querySelector('.n'), c.xp, Math.round(520 * F));
       }, base + i * step);
     });
     const totalXpCredited = credits.reduce((a, c) => a + c.xp, 0);
+    // Sin módulos convalidados (A1) la revelación tiene igual su momento: una
+    // línea propia y la ruta A1→C1 dibujándose.
+    if (!credits.length) {
+      later(() => {
+        const row = document.createElement('div');
+        row.className = 's-credit zero';
+        row.innerHTML = `<span>Desde cero</span><span>todo el camino es tuyo</span><span class="cx">A1 → C1</span>`;
+        host.appendChild(row);
+        row.classList.add('in');
+        row.style.opacity = '1'; row.style.transform = 'none';
+        const track = document.createElement('div');
+        track.className = 's-route';
+        track.innerHTML = `<i></i>` + LV.map(l => `<span>${l}</span>`).join('');
+        host.appendChild(track);
+        requestAnimationFrame(() => track.classList.add('go'));
+        buzz(30);
+      }, base);
+    }
     later(() => {
       if (!credits.length) return;
       const tot = el.querySelector('#s-total');
       tot.innerHTML = `Total convalidado: <b class="n">0</b> XP`;
       tot.classList.add('in');
-      tickUp(tot.querySelector('.n'), totalXpCredited, reduce ? 0 : 700);
+      tickUp(tot.querySelector('.n'), totalXpCredited, Math.round(700 * F));
       buzz(60);
     }, base + credits.length * step);
     later(() => {
       const cta = el.querySelector('#s-cta');
       cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
       cta.querySelector('#s-go').onclick = finish;
-    }, base + credits.length * step + (credits.length ? 850 : 400));
+    }, base + credits.length * step + (credits.length ? 850 : 1500));
   };
 
   el.querySelector('#s-skip').onclick = finish;
-  if (reduce) reveal(); else timers.push(setTimeout(reveal, 3600));
+  timers.push(setTimeout(reveal, Math.round(3600 * F)));
 }
+
 // Contador que sube de 0 a `to` en `ms` (usado en la revelación y en la cascada del mapa).
 function tickUp(node, to, ms) {
   if (!node) return;
