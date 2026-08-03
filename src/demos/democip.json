@@ -1,0 +1,11 @@
+{
+  "institution": "Colegio de Ingenieros del Perú",
+  "published": true,
+  "meta": {
+    "title": "AprendoEnglish × CIP · Demo interactivo",
+    "description": "Prueba el demo interactivo de AprendoEnglish y descubre nuestra metodología.",
+    "imageAlt": "AprendoEnglish × CIP"
+  },
+  "mascot": { "pack": "boti" },
+  "copy": { "audience": "ingenier@" }
+}

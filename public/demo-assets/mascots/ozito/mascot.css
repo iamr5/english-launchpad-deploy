@@ -1,0 +1,60 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   ozito · mascot.css — la animación de la mascota.
+
+   Extraído del bloque .tr-bear que vivía inline en index.html (que a su vez venía
+   de turuta-bear-animated_1.html). Cada transform-origin, duración y keyframe
+   conserva sus valores originales; los dos únicos cambios son:
+     · los @keyframes llevan prefijo `ozito-` (antes eran nombres globales tan
+       genéricos como `head` o `breathe`, que chocarían entre mascotas);
+     · se añadió el bloque prefers-reduced-motion del final.
+
+   Todo cuelga de .tr-bear (la clase raíz declarada en mascot.json → rootClass),
+   así los nombres genéricos de capa no se filtran al resto de la app.
+
+   Los transform-origin están en PORCENTAJES, no en píxeles: la mascota se ve
+   igual a cualquier tamaño. Si dibujas otra mascota, ajusta esos porcentajes al
+   pivote real de tu arte y no toques nada más.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Sombra de piso: constante — la mascota está plantada, no flota. */
+.tr-bear .shadow {
+  position: absolute; left: 50%; bottom: 3.6%; width: 66%; height: 6%;
+  transform: translateX(-50%); border-radius: 50%;
+  background: rgba(0, 0, 0, .23);
+}
+
+.tr-bear .bear  { position: absolute; inset: 0; }
+.tr-bear .group { position: absolute; inset: 0; }
+.tr-bear .layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* El torso rebota desde la cadera hacia arriba; los pies (piernas) quedan plantados. */
+.tr-bear .torso         { animation: ozito-torsobob 3.6s ease-in-out infinite; }
+.tr-bear .head          { transform-origin: 49.9% 47.3%; animation: ozito-head 3.6s ease-in-out infinite; }
+.tr-bear .glassesfollow { position: absolute; inset: 0; transform-origin: 49.9% 47.3%; animation: ozito-head 3.6s ease-in-out infinite; }
+.tr-bear .bowtie        { transform-origin: 45.6% 49.6%; animation: ozito-bowtie 3.6s ease-in-out infinite; }
+.tr-bear .leftarm       { transform-origin: 67.2% 47.6%; animation: ozito-leftarm 4.8s ease-in-out infinite; }
+.tr-bear .rightarm      { transform-origin: 34.8% 47.6%; animation: ozito-rightarm 3.6s ease-in-out infinite; }
+.tr-bear .leftleg       { transform-origin: 65.3% 96.5%; animation: ozito-legstretch 3.6s ease-in-out infinite; }
+.tr-bear .rightleg      { transform-origin: 33.4% 94.3%; animation: ozito-legstretch 3.6s ease-in-out infinite; }
+.tr-bear .body,
+.tr-bear .tummy         { transform-origin: 50.0% 76.6%; animation: ozito-breathe 3.6s ease-in-out infinite; }
+
+/* Rebote con los pies en el piso: sube sólo el torso. */
+@keyframes ozito-torsobob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.3%); } }
+@keyframes ozito-breathe  { 0%, 100% { transform: scale(1); } 50% { transform: scaleX(1.02) scaleY(.985); } }
+@keyframes ozito-head     { 0%, 100% { transform: rotate(0deg) translateY(0); }
+                            30%      { transform: rotate(-1.7deg) translateY(-.3%); }
+                            70%      { transform: rotate(1.5deg) translateY(-.3%); } }
+@keyframes ozito-bowtie   { 0%, 100% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(2.5deg) scale(1.05); } }
+
+/* Péndulo armónico relajado: recorrido corto, poco hacia afuera, reposo un pelo más alto. */
+@keyframes ozito-leftarm  { 0%, 100% { transform: translateY(-0.9%) rotate(2deg); }
+                            50%      { transform: translateY(-0.9%) rotate(-5deg); } }
+@keyframes ozito-rightarm { 0%, 100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(-3.2deg) translateY(-1.1%); } }
+
+/* Las piernas se estiran desde el pie plantado para seguir la subida del torso. */
+@keyframes ozito-legstretch { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.05); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-bear * { animation: none !important; }
+}

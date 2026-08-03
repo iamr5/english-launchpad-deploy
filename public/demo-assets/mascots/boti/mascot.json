@@ -1,0 +1,12 @@
+{
+  "id": "boti",
+  "name": "Boti",
+  "shortName": "Boti",
+  "kind": "robot guía",
+  "emoji": "🤖",
+  "engine": "script",
+  "entry": "boti.js",
+  "global": "Boti",
+  "artboard": { "width": 757.6, "height": 1139.5 },
+  "headIcon": "boti_head.svg"
+}

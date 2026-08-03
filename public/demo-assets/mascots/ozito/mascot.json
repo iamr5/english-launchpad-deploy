@@ -1,0 +1,42 @@
+{
+  "id": "ozito",
+  "name": "Ozzy el Osito",
+  "shortName": "Ozzy",
+  "kind": "osito guía",
+  "emoji": "🐻",
+  "engine": "layers",
+  "css": "mascot.css",
+  "rootClass": "tr-bear",
+  "shadow": true,
+  "artboard": { "width": 416.52, "height": 613.16 },
+  "headIcon": "layers/head.svg",
+  "layers": {
+    "body": "layers/body.svg",
+    "div": "layers/div.svg",
+    "head": "layers/head.svg",
+    "glasses": "layers/glasses.svg",
+    "bowtie": "layers/bowtie.svg",
+    "tummy": "layers/tummy.svg",
+    "leftarm": "layers/leftarm.svg",
+    "rightarm": "layers/rightarm.svg",
+    "leftleg": "layers/leftleg.svg",
+    "rightleg": "layers/rightleg.svg"
+  },
+  "stack": [
+    { "group": "torso", "children": [{ "layer": "body" }] },
+    { "layer": "rightleg" },
+    { "layer": "leftleg" },
+    {
+      "group": "torso",
+      "children": [
+        { "layer": "div" },
+        { "layer": "leftarm" },
+        { "layer": "rightarm" },
+        { "layer": "head" },
+        { "wrapper": "glassesfollow", "children": [{ "layer": "glasses" }] },
+        { "layer": "bowtie" },
+        { "layer": "tummy" }
+      ]
+    }
+  ]
+}

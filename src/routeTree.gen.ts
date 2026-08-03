@@ -9,54 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PresentationRouteImport } from './routes/presentation'
-import { Route as PresentacionRouteImport } from './routes/presentacion'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DemocipRouteImport } from './routes/democip'
-import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
-import { Route as DemoRouteImport } from './routes/demo'
-import { Route as CipRouteImport } from './routes/cip'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as CIPPresentaRouteImport } from './routes/CIP-presenta'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as CipRouteImport } from './routes/cip'
+import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PresentacionRouteImport } from './routes/presentacion'
+import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
-const PresentationRoute = PresentationRouteImport.update({
-  id: '/presentation',
-  path: '/presentation',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PresentacionRoute = PresentacionRouteImport.update({
-  id: '/presentacion',
-  path: '/presentacion',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemocipRoute = DemocipRouteImport.update({
-  id: '/democip',
-  path: '/democip',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoDashboardRoute = DemoDashboardRouteImport.update({
-  id: '/demo-dashboard',
-  path: '/demo-dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoRoute = DemoRouteImport.update({
-  id: '/demo',
-  path: '/demo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CipRoute = CipRouteImport.update({
-  id: '/cip',
-  path: '/cip',
+const SlugRoute = SlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CIPPresentaRoute = CIPPresentaRouteImport.update({
@@ -68,19 +42,39 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CipRoute = CipRouteImport.update({
+  id: '/cip',
+  path: '/cip',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const DemoDashboardRoute = DemoDashboardRouteImport.update({
+  id: '/demo-dashboard',
+  path: '/demo-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionRoute = PresentacionRouteImport.update({
+  id: '/presentacion',
+  path: '/presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentationRoute = PresentationRouteImport.update({
+  id: '/presentation',
+  path: '/presentation',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
@@ -97,11 +91,10 @@ const LovableEmailTransactionalPreviewRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
   '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
-  '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
-  '/democip': typeof DemocipRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
@@ -112,11 +105,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$slug': typeof SlugRoute
   '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
-  '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
-  '/democip': typeof DemocipRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
@@ -129,11 +121,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/$slug': typeof SlugRoute
   '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
-  '/demo': typeof DemoRoute
   '/demo-dashboard': typeof DemoDashboardRoute
-  '/democip': typeof DemocipRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
   '/presentation': typeof PresentationRoute
@@ -146,11 +137,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$slug'
     | '/CIP-presenta'
     | '/cip'
-    | '/demo'
     | '/demo-dashboard'
-    | '/democip'
     | '/login'
     | '/presentacion'
     | '/presentation'
@@ -161,11 +151,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$slug'
     | '/CIP-presenta'
     | '/cip'
-    | '/demo'
     | '/demo-dashboard'
-    | '/democip'
     | '/login'
     | '/presentacion'
     | '/presentation'
@@ -177,11 +166,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/$slug'
     | '/CIP-presenta'
     | '/cip'
-    | '/demo'
     | '/demo-dashboard'
-    | '/democip'
     | '/login'
     | '/presentacion'
     | '/presentation'
@@ -194,11 +182,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  SlugRoute: typeof SlugRoute
   CIPPresentaRoute: typeof CIPPresentaRoute
   CipRoute: typeof CipRoute
-  DemoRoute: typeof DemoRoute
   DemoDashboardRoute: typeof DemoDashboardRoute
-  DemocipRoute: typeof DemocipRoute
   LoginRoute: typeof LoginRoute
   PresentacionRoute: typeof PresentacionRoute
   PresentationRoute: typeof PresentationRoute
@@ -208,53 +195,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/presentation': {
-      id: '/presentation'
-      path: '/presentation'
-      fullPath: '/presentation'
-      preLoaderRoute: typeof PresentationRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/presentacion': {
-      id: '/presentacion'
-      path: '/presentacion'
-      fullPath: '/presentacion'
-      preLoaderRoute: typeof PresentacionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/democip': {
-      id: '/democip'
-      path: '/democip'
-      fullPath: '/democip'
-      preLoaderRoute: typeof DemocipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo-dashboard': {
-      id: '/demo-dashboard'
-      path: '/demo-dashboard'
-      fullPath: '/demo-dashboard'
-      preLoaderRoute: typeof DemoDashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cip': {
-      id: '/cip'
-      path: '/cip'
-      fullPath: '/cip'
-      preLoaderRoute: typeof CipRouteImport
+    '/$slug': {
+      id: '/$slug'
+      path: '/$slug'
+      fullPath: '/$slug'
+      preLoaderRoute: typeof SlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/CIP-presenta': {
@@ -271,25 +223,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/cip': {
+      id: '/cip'
+      path: '/cip'
+      fullPath: '/cip'
+      preLoaderRoute: typeof CipRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/demo-dashboard': {
+      id: '/demo-dashboard'
+      path: '/demo-dashboard'
+      fullPath: '/demo-dashboard'
+      preLoaderRoute: typeof DemoDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion': {
+      id: '/presentacion'
+      path: '/presentacion'
+      fullPath: '/presentacion'
+      preLoaderRoute: typeof PresentacionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentation': {
+      id: '/presentation'
+      path: '/presentation'
+      fullPath: '/presentation'
+      preLoaderRoute: typeof PresentationRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/app': {
       id: '/_authenticated/app'
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AuthenticatedAppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/api/public/share-invite': {
@@ -325,11 +305,10 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  SlugRoute: SlugRoute,
   CIPPresentaRoute: CIPPresentaRoute,
   CipRoute: CipRoute,
-  DemoRoute: DemoRoute,
   DemoDashboardRoute: DemoDashboardRoute,
-  DemocipRoute: DemocipRoute,
   LoginRoute: LoginRoute,
   PresentacionRoute: PresentacionRoute,
   PresentationRoute: PresentationRoute,

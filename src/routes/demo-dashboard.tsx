@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import html from "../assets/demo-dashboard.html?raw";
 
-const htmlWithBase = html.replace("<head>", '<head><base href="/democip/">');
+const htmlWithBase = html.replace("<head>", '<head><base href="/demo-assets/">');
 
 export const Route = createFileRoute("/demo-dashboard")({
   server: {
