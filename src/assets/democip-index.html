@@ -3332,8 +3332,11 @@ function plRender() {
   host.querySelector('#pl-skip').onclick = () => { PL.sel = -1; plNext(); };
 }
 function plFinish() {
-  OB.lvl = plLevel(); PL.state = 'result'; plRender(); obRender();
+  OB.lvl = plLevel(); PL.state = 'result';
+  placementReveal(OB.lvl, () => { plRender(); obRender(); });
+  plRender(); obRender();
 }
+
 function plNext() {
   if (PL.state === 'intro') { plBuild(); if (PL.state === 'result') OB.lvl = 0; plRender(); obRender(); return; }
   if (PL.state === 'result') { obAdvance(); return; }
