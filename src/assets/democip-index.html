@@ -1241,11 +1241,8 @@ function applyPlacement(lvl) {
   const start = placementStartIdx(lvl);
   course.modules.forEach((m, i) => {
     if (i > start) return;
-    m.lessons.forEach(l => {
-      const L = lp(l.id);
-      L.unlocked = true;
-      if (i < start) L.skipped = true; else delete L.skipped;
-    });
+    if (i === start) { const L = lp(m.lessons[0].id); L.unlocked = true; delete L.skipped; return; }
+    m.lessons.forEach(l => { const L = lp(l.id); L.unlocked = true; L.skipped = true; });
   });
   saveProgress(PROGRESS);
   return start;
