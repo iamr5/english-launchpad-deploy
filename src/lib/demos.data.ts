@@ -56,7 +56,7 @@ export async function saveDemo(
 ) {
   const { data, error } = await supabase
     .from(TABLE)
-    .update(patch)
+    .update(patch as never)
     .eq("slug", slug)
     .select()
     .single();
