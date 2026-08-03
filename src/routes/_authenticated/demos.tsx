@@ -5,6 +5,7 @@ import {
   createDemo,
   deleteDemo,
   fetchDemos,
+  isAdmin,
   saveDemo,
   slugProblem,
   suggestSlug,
@@ -20,6 +21,13 @@ import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  downloadTemplate,
+  inspectPack,
+  uploadPack,
+  type MascotManifest,
+  type PackCheck,
+} from "@/lib/mascot-pack";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/demos")({
@@ -46,6 +54,387 @@ function set(o: Cfg, path: string, value: unknown): Cfg {
 }
 
 const MODULE_LABELS = ["Módulo 1", "Módulo 2", "Módulo 3", "Módulo 4", "Módulo 5"];
+
+const PACK_INFO: Record<string, { name: string; kind: string; emoji: string; head: string }> = {
+  ozito: {
+    name: "Ozzy",
+    kind: "osito guía",
+    emoji: "🐻",
+    head: "/demo-assets/mascots/ozito/layers/head.svg",
+  },
+  boti: {
+    name: "Boti",
+    kind: "robot guía",
+    emoji: "🤖",
+    head: "/demo-assets/mascots/boti/boti_head.svg",
+  },
+};
+
+/** Oscurece un hex igual que lo hace el servidor, para que la sombra coincida. */
+function shade(hex: string, amount: number) {
+  const m = /^#?([0-9a-f]{6})$/i.exec((hex ?? "").trim());
+  if (!m) return hex;
+  const n = parseInt(m[1], 16);
+  return (
+    "#" +
+    [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+      .map((c) => {
+        const v = amount < 0 ? c * (1 + amount) : c + (255 - c) * amount;
+        return Math.max(0, Math.min(255, Math.round(v)))
+          .toString(16)
+          .padStart(2, "0");
+      })
+      .join("")
+  );
+}
+
+/** Un icono de la configuración: emoji o imagen. */
+function Ico({ v, fallback, size = 18 }: { v: string; fallback: string; size?: number }) {
+  const val = v || fallback;
+  if (!val) return null;
+  return /^(https?:|\/|data:)/.test(val) || /\.(svg|png|jpg|webp)$/i.test(val) ? (
+    <img src={val} alt="" style={{ height: size, width: size, objectFit: "contain" }} />
+  ) : (
+    <span style={{ fontSize: size }}>{val}</span>
+  );
+}
+
+/**
+ * Muestra, de verdad, lo que toca la pestaña abierta. Se pinta con la
+ * configuración SIN guardar, así el cambio se ve al escribirlo — el previo de la
+ * derecha va por iframe y sólo refleja lo ya guardado.
+ */
+function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institution: string }) {
+  const g = (p: string, f: unknown = "") => get(cfg, p, f) as string;
+  const accent = g("colors.accent", DEFAULTS.colors.accent);
+  const button = g("colors.button") || accent;
+  const spinner = g("colors.spinner") || accent;
+  const mods = (get(cfg, "colors.modules", DEFAULTS.colors.modules) as string[]) ?? [];
+  const packId = g("mascot.pack", "ozito");
+  // Un pack subido no está en PACK_INFO: sus datos salen del manifiesto guardado.
+  const custom = get(cfg, "mascot.manifest", null) as MascotManifest | null;
+  const baseUrl = g("mascot.baseUrl");
+  const pack =
+    packId === "custom" && custom
+      ? {
+          name: custom.shortName ?? custom.name,
+          kind: custom.kind ?? "mascota guía",
+          emoji: custom.emoji ?? "✨",
+          head: baseUrl + custom.headIcon,
+        }
+      : (PACK_INFO[packId] ?? PACK_INFO.ozito);
+  const mName = g("mascot.name") || pack.name;
+  const mKind = g("mascot.kind") || pack.kind;
+  const mEmoji = g("mascot.emoji") || pack.emoji;
+  const audience = g("copy.audience") || DEFAULTS.copy.audience;
+  const headerText = g("brand.headerText");
+  const logo = g("brand.logo");
+  const appbarIcon = g("brand.appbarIcon") || pack.head;
+
+  const frame: React.CSSProperties = {
+    fontFamily: "ui-rounded, 'Segoe UI', system-ui, sans-serif",
+    background: "#F4F4F6",
+    borderRadius: 14,
+    padding: 14,
+  };
+
+  const AppBar = (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        background: "#fff",
+        padding: "10px 12px",
+        borderRadius: 10,
+        border: "1px solid #E6E6EA",
+      }}
+    >
+      <img src={appbarIcon} alt="" style={{ height: 30 }} />
+      {logo ? (
+        <img src={logo} alt="" style={{ height: 24, maxWidth: 150, objectFit: "contain" }} />
+      ) : headerText ? (
+        <span style={{ fontWeight: 700, fontSize: 18 }}>{headerText}</span>
+      ) : (
+        <span style={{ fontWeight: 700, fontSize: 18 }}>
+          <span style={{ color: "#000" }}>Aprendo</span>
+          <span style={{ color: "#539bec" }}>English</span>
+          <span style={{ color: "#ea4e57", fontSize: 13 }}>.com</span>
+        </span>
+      )}
+      <span style={{ flex: 1 }} />
+      <span style={chip}>
+        <Ico v={g("icons.goal")} fallback="" size={15} />
+        {!g("icons.goal") && <span style={ring(accent)} />}
+        <b style={{ fontSize: 12 }}>0 min</b>
+      </span>
+      <span style={chip}>
+        <Ico v={g("icons.streak")} fallback="🔥" size={15} />
+        <b style={{ fontSize: 12 }}>5</b>
+      </span>
+    </div>
+  );
+
+  const DashCta = (
+    <button
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        width: "100%",
+        background: "#fff",
+        border: "2px solid #E6E6EA",
+        borderRadius: 14,
+        padding: "11px 13px",
+        textAlign: "left",
+        cursor: "default",
+      }}
+    >
+      <Ico v={g("icons.dashboard")} fallback="📊" size={22} />
+      <span style={{ flex: 1 }}>
+        <b style={{ display: "block", fontSize: 14 }}>
+          {g("copy.dashboardCta") || DEFAULTS.copy.dashboardCta}
+        </b>
+        <small style={{ color: "#7A7A7A", fontSize: 12 }}>
+          {g("copy.dashboardCtaSub") || DEFAULTS.copy.dashboardCtaSub}
+        </small>
+      </span>
+    </button>
+  );
+
+  if (tab === "marca") {
+    return (
+      <div style={frame}>
+        {AppBar}
+        <p style={caption}>La barra superior, tal cual la verá el alumno.</p>
+      </div>
+    );
+  }
+
+  if (tab === "colores") {
+    return (
+      <div style={frame}>
+        <div
+          style={{
+            background: accent,
+            color: "#fff",
+            borderRadius: 12,
+            padding: "9px 13px",
+            boxShadow: `0 4px 0 ${shade(accent, -0.24)}`,
+            fontWeight: 800,
+          }}
+        >
+          <div style={{ fontSize: 11, letterSpacing: ".8px", opacity: 0.92 }}>MÓDULO 1 · A1</div>
+          <div style={{ fontSize: 17 }}>Primeros pasos</div>
+        </div>
+        <div style={{ display: "flex", gap: 6, marginTop: 12 }}>
+          {mods.slice(0, 5).map((c, i) => (
+            <div key={i} style={{ flex: 1, textAlign: "center" }}>
+              <div
+                style={{
+                  height: 34,
+                  borderRadius: 9,
+                  background: c,
+                  boxShadow: `0 3px 0 ${shade(c, -0.24)}`,
+                }}
+              />
+              <div style={{ fontSize: 10, color: "#7A7A7A", marginTop: 5 }}>M{i + 1}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 14 }}>
+          <button
+            style={{
+              background: button,
+              color: "#fff",
+              border: "none",
+              borderRadius: 12,
+              padding: "10px 20px",
+              fontWeight: 800,
+              boxShadow: `0 4px 0 ${shade(button, -0.24)}`,
+              cursor: "default",
+            }}
+          >
+            Empezar
+          </button>
+          <span
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: "50%",
+              border: "3px solid #E0E0E0",
+              borderTopColor: spinner,
+              display: "inline-block",
+              animation: "spin 0.8s linear infinite",
+            }}
+          />
+          <span style={{ fontSize: 12, color: "#7A7A7A" }}>ruedita de carga</span>
+          <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+        </div>
+        <p style={caption}>Cabecera de módulo, color de cada módulo, botón y ruedita.</p>
+      </div>
+    );
+  }
+
+  if (tab === "mascota") {
+    return (
+      <div style={frame}>
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <img src={pack.head} alt="" style={{ height: 54 }} />
+          <div
+            style={{
+              flex: 1,
+              background: "#fff",
+              border: "1px solid #E6E6EA",
+              borderRadius: 12,
+              padding: "9px 12px",
+              fontSize: 13.5,
+            }}
+          >
+            ¡Hola! Soy <b>{mName}</b> {mEmoji}, tu {mKind}.
+          </div>
+        </div>
+        <p style={caption}>
+          Así queda el texto del curso con estos valores: <code>{"{{mascot}}"}</code>{" "}
+          <code>{"{{mascotEmoji}}"}</code> <code>{"{{mascotKind}}"}</code>
+        </p>
+      </div>
+    );
+  }
+
+  if (tab === "textos") {
+    return (
+      <div style={frame}>
+        <div
+          style={{
+            background: "#fff",
+            border: "1px solid #E6E6EA",
+            borderRadius: 12,
+            padding: "9px 12px",
+            fontSize: 13.5,
+            marginBottom: 10,
+          }}
+        >
+          ¡Hey, <b>{audience}</b>! Soy <b>{mName}</b> {mEmoji}, y hoy te presento…
+        </div>
+        {DashCta}
+        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+          <span style={chip}>
+            <Ico v={g("icons.streak")} fallback="🔥" size={15} />
+            <b style={{ fontSize: 12 }}>5</b>
+          </span>
+          <span style={chip}>
+            <Ico v={g("icons.goal")} fallback="" size={15} />
+            {!g("icons.goal") && <span style={ring(accent)} />}
+            <b style={{ fontSize: 12 }}>15 min</b>
+          </span>
+        </div>
+        <p style={caption}>
+          {audience} sustituye a <code>{"{{audience}}"}</code> en todo el curso.
+        </p>
+      </div>
+    );
+  }
+
+  if (tab === "mapa") {
+    const bgs = (get(cfg, "map.backgrounds", []) as (string | null)[]) ?? [];
+    return (
+      <div style={frame}>
+        <div style={{ display: "flex", gap: 6 }}>
+          {MODULE_LABELS.map((_, i) => (
+            <div key={i} style={{ flex: 1 }}>
+              <div
+                style={{
+                  aspectRatio: "9/16",
+                  borderRadius: 8,
+                  border: "1px solid #E6E6EA",
+                  background: `#fff url('${bgs[i] || `/demo-assets/modulebg${i + 1}.png`}') center top / cover no-repeat`,
+                }}
+              />
+              <div style={{ fontSize: 10, color: "#7A7A7A", marginTop: 4, textAlign: "center" }}>
+                M{i + 1}
+                {bgs[i] ? " ·propio" : ""}
+              </div>
+            </div>
+          ))}
+        </div>
+        <p style={caption}>El fondo real de cada mapa. «propio» = subido para este demo.</p>
+      </div>
+    );
+  }
+
+  return <div style={frame}>{AppBar}</div>;
+}
+
+const chip: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 4,
+  border: "2px solid #E6E6EA",
+  background: "#fff",
+  borderRadius: 999,
+  padding: "4px 9px",
+};
+const ring = (c: string): React.CSSProperties => ({
+  width: 15,
+  height: 15,
+  borderRadius: "50%",
+  background: `conic-gradient(${c} 45%, #E0E0E0 0)`,
+  display: "inline-block",
+});
+const caption: React.CSSProperties = {
+  fontSize: 11.5,
+  color: "#7A7A7A",
+  margin: "10px 0 0",
+};
+
+/**
+ * Un fallo a la vista, siempre. Los errores más habituales aquí vienen de RLS y
+ * su mensaje crudo no dice nada, así que se traducen a algo accionable.
+ */
+function ErrorNote({ error }: { error: Error }) {
+  const msg = error?.message ?? "";
+  const rls = /row-level security|violates row-level/i.test(msg);
+  return (
+    <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 space-y-1">
+      <p className="text-sm font-medium text-destructive">
+        {rls ? "Tu cuenta no tiene permiso de administrador" : "No se pudo guardar"}
+      </p>
+      {rls && (
+        <p className="text-xs text-muted-foreground">
+          La base de datos rechazó la escritura. Hace falta una fila en <code>user_roles</code> con{" "}
+          <code>role = &apos;admin&apos;</code> para tu usuario.
+        </p>
+      )}
+      <pre className="text-[11px] text-muted-foreground whitespace-pre-wrap break-words">{msg}</pre>
+    </div>
+  );
+}
+
+/** Aviso permanente si la sesión no es administradora: nada va a poder guardarse. */
+function AdminBanner() {
+  const admin = useQuery({ queryKey: ["is-admin"], queryFn: isAdmin });
+  if (admin.isLoading || admin.data?.ok) return null;
+  return (
+    <Card className="p-4 mb-4 border-amber-500/50 bg-amber-500/5">
+      <p className="text-sm font-medium">Estás en modo sólo lectura</p>
+      <p className="text-sm text-muted-foreground mt-1">
+        {admin.data?.email
+          ? `La cuenta ${admin.data.email} no tiene el rol de administrador, así que crear y guardar fallará.`
+          : "No hay sesión iniciada."}
+      </p>
+      <p className="text-xs text-muted-foreground mt-2">
+        Se arregla con una fila en <code>user_roles</code>:
+      </p>
+      <pre className="text-[11px] bg-muted p-2 rounded mt-1 overflow-x-auto">
+        {`insert into public.user_roles (user_id, role)
+select id, 'admin' from auth.users
+where lower(email) = lower('${admin.data?.email ?? "tu@correo.com"}')
+on conflict do nothing;`}
+      </pre>
+    </Card>
+  );
+}
 
 function DemosManager() {
   const qc = useQueryClient();
@@ -91,6 +480,7 @@ function DemosManager() {
 
   return (
     <Shell>
+      <AdminBanner />
       <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
         <DemoList
           demos={demos.data ?? []}
@@ -197,6 +587,7 @@ function DemoList({
         >
           {create.isPending ? "Creando…" : "Crear borrador"}
         </Button>
+        {create.error && <ErrorNote error={create.error as Error} />}
       </Card>
 
       <div className="space-y-1.5">
@@ -228,6 +619,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
   const [institution, setInstitution] = useState(demo.institution);
   const [published, setPublished] = useState(demo.published);
   const [previewKey, setPreviewKey] = useState(0);
+  const [tab, setTab] = useState("marca");
 
   const dirty =
     JSON.stringify(cfg) !== JSON.stringify(demo.config ?? {}) ||
@@ -256,6 +648,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
   });
 
   const upd = (path: string) => (v: unknown) => setCfg((c) => set(c, path, v));
+  const g2 = (p: string, f: unknown = "") => get(cfg, p, f) as string;
   const url = `/${demo.slug}`;
 
   return (
@@ -289,7 +682,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
 
       <div className="grid gap-4 xl:grid-cols-[1fr_390px]">
         <Card className="p-4">
-          <Tabs defaultValue="marca">
+          <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="mb-4">
               <TabsTrigger value="marca">Marca</TabsTrigger>
               <TabsTrigger value="colores">Colores</TabsTrigger>
@@ -297,6 +690,10 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <TabsTrigger value="textos">Textos</TabsTrigger>
               <TabsTrigger value="mapa">Mapa</TabsTrigger>
             </TabsList>
+
+            <div className="mb-5">
+              <LivePreview tab={tab} cfg={cfg} institution={institution} />
+            </div>
 
             <TabsContent value="marca" className="space-y-4">
               <Field label="Institución" value={institution} onChange={setInstitution} />
@@ -411,18 +808,30 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   })}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Para crear otra mascota, parte de la plantilla:{" "}
                   <a
                     className="underline"
                     href="/demo-assets/mascots/ozito/preview.html"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    ver Ozito
-                  </a>{" "}
-                  · instrucciones en <code>demo-assets/mascots/ozito/README.md</code>
+                    Ver Ozito animado
+                  </a>
                 </p>
               </div>
+              <MascotPackField
+                slug={demo.slug}
+                pack={g2("mascot.pack", "ozito")}
+                manifest={get(cfg, "mascot.manifest", null) as MascotManifest | null}
+                onUploaded={(baseUrl, manifest) =>
+                  setCfg((c) =>
+                    set(
+                      set(set(c, "mascot.pack", "custom"), "mascot.baseUrl", baseUrl),
+                      "mascot.manifest",
+                      manifest,
+                    ),
+                  )
+                }
+              />
               <Field
                 label="Cómo se llama"
                 hint="Vacío usa el nombre del pack. Aparece dentro de las lecciones."
@@ -543,7 +952,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
           <div className="rounded-2xl border overflow-hidden bg-muted">
             <iframe
               key={previewKey}
-              src={`${url}?p=${previewKey}`}
+              src={`${url}?debug=1&p=${previewKey}`}
               title={`Previo de ${demo.slug}`}
               className="w-[390px] h-[720px] block bg-white"
             />
@@ -554,6 +963,139 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Descargar la plantilla y subir un pack propio. Es lo que permite tener una
+ * mascota que no sea ninguna de las dos incorporadas.
+ */
+function MascotPackField({
+  slug,
+  pack,
+  manifest,
+  onUploaded,
+}: {
+  slug: string;
+  pack: string;
+  manifest: MascotManifest | null;
+  onUploaded: (baseUrl: string, manifest: MascotManifest) => void;
+}) {
+  const [check, setCheck] = useState<PackCheck | null>(null);
+  const [busy, setBusy] = useState<null | "revisando" | "subiendo" | "plantilla">(null);
+
+  async function pick(file: File) {
+    setCheck(null);
+    setBusy("revisando");
+    try {
+      const result = await inspectPack(file);
+      setCheck(result);
+      if (!result.ok) return;
+      setBusy("subiendo");
+      const { baseUrl, manifest: m } = await uploadPack(slug, file);
+      onUploaded(baseUrl, m);
+      toast.success(`Pack «${m.name}» subido. Guarda para aplicarlo.`);
+    } catch (e) {
+      toast.error((e as Error).message);
+      setCheck({
+        ok: false,
+        manifest: null,
+        files: [],
+        errors: [(e as Error).message],
+        warnings: [],
+      });
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function template(blank: boolean) {
+    setBusy("plantilla");
+    try {
+      await downloadTemplate(blank);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  return (
+    <div className="rounded-lg border p-3 space-y-3">
+      <div>
+        <p className="text-sm font-medium">Mascota propia</p>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Descarga la plantilla, redibuja el arte y súbela como <code>.zip</code>.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" size="sm" disabled={!!busy} onClick={() => template(true)}>
+          Descargar plantilla
+        </Button>
+        <Button variant="ghost" size="sm" disabled={!!busy} onClick={() => template(false)}>
+          Descargar Ozito completo
+        </Button>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        La plantilla trae el andamiaje montado —capas, pivotes, animación y un{" "}
+        <code>preview.html</code> para verla— con siluetas de relleno en vez del arte. Las
+        instrucciones van dentro, en <code>README.md</code>.
+      </p>
+
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm" asChild disabled={!!busy}>
+          <label className="cursor-pointer">
+            {busy === "revisando"
+              ? "Revisando…"
+              : busy === "subiendo"
+                ? "Subiendo…"
+                : "Subir pack .zip"}
+            <input
+              type="file"
+              accept=".zip,application/zip"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) pick(f);
+                e.target.value = "";
+              }}
+            />
+          </label>
+        </Button>
+        {pack === "custom" && manifest && (
+          <span className="text-xs">
+            En uso: <b>{manifest.name}</b> {manifest.emoji}
+          </span>
+        )}
+      </div>
+
+      {check && (
+        <div
+          className={`rounded-lg border p-3 space-y-1.5 ${
+            check.ok
+              ? "border-emerald-500/40 bg-emerald-500/5"
+              : "border-destructive/40 bg-destructive/5"
+          }`}
+        >
+          <p className="text-sm font-medium">
+            {check.ok
+              ? `Pack válido: ${check.manifest?.name} · ${check.files.length} archivos`
+              : "El pack tiene problemas"}
+          </p>
+          {check.errors.map((e, i) => (
+            <p key={i} className="text-xs text-destructive">
+              · {e}
+            </p>
+          ))}
+          {check.warnings.map((w, i) => (
+            <p key={i} className="text-xs text-muted-foreground">
+              · {w}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

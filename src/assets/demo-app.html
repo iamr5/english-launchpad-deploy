@@ -4054,6 +4054,9 @@ function startOnboarding() { OB = { step: 0, name: '', mot: '', lvl: null, goal:
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Boot: first run (no profile) → onboarding; otherwise straight to the course.
 // Boti del onboarding: se monta una sola vez (su contenedor nunca se re-renderiza).
+// ?debug=1 enciende los botones de depuracion sin los 7 toques. Lo usa el previo
+// del panel de demos, donde hace falta saltar de pantalla rapido.
+if (/[?&]debug=1\b/.test(location.search)) document.body.classList.add('debug-fabs');
 applyIcons();
 mascotMountStatic();
 if (loadProfile()) renderCourse(); else startOnboarding();

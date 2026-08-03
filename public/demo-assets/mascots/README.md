@@ -15,9 +15,23 @@ mascota. Para packs de capas construye el stack; para packs de script carga el
 
 ## Crear una mascota
 
-Copia `ozito/`, cambia el arte y los pivotes, compruébalo con su `preview.html`,
-súbelo como `.zip` desde el panel de demos. El paso a paso está en
-[`ozito/README.md`](ozito/README.md).
+Desde **`/demos` → pestaña Mascota**:
+
+1. **Descargar plantilla** — el andamiaje completo (capas, pivotes, animación,
+   `preview.html`) con siluetas de relleno en vez del arte. También está
+   *Descargar Ozito completo* si prefieres partir del oso ya dibujado.
+2. Redibuja los SVG y ajusta los pivotes. El paso a paso, en
+   [`ozito/README.md`](ozito/README.md).
+3. Compruébalo abriendo `preview.html` desde un servidor local.
+4. **Subir pack .zip**. Se valida antes de guardar nada y, si algo falla, dice
+   exactamente qué archivo y por qué.
+
+Un pack subido no vive en esta carpeta: sus archivos van al almacenamiento y su
+manifiesto se copia dentro de la configuración del demo, para que el servidor
+pueda pintar la página sin ir a buscarlo.
+
+Las carpetas de aquí son los packs **incorporados**, disponibles para todos los
+demos sin subir nada.
 
 ## El manifiesto, campo por campo
 

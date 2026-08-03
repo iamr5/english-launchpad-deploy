@@ -45,8 +45,15 @@ export type DemoConfig = {
   };
 
   mascot: {
-    /** Carpeta del pack: 'ozito', 'boti', o una URL a un pack subido. */
+    /** Pack incorporado ('ozito', 'boti') o 'custom' si se subió uno. */
     pack: string;
+    /** Sólo para packs subidos: dónde quedaron sus archivos. */
+    baseUrl?: string;
+    /**
+     * Sólo para packs subidos: copia de su mascot.json. Se guarda aquí para que
+     * el servidor pueda pintar la página sin ir a buscar el manifiesto.
+     */
+    manifest?: Record<string, unknown>;
     /** Sobrescriben lo que declara el manifiesto del pack. */
     name?: string;
     kind?: string;

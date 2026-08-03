@@ -84,8 +84,15 @@ function themeCSS(cfg: DemoConfig) {
  */
 function resolveMascot(cfg: DemoConfig) {
   const built = BUILT_IN[cfg.mascot.pack];
-  const dir = built ? `${MASCOTS_DIR}${built.id}/` : cfg.mascot.pack.replace(/\/?$/, "/");
-  const pack = built ?? null;
+
+  // Pack subido: su manifiesto viaja dentro de la configuración (lo guarda el
+  // panel al subirlo), así no hay que ir a buscarlo para poder responder.
+  const custom = !built && cfg.mascot.manifest ? (cfg.mascot.manifest as MascotPack) : null;
+
+  const dir = built
+    ? `${MASCOTS_DIR}${built.id}/`
+    : (cfg.mascot.baseUrl ?? cfg.mascot.pack).replace(/\/?$/, "/");
+  const pack = built ?? custom;
   return {
     dir,
     pack,
@@ -131,8 +138,7 @@ export function renderDemoNotFound(slug: string): Response {
     padding:11px 20px;border-radius:12px}
 </style></head><body><div class="c">
 <h1>Aquí no hay ningún demo</h1>
-<p>El enlace <code>/${esc(slug)}</code> no corresponde a ningún demo publicado.
-Puede que se haya escrito mal o que aún no esté activo.</p>
+<p>El enlace <code>/${esc(slug)}</code> no corresponde a ningún link publicado en este sitio.</p>
 <a href="/demo">Ver el demo general</a>
 </div></body></html>`;
   return new Response(page, {

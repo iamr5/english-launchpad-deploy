@@ -16,6 +16,26 @@ export type DemoRow = {
 
 const TABLE = "demos";
 
+/**
+ * Si la sesión actual es administradora. El panel lo comprueba al entrar para
+ * poder decirlo claro, en vez de dejar que cada acción falle contra RLS.
+ */
+export async function isAdmin(): Promise<{ ok: boolean; email: string | null; reason?: string }> {
+  const { data: auth } = await supabase.auth.getUser();
+  const user = auth?.user ?? null;
+  if (!user) return { ok: false, email: null, reason: "Sin sesión iniciada." };
+
+  const { data, error } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id)
+    .eq("role", "admin")
+    .maybeSingle();
+
+  if (error) return { ok: false, email: user.email ?? null, reason: error.message };
+  return { ok: !!data, email: user.email ?? null };
+}
+
 export async function fetchDemos(): Promise<DemoRow[]> {
   const { data, error } = await supabase
     .from(TABLE)
