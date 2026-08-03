@@ -2633,7 +2633,9 @@ function openFinalQuiz(lesson, mod) {
       <div style="height:12px"></div><button class="btn" style="background:none;color:var(--blue)" id="dlg-back">Volver al módulo</button></div>`,
       () => { closeOverlay(); startRound(shuffle(lesson.quizQuestions), false); },
       () => { closeOverlay(); renderModule(mod); });
+    suggestReview(lesson, 2); // fallar el examen final pesa doble
   }
+
   startRound(shuffle(lesson.quizQuestions), false);
 }
 
