@@ -1228,9 +1228,27 @@ function isQuizCompleted(id) { return !!(PROGRESS[id] && PROGRESS[id].quizComple
 function isReadingCompleted(id) { return !!(PROGRESS[id] && PROGRESS[id].readingCompleted); }
 function getScroll(id) { return (PROGRESS[id] && PROGRESS[id].scroll) || 0; }
 function nextLessonId(id) { const i = allLessons.findIndex(l => l.id === id); return (i >= 0 && i < allLessons.length - 1) ? allLessons[i + 1].id : null; }
+function isLessonSkipped(id) { return !!(PROGRESS[id] && PROGRESS[id].skipped); }
 function isLessonCompleted(id) {
   if (isQuizCompleted(id)) return true;
-  const n = nextLessonId(id); return n ? isLessonUnlocked(n) : false;
+  if (isLessonSkipped(id)) return false; // repaso abierto por el test de ubicación: no cuenta como hecho
+  const n = nextLessonId(id); return n ? (isLessonUnlocked(n) && !isLessonSkipped(n)) : false;
+}
+// Test de ubicación → módulo de arranque. Los módulos por debajo quedan abiertos
+// para repaso (unlocked) pero marcados `skipped`: sin XP ni check de completado.
+function placementStartIdx(lvl) { return Math.max(0, Math.min(course.modules.length - 1, +lvl || 0)); }
+function applyPlacement(lvl) {
+  const start = placementStartIdx(lvl);
+  course.modules.forEach((m, i) => {
+    if (i > start) return;
+    m.lessons.forEach(l => {
+      const L = lp(l.id);
+      L.unlocked = true;
+      if (i < start) L.skipped = true; else delete L.skipped;
+    });
+  });
+  saveProgress(PROGRESS);
+  return start;
 }
 let _saveT = null;
 function scheduleSave() { if (WIPED || _saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
@@ -2520,6 +2538,7 @@ function openMiniQuiz(lesson, block) {
     result('refresh', '#5C5159', 'no', 'Casi lo tienes',
       'Fallaste otra vez. Repite el quiz completo para continuar.',
       'blue', 'Reintentar', () => startRound(shuffle(block.miniQuiz), false));
+    suggestReview(lesson);
   }
   sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
   startRound(shuffle(block.miniQuiz), false);
@@ -2948,6 +2967,27 @@ function botiCheer(msg) {
   document.body.appendChild(el);
   setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 2200);
 }
+// Repaso sugerido: si el alumno arrancó por encima de A1 (test de ubicación) y
+// falla en su módulo de arranque, Boti ofrece volver al nivel anterior. No bloquea.
+let _reviewShown = false;
+function suggestReview(lesson) {
+  if (_reviewShown) return;
+  const mi = course.modules.findIndex(m => m.lessons.some(l => l.id === lesson.id));
+  if (mi <= 0) return;
+  const prev = course.modules[mi - 1];
+  if (!prev || !prev.lessons.some(l => isLessonSkipped(l.id))) return; // solo si vino del test
+  _reviewShown = true;
+  const lv = ['A1', 'A2', 'B1', 'B2', 'C1'][mi - 1] || `Módulo ${mi}`;
+  const old = document.getElementById('boti-review'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.id = 'boti-review'; el.className = 'boti-cheer';
+  el.style.pointerEvents = 'auto';
+  el.innerHTML = `<img src="boti_head.svg" alt=""><div class="bc-txt">¿Repasamos ${lv} un momento?</div>` +
+    `<button type="button" style="margin-left:10px;border:0;background:#1CB0F6;color:#fff;font-weight:800;padding:8px 12px;border-radius:10px;cursor:pointer">Ir</button>`;
+  document.body.appendChild(el);
+  el.querySelector('button').onclick = () => { el.remove(); closeOverlay(); renderModule(prev); };
+  setTimeout(() => { if (!document.body.contains(el)) return; el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 6000);
+}
 // Recompensa grande al terminar una lección: Boti aparece, confeti, XP y racha.
 function lessonCelebration(lesson, onDone) {
   const old = document.getElementById('lesson-win'); if (old) old.remove();
@@ -3104,7 +3144,9 @@ function plRender() {
     host.innerHTML = `<div class="pl-result">
       <div class="pl-badge">${OB_LEVELS[lvl]}</div>
       <div class="pl-txt">Tu punto de partida</div>
-      <div class="pl-sub">Empezarás desde el inicio para no saltarte fundamentos, pero adaptaremos el ritmo a tu nivel.</div>
+      <div class="pl-sub">${lvl > 0
+        ? `Empiezas en el nivel <b>${OB_LEVELS[lvl]}</b>. ${OB_LEVELS.slice(0, lvl).join(' y ')} quedan abiertos por si quieres repasar.`
+        : 'Empiezas en el nivel <b>A1</b>, desde los fundamentos.'}</div>
     </div>`;
     return;
   }
@@ -3163,9 +3205,10 @@ function obRender() {
     document.getElementById('ob-sum').innerHTML =
       `<div class="ob-chip lvl"><span class="em">🏁</span><span class="lb">Nivel ${OB_LEVELS[OB.lvl || 0]}</span><div class="sb">Tu nivel</div></div>` +
       `<div class="ob-chip goal"><span class="em">🎯</span><span class="lb">${OB.goal || 15} min</span><div class="sb">Meta diaria</div></div>`;
-    // always the very first lesson, regardless of the placement answer
-    const mod = course.modules[0], fl = mod.lessons[0];
-    const col = modAccent(0), cold = shadeHex(col, -0.24);
+    // arranca en el módulo que corresponde al nivel del test de ubicación
+    const sIdx = placementStartIdx(OB.lvl || 0);
+    const mod = course.modules[sIdx], fl = mod.lessons[0];
+    const col = modAccent(sIdx), cold = shadeHex(col, -0.24);
     foot.innerHTML = fl
       ? `<div class="foot-kicker" style="color:${col}">Tu primera lección</div>
          <div class="foot-title">${escapeHtml(lessonName(fl))}</div>
@@ -3232,13 +3275,15 @@ document.querySelectorAll('.ob-opt[data-mot], .ob-opt[data-goal]').forEach(b => 
 // everyone starts from the very first lesson so no one misses the fundamentals.
 function obFinish() {
   saveProfile({ name: OB.name, goal: +OB.goal || 15, level: OB.lvl || 0, motive: OB.mot || '', created: new Date().toISOString() });
+  applyPlacement(OB.lvl || 0);
   renderCourse();
   toast('¡Hola, ' + OB.name + '! Boti te espera 🤖');
 }
 // Finish onboarding and drop straight into the very first lesson (from the last-step bar).
 function obFinishToLesson() {
-  const mod = course.modules[0], fl = mod.lessons[0];
   saveProfile({ name: OB.name, goal: +OB.goal || 15, level: OB.lvl || 0, motive: OB.mot || '', created: new Date().toISOString() });
+  const start = applyPlacement(OB.lvl || 0);
+  const mod = course.modules[start], fl = mod.lessons[0];
   renderCourse();
   if (fl) openLesson(fl, mod);
   toast('¡Hola, ' + OB.name + '! Boti te espera 🤖');
