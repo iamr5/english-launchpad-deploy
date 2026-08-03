@@ -1829,6 +1829,7 @@ function renderCourse() {
   });
   const cta = document.getElementById('cta-continue');
   if (cta && na) cta.onclick = () => openLesson(na.lesson, na.mod);
+  playPlacementFillIn('course');
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
