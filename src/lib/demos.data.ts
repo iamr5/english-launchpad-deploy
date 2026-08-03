@@ -41,7 +41,7 @@ export async function createDemo(row: {
     .insert({
       slug: row.slug,
       institution: row.institution,
-      config: row.config ?? {},
+      config: (row.config ?? {}) as never,
       published: false,
     })
     .select()
@@ -56,7 +56,7 @@ export async function saveDemo(
 ) {
   const { data, error } = await supabase
     .from(TABLE)
-    .update(patch)
+    .update(patch as never)
     .eq("slug", slug)
     .select()
     .single();
