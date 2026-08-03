@@ -55,6 +55,9 @@ export type DemoConfig = {
      */
     manifest?: Record<string, unknown>;
     /** Sobrescriben lo que declara el manifiesto del pack. */
+    /** Nombre completo del personaje: «Ozzy el Osito». Sale en la presentación. */
+    fullName?: string;
+    /** Cómo se le llama a diario: «Ozzy». Es el que aparece en las lecciones. */
     name?: string;
     kind?: string;
     emoji?: string;

@@ -1258,7 +1258,7 @@ const CFG = {
   }, DEMO.copy),
   brand: DEMO.brand || {},
   mascot: DEMO.mascot || { engine: 'script', global: 'Boti', name: 'Boti', emoji: '🤖',
-                           kind: 'robot guía', headIcon: 'mascots/boti/boti_head.svg',
+                           kind: 'robot guía', fullName: 'Boti', headIcon: 'mascots/boti/boti_head.svg',
                            artboard: { width: 757.6, height: 1139.5 } },
   map: DEMO.map || {},
 };
@@ -1276,7 +1276,8 @@ function iconHTML(v, cls) {
 // el mismo contenido sirva a cualquier demo. Ver public/demo-assets/README.md.
 function tpl(s) {
   return typeof s === 'string' && s.indexOf('{{') >= 0
-    ? s.replace(/\{\{mascotEmoji\}\}/g, CFG.mascot.emoji || '')
+    ? s.replace(/\{\{mascotFull\}\}/g, CFG.mascot.fullName || CFG.mascot.name || '')
+       .replace(/\{\{mascotEmoji\}\}/g, CFG.mascot.emoji || '')
        .replace(/\{\{mascotKind\}\}/g, CFG.mascot.kind || '')
        .replace(/\{\{mascot\}\}/g, CFG.mascot.name || '')
        .replace(/\{\{audience\}\}/g, CFG.copy.audience)
@@ -3820,7 +3821,7 @@ const OB_TAP_STEPS = [2, 5];        // option lists: selecting advances, no butt
 const OB_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'];
 let OB = { step: 0, name: '', mot: '', lvl: null, goal: '' };
 const OB_BUBBLES = [
-  () => '¡Hola! Soy <b>' + (CFG.mascot.name || 'Boti') + '.</b><br>Empecemos.',
+  () => '¡Hola! Soy <b>' + (CFG.mascot.fullName || CFG.mascot.name || 'Boti') + '.</b><br>Empecemos.',
   () => '¿Cómo te llamas?',
   () => OB.name ? `<b>${escapeHtml(OB.name)}</b>, ¿por qué quieres aprender inglés?` : '¿Por qué quieres aprender inglés?',
   () => PL.state === 'result'

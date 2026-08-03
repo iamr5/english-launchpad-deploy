@@ -61,14 +61,19 @@ function set(o: Cfg, path: string, value: unknown): Cfg {
 
 const MODULE_LABELS = ["Módulo 1", "Módulo 2", "Módulo 3", "Módulo 4", "Módulo 5"];
 
-const PACK_INFO: Record<string, { name: string; kind: string; emoji: string; head: string }> = {
+const PACK_INFO: Record<
+  string,
+  { fullName: string; name: string; kind: string; emoji: string; head: string }
+> = {
   ozito: {
+    fullName: "Ozzy el Osito",
     name: "Ozzy",
     kind: "osito guía",
     emoji: "🐻",
     head: "/demo-assets/mascots/ozito/layers/head.svg",
   },
   boti: {
+    fullName: "Boti",
     name: "Boti",
     kind: "robot guía",
     emoji: "🤖",
@@ -129,6 +134,7 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
           head: baseUrl + custom.headIcon,
         }
       : (PACK_INFO[packId] ?? PACK_INFO.ozito);
+  const mFull = g("mascot.fullName") || (pack as { fullName?: string }).fullName || pack.name;
   const mName = g("mascot.name") || pack.name;
   const mKind = g("mascot.kind") || pack.kind;
   const mEmoji = g("mascot.emoji") || pack.emoji;
@@ -297,12 +303,23 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
               fontSize: 13.5,
             }}
           >
-            ¡Hola! Soy <b>{mName}</b> {mEmoji}, tu {mKind}.
+            ¡Hola! Soy <b>{mFull}</b> {mEmoji}, tu {mKind}.
           </div>
         </div>
+        <div
+          style={{
+            background: "#fff",
+            border: "1px solid #E6E6EA",
+            borderRadius: 12,
+            padding: "9px 12px",
+            fontSize: 13.5,
+            marginTop: 8,
+          }}
+        >
+          Más adelante, en las lecciones: «<b>{mName}</b> tip: repite en voz alta.»
+        </div>
         <p style={caption}>
-          Así queda el texto del curso con estos valores: <code>{"{{mascot}}"}</code>{" "}
-          <code>{"{{mascotEmoji}}"}</code> <code>{"{{mascotKind}}"}</code>
+          Arriba, la presentación con el nombre completo; abajo, cómo lo llaman el resto del tiempo.
         </p>
       </div>
     );
@@ -762,6 +779,13 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
 
   const upd = (path: string) => (v: unknown) => setCfg((c) => set(c, path, v));
   const g2 = (p: string, f: unknown = "") => get(cfg, p, f) as string;
+  // Lo que trae la mascota elegida, para enseñarlo como marca de agua.
+  const packDefaults = (() => {
+    const id = g2("mascot.pack", "ozito");
+    const man = get(cfg, "mascot.manifest", null) as MascotManifest | null;
+    if (id === "custom" && man) return { fullName: man.name, name: man.shortName ?? man.name };
+    return PACK_INFO[id] ?? PACK_INFO.ozito;
+  })();
   const url = `/${demo.slug}`;
 
   return (
@@ -948,10 +972,17 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 }
               />
               <Field
-                label="Cómo se llama"
-                hint="Cómo lo llaman las lecciones. Si lo dejas vacío se usa el nombre que trae la mascota."
+                label="Nombre completo"
+                hint="Con el que se presenta al empezar: «Ozzy el Osito»."
+                value={get(cfg, "mascot.fullName")}
+                placeholder={packDefaults.fullName}
+                onChange={upd("mascot.fullName")}
+              />
+              <Field
+                label="Nombre corto"
+                hint="Como lo llaman las lecciones el resto del tiempo: «Ozzy»."
                 value={get(cfg, "mascot.name")}
-                placeholder="Ozzy"
+                placeholder={packDefaults.name}
                 onChange={upd("mascot.name")}
               />
               <Field
@@ -969,6 +1000,42 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
             </TabsContent>
 
             <TabsContent value="textos" className="space-y-4">
+              <div>
+                <p className="text-sm font-medium">Iconos</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Elige un emoji de los de al lado, escribe otro, o sube una imagen tuya.
+                </p>
+              </div>
+              <IconField
+                label="Racha"
+                slug={demo.slug}
+                kind="icono-racha"
+                suggestions={["🔥", "⚡", "🌟", "🏆", "💪"]}
+                fallback="🔥"
+                value={g2("icons.streak")}
+                onChange={upd("icons.streak")}
+              />
+              <IconField
+                label="Meta diaria"
+                hint="Si lo dejas vacío se conserva el anillo de progreso de siempre."
+                slug={demo.slug}
+                kind="icono-meta"
+                suggestions={["⏱", "⏰", "🎯", "📅", "✅"]}
+                fallback=""
+                value={g2("icons.goal")}
+                onChange={upd("icons.goal")}
+              />
+              <IconField
+                label="Panel de progreso"
+                slug={demo.slug}
+                kind="icono-panel"
+                suggestions={["📊", "📈", "🗂", "🎖", "📋"]}
+                fallback="📊"
+                value={g2("icons.dashboard")}
+                onChange={upd("icons.dashboard")}
+              />
+
+              <hr />
               <Field
                 label="Cómo se dirige al alumno"
                 hint="Así se dirige el curso al alumno: «ingenier@», «estudiante»… Se cambia en todas las lecciones a la vez."
@@ -976,43 +1043,29 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 placeholder={DEFAULTS.copy.audience}
                 onChange={upd("copy.audience")}
               />
-              <hr />
-              <Field
-                label="Botón del panel de progreso"
-                value={get(cfg, "copy.dashboardCta")}
-                placeholder={DEFAULTS.copy.dashboardCta}
-                onChange={upd("copy.dashboardCta")}
-              />
-              <Field
-                label="Subtítulo de ese botón"
-                value={get(cfg, "copy.dashboardCtaSub")}
-                placeholder={DEFAULTS.copy.dashboardCtaSub}
-                onChange={upd("copy.dashboardCtaSub")}
-              />
-              <hr />
-              <p className="text-sm font-medium">Iconos</p>
-              <p className="text-xs text-muted-foreground -mt-2">
-                Escribe un emoji o pega la dirección de una imagen.
-              </p>
-              <Field
-                label="Racha"
-                value={get(cfg, "icons.streak")}
-                placeholder="🔥"
-                onChange={upd("icons.streak")}
-              />
-              <Field
-                label="Meta diaria"
-                hint="Si lo dejas vacío se conserva el anillo de progreso de siempre."
-                value={get(cfg, "icons.goal")}
-                placeholder="⏱"
-                onChange={upd("icons.goal")}
-              />
-              <Field
-                label="Panel de progreso"
-                value={get(cfg, "icons.dashboard")}
-                placeholder="📊"
-                onChange={upd("icons.dashboard")}
-              />
+
+              <details className="rounded-lg border p-3">
+                <summary className="text-sm font-medium cursor-pointer select-none">
+                  Cambiar el texto del botón de progreso
+                </summary>
+                <p className="text-xs text-muted-foreground mt-1 mb-3">
+                  Normalmente no hace falta tocarlo.
+                </p>
+                <div className="space-y-4">
+                  <Field
+                    label="Texto del botón"
+                    value={get(cfg, "copy.dashboardCta")}
+                    placeholder={DEFAULTS.copy.dashboardCta}
+                    onChange={upd("copy.dashboardCta")}
+                  />
+                  <Field
+                    label="Subtítulo"
+                    value={get(cfg, "copy.dashboardCtaSub")}
+                    placeholder={DEFAULTS.copy.dashboardCtaSub}
+                    onChange={upd("copy.dashboardCtaSub")}
+                  />
+                </div>
+              </details>
             </TabsContent>
 
             <TabsContent value="mapa" className="space-y-4">
@@ -1084,6 +1137,107 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Un icono: emoji o imagen propia, en el mismo sitio. Los emojis sugeridos se
+ * eligen de un toque; para cualquier otro, se escribe; y si hace falta la marca
+ * de la institución, se sube un archivo.
+ */
+function IconField({
+  label,
+  hint,
+  slug,
+  kind,
+  suggestions,
+  fallback,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  slug: string;
+  kind: string;
+  suggestions: string[];
+  fallback: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const isImage =
+    !!value && (/^(https?:|\/|data:)/.test(value) || /\.(svg|png|jpg|webp)$/i.test(value));
+
+  return (
+    <div className="space-y-2">
+      <Label>{label}</Label>
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Lo que se está usando ahora mismo */}
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border bg-white">
+          {isImage ? (
+            <img src={value} alt="" className="h-7 w-7 object-contain" />
+          ) : (
+            <span className="text-xl leading-none">{value || fallback || "—"}</span>
+          )}
+        </span>
+
+        {suggestions.map((e) => (
+          <button
+            key={e}
+            type="button"
+            onClick={() => onChange(e)}
+            aria-label={`Usar ${e}`}
+            className={`h-10 w-10 rounded-lg border text-xl leading-none transition hover:bg-accent ${
+              value === e ? "border-primary bg-accent" : ""
+            }`}
+          >
+            {e}
+          </button>
+        ))}
+
+        <Button variant="outline" size="sm" asChild disabled={busy}>
+          <label className="cursor-pointer shrink-0">
+            {busy ? "Subiendo…" : "Subir imagen"}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                setBusy(true);
+                try {
+                  onChange(await uploadBrandFile(slug, kind, file));
+                  toast.success("Imagen subida.");
+                } catch (err) {
+                  toast.error((err as Error).message);
+                } finally {
+                  setBusy(false);
+                  e.target.value = "";
+                }
+              }}
+            />
+          </label>
+        </Button>
+
+        {value && (
+          <Button variant="ghost" size="sm" onClick={() => onChange("")}>
+            Quitar
+          </Button>
+        )}
+      </div>
+
+      <Input
+        value={value ?? ""}
+        placeholder={
+          fallback
+            ? `Otro emoji, o pega una dirección (por defecto ${fallback})`
+            : "Otro emoji, o pega una dirección"
+        }
+        onChange={(e) => onChange(e.target.value)}
+      />
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </div>
   );
 }

@@ -99,6 +99,7 @@ function resolveMascot(cfg: DemoConfig) {
     runtime: {
       engine: pack?.engine ?? "layers",
       global: pack?.global ?? "Boti",
+      fullName: cfg.mascot.fullName ?? pack?.name ?? "",
       name: cfg.mascot.name ?? pack?.shortName ?? pack?.name ?? "",
       kind: cfg.mascot.kind ?? pack?.kind ?? "",
       emoji: cfg.mascot.emoji ?? pack?.emoji ?? "",
