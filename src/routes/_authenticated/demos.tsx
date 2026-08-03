@@ -559,15 +559,24 @@ function SessionFooter() {
                 {d.isAdmin ? "sí" : "no"}
               </b>
             </span>
-            {d.fakeLogin && (
+            {/* fake_login sólo hace que el guardia de ruta no compruebe nada. Si
+                además hay sesión de Supabase, las consultas siguen yendo con
+                ella y se puede escribir con normalidad; lo grave es cuando no
+                la hay. */}
+            {d.fakeLogin && d.email && (
+              <span className="text-muted-foreground">
+                fake_login activo (sólo salta el guardia de ruta; la sesión real es la de arriba)
+              </span>
+            )}
+            {d.fakeLogin && !d.email && (
               <span className="text-destructive">
-                fake_login activo — no hay sesión real, toda escritura será rechazada
+                fake_login activo y sin sesión de Supabase — toda escritura será rechazada
               </span>
             )}
             {d.error && <span className="text-destructive">error: {d.error}</span>}
           </div>
         )}
-        {d && d.fakeLogin && (
+        {d && d.fakeLogin && !d.email && (
           <div className="mt-2 flex items-center gap-2">
             <Button
               size="sm"
