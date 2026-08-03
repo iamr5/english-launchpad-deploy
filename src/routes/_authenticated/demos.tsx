@@ -38,15 +38,20 @@ export const Route = createFileRoute("/_authenticated/demos")({
 type Cfg = Record<string, unknown>;
 
 /** Lee `a.b.c` de un objeto sin reventar si falta un tramo. */
-function get(o: Cfg, path: string, fallback: unknown = "") {
-  return path.split(".").reduce<unknown>((v, k) => (v == null ? v : (v as Cfg)[k]), o) ?? fallback;
+function get<T = string>(o: Cfg, path: string, fallback: T = "" as T): T {
+  const v = path.split(".").reduce<unknown>((acc, k) => (acc == null ? acc : (acc as Cfg)[k]), o);
+  return (v ?? fallback) as T;
 }
 /** Escribe `a.b.c`; borra la clave si el valor queda vacío, para no guardar ruido. */
 function set(o: Cfg, path: string, value: unknown): Cfg {
   const keys = path.split(".");
-  const out = structuredClone(o);
+  const out = structuredClone(o) as Cfg;
   let node: Cfg = out;
-  for (const k of keys.slice(0, -1)) node = node[k] ??= {};
+  for (const k of keys.slice(0, -1)) {
+    const next = (node[k] as Cfg | undefined) ?? {};
+    node[k] = next;
+    node = next;
+  }
   const last = keys[keys.length - 1];
   if (value === "" || value == null) delete node[last];
   else node[last] = value;
@@ -912,8 +917,14 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   kind={`mapa${i + 1}`}
                   value={get(cfg, `map.backgrounds.${i}`)}
                   onChange={(v: string) => {
-                    const bgs = [
-                      ...(get(cfg, "map.backgrounds", null) ?? [null, null, null, null, null]),
+                    const bgs: (string | null)[] = [
+                      ...(get<(string | null)[] | null>(cfg, "map.backgrounds", null) ?? [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                      ]),
                     ];
                     bgs[i] = v || null;
                     setCfg((c) => set(c, "map.backgrounds", bgs.some(Boolean) ? bgs : ""));
