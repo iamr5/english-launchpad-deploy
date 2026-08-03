@@ -1136,7 +1136,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   slug={demo.slug}
                   mascotHead={mascotHead}
                   bg={g2(`map.backgrounds.${i}`)}
-                  shift={Number(get(cfg, `map.buttonShift.${i}`, 0)) || 0}
+                  offsets={get<number[] | null>(cfg, `map.buttonOffsets.${i}`, null) ?? []}
                   onBg={(v: string) => {
                     const bgs: (string | null)[] = [
                       ...(get<(string | null)[] | null>(cfg, "map.backgrounds", null) ?? [
@@ -1150,14 +1150,22 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     bgs[i] = v || null;
                     setCfg((c) => set(c, "map.backgrounds", bgs.some(Boolean) ? bgs : ""));
                   }}
-                  onShift={(v: number) => {
-                    const arr: (number | null)[] = [
-                      ...(get<(number | null)[] | null>(cfg, "map.buttonShift", null) ?? [
-                        0, 0, 0, 0, 0,
+                  onOffsets={(v: number[]) => {
+                    const all: (number[] | null)[] = [
+                      ...(get<(number[] | null)[] | null>(cfg, "map.buttonOffsets", null) ?? [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
                       ]),
                     ];
-                    arr[i] = v;
-                    setCfg((c) => set(c, "map.buttonShift", arr.some((x) => x) ? arr : ""));
+                    // Un módulo sin ningún ajuste se guarda como null, para no
+                    // dejar ceros por toda la configuración.
+                    all[i] = v.some(Boolean) ? v : null;
+                    setCfg((c) =>
+                      set(c, "map.buttonOffsets", all.some((x) => x && x.some(Boolean)) ? all : ""),
+                    );
                   }}
                 />
               ))}
@@ -1209,8 +1217,9 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
 }
 
 // --- Mapa de módulo -----------------------------------------------------------
-// Copiados de la plantilla para que el previo coloque los botones EXACTAMENTE
-// donde los pone la app. Si allí cambian, hay que cambiarlos aquí.
+// Todo esto está copiado de la plantilla para que el previo sea fiel: mismas
+// posiciones, mismos tamaños y misma escala del fondo. Si allí cambian, aquí
+// también.
 const SWAY = [0, -44, -70, -44, 0, 44, 70, 44];
 const BTN_ADJ: Record<number, Record<number, number>> = {
   1: { 0: -2, 1: 6, 2: -1, 3: -17, 4: -20, 5: -16, 6: -12, 7: 1, 8: 3, 9: -5 },
@@ -1219,7 +1228,6 @@ const BTN_ADJ: Record<number, Record<number, number>> = {
   4: { 1: 5, 2: -2, 3: -13, 4: -10, 5: -12, 6: -13, 7: -9 },
   5: { 0: 1, 1: 2, 2: 2, 3: -11, 4: -18, 5: -14, 6: -18 },
 };
-/** Posición de la mascota en cada mapa, y su ancho. También de la plantilla. */
 const MASCOT_POS: Record<number, { x: number; y: number }> = {
   1: { x: 57, y: 16 },
   2: { x: 59, y: 16 },
@@ -1227,100 +1235,198 @@ const MASCOT_POS: Record<number, { x: number; y: number }> = {
   4: { x: 77, y: 50 },
   5: { x: 70, y: 27 },
 };
+/** Lecciones reales de cada módulo: son los botones que se dibujan. */
+const MODULE_LESSONS = [10, 12, 8, 8, 7];
+
+// Medidas exactas del caminito, en píxeles de la app.
 const APP_WIDTH = 390; // ancho de referencia del móvil
-const NODES = 8; // un ciclo completo de SWAY: basta para cuadrar el fondo
+const BG_WIDTH = 490; // background-size: 490px auto — NO es "cover"
+const PATH_PAD_TOP = 97; // .lpath { padding-top }
+const NODE_W = 71; // .lpath .node { width }
+const NODE_H = 67; // .lpath .node { height }
+const MASCOT_W = 100; // BOTI_SIZE
+const MASCOT_RATIO = 1139.5 / 757.6; // BOTI_RATIO
+const MASCOT_DROP = 40; // BOTI_DROP
+const MASCOT_NUDGE_X = 6; // BOTI_NUDGE_X
+
+/** Separación por encima de cada fila, igual que la calcula renderModuleNow(). */
+function rowGap(i: number) {
+  return i === 0
+    ? 22
+    : Math.round(30 - 0.45 * Math.abs(SWAY[i % SWAY.length] - SWAY[(i - 1) % SWAY.length]));
+}
+/** Coordenada Y del borde superior de cada botón, en píxeles de la app. */
+function nodeTop(i: number) {
+  let y = PATH_PAD_TOP;
+  for (let j = 0; j <= i; j++) y += rowGap(j) + (j > 0 ? NODE_H : 0);
+  return y;
+}
 
 /**
- * El mapa de un módulo con sus botones y su mascota encima del fondo, y un
- * control para correr los botones en horizontal. Es lo que permite cuadrar un
- * fondo subido que no coincide con el caminito de fábrica.
+ * El mapa de un módulo, dibujado como en la app, con cada botón movible por
+ * separado. Un fondo propio nunca trae el caminito donde lo tienen los de
+ * fábrica, y cada curva cae en un sitio distinto: por eso el ajuste es por
+ * botón y no un corrimiento de todos a la vez.
  */
 function MapModuleField({
   n,
   slug,
   bg,
-  shift,
+  offsets,
   mascotHead,
   onBg,
-  onShift,
+  onOffsets,
 }: {
   n: number;
   slug: string;
   bg: string;
-  shift: number;
+  offsets: number[];
   mascotHead: string;
   onBg: (v: string) => void;
-  onShift: (v: number) => void;
+  onOffsets: (v: number[]) => void;
 }) {
   const [busy, setBusy] = useState(false);
-  const W = 190; // ancho del previo
-  const k = W / APP_WIDTH; // escala respecto al móvil real
+  const [sel, setSel] = useState(0);
+  const [drag, setDrag] = useState<{ i: number; x0: number; v0: number } | null>(null);
+
+  const count = MODULE_LESSONS[n - 1] ?? 8;
   const src = bg || `/demo-assets/modulebg${n}.png`;
-  const pos = MASCOT_POS[n] ?? { x: 62, y: 0 };
+
+  // Escala del previo. El alto sale del caminito real para que no se corte.
+  const VIEW_W = 250;
+  const k = VIEW_W / APP_WIDTH;
+  const viewH = Math.round((nodeTop(count - 1) + NODE_H + 60) * k);
+
+  const offAt = (i: number) => offsets[i] ?? 0;
+  const setOff = (i: number, v: number) => {
+    const next = Array.from({ length: count }, (_, j) => (j === i ? v : offAt(j)));
+    onOffsets(next);
+  };
+
+  // Arrastre horizontal: se mueve el botón y se guarda su desplazamiento.
+  useEffect(() => {
+    if (!drag) return;
+    const move = (e: PointerEvent) => {
+      const dx = (e.clientX - drag.x0) / k; // de píxeles del previo a los de la app
+      setOff(drag.i, Math.round(drag.v0 + dx));
+    };
+    const up = () => setDrag(null);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drag]);
+
+  const mascotH = MASCOT_W * MASCOT_RATIO;
+  const thirdRowCenter = nodeTop(Math.min(2, count - 1)) + NODE_H / 2;
 
   return (
     <div className="rounded-lg border p-3">
       <div className="flex flex-wrap items-start gap-4">
-        {/* Previo: fondo + botones + mascota */}
+        {/* Previo a escala: el fondo va a 490px centrado, como en la app */}
         <div
           className="relative shrink-0 overflow-hidden rounded-lg border bg-white"
           style={{
-            width: W,
-            height: Math.round(W * 1.9),
-            background: `#fff url('${src}') center top / cover no-repeat`,
+            width: VIEW_W,
+            height: viewH,
+            backgroundImage: `url('${src}')`,
+            backgroundSize: `${BG_WIDTH * k}px auto`,
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
           }}
         >
-          {Array.from({ length: NODES }, (_, i) => {
-            const x = SWAY[i % SWAY.length] + (BTN_ADJ[n]?.[i] ?? 0) + shift;
-            const gap =
-              i === 0
-                ? 22
-                : 30 - 0.45 * Math.abs(SWAY[i % SWAY.length] - SWAY[(i - 1) % SWAY.length]);
-            return (
-              <div
-                key={i}
-                style={{
-                  position: "absolute",
-                  left: "50%",
-                  top: 14 + i * (46 + gap) * k,
-                  transform: `translateX(calc(-50% + ${x * k}px))`,
-                  width: 34,
-                  height: 30,
-                  borderRadius: 12,
-                  background: i === 0 ? "#3faa24" : "#cfcfd6",
-                  boxShadow: `0 3px 0 ${i === 0 ? "#2E7D1A" : "#a9a9b4"}`,
-                }}
-              />
-            );
-          })}
           {mascotHead && (
             <img
               src={mascotHead}
               alt=""
               style={{
                 position: "absolute",
-                left: `calc(50% + ${pos.x * k}px)`,
-                top: 14 + 2 * (46 + 22) * k + pos.y * k,
-                width: 40,
-                transform: "translateX(-50%)",
-                opacity: 0.95,
+                left: "50%",
+                marginLeft: (MASCOT_POS[n].x - MASCOT_W / 2 + MASCOT_NUDGE_X) * k,
+                top: (thirdRowCenter - mascotH / 2 + MASCOT_POS[n].y + MASCOT_DROP) * k,
+                width: MASCOT_W * k,
+                opacity: 0.9,
+                pointerEvents: "none",
               }}
             />
           )}
+
+          {Array.from({ length: count }, (_, i) => {
+            const x = SWAY[i % SWAY.length] + (BTN_ADJ[n]?.[i] ?? 0) + offAt(i);
+            const active = sel === i;
+            return (
+              <button
+                key={i}
+                type="button"
+                onPointerDown={(e) => {
+                  e.preventDefault();
+                  setSel(i);
+                  setDrag({ i, x0: e.clientX, v0: offAt(i) });
+                }}
+                title={`Lección ${i + 1} — arrástrala para moverla`}
+                style={{
+                  position: "absolute",
+                  left: `calc(50% + ${x * k}px)`,
+                  top: nodeTop(i) * k,
+                  width: NODE_W * k,
+                  height: NODE_H * k,
+                  transform: "translateX(-50%)",
+                  border: "none",
+                  background: "none",
+                  padding: 0,
+                  cursor: "ew-resize",
+                  touchAction: "none",
+                }}
+              >
+                {/* base + cap: el botón redondo de la app */}
+                <span
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    top: (NODE_H - 58) * k,
+                    height: 58 * k,
+                    borderRadius: "50%",
+                    background: i === 0 ? "#2E7D1A" : "#a9a9b4",
+                  }}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    height: 58 * k,
+                    borderRadius: "50%",
+                    background: i === 0 ? "#3FAA24" : "#cfcfd6",
+                    outline: active ? "2px solid #111" : "none",
+                    outlineOffset: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#fff",
+                    font: "700 10px system-ui",
+                  }}
+                >
+                  {i + 1}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Controles */}
-        <div className="flex-1 min-w-[220px] space-y-3">
-          <p className="text-sm font-medium">{MODULE_LABELS[n - 1]}</p>
+        <div className="min-w-[240px] flex-1 space-y-3">
+          <p className="text-sm font-medium">
+            {MODULE_LABELS[n - 1]}{" "}
+            <span className="text-muted-foreground font-normal">· {count} lecciones</span>
+          </p>
 
           <div className="flex items-center gap-2">
-            {/* Siempre visible: si no se ha subido nada, el fondo de fábrica. */}
             <img
               src={src}
               alt=""
-              className={`h-11 w-11 shrink-0 rounded border object-cover bg-white ${
-                bg ? "" : "opacity-60"
-              }`}
+              className={`h-11 w-11 shrink-0 rounded border object-cover bg-white ${bg ? "" : "opacity-60"}`}
             />
             <Input
               value={bg ?? ""}
@@ -1358,35 +1464,64 @@ function MapModuleField({
             )}
           </div>
 
-          <div className="space-y-1.5">
-            <Label className="text-xs">Mover los botones a izquierda o derecha</Label>
-            <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-muted/40 p-2.5 space-y-2">
+            <p className="text-xs text-muted-foreground">
+              Arrastra un botón sobre la imagen, o elígelo aquí y muévelo con la flecha.
+            </p>
+            <div className="flex flex-wrap gap-1">
+              {Array.from({ length: count }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setSel(i)}
+                  className={`h-7 w-7 rounded border text-[11px] font-semibold ${
+                    sel === i ? "border-primary bg-accent" : "hover:bg-accent/50"
+                  } ${offAt(i) ? "text-primary" : ""}`}
+                  title={offAt(i) ? `movido ${offAt(i)}px` : "sin mover"}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <Label className="text-xs whitespace-nowrap">Lección {sel + 1}</Label>
               <input
                 type="range"
-                min={-80}
-                max={80}
-                step={1}
-                value={shift}
-                onChange={(e) => onShift(Number(e.target.value))}
+                min={-90}
+                max={90}
+                value={offAt(sel)}
+                onChange={(e) => setOff(sel, Number(e.target.value))}
                 className="flex-1"
-                aria-label={`Corrimiento de los botones del ${MODULE_LABELS[n - 1]}`}
+                aria-label={`Posición horizontal de la lección ${sel + 1}`}
               />
               <Input
                 type="number"
-                value={shift}
-                onChange={(e) => onShift(Number(e.target.value) || 0)}
-                className="w-20 font-mono"
+                value={offAt(sel)}
+                onChange={(e) => setOff(sel, Number(e.target.value) || 0)}
+                className="w-16 font-mono"
               />
-              {shift !== 0 && (
-                <Button variant="ghost" size="sm" onClick={() => onShift(0)}>
-                  Centrar
-                </Button>
-              )}
             </div>
-            <p className="text-[11px] text-muted-foreground">
-              Negativo mueve a la izquierda, positivo a la derecha. Sirve cuando el caminito de tu
-              imagen no cae donde los botones.
-            </p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onOffsets(Array.from({ length: count }, () => 0))}
+                disabled={!offsets.some(Boolean)}
+              >
+                Quitar todos los ajustes
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const d = offAt(sel);
+                  onOffsets(Array.from({ length: count }, () => d));
+                }}
+                disabled={!offAt(sel)}
+              >
+                Aplicar este a todos
+              </Button>
+            </div>
           </div>
         </div>
       </div>

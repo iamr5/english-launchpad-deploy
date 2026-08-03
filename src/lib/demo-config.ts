@@ -96,9 +96,16 @@ export type DemoConfig = {
     /** Fondo de cada módulo (5 URLs). Cualquier hueco usa el de siempre. */
     backgrounds?: (string | null)[];
     /**
-     * Corrimiento horizontal de los botones de cada módulo, en píxeles
-     * (+ derecha). Sirve para cuadrarlos con el caminito de un fondo subido
-     * que no coincide con el de fábrica. 0 o ausente = sin tocar.
+     * Ajuste horizontal de cada botón, por módulo y por botón, en píxeles
+     * (+ derecha). Se dial arrastrando el botón sobre el previo del panel.
+     * Es por botón porque el caminito de un fondo propio no se desvía igual en
+     * todas sus curvas. Ausente o todo ceros = sin tocar.
+     */
+    buttonOffsets?: (number[] | null)[];
+    /**
+     * Versión anterior: un solo corrimiento para todo el módulo. Se sigue
+     * leyendo para no romper lo ya guardado, pero el panel escribe
+     * `buttonOffsets`.
      */
     buttonShift?: (number | null)[];
   };

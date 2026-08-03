@@ -1344,10 +1344,16 @@ function moduleBg(n) {
   const custom = (CFG.map.backgrounds || [])[n - 1];
   return custom || ('modulebg' + n + '.png');
 }
-// Cuanto se corren en horizontal los botones de ese mapa (px; + derecha).
-function mapShift(n) {
-  const v = (CFG.map.buttonShift || [])[n - 1];
-  return typeof v === 'number' ? v : 0;
+// Ajuste horizontal de UN boton de ese mapa (px; + derecha). Se dial desde el
+// panel arrastrando el boton sobre el previo: un fondo propio nunca trae el
+// caminito donde lo tienen los de fabrica, y cada curva cae en un sitio.
+// buttonShift (un corrimiento para todo el mapa) se sigue leyendo por si quedo
+// guardado de antes.
+function mapShift(n, i) {
+  const all = CFG.map.buttonOffsets || [];
+  const perButton = Array.isArray(all[n - 1]) ? all[n - 1][i] : undefined;
+  const whole = (CFG.map.buttonShift || [])[n - 1];
+  return (typeof perButton === 'number' ? perButton : 0) + (typeof whole === 'number' ? whole : 0);
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -2625,7 +2631,7 @@ function modulePathHTML(mod) {
     // Corrimiento manual del demo: cuando el fondo subido no calza con el
     // caminito de fabrica, se mueve la fila entera de botones a izquierda o
     // derecha desde el panel. 0 = como siempre.
-    const x = SWAY[i % SWAY.length] + ((BTN_ADJ[bgN] && BTN_ADJ[bgN][i]) || 0) + mapShift(bgN);
+    const x = SWAY[i % SWAY.length] + ((BTN_ADJ[bgN] && BTN_ADJ[bgN][i]) || 0) + mapShift(bgN, i);
     // gap derived from the horizontal step so spacing stays even (no step → more room)
     const mt = i === 0 ? 22 : Math.round(30 - 0.45 * Math.abs(SWAY[i % SWAY.length] - SWAY[(i - 1) % SWAY.length]));
     const capInner = completed
