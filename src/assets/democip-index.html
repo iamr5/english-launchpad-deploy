@@ -2997,24 +2997,43 @@ function botiCheer(msg) {
 // Repaso sugerido: si el alumno arrancó por encima de A1 (test de ubicación) y
 // falla en su módulo de arranque, Boti ofrece volver al nivel anterior. No bloquea.
 let _reviewShown = false;
-function suggestReview(lesson) {
+const _failCount = {}; // fallos por módulo dentro de la sesión
+// Sugerencia de repaso: si el alumno fue colocado por el test en un módulo por
+// encima de A1 y le está costando, Boti ofrece bajar un nivel. Nunca bloquea.
+// Umbral: 2 fallos de mini-quiz o 1 fallo de examen final en ese módulo.
+function suggestReview(lesson, weight) {
   if (_reviewShown) return;
+  const placement = PROGRESS['__placement'];
+  if (!placement) return;
   const mi = course.modules.findIndex(m => m.lessons.some(l => l.id === lesson.id));
-  if (mi <= 0) return;
+  if (mi <= 0 || mi > (placement.lvl || 0)) return; // solo dentro (o bajo) del módulo colocado
   const prev = course.modules[mi - 1];
-  if (!prev || !prev.lessons.some(l => isLessonSkipped(l.id))) return; // solo si vino del test
+  if (!prev || !isModulePlaced(prev)) return; // solo si ese nivel vino convalidado
+  _failCount[mi] = (_failCount[mi] || 0) + (weight || 1);
+  if (_failCount[mi] < 2) return;
   _reviewShown = true;
   const lv = ['A1', 'A2', 'B1', 'B2', 'C1'][mi - 1] || `Módulo ${mi}`;
   const old = document.getElementById('boti-review'); if (old) old.remove();
   const el = document.createElement('div');
   el.id = 'boti-review'; el.className = 'boti-cheer';
   el.style.pointerEvents = 'auto';
-  el.innerHTML = `<img src="boti_head.svg" alt=""><div class="bc-txt">¿Repasamos ${lv} un momento?</div>` +
-    `<button type="button" style="margin-left:10px;border:0;background:#1CB0F6;color:#fff;font-weight:800;padding:8px 12px;border-radius:10px;cursor:pointer">Ir</button>`;
+  const btn = 'border:0;color:#fff;font-weight:800;padding:8px 12px;border-radius:10px;cursor:pointer;margin-left:8px';
+  el.innerHTML = `<img src="boti_head.svg" alt=""><div class="bc-txt">Parece que este nivel te está costando. ¿Bajamos a ${lv} un momento?</div>` +
+    `<button type="button" data-go style="${btn};background:#1CB0F6">Sí, repasar</button>` +
+    `<button type="button" data-stay style="${btn};background:transparent;color:#5C5159">Seguir aquí</button>`;
   document.body.appendChild(el);
-  el.querySelector('button').onclick = () => { el.remove(); closeOverlay(); renderModule(prev); };
-  setTimeout(() => { if (!document.body.contains(el)) return; el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 6000);
+  el.querySelector('[data-go]').onclick = () => {
+    el.remove(); closeOverlay();
+    uncreditModule(prev);                       // el nivel anterior pasa a ser su nivel activo
+    PROGRESS['__placement'] = { lvl: mi - 1, ts: Date.now() };
+    saveProgress(PROGRESS);
+    renderModule(prev);
+    toast(`Repasemos ${lv}. Puedes volver a subir cuando quieras.`);
+  };
+  el.querySelector('[data-stay]').onclick = () => el.remove();
+  setTimeout(() => { if (!document.body.contains(el)) return; el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 9000);
 }
+
 // Recompensa grande al terminar una lección: Boti aparece, confeti, XP y racha.
 function lessonCelebration(lesson, onDone) {
   const old = document.getElementById('lesson-win'); if (old) old.remove();
