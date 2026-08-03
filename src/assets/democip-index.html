@@ -1373,6 +1373,100 @@ function placementCredits(start) {
   }));
 }
 
+// --- Llegada al mapa tras el test: el progreso convalidado se pinta EN VIVO ---
+// Solo la primera vez (PROGRESS.__placement.revealPending). Después el mapa se
+// pinta normal e instantáneo. Con prefers-reduced-motion, estado final directo.
+function placementRevealPending() {
+  const p = PROGRESS['__placement'];
+  return !!(p && p.revealPending);
+}
+function clearPlacementReveal() {
+  const p = PROGRESS['__placement'];
+  if (p && p.revealPending) { delete p.revealPending; saveProgress(PROGRESS); }
+}
+function playPlacementFillIn(scope) {
+  if (!placementRevealPending()) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { clearPlacementReveal(); return; }
+  if (scope === 'course') return fillInCourse();
+  if (scope === 'module') return fillInModule();
+}
+function fillInCourse() {
+  const start = (PROGRESS['__placement'] || {}).lvl || 0;
+  const body = document.getElementById('course-body');
+  if (!body || start <= 0) { clearPlacementReveal(); return; }
+  const cards = Array.from(body.querySelectorAll('.mod-card')).slice(0, start);
+  if (!cards.length) { clearPlacementReveal(); return; }
+  const credits = placementCredits(start);
+  const totalXpCredited = credits.reduce((a, c) => a + c.xp, 0);
+  // Estado inicial: gris, anillos/barras a 0.
+  cards.forEach(c => {
+    c.classList.add('fill-pending');
+    c.style.position = 'relative';
+    const fill = c.querySelector('.sec-bar .fill');
+    if (fill) { c.dataset.fillW = fill.style.width || '98%'; fill.style.width = '0%'; }
+    const pct = c.querySelector('.sec-bar .pct');
+    if (pct) { c.dataset.fillLabel = pct.textContent; pct.textContent = '0%'; }
+    const em = c.querySelector('.sec-emblem'); if (em) em.style.opacity = '0';
+  });
+  // Contador de XP en vivo en la cabecera.
+  const bar = document.querySelector('#screen-course .appbar');
+  let chip = null;
+  if (bar) {
+    bar.style.position = bar.style.position || 'relative';
+    chip = document.createElement('div');
+    chip.className = 'fill-xp';
+    chip.innerHTML = '+<b class="n">0</b> XP convalidados';
+    document.getElementById('screen-course').appendChild(chip);
+  }
+  const STEP = 620;
+  cards.forEach((c, i) => {
+    setTimeout(() => {
+      c.classList.remove('fill-pending');
+      c.classList.add('fill-in');
+      const fill = c.querySelector('.sec-bar .fill');
+      if (fill) fill.style.width = c.dataset.fillW || '98%';
+      const pct = c.querySelector('.sec-bar .pct');
+      if (pct) tickUp(pct, 100, 600), setTimeout(() => { pct.textContent = c.dataset.fillLabel || 'Completado'; }, 640);
+      const flash = document.createElement('span');
+      flash.className = 'fill-flash';
+      c.appendChild(flash);
+      setTimeout(() => flash.remove(), 800);
+      const em = c.querySelector('.sec-emblem');
+      if (em) setTimeout(() => { em.style.transition = 'opacity .3s ease'; em.style.opacity = '1'; }, 500);
+      try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) {}
+    }, 260 + i * STEP);
+  });
+  if (chip) tickUp(chip.querySelector('.n'), totalXpCredited, 260 + cards.length * STEP);
+  setTimeout(() => {
+    if (chip) { chip.style.transition = 'opacity .4s ease'; chip.style.opacity = '0'; setTimeout(() => chip.remove(), 450); }
+    const active = document.querySelectorAll('#course-body .mod-card')[start];
+    if (active) {
+      active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      active.classList.add('fill-in');
+    }
+    const LV = ['A1', 'A2', 'B1', 'B2', 'C1'];
+    if (typeof toast === 'function') toast(`Aquí empiezas: ${LV[start] || 'A1'}`);
+    clearPlacementReveal();
+  }, 500 + cards.length * STEP);
+}
+function fillInModule() {
+  const body = document.getElementById('module-body');
+  const mod = CURRENT.module;
+  if (!body || !mod) return;
+  const nodes = Array.from(body.querySelectorAll('.lpath .node.done'));
+  if (!nodes.length) return;
+  nodes.forEach(n => n.classList.add('fill-pending'));
+  nodes.forEach((n, i) => setTimeout(() => {
+    n.classList.remove('fill-pending');
+    n.classList.add('fill-in');
+  }, 120 + i * 90));
+  setTimeout(() => {
+    const act = body.querySelector('.lpath .node.active');
+    if (act) { act.scrollIntoView({ behavior: 'smooth', block: 'center' }); act.classList.add('here-pulse'); }
+  }, 200 + nodes.length * 90);
+}
+
 let _saveT = null;
 function scheduleSave() { if (WIPED || _saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
 
