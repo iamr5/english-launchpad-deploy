@@ -3080,7 +3080,72 @@ function suggestReview(lesson, weight) {
   setTimeout(() => { if (!document.body.contains(el)) return; el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 9000);
 }
 
+// Momento "sombrero seleccionador": revelación del nivel al terminar el test.
+// Distinta de lessonCelebration a propósito — es un momento único, no una lección más.
+function placementReveal(lvl, onDone) {
+  const LV = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const target = LV[lvl] || 'A1';
+  const credits = placementCredits(lvl);
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const old = document.getElementById('sort-hat'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.id = 'sort-hat'; el.className = 'sort';
+  const R = 108;
+  const orbit = LV.map((l, i) => {
+    const a = (i / LV.length) * Math.PI * 2;
+    return `<div class="s-badge" style="transform:translate(${Math.round(Math.cos(a) * R)}px,${Math.round(Math.sin(a) * R)}px)">${l}</div>`;
+  }).join('');
+  el.innerHTML = `
+    <div class="s-stage" id="s-stage">
+      <div class="s-orbit" id="s-orbit">${orbit}</div>
+      <img class="s-boti" id="s-boti" src="boti_head.svg" alt="">
+    </div>
+    <div class="s-t" id="s-t">Boti está decidiendo…</div>
+    <div class="s-s" id="s-s">Leyendo tus respuestas del test</div>
+    <div class="s-credits" id="s-credits"></div>
+    <div id="s-cta"></div>
+    <button class="s-skip" id="s-skip">Saltar</button>`;
+  document.body.appendChild(el);
+
+  let done = false;
+  const finish = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); if (onDone) onDone(); }, 350); };
+
+  const reveal = () => {
+    const stage = el.querySelector('#s-stage');
+    stage.innerHTML = `<div class="s-wave"></div><div class="s-final">${target}</div>`;
+    el.querySelector('#s-t').textContent = `¡${target}!`;
+    el.querySelector('#s-s').innerHTML = credits.length
+      ? `Ese es tu punto de partida. Damos por aprobado ${credits.map(c => c.lvl).join(' y ')}.`
+      : 'Empiezas desde los fundamentos, con todo por descubrir.';
+    if (!reduce) {
+      const cols = ['#FFD86B', '#FFC53D', '#FFF3C4', '#1CB0F6'];
+      for (let i = 0; i < 22; i++) {
+        const s = document.createElement('span');
+        s.className = 'cft';
+        s.style.cssText = `position:absolute;top:-12px;width:10px;height:16px;border-radius:3px;left:${Math.round(Math.random() * 96)}%;background:${cols[i % cols.length]};animation:cft ${(2 + Math.random() * 1.6).toFixed(2)}s linear ${(Math.random() * 1.2).toFixed(2)}s infinite`;
+        el.appendChild(s);
+      }
+    }
+    const host = el.querySelector('#s-credits');
+    credits.forEach((c, i) => {
+      const row = document.createElement('div');
+      row.className = 's-credit';
+      row.innerHTML = `<span>${c.lvl}</span><span>convalidado</span><span class="cx">✓ +${c.xp} XP</span>`;
+      host.appendChild(row);
+      setTimeout(() => { row.classList.add('in'); row.style.opacity = '1'; row.style.transform = 'none'; }, reduce ? 0 : 260 + i * 260);
+    });
+    setTimeout(() => {
+      const cta = el.querySelector('#s-cta');
+      cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
+      cta.querySelector('#s-go').onclick = finish;
+    }, reduce ? 0 : 300 + credits.length * 260);
+  };
+
+  el.querySelector('#s-skip').onclick = finish;
+  if (reduce) reveal(); else setTimeout(reveal, 2600);
+}
 // Recompensa grande al terminar una lección: Boti aparece, confeti, XP y racha.
+
 function lessonCelebration(lesson, onDone) {
   const old = document.getElementById('lesson-win'); if (old) old.remove();
   const el = document.createElement('div');
