@@ -851,6 +851,48 @@
   .win .cft { position: absolute; top: -12px; width: 10px; height: 16px; border-radius: 3px; animation: cft 2.6s linear infinite; }
   @keyframes cft { 0% { transform: translateY(-20px) rotate(0) } 100% { transform: translateY(105vh) rotate(720deg) } }
 
+  /* Momento "sombrero seleccionador": revelación del nivel tras el test de ubicación */
+  .sort { position: fixed; inset: 0; z-index: 95; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px; overflow: hidden;
+    background: radial-gradient(circle at 50% 42%, #123a5c 0%, #0a1b2b 70%); animation: winIn .3s ease both; }
+  .sort.out { animation: winOut .35s ease both; }
+  .sort .s-stage { position: relative; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; }
+  .sort .s-boti { width: 118px; height: 118px; animation: sortThink 1.1s ease-in-out infinite; }
+  @keyframes sortThink { 0%,100% { transform: translateY(0) rotate(-3deg) } 50% { transform: translateY(-8px) rotate(3deg) } }
+  .sort .s-orbit { position: absolute; inset: 0; animation: sortSpin 2.6s cubic-bezier(.25,.1,.3,1) both; }
+  @keyframes sortSpin {
+    0% { transform: rotate(0deg) } 45% { transform: rotate(760deg) }
+    58% { transform: rotate(700deg) } 100% { transform: rotate(1440deg) } }
+  .sort .s-badge { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px 0 0 -27px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-round); font-weight: 800; font-size: 16px; color: #0a1b2b;
+    background: #FFD86B; box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+  .sort .s-final { position: relative; z-index: 2; width: 132px; height: 132px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-family: var(--font-round);
+    font-weight: 800; font-size: 44px; color: #0a1b2b;
+    background: radial-gradient(circle at 40% 35%, #FFF3C4, #FFC53D);
+    box-shadow: 0 0 0 10px rgba(255,216,107,.18), 0 0 60px 18px rgba(255,197,61,.55);
+    animation: sortLand .8s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes sortLand { 0% { transform: scale(.1) rotate(-30deg); opacity: 0 } 60% { transform: scale(1.18) } 100% { transform: scale(1) } }
+  .sort .s-wave { position: absolute; left: 50%; top: 50%; width: 140px; height: 140px; margin: -70px 0 0 -70px;
+    border-radius: 50%; border: 3px solid rgba(255,216,107,.7); animation: sortWave 1.1s ease-out both; }
+  @keyframes sortWave { 0% { transform: scale(.4); opacity: .9 } 100% { transform: scale(3.4); opacity: 0 } }
+  .sort .s-t { font-family: var(--font-round); font-size: 26px; font-weight: 800; color: #FFF3C4; margin-top: 10px; text-align: center; }
+  .sort .s-s { font-size: 15px; font-weight: 700; color: #CFE6F7; text-align: center; max-width: 340px; margin-top: 6px; }
+  .sort .s-credits { display: flex; flex-direction: column; gap: 8px; margin: 16px 0 4px; width: 100%; max-width: 320px; }
+  .sort .s-credit { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.08);
+    border: 1.5px solid rgba(255,255,255,.16); border-radius: 14px; padding: 10px 14px; color: #fff;
+    font-weight: 800; opacity: 0; transform: translateY(10px); }
+  .sort .s-credit.in { animation: tr-rise .45s ease both; }
+  .sort .s-credit .cx { margin-left: auto; color: #FFD86B; }
+  .sort .btn { max-width: 320px; width: 100%; margin-top: 18px; }
+  .sort .s-skip { margin-top: 10px; background: none; border: 0; color: #9FC2DA; font-weight: 700; cursor: pointer; }
+  @media (prefers-reduced-motion: reduce) {
+    .sort, .sort .s-orbit, .sort .s-final, .sort .s-wave, .sort .s-boti, .sort .s-credit.in { animation: none !important; }
+    .sort .s-credit { opacity: 1; transform: none; }
+  }
+
+
   /* CTA al panel completo (ruta /dashboard) */
   .dash-cta { display: flex; align-items: center; gap: 12px; width: 100%; margin: 6px 0 18px;
     background: #fff; border: 1.5px solid var(--line); border-radius: 18px; padding: 14px 16px;
@@ -1228,25 +1270,55 @@ function isQuizCompleted(id) { return !!(PROGRESS[id] && PROGRESS[id].quizComple
 function isReadingCompleted(id) { return !!(PROGRESS[id] && PROGRESS[id].readingCompleted); }
 function getScroll(id) { return (PROGRESS[id] && PROGRESS[id].scroll) || 0; }
 function nextLessonId(id) { const i = allLessons.findIndex(l => l.id === id); return (i >= 0 && i < allLessons.length - 1) ? allLessons[i + 1].id : null; }
-function isLessonSkipped(id) { return !!(PROGRESS[id] && PROGRESS[id].skipped); }
+function isLessonSkipped(id) { return false; } // legado: el test ya no deja lecciones "abiertas sin crédito"
+function isLessonPlaced(id) { return !!(PROGRESS[id] && PROGRESS[id].placedCredit); }
 function isLessonCompleted(id) {
   if (isQuizCompleted(id)) return true;
-  if (isLessonSkipped(id)) return false; // repaso abierto por el test de ubicación: no cuenta como hecho
-  const n = nextLessonId(id); return n ? (isLessonUnlocked(n) && !isLessonSkipped(n)) : false;
+  const n = nextLessonId(id); return n ? isLessonUnlocked(n) : false;
 }
-// Test de ubicación → módulo de arranque. Los módulos por debajo quedan abiertos
-// para repaso (unlocked) pero marcados `skipped`: sin XP ni check de completado.
+// Test de ubicación → módulo de arranque. Los módulos por debajo se CONVALIDAN:
+// quedan completados de verdad (check + XP), marcados con `placedCredit` para saber
+// que el crédito vino del test y poder revertirlo si el alumno decide repasar.
 function placementStartIdx(lvl) { return Math.max(0, Math.min(course.modules.length - 1, +lvl || 0)); }
+function creditLesson(l) {
+  const L = lp(l.id);
+  L.unlocked = true; L.readingCompleted = true; L.quizCompleted = true; L.placedCredit = true;
+  delete L.skipped;
+  l.contentBlocks.forEach(b => {
+    L.blocks[b.id] = Object.assign({}, L.blocks[b.id], { unlocked: true },
+      (b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length) ? { mq: true } : {});
+  });
+}
+function uncreditModule(mod) {
+  mod.lessons.forEach((l, i) => {
+    const L = lp(l.id);
+    if (!L.placedCredit) return;
+    delete L.placedCredit; delete L.quizCompleted; delete L.readingCompleted;
+    L.blocks = {};
+    L.unlocked = i === 0 ? true : false;
+  });
+  saveProgress(PROGRESS);
+}
+function isModulePlaced(mod) { return mod.lessons.every(l => isLessonPlaced(l.id)); }
 function applyPlacement(lvl) {
   const start = placementStartIdx(lvl);
   course.modules.forEach((m, i) => {
     if (i > start) return;
     if (i === start) { const L = lp(m.lessons[0].id); L.unlocked = true; delete L.skipped; return; }
-    m.lessons.forEach(l => { const L = lp(l.id); L.unlocked = true; L.skipped = true; });
+    m.lessons.forEach(creditLesson);
   });
+  PROGRESS['__placement'] = { lvl: start, ts: Date.now() };
   saveProgress(PROGRESS);
   return start;
 }
+// XP convalidado por módulo (para el reveal del test)
+function placementCredits(start) {
+  return course.modules.slice(0, start).map((m, i) => ({
+    lvl: ['A1', 'A2', 'B1', 'B2', 'C1'][i] || `M${i + 1}`,
+    xp: moduleXpMax(m)
+  }));
+}
+
 let _saveT = null;
 function scheduleSave() { if (WIPED || _saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
 
@@ -1963,7 +2035,9 @@ function renderModule(mod) {
   const modDone = mod.lessons.every(l => isLessonCompleted(l.id));
   document.getElementById('module-title').innerHTML = escapeHtml(moduleName(mod)) + (modDone ? ` ${checkBold(21, '#fff', 3)}` : '');
   const _mi = course.modules.indexOf(mod), _lv = ['A1', 'A2', 'B1', 'B2', 'C1'][_mi] || 'C1';
-  document.getElementById('module-kicker').textContent = `Módulo ${_mi + 1} · Nivel ${_lv}`;
+  document.getElementById('module-kicker').textContent = `Módulo ${_mi + 1} · Nivel ${_lv}` +
+    (isModulePlaced(mod) ? ' · Convalidado por el test de ubicación' : '');
+
   const _sm = document.getElementById('screen-module');
   const _col = modAccent(_mi); // per-module accent (--mod): top bar, button caps, ring, popovers
   _sm.style.setProperty('--mod', _col);
@@ -2603,7 +2677,9 @@ function openFinalQuiz(lesson, mod) {
       <div style="height:12px"></div><button class="btn" style="background:none;color:var(--blue)" id="dlg-back">Volver al módulo</button></div>`,
       () => { closeOverlay(); startRound(shuffle(lesson.quizQuestions), false); },
       () => { closeOverlay(); renderModule(mod); });
+    suggestReview(lesson, 2); // fallar el examen final pesa doble
   }
+
   startRound(shuffle(lesson.quizQuestions), false);
 }
 
@@ -2967,25 +3043,109 @@ function botiCheer(msg) {
 // Repaso sugerido: si el alumno arrancó por encima de A1 (test de ubicación) y
 // falla en su módulo de arranque, Boti ofrece volver al nivel anterior. No bloquea.
 let _reviewShown = false;
-function suggestReview(lesson) {
+const _failCount = {}; // fallos por módulo dentro de la sesión
+// Sugerencia de repaso: si el alumno fue colocado por el test en un módulo por
+// encima de A1 y le está costando, Boti ofrece bajar un nivel. Nunca bloquea.
+// Umbral: 2 fallos de mini-quiz o 1 fallo de examen final en ese módulo.
+function suggestReview(lesson, weight) {
   if (_reviewShown) return;
+  const placement = PROGRESS['__placement'];
+  if (!placement) return;
   const mi = course.modules.findIndex(m => m.lessons.some(l => l.id === lesson.id));
-  if (mi <= 0) return;
+  if (mi <= 0 || mi > (placement.lvl || 0)) return; // solo dentro (o bajo) del módulo colocado
   const prev = course.modules[mi - 1];
-  if (!prev || !prev.lessons.some(l => isLessonSkipped(l.id))) return; // solo si vino del test
+  if (!prev || !isModulePlaced(prev)) return; // solo si ese nivel vino convalidado
+  _failCount[mi] = (_failCount[mi] || 0) + (weight || 1);
+  if (_failCount[mi] < 2) return;
   _reviewShown = true;
   const lv = ['A1', 'A2', 'B1', 'B2', 'C1'][mi - 1] || `Módulo ${mi}`;
   const old = document.getElementById('boti-review'); if (old) old.remove();
   const el = document.createElement('div');
   el.id = 'boti-review'; el.className = 'boti-cheer';
   el.style.pointerEvents = 'auto';
-  el.innerHTML = `<img src="boti_head.svg" alt=""><div class="bc-txt">¿Repasamos ${lv} un momento?</div>` +
-    `<button type="button" style="margin-left:10px;border:0;background:#1CB0F6;color:#fff;font-weight:800;padding:8px 12px;border-radius:10px;cursor:pointer">Ir</button>`;
+  const btn = 'border:0;color:#fff;font-weight:800;padding:8px 12px;border-radius:10px;cursor:pointer;margin-left:8px';
+  el.innerHTML = `<img src="boti_head.svg" alt=""><div class="bc-txt">Parece que este nivel te está costando. ¿Bajamos a ${lv} un momento?</div>` +
+    `<button type="button" data-go style="${btn};background:#1CB0F6">Sí, repasar</button>` +
+    `<button type="button" data-stay style="${btn};background:transparent;color:#5C5159">Seguir aquí</button>`;
   document.body.appendChild(el);
-  el.querySelector('button').onclick = () => { el.remove(); closeOverlay(); renderModule(prev); };
-  setTimeout(() => { if (!document.body.contains(el)) return; el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 6000);
+  el.querySelector('[data-go]').onclick = () => {
+    el.remove(); closeOverlay();
+    uncreditModule(prev);                       // el nivel anterior pasa a ser su nivel activo
+    PROGRESS['__placement'] = { lvl: mi - 1, ts: Date.now() };
+    saveProgress(PROGRESS);
+    renderModule(prev);
+    toast(`Repasemos ${lv}. Puedes volver a subir cuando quieras.`);
+  };
+  el.querySelector('[data-stay]').onclick = () => el.remove();
+  setTimeout(() => { if (!document.body.contains(el)) return; el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 9000);
+}
+
+// Momento "sombrero seleccionador": revelación del nivel al terminar el test.
+// Distinta de lessonCelebration a propósito — es un momento único, no una lección más.
+function placementReveal(lvl, onDone) {
+  const LV = ['A1', 'A2', 'B1', 'B2', 'C1'];
+  const target = LV[lvl] || 'A1';
+  const credits = placementCredits(lvl);
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const old = document.getElementById('sort-hat'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.id = 'sort-hat'; el.className = 'sort';
+  const R = 108;
+  const orbit = LV.map((l, i) => {
+    const a = (i / LV.length) * Math.PI * 2;
+    return `<div class="s-badge" style="transform:translate(${Math.round(Math.cos(a) * R)}px,${Math.round(Math.sin(a) * R)}px)">${l}</div>`;
+  }).join('');
+  el.innerHTML = `
+    <div class="s-stage" id="s-stage">
+      <div class="s-orbit" id="s-orbit">${orbit}</div>
+      <img class="s-boti" id="s-boti" src="boti_head.svg" alt="">
+    </div>
+    <div class="s-t" id="s-t">Boti está decidiendo…</div>
+    <div class="s-s" id="s-s">Leyendo tus respuestas del test</div>
+    <div class="s-credits" id="s-credits"></div>
+    <div id="s-cta"></div>
+    <button class="s-skip" id="s-skip">Saltar</button>`;
+  document.body.appendChild(el);
+
+  let done = false;
+  const finish = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); if (onDone) onDone(); }, 350); };
+
+  const reveal = () => {
+    const stage = el.querySelector('#s-stage');
+    stage.innerHTML = `<div class="s-wave"></div><div class="s-final">${target}</div>`;
+    el.querySelector('#s-t').textContent = `¡${target}!`;
+    el.querySelector('#s-s').innerHTML = credits.length
+      ? `Ese es tu punto de partida. Damos por aprobado ${credits.map(c => c.lvl).join(' y ')}.`
+      : 'Empiezas desde los fundamentos, con todo por descubrir.';
+    if (!reduce) {
+      const cols = ['#FFD86B', '#FFC53D', '#FFF3C4', '#1CB0F6'];
+      for (let i = 0; i < 22; i++) {
+        const s = document.createElement('span');
+        s.className = 'cft';
+        s.style.cssText = `position:absolute;top:-12px;width:10px;height:16px;border-radius:3px;left:${Math.round(Math.random() * 96)}%;background:${cols[i % cols.length]};animation:cft ${(2 + Math.random() * 1.6).toFixed(2)}s linear ${(Math.random() * 1.2).toFixed(2)}s infinite`;
+        el.appendChild(s);
+      }
+    }
+    const host = el.querySelector('#s-credits');
+    credits.forEach((c, i) => {
+      const row = document.createElement('div');
+      row.className = 's-credit';
+      row.innerHTML = `<span>${c.lvl}</span><span>convalidado</span><span class="cx">✓ +${c.xp} XP</span>`;
+      host.appendChild(row);
+      setTimeout(() => { row.classList.add('in'); row.style.opacity = '1'; row.style.transform = 'none'; }, reduce ? 0 : 260 + i * 260);
+    });
+    setTimeout(() => {
+      const cta = el.querySelector('#s-cta');
+      cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
+      cta.querySelector('#s-go').onclick = finish;
+    }, reduce ? 0 : 300 + credits.length * 260);
+  };
+
+  el.querySelector('#s-skip').onclick = finish;
+  if (reduce) reveal(); else setTimeout(reveal, 2600);
 }
 // Recompensa grande al terminar una lección: Boti aparece, confeti, XP y racha.
+
 function lessonCelebration(lesson, onDone) {
   const old = document.getElementById('lesson-win'); if (old) old.remove();
   const el = document.createElement('div');
@@ -3157,7 +3317,7 @@ function plRender() {
       <div class="pl-badge">${OB_LEVELS[lvl]}</div>
       <div class="pl-txt">Tu punto de partida</div>
       <div class="pl-sub">${lvl > 0
-        ? `Empiezas en el nivel <b>${OB_LEVELS[lvl]}</b>. ${OB_LEVELS.slice(0, lvl).join(' y ')} quedan abiertos por si quieres repasar.`
+        ? `Empiezas en el nivel <b>${OB_LEVELS[lvl]}</b>. ${OB_LEVELS.slice(0, lvl).join(' y ')} quedan <b>convalidados</b>, con su XP ya sumada.`
         : 'Empiezas en el nivel <b>A1</b>, desde los fundamentos.'}</div>
     </div>`;
     return;
@@ -3172,8 +3332,11 @@ function plRender() {
   host.querySelector('#pl-skip').onclick = () => { PL.sel = -1; plNext(); };
 }
 function plFinish() {
-  OB.lvl = plLevel(); PL.state = 'result'; plRender(); obRender();
+  OB.lvl = plLevel(); PL.state = 'result';
+  placementReveal(OB.lvl, () => { plRender(); obRender(); });
+  plRender(); obRender();
 }
+
 function plNext() {
   if (PL.state === 'intro') { plBuild(); if (PL.state === 'result') OB.lvl = 0; plRender(); obRender(); return; }
   if (PL.state === 'result') { obAdvance(); return; }
