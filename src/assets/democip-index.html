@@ -915,6 +915,18 @@
   .sort .s-total.in { opacity: 1; }
   .sort .s-credit.pulse { animation: tr-rise .45s ease both, sortPulse .5s ease both; }
   @keyframes sortPulse { 0% { box-shadow: 0 0 0 0 rgba(255,216,107,.55) } 100% { box-shadow: 0 0 0 14px rgba(255,216,107,0) } }
+  /* Ruta A1→C1 cuando no hay módulos convalidados */
+  .sort .s-route { position: relative; display: flex; justify-content: space-between; align-items: center;
+    width: 100%; margin-top: 14px; padding: 10px 4px 0; }
+  .sort .s-route i { position: absolute; left: 4px; right: 4px; top: 4px; height: 4px; border-radius: 999px;
+    background: rgba(255,255,255,.18); }
+  .sort .s-route i::after { content: ''; position: absolute; inset: 0; width: 0; border-radius: 999px;
+    background: linear-gradient(90deg, #FFD86B, #1CB0F6); transition: width 1.2s cubic-bezier(.3,.9,.3,1); }
+  .sort .s-route.go i::after { width: 100%; }
+  .sort .s-route span { font-weight: 800; font-size: 12px; color: rgba(255,255,255,.55); padding-top: 10px;
+    transition: color .4s ease .3s; }
+  .sort .s-route.go span:first-of-type { color: #FFD86B; }
+
   @media (prefers-reduced-motion: reduce) {
     .sort, .sort .s-orbit, .sort .s-final, .sort .s-wave, .sort .s-boti, .sort .s-credit.in,
     .sort .s-flash, .sort .s-boti.cheer, .sort .s-credit.pulse { animation: none !important; }
