@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      demos: {
+        Row: {
+          config: Json
+          created_at: string
+          institution: string
+          notes: string | null
+          published: boolean
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          institution: string
+          notes?: string | null
+          published?: boolean
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          institution?: string
+          notes?: string | null
+          published?: boolean
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       links: {
         Row: {
           created_at: string
