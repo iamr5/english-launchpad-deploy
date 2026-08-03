@@ -780,6 +780,12 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
   const upd = (path: string) => (v: unknown) => setCfg((c) => set(c, path, v));
   const g2 = (p: string, f: unknown = "") => get(cfg, p, f) as string;
   // Lo que trae la mascota elegida, para enseñarlo como marca de agua.
+  const mascotHead = (() => {
+    const id = g2("mascot.pack", "ozito");
+    const man = get(cfg, "mascot.manifest", null) as MascotManifest | null;
+    if (id === "custom" && man) return g2("mascot.baseUrl") + man.headIcon;
+    return (PACK_INFO[id] ?? PACK_INFO.ozito).head;
+  })();
   const packDefaults = (() => {
     const id = g2("mascot.pack", "ozito");
     const man = get(cfg, "mascot.manifest", null) as MascotManifest | null;
@@ -844,6 +850,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <FileField
                 label="Logo"
+                fallbackLabel="logotipo AprendoEnglish"
                 slug={demo.slug}
                 kind="logo"
                 value={get(cfg, "brand.logo")}
@@ -852,6 +859,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <FileField
                 label="Icono de la barra superior"
                 hint="Si lo dejas vacío se usa la cabeza de la mascota."
+                fallbackSrc={mascotHead}
                 slug={demo.slug}
                 kind="icono"
                 value={get(cfg, "brand.appbarIcon")}
@@ -873,6 +881,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <FileField
                 label="Imagen al compartir (1200×630)"
+                fallbackSrc="https://aprendoenglish.com/social-preview.jpg"
                 slug={demo.slug}
                 kind="social"
                 value={get(cfg, "meta.image")}
@@ -1070,16 +1079,18 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
 
             <TabsContent value="mapa" className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                El fondo del mapa de cada módulo. Lo que dejes vacío conserva el de siempre.
+                El fondo del mapa de cada módulo, con los botones y la mascota encima para ver cómo
+                queda. Lo que dejes vacío conserva el fondo de siempre.
               </p>
-              {MODULE_LABELS.map((label, i) => (
-                <FileField
+              {MODULE_LABELS.map((_, i) => (
+                <MapModuleField
                   key={i}
-                  label={label}
+                  n={i + 1}
                   slug={demo.slug}
-                  kind={`mapa${i + 1}`}
-                  value={get(cfg, `map.backgrounds.${i}`)}
-                  onChange={(v: string) => {
+                  mascotHead={mascotHead}
+                  bg={g2(`map.backgrounds.${i}`)}
+                  shift={Number(get(cfg, `map.buttonShift.${i}`, 0)) || 0}
+                  onBg={(v: string) => {
                     const bgs: (string | null)[] = [
                       ...(get<(string | null)[] | null>(cfg, "map.backgrounds", null) ?? [
                         null,
@@ -1091,6 +1102,15 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     ];
                     bgs[i] = v || null;
                     setCfg((c) => set(c, "map.backgrounds", bgs.some(Boolean) ? bgs : ""));
+                  }}
+                  onShift={(v: number) => {
+                    const arr: (number | null)[] = [
+                      ...(get<(number | null)[] | null>(cfg, "map.buttonShift", null) ?? [
+                        0, 0, 0, 0, 0,
+                      ]),
+                    ];
+                    arr[i] = v;
+                    setCfg((c) => set(c, "map.buttonShift", arr.some((x) => x) ? arr : ""));
                   }}
                 />
               ))}
@@ -1135,6 +1155,192 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
             Esto muestra lo último guardado. Si acabas de guardar y no ves el cambio, espera unos
             segundos y pulsa Recargar.
           </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Mapa de módulo -----------------------------------------------------------
+// Copiados de la plantilla para que el previo coloque los botones EXACTAMENTE
+// donde los pone la app. Si allí cambian, hay que cambiarlos aquí.
+const SWAY = [0, -44, -70, -44, 0, 44, 70, 44];
+const BTN_ADJ: Record<number, Record<number, number>> = {
+  1: { 0: -2, 1: 6, 2: -1, 3: -17, 4: -20, 5: -16, 6: -12, 7: 1, 8: 3, 9: -5 },
+  2: { 0: 1, 1: 5, 3: -10, 4: -13, 5: -9, 6: -14, 7: -3, 8: 1, 9: -2 },
+  3: { 0: -4, 1: 6, 2: 4, 3: -11, 4: -15, 5: -11, 6: -11, 7: -2 },
+  4: { 1: 5, 2: -2, 3: -13, 4: -10, 5: -12, 6: -13, 7: -9 },
+  5: { 0: 1, 1: 2, 2: 2, 3: -11, 4: -18, 5: -14, 6: -18 },
+};
+/** Posición de la mascota en cada mapa, y su ancho. También de la plantilla. */
+const MASCOT_POS: Record<number, { x: number; y: number }> = {
+  1: { x: 57, y: 16 },
+  2: { x: 59, y: 16 },
+  3: { x: 68, y: -148 },
+  4: { x: 77, y: 50 },
+  5: { x: 70, y: 27 },
+};
+const APP_WIDTH = 390; // ancho de referencia del móvil
+const NODES = 8; // un ciclo completo de SWAY: basta para cuadrar el fondo
+
+/**
+ * El mapa de un módulo con sus botones y su mascota encima del fondo, y un
+ * control para correr los botones en horizontal. Es lo que permite cuadrar un
+ * fondo subido que no coincide con el caminito de fábrica.
+ */
+function MapModuleField({
+  n,
+  slug,
+  bg,
+  shift,
+  mascotHead,
+  onBg,
+  onShift,
+}: {
+  n: number;
+  slug: string;
+  bg: string;
+  shift: number;
+  mascotHead: string;
+  onBg: (v: string) => void;
+  onShift: (v: number) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const W = 190; // ancho del previo
+  const k = W / APP_WIDTH; // escala respecto al móvil real
+  const src = bg || `/demo-assets/modulebg${n}.png`;
+  const pos = MASCOT_POS[n] ?? { x: 62, y: 0 };
+
+  return (
+    <div className="rounded-lg border p-3">
+      <div className="flex flex-wrap items-start gap-4">
+        {/* Previo: fondo + botones + mascota */}
+        <div
+          className="relative shrink-0 overflow-hidden rounded-lg border bg-white"
+          style={{
+            width: W,
+            height: Math.round(W * 1.9),
+            background: `#fff url('${src}') center top / cover no-repeat`,
+          }}
+        >
+          {Array.from({ length: NODES }, (_, i) => {
+            const x = SWAY[i % SWAY.length] + (BTN_ADJ[n]?.[i] ?? 0) + shift;
+            const gap =
+              i === 0
+                ? 22
+                : 30 - 0.45 * Math.abs(SWAY[i % SWAY.length] - SWAY[(i - 1) % SWAY.length]);
+            return (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: 14 + i * (46 + gap) * k,
+                  transform: `translateX(calc(-50% + ${x * k}px))`,
+                  width: 34,
+                  height: 30,
+                  borderRadius: 12,
+                  background: i === 0 ? "#3faa24" : "#cfcfd6",
+                  boxShadow: `0 3px 0 ${i === 0 ? "#2E7D1A" : "#a9a9b4"}`,
+                }}
+              />
+            );
+          })}
+          {mascotHead && (
+            <img
+              src={mascotHead}
+              alt=""
+              style={{
+                position: "absolute",
+                left: `calc(50% + ${pos.x * k}px)`,
+                top: 14 + 2 * (46 + 22) * k + pos.y * k,
+                width: 40,
+                transform: "translateX(-50%)",
+                opacity: 0.95,
+              }}
+            />
+          )}
+        </div>
+
+        {/* Controles */}
+        <div className="flex-1 min-w-[220px] space-y-3">
+          <p className="text-sm font-medium">{MODULE_LABELS[n - 1]}</p>
+
+          <div className="flex items-center gap-2">
+            {/* Siempre visible: si no se ha subido nada, el fondo de fábrica. */}
+            <img
+              src={src}
+              alt=""
+              className={`h-11 w-11 shrink-0 rounded border object-cover bg-white ${
+                bg ? "" : "opacity-60"
+              }`}
+            />
+            <Input
+              value={bg ?? ""}
+              placeholder="Fondo de fábrica"
+              onChange={(e) => onBg(e.target.value)}
+            />
+            <Button variant="outline" size="sm" asChild disabled={busy}>
+              <label className="cursor-pointer shrink-0">
+                {busy ? "Subiendo…" : "Subir"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setBusy(true);
+                    try {
+                      onBg(await uploadBrandFile(slug, `mapa${n}`, file));
+                      toast.success("Fondo subido.");
+                    } catch (err) {
+                      toast.error((err as Error).message);
+                    } finally {
+                      setBusy(false);
+                      e.target.value = "";
+                    }
+                  }}
+                />
+              </label>
+            </Button>
+            {bg && (
+              <Button variant="ghost" size="sm" onClick={() => onBg("")}>
+                Quitar
+              </Button>
+            )}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs">Mover los botones a izquierda o derecha</Label>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={-80}
+                max={80}
+                step={1}
+                value={shift}
+                onChange={(e) => onShift(Number(e.target.value))}
+                className="flex-1"
+                aria-label={`Corrimiento de los botones del ${MODULE_LABELS[n - 1]}`}
+              />
+              <Input
+                type="number"
+                value={shift}
+                onChange={(e) => onShift(Number(e.target.value) || 0)}
+                className="w-20 font-mono"
+              />
+              {shift !== 0 && (
+                <Button variant="ghost" size="sm" onClick={() => onShift(0)}>
+                  Centrar
+                </Button>
+              )}
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Negativo mueve a la izquierda, positivo a la derecha. Sirve cuando el caminito de tu
+              imagen no cae donde los botones.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -1448,6 +1654,8 @@ function FileField({
   kind,
   value,
   onChange,
+  fallbackSrc,
+  fallbackLabel,
 }: {
   label: string;
   hint?: string;
@@ -1455,22 +1663,42 @@ function FileField({
   kind: string;
   value: string;
   onChange: (v: string) => void;
+  /** Imagen que se usa si no se sube ninguna: se enseña igualmente. */
+  fallbackSrc?: string;
+  /** Si no hay imagen por defecto, qué se usa en su lugar. */
+  fallbackLabel?: string;
 }) {
   const [busy, setBusy] = useState(false);
+  const shown = value || fallbackSrc || "";
   return (
     <div className="space-y-1.5">
       <Label>{label}</Label>
       <div className="flex gap-2 items-center">
-        {value && (
-          <img
-            src={value}
-            alt=""
-            className="h-9 w-9 object-contain rounded border bg-white shrink-0"
-          />
-        )}
+        {/* Siempre hay miniatura: si no se ha subido nada, la de por defecto,
+            para saber qué se está sustituyendo. */}
+        <span className="relative shrink-0">
+          {shown ? (
+            <img
+              src={shown}
+              alt=""
+              className={`h-11 w-11 object-contain rounded border bg-white ${
+                value ? "" : "opacity-60"
+              }`}
+            />
+          ) : (
+            <span className="flex h-11 w-11 items-center justify-center rounded border border-dashed bg-muted/40 text-center text-[9px] leading-tight text-muted-foreground px-1">
+              {fallbackLabel ?? "sin imagen"}
+            </span>
+          )}
+          {!value && (
+            <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded bg-muted px-1 text-[9px] text-muted-foreground">
+              actual
+            </span>
+          )}
+        </span>
         <Input
           value={value ?? ""}
-          placeholder="URL, o sube un archivo →"
+          placeholder="Pega una dirección, o sube un archivo →"
           onChange={(e) => onChange(e.target.value)}
         />
         <Button variant="outline" size="sm" asChild disabled={busy}>

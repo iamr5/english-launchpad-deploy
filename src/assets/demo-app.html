@@ -1344,6 +1344,11 @@ function moduleBg(n) {
   const custom = (CFG.map.backgrounds || [])[n - 1];
   return custom || ('modulebg' + n + '.png');
 }
+// Cuanto se corren en horizontal los botones de ese mapa (px; + derecha).
+function mapShift(n) {
+  const v = (CFG.map.buttonShift || [])[n - 1];
+  return typeof v === 'number' ? v : 0;
+}
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Markdown renderer (subset: headings, bold/italic, lists, tables, blockquotes)
@@ -2617,7 +2622,10 @@ function modulePathHTML(mod) {
   mod.lessons.forEach((lesson, i) => {
     const unlocked = isLessonUnlocked(lesson.id), completed = isLessonCompleted(lesson.id), isCur = i === currentIdx;
     const state = completed ? 'done' : (!unlocked ? 'locked' : (isCur ? 'active' : 'avail'));
-    const x = SWAY[i % SWAY.length] + ((BTN_ADJ[bgN] && BTN_ADJ[bgN][i]) || 0);
+    // Corrimiento manual del demo: cuando el fondo subido no calza con el
+    // caminito de fabrica, se mueve la fila entera de botones a izquierda o
+    // derecha desde el panel. 0 = como siempre.
+    const x = SWAY[i % SWAY.length] + ((BTN_ADJ[bgN] && BTN_ADJ[bgN][i]) || 0) + mapShift(bgN);
     // gap derived from the horizontal step so spacing stays even (no step → more room)
     const mt = i === 0 ? 22 : Math.round(30 - 0.45 * Math.abs(SWAY[i % SWAY.length] - SWAY[(i - 1) % SWAY.length]));
     const capInner = completed

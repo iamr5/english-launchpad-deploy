@@ -83,6 +83,12 @@ export type DemoConfig = {
   map: {
     /** Fondo de cada módulo (5 URLs). Cualquier hueco usa el de siempre. */
     backgrounds?: (string | null)[];
+    /**
+     * Corrimiento horizontal de los botones de cada módulo, en píxeles
+     * (+ derecha). Sirve para cuadrarlos con el caminito de un fondo subido
+     * que no coincide con el de fábrica. 0 o ausente = sin tocar.
+     */
+    buttonShift?: (number | null)[];
   };
 
   features: {
