@@ -20,6 +20,7 @@ import { Route as PresentacionRouteImport } from './routes/presentacion'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDemosRouteImport } from './routes/_authenticated/demos'
 import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
@@ -77,6 +78,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDemosRoute = AuthenticatedDemosRouteImport.update({
+  id: '/demos',
+  path: '/demos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
   id: '/api/public/share-invite',
   path: '/api/public/share-invite',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/presentation': typeof PresentationRoute
   '/app': typeof AuthenticatedAppRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/demos': typeof AuthenticatedDemosRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/presentation': typeof PresentationRoute
   '/app': typeof AuthenticatedAppRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/demos': typeof AuthenticatedDemosRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/presentation': typeof PresentationRoute
   '/_authenticated/app': typeof AuthenticatedAppRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/demos': typeof AuthenticatedDemosRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/presentation'
     | '/app'
     | '/dashboard'
+    | '/demos'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/presentation'
     | '/app'
     | '/dashboard'
+    | '/demos'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   id:
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/presentation'
     | '/_authenticated/app'
     | '/_authenticated/dashboard'
+    | '/_authenticated/demos'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/demos': {
+      id: '/_authenticated/demos'
+      path: '/demos'
+      fullPath: '/demos'
+      preLoaderRoute: typeof AuthenticatedDemosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/share-invite': {
       id: '/api/public/share-invite'
       path: '/api/public/share-invite'
@@ -292,11 +311,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppRoute: typeof AuthenticatedAppRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDemosRoute: typeof AuthenticatedDemosRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppRoute: AuthenticatedAppRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDemosRoute: AuthenticatedDemosRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -318,3 +339,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

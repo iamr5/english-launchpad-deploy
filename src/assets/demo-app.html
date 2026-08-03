@@ -3493,7 +3493,7 @@ function botiCheer(msg) {
   const old = document.getElementById('boti-cheer'); if (old) old.remove();
   const el = document.createElement('div');
   el.id = 'boti-cheer'; el.className = 'boti-cheer';
-  el.innerHTML = `<img src="mascots/boti/boti_head.svg" alt=""><div class="bc-txt">${msg}</div>`;
+  el.innerHTML = `<img src="${mascotHeadIcon()}" alt=""><div class="bc-txt">${msg}</div>`;
   document.body.appendChild(el);
   setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 2200);
 }
@@ -3521,7 +3521,7 @@ function suggestReview(lesson, weight) {
   el.id = 'boti-review'; el.className = 'boti-cheer';
   el.style.pointerEvents = 'auto';
   const btn = 'border:0;color:#fff;font-weight:800;padding:8px 12px;border-radius:10px;cursor:pointer;margin-left:8px';
-  el.innerHTML = `<img src="mascots/boti/boti_head.svg" alt=""><div class="bc-txt">Parece que este nivel te está costando. ¿Bajamos a ${lv} un momento?</div>` +
+  el.innerHTML = `<img src="${mascotHeadIcon()}" alt=""><div class="bc-txt">Parece que este nivel te está costando. ¿Bajamos a ${lv} un momento?</div>` +
     `<button type="button" data-go style="${btn};background:#1CB0F6">Sí, repasar</button>` +
     `<button type="button" data-stay style="${btn};background:transparent;color:#5C5159">Seguir aquí</button>`;
   document.body.appendChild(el);
@@ -3561,7 +3561,7 @@ function placementReveal(lvl, onDone) {
     <div class="s-aura"></div>${dust}
     <div class="s-stage" id="s-stage">
       <div class="s-orbit" id="s-orbit">${orbit}</div>
-      <img class="s-boti" id="s-boti" src="mascots/boti/boti_head.svg" alt="">
+      <img class="s-boti" id="s-boti" src="${mascotHeadIcon()}" alt="">
     </div>
     <div class="s-t" id="s-t">Boti está decidiendo…</div>
     <div class="s-s" id="s-s">Leyendo tus respuestas del test</div>
@@ -3611,7 +3611,7 @@ function placementReveal(lvl, onDone) {
     const stage = el.querySelector('#s-stage');
     stage.innerHTML = `<div class="s-wave"></div><div class="s-wave w2"></div>` +
       `<div class="s-final">${target}</div>` +
-      `<img class="s-boti cheer" src="boti_head.svg" alt="" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">`;
+      `<img class="s-boti cheer" src="${mascotHeadIcon()}" alt="" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">`;
     const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 760);
     // El nivel se anuncia con ritmo de habla: pausas distintas y respiro antes del cierre.
     const tEl = el.querySelector('#s-t'), txt = `¡${target}!`;
@@ -3737,7 +3737,7 @@ function lessonCelebration(lesson, onDone) {
     cft += `<span class="cft" style="left:${Math.round(Math.random() * 96)}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * 2).toFixed(2)}s;animation-duration:${(2 + Math.random() * 1.6).toFixed(2)}s"></span>`;
   }
   el.innerHTML = `${cft}
-    <img class="w-boti" src="mascots/boti/boti_head.svg" alt="">
+    <img class="w-boti" src="${mascotHeadIcon()}" alt="">
     <div class="w-t">¡Lección completada!</div>
     <div class="w-s">${escapeHtml(lessonName(lesson))}</div>
     <div class="w-stats">

@@ -54,8 +54,15 @@ con Boti, y para un colegio de ingenieros o una universidad.
 
 `mascot.name` sale del pack si no se indica: `ozito` → «Ozzy», `boti` → «Boti».
 
-## Más adelante
+## Estos archivos son la semilla, no la fuente
 
-Cuando exista el panel de gestión, los demos vivirán en la tabla `demos` de
-Supabase y estos archivos serán la semilla. `getDemoConfig()` es el único sitio
-que habrá que tocar: el resto del código pasa siempre por ahí.
+Los demos viven en la tabla `demos` de Supabase y se gestionan desde **`/demos`**.
+Estos archivos cumplen dos papeles:
+
+1. **Semilla** — la migración `20260803120100_demos.sql` los inserta como filas.
+2. **Respaldo** — si la consulta a Supabase falla (tabla aún sin crear, servicio
+   caído), `getDemoConfig()` cae a estos archivos, así los enlaces que ya
+   funcionaban siguen funcionando.
+
+Para crear un demo nuevo usa el panel, no un archivo aquí: un archivo sólo entra
+en vigor al desplegar, mientras que una fila es inmediata.

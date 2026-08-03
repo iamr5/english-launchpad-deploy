@@ -87,8 +87,7 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
   published: true,
   meta: {
     title: "AprendoEnglish · Demo interactivo",
-    description:
-      "Prueba el demo interactivo de AprendoEnglish y descubre nuestra metodología.",
+    description: "Prueba el demo interactivo de AprendoEnglish y descubre nuestra metodología.",
     image: "https://aprendoenglish.com/social-preview.jpg",
     imageAlt: "AprendoEnglish.com — Inglés de clase mundial para tu institución",
   },
@@ -116,6 +115,7 @@ export const RESERVED_SLUGS = new Set([
   "dashboard",
   "demo-assets",
   "demo-dashboard",
+  "demos",
   "login",
   "lovable",
   "presentacion",
@@ -165,7 +165,10 @@ const files = import.meta.glob<{ default: Record<string, unknown> }>("../demos/*
 
 const fromFiles = new Map<string, DemoConfig>();
 for (const [path, mod] of Object.entries(files)) {
-  const slug = path.split("/").pop()!.replace(/\.json$/, "");
+  const slug = path
+    .split("/")
+    .pop()!
+    .replace(/\.json$/, "");
   const raw = (mod.default ?? mod) as DeepPartial<DemoConfig> & {
     slug?: string;
     institution?: string;
@@ -177,13 +180,66 @@ for (const [path, mod] of Object.entries(files)) {
   } as DemoConfig);
 }
 
-export function listDemos(): DemoConfig[] {
+/** Los demos semilla del repositorio. Sirven de respaldo si la tabla no responde. */
+export function listSeedDemos(): DemoConfig[] {
   return [...fromFiles.values()].sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
-export function getDemoConfig(slug: string): DemoConfig | null {
+/** Convierte una fila de la tabla `demos` en la configuración completa. */
+export function rowToConfig(row: {
+  slug: string;
+  institution: string;
+  published: boolean;
+  config: unknown;
+}): DemoConfig {
+  return {
+    ...merge(DEFAULTS, (row.config ?? {}) as DeepPartial<typeof DEFAULTS>),
+    slug: row.slug,
+    institution: row.institution,
+    published: row.published,
+  } as DemoConfig;
+}
+
+// Pequeña caché en memoria: servir un demo no debería costar una consulta por
+// visita. Se vacía sola al minuto, y el panel la invalida al guardar.
+const CACHE_MS = 60_000;
+const cache = new Map<string, { at: number; cfg: DemoConfig | null }>();
+
+export function invalidateDemoCache(slug?: string) {
+  if (slug) cache.delete(slug);
+  else cache.clear();
+}
+
+/**
+ * La configuración de un demo publicado, o null si no existe.
+ *
+ * Lee de la tabla `demos`. Si la consulta falla —tabla aún sin crear, Supabase
+ * caído— cae a los archivos de src/demos, así los enlaces que ya funcionaban
+ * siguen funcionando.
+ */
+export async function getDemoConfig(slug: string): Promise<DemoConfig | null> {
   if (!isValidSlug(slug)) return null;
-  const cfg = fromFiles.get(slug);
-  if (!cfg || !cfg.published) return null;
+
+  const hit = cache.get(slug);
+  if (hit && Date.now() - hit.at < CACHE_MS) return hit.cfg;
+
+  let cfg: DemoConfig | null = null;
+  try {
+    const { supabase } = await import("@/integrations/supabase/client");
+    const { data, error } = await supabase
+      .from("demos")
+      .select("slug, institution, published, config")
+      .eq("slug", slug)
+      .eq("published", true)
+      .maybeSingle();
+    if (error) throw error;
+    if (data) cfg = rowToConfig(data as never);
+  } catch {
+    // Respaldo: los archivos del repositorio.
+    const seed = fromFiles.get(slug);
+    cfg = seed && seed.published ? seed : null;
+  }
+
+  cache.set(slug, { at: Date.now(), cfg });
   return cfg;
 }

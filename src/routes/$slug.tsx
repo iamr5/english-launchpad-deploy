@@ -9,7 +9,7 @@ export const Route = createFileRoute("/$slug")({
   server: {
     handlers: {
       GET: async ({ params }) => {
-        const cfg = getDemoConfig(params.slug);
+        const cfg = await getDemoConfig(params.slug);
         return cfg ? renderDemoPage(cfg) : renderDemoNotFound(params.slug);
       },
     },
