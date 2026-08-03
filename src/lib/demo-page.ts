@@ -66,20 +66,35 @@ function headTags(cfg: DemoConfig) {
 <meta name="twitter:image" content="${esc(image)}">`;
 }
 
+// Los valores de fábrica, tal como están escritos en la plantilla. Importan
+// porque la sombra derivada no cae exactamente en el mismo tono: si un demo no
+// toca el color, se le devuelve SU par original y no una aproximación, para que
+// nada cambie de aspecto sin haberlo pedido.
+const STOCK = {
+  action: "#3FAA24",
+  actionDark: "#2E7D1A",
+  highlight: "#1CB0F6",
+  highlightDark: "#1488C0",
+};
+
 /** Las variables CSS que puede mover un demo. El resto del tema es fijo. */
 function themeCSS(cfg: DemoConfig) {
   const c = cfg.colors;
+
+  // Verde = acción principal (Empecemos / Continuar / Empezar, acierto).
+  // Azul = resalte (opción elegida, foco y pasos del onboarding).
+  const action = c.action ?? STOCK.action;
+  const highlight = c.highlight ?? STOCK.highlight;
+
   const vars = [
     `--accent:${c.accent}`,
     `--accent-d:${c.accentDark ?? shadeHex(c.accent, -0.24)}`,
     `--button:${c.button ?? c.accent}`,
     `--spinner:${c.spinner ?? c.accent}`,
-    // Verde = acción principal (Empecemos / Continuar / Empezar, acierto).
-    // Azul = resalte (opción elegida, foco y pasos del onboarding).
-    `--green:${c.action ?? "#3FAA24"}`,
-    `--greenDark:${c.actionDark ?? shadeHex(c.action ?? "#3FAA24", -0.28)}`,
-    `--blue:${c.highlight ?? "#1CB0F6"}`,
-    `--blueDark:${c.highlightDark ?? shadeHex(c.highlight ?? "#1CB0F6", -0.24)}`,
+    `--green:${action}`,
+    `--greenDark:${c.actionDark ?? (c.action ? shadeHex(action, -0.28) : STOCK.actionDark)}`,
+    `--blue:${highlight}`,
+    `--blueDark:${c.highlightDark ?? (c.highlight ? shadeHex(highlight, -0.24) : STOCK.highlightDark)}`,
   ];
   return `<style id="demo-theme">:root{${vars.join(";")}}</style>`;
 }
