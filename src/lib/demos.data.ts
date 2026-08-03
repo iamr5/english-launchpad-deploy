@@ -69,7 +69,13 @@ export async function deleteDemo(slug: string) {
   if (error) throw error;
 }
 
-/** Sube un archivo de marca y devuelve su URL pública. */
+/**
+ * Sube un archivo de marca y devuelve la URL con la que servirlo.
+ *
+ * No se usa getPublicUrl(): el bucket es privado (la plataforma no admite
+ * buckets públicos) y ese endpoint devuelve "Bucket not found". Se sirve por
+ * /api/brand/<ruta>, que reemite el archivo y no caduca como una URL firmada.
+ */
 export async function uploadBrandFile(slug: string, kind: string, file: File): Promise<string> {
   const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
   const path = `${slug}/${kind}/${Date.now()}-${safe}`;
@@ -77,7 +83,7 @@ export async function uploadBrandFile(slug: string, kind: string, file: File): P
     .from("demo-brand")
     .upload(path, file, { cacheControl: "31536000", upsert: false });
   if (error) throw error;
-  return supabase.storage.from("demo-brand").getPublicUrl(path).data.publicUrl;
+  return `/api/brand/${path}`;
 }
 
 /** Motivo por el que un slug no vale, o null si está bien. */

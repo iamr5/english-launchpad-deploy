@@ -70,10 +70,16 @@ CREATE TRIGGER demos_touch_updated_at
   FOR EACH ROW EXECUTE FUNCTION public.touch_demos_updated_at();
 
 -- Almacenamiento de lo que sube cada demo: logos, fondos del mapa, packs de
--- mascota. Lectura pública (las imágenes las pide el navegador de cualquiera),
--- escritura sólo para administradores.
+-- mascota. Escritura sólo para administradores; lectura abierta por política.
+--
+-- El bucket va PRIVADO a propósito: la plataforma bloquea los buckets públicos.
+-- La consecuencia práctica es que /storage/v1/object/public/ responde
+-- "Bucket not found", así que los archivos NO se enlazan con getPublicUrl():
+-- se sirven por /api/brand/<ruta> (ver src/routes/api/brand/$.ts), que descarga
+-- con la clave publicable apoyándose en la política de abajo. Se prefiere eso a
+-- las URLs firmadas porque la dirección no caduca.
 INSERT INTO storage.buckets (id, name, public)
-VALUES ('demo-brand', 'demo-brand', true)
+VALUES ('demo-brand', 'demo-brand', false)
 ON CONFLICT (id) DO NOTHING;
 
 DROP POLICY IF EXISTS "anyone reads demo brand files" ON storage.objects;

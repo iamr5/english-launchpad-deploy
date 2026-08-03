@@ -21,6 +21,7 @@ import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDemosRouteImport } from './routes/_authenticated/demos'
+import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
 import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
@@ -83,6 +84,11 @@ const AuthenticatedDemosRoute = AuthenticatedDemosRouteImport.update({
   path: '/demos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiBrandSplatRoute = ApiBrandSplatRouteImport.update({
+  id: '/api/brand/$',
+  path: '/api/brand/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
   id: '/api/public/share-invite',
   path: '/api/public/share-invite',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AuthenticatedAppRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/demos': typeof AuthenticatedDemosRoute
+  '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/app': typeof AuthenticatedAppRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/demos': typeof AuthenticatedDemosRoute
+  '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/_authenticated/app': typeof AuthenticatedAppRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/demos': typeof AuthenticatedDemosRoute
+  '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/dashboard'
     | '/demos'
+    | '/api/brand/$'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/dashboard'
     | '/demos'
+    | '/api/brand/$'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   id:
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app'
     | '/_authenticated/dashboard'
     | '/_authenticated/demos'
+    | '/api/brand/$'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -201,6 +213,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PresentacionRoute: typeof PresentacionRoute
   PresentationRoute: typeof PresentationRoute
+  ApiBrandSplatRoute: typeof ApiBrandSplatRoute
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDemosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/brand/$': {
+      id: '/api/brand/$'
+      path: '/api/brand/$'
+      fullPath: '/api/brand/$'
+      preLoaderRoute: typeof ApiBrandSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/share-invite': {
       id: '/api/public/share-invite'
       path: '/api/public/share-invite'
@@ -333,6 +353,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PresentacionRoute: PresentacionRoute,
   PresentationRoute: PresentationRoute,
+  ApiBrandSplatRoute: ApiBrandSplatRoute,
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
