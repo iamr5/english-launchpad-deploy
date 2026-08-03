@@ -3156,23 +3156,45 @@ function placementReveal(lvl, onDone) {
     <div class="s-t" id="s-t">Boti está decidiendo…</div>
     <div class="s-s" id="s-s">Leyendo tus respuestas del test</div>
     <div class="s-credits" id="s-credits"></div>
+    <div class="s-total" id="s-total"></div>
     <div id="s-cta"></div>
     <button class="s-skip" id="s-skip">Saltar</button>`;
   document.body.appendChild(el);
 
   let done = false;
-  const finish = () => { if (done) return; done = true; el.classList.add('out'); setTimeout(() => { el.remove(); if (onDone) onDone(); }, 350); };
+  const timers = [];
+  const later = (fn, ms) => { timers.push(setTimeout(fn, reduce ? 0 : ms)); };
+  const finish = () => {
+    if (done) return; done = true;
+    timers.forEach(clearTimeout);
+    el.classList.add('out');
+    setTimeout(() => { el.remove(); if (onDone) onDone(); }, 350);
+  };
+  const buzz = ms => { try { if (!reduce && navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
+
+  // Falso frenazo: Boti "duda" y nombra un nivel equivocado antes del veredicto.
+  const wrong = LV.filter(l => l !== target)[0] || 'A1';
+  later(() => { if (!done) el.querySelector('#s-t').textContent = `¿${wrong}…?`; }, 1500);
+  later(() => { if (!done) el.querySelector('#s-t').textContent = 'No, esperen…'; }, 2200);
 
   const reveal = () => {
+    if (done) return;
+    buzz(40);
     const stage = el.querySelector('#s-stage');
-    stage.innerHTML = `<div class="s-wave"></div><div class="s-final">${target}</div>`;
-    el.querySelector('#s-t').textContent = `¡${target}!`;
+    stage.innerHTML = `<div class="s-wave"></div><div class="s-wave w2"></div>` +
+      `<div class="s-final">${target}</div>` +
+      `<img class="s-boti cheer" src="boti_head.svg" alt="" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">`;
+    if (!reduce) { const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 600); }
+    // El nivel se anuncia letra por letra.
+    const tEl = el.querySelector('#s-t'), txt = `¡${target}!`;
+    if (reduce) tEl.textContent = txt;
+    else { tEl.textContent = ''; txt.split('').forEach((ch, i) => later(() => { tEl.textContent += ch; }, 220 + i * 110)); }
     el.querySelector('#s-s').innerHTML = credits.length
       ? `Ese es tu punto de partida. Damos por aprobado ${credits.map(c => c.lvl).join(' y ')}.`
       : 'Empiezas desde los fundamentos, con todo por descubrir.';
     if (!reduce) {
       const cols = ['#FFD86B', '#FFC53D', '#FFF3C4', '#1CB0F6'];
-      for (let i = 0; i < 22; i++) {
+      for (let i = 0; i < 26; i++) {
         const s = document.createElement('span');
         s.className = 'cft';
         s.style.cssText = `position:absolute;top:-12px;width:10px;height:16px;border-radius:3px;left:${Math.round(Math.random() * 96)}%;background:${cols[i % cols.length]};animation:cft ${(2 + Math.random() * 1.6).toFixed(2)}s linear ${(Math.random() * 1.2).toFixed(2)}s infinite`;
@@ -3180,23 +3202,53 @@ function placementReveal(lvl, onDone) {
       }
     }
     const host = el.querySelector('#s-credits');
+    const base = 700, step = 620;
     credits.forEach((c, i) => {
       const row = document.createElement('div');
       row.className = 's-credit';
-      row.innerHTML = `<span>${c.lvl}</span><span>convalidado</span><span class="cx">✓ +${c.xp} XP</span>`;
+      row.innerHTML = `<span>${c.lvl}</span><span>convalidado</span><span class="cx"><i class="ck" style="font-style:normal;opacity:0">✓</i> +<b class="n">0</b> XP</span>`;
       host.appendChild(row);
-      setTimeout(() => { row.classList.add('in'); row.style.opacity = '1'; row.style.transform = 'none'; }, reduce ? 0 : 260 + i * 260);
+      later(() => {
+        row.classList.add('in', 'pulse');
+        row.style.opacity = '1'; row.style.transform = 'none';
+        buzz(18);
+        const ck = row.querySelector('.ck');
+        setTimeout(() => { ck.style.transition = 'opacity .3s ease, transform .3s ease'; ck.style.opacity = '1'; }, reduce ? 0 : 140);
+        tickUp(row.querySelector('.n'), c.xp, reduce ? 0 : 520);
+      }, base + i * step);
     });
-    setTimeout(() => {
+    const totalXpCredited = credits.reduce((a, c) => a + c.xp, 0);
+    later(() => {
+      if (!credits.length) return;
+      const tot = el.querySelector('#s-total');
+      tot.innerHTML = `Total convalidado: <b class="n">0</b> XP`;
+      tot.classList.add('in');
+      tickUp(tot.querySelector('.n'), totalXpCredited, reduce ? 0 : 700);
+      buzz(60);
+    }, base + credits.length * step);
+    later(() => {
       const cta = el.querySelector('#s-cta');
       cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
       cta.querySelector('#s-go').onclick = finish;
-    }, reduce ? 0 : 300 + credits.length * 260);
+    }, base + credits.length * step + (credits.length ? 850 : 400));
   };
 
   el.querySelector('#s-skip').onclick = finish;
-  if (reduce) reveal(); else setTimeout(reveal, 2600);
+  if (reduce) reveal(); else timers.push(setTimeout(reveal, 3600));
 }
+// Contador que sube de 0 a `to` en `ms` (usado en la revelación y en la cascada del mapa).
+function tickUp(node, to, ms) {
+  if (!node) return;
+  if (!ms) { node.textContent = String(to); return; }
+  const t0 = performance.now();
+  const step = now => {
+    const p = Math.min(1, (now - t0) / ms);
+    node.textContent = String(Math.round(to * (1 - Math.pow(1 - p, 3))));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 // Recompensa grande al terminar una lección: Boti aparece, confeti, XP y racha.
 
 function lessonCelebration(lesson, onDone) {
