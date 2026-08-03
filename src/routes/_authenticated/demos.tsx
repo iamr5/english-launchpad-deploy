@@ -1135,6 +1135,9 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   n={i + 1}
                   slug={demo.slug}
                   mascotHead={mascotHead}
+                  modColor={
+                    (get(cfg, `colors.modules.${i}`, "") as string) || DEFAULTS.colors.modules[i]
+                  }
                   bg={g2(`map.backgrounds.${i}`)}
                   offsets={get<number[] | null>(cfg, `map.buttonOffsets.${i}`, null) ?? []}
                   onBg={(v: string) => {
@@ -1241,9 +1244,19 @@ const MODULE_LESSONS = [10, 12, 8, 8, 7];
 // Medidas exactas del caminito, en píxeles de la app.
 const APP_WIDTH = 390; // ancho de referencia del móvil
 const BG_WIDTH = 490; // background-size: 490px auto — NO es "cover"
-const PATH_PAD_TOP = 97; // .lpath { padding-top }
+const PATH_PAD_TOP = 97; // .lpath { padding: 97px 16px 108px 0 }
+const PATH_PAD_RIGHT = 16;
+const PATH_PAD_BOTTOM = 108;
+// El padding es ASIMÉTRICO (16 a la derecha, 0 a la izquierda), así que las
+// filas se centran en el hueco de contenido —187— mientras que el fondo y la
+// mascota se centran en la caja entera —195—. Son 8px de diferencia, justo lo
+// que hay que respetar para cuadrar una imagen.
+const ROW_CENTER = (APP_WIDTH - PATH_PAD_RIGHT) / 2;
+const BOX_CENTER = APP_WIDTH / 2;
 const NODE_W = 71; // .lpath .node { width }
 const NODE_H = 67; // .lpath .node { height }
+const LOCKED_CAP = "#DADAE0"; // .lpath .node.locked .cap
+const LOCKED_BASE = "#C2C2CC"; // .lpath .node.locked .base
 const MASCOT_W = 100; // BOTI_SIZE
 const MASCOT_RATIO = 1139.5 / 757.6; // BOTI_RATIO
 const MASCOT_DROP = 40; // BOTI_DROP
@@ -1274,6 +1287,7 @@ function MapModuleField({
   bg,
   offsets,
   mascotHead,
+  modColor,
   onBg,
   onOffsets,
 }: {
@@ -1282,6 +1296,8 @@ function MapModuleField({
   bg: string;
   offsets: number[];
   mascotHead: string;
+  /** El color de ESTE módulo: es el que llevan sus botones desbloqueados. */
+  modColor: string;
   onBg: (v: string) => void;
   onOffsets: (v: number[]) => void;
 }) {
@@ -1295,7 +1311,7 @@ function MapModuleField({
   // Escala del previo. El alto sale del caminito real para que no se corte.
   const VIEW_W = 250;
   const k = VIEW_W / APP_WIDTH;
-  const viewH = Math.round((nodeTop(count - 1) + NODE_H + 60) * k);
+  const viewH = Math.round((nodeTop(count - 1) + NODE_H + PATH_PAD_BOTTOM) * k);
 
   const offAt = (i: number) => offsets[i] ?? 0;
   const setOff = (i: number, v: number) => {
@@ -1344,8 +1360,7 @@ function MapModuleField({
               alt=""
               style={{
                 position: "absolute",
-                left: "50%",
-                marginLeft: (MASCOT_POS[n].x - MASCOT_W / 2 + MASCOT_NUDGE_X) * k,
+                left: (BOX_CENTER + MASCOT_POS[n].x - MASCOT_W / 2 + MASCOT_NUDGE_X) * k,
                 top: (thirdRowCenter - mascotH / 2 + MASCOT_POS[n].y + MASCOT_DROP) * k,
                 width: MASCOT_W * k,
                 opacity: 0.9,
@@ -1369,7 +1384,7 @@ function MapModuleField({
                 title={`Lección ${i + 1} — arrástrala para moverla`}
                 style={{
                   position: "absolute",
-                  left: `calc(50% + ${x * k}px)`,
+                  left: (ROW_CENTER + x) * k,
                   top: nodeTop(i) * k,
                   width: NODE_W * k,
                   height: NODE_H * k,
@@ -1389,7 +1404,7 @@ function MapModuleField({
                     top: (NODE_H - 58) * k,
                     height: 58 * k,
                     borderRadius: "50%",
-                    background: i === 0 ? "#2E7D1A" : "#a9a9b4",
+                    background: i === 0 ? shade(modColor, -0.24) : LOCKED_BASE,
                   }}
                 />
                 <span
@@ -1398,7 +1413,7 @@ function MapModuleField({
                     inset: 0,
                     height: 58 * k,
                     borderRadius: "50%",
-                    background: i === 0 ? "#3FAA24" : "#cfcfd6",
+                    background: i === 0 ? modColor : LOCKED_CAP,
                     outline: active ? "2px solid #111" : "none",
                     outlineOffset: 1,
                     display: "flex",
