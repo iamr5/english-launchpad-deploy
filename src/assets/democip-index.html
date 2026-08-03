@@ -3317,7 +3317,7 @@ function plRender() {
       <div class="pl-badge">${OB_LEVELS[lvl]}</div>
       <div class="pl-txt">Tu punto de partida</div>
       <div class="pl-sub">${lvl > 0
-        ? `Empiezas en el nivel <b>${OB_LEVELS[lvl]}</b>. ${OB_LEVELS.slice(0, lvl).join(' y ')} quedan abiertos por si quieres repasar.`
+        ? `Empiezas en el nivel <b>${OB_LEVELS[lvl]}</b>. ${OB_LEVELS.slice(0, lvl).join(' y ')} quedan <b>convalidados</b>, con su XP ya sumada.`
         : 'Empiezas en el nivel <b>A1</b>, desde los fundamentos.'}</div>
     </div>`;
     return;
