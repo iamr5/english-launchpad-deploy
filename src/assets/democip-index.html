@@ -1228,25 +1228,55 @@ function isQuizCompleted(id) { return !!(PROGRESS[id] && PROGRESS[id].quizComple
 function isReadingCompleted(id) { return !!(PROGRESS[id] && PROGRESS[id].readingCompleted); }
 function getScroll(id) { return (PROGRESS[id] && PROGRESS[id].scroll) || 0; }
 function nextLessonId(id) { const i = allLessons.findIndex(l => l.id === id); return (i >= 0 && i < allLessons.length - 1) ? allLessons[i + 1].id : null; }
-function isLessonSkipped(id) { return !!(PROGRESS[id] && PROGRESS[id].skipped); }
+function isLessonSkipped(id) { return false; } // legado: el test ya no deja lecciones "abiertas sin crédito"
+function isLessonPlaced(id) { return !!(PROGRESS[id] && PROGRESS[id].placedCredit); }
 function isLessonCompleted(id) {
   if (isQuizCompleted(id)) return true;
-  if (isLessonSkipped(id)) return false; // repaso abierto por el test de ubicación: no cuenta como hecho
-  const n = nextLessonId(id); return n ? (isLessonUnlocked(n) && !isLessonSkipped(n)) : false;
+  const n = nextLessonId(id); return n ? isLessonUnlocked(n) : false;
 }
-// Test de ubicación → módulo de arranque. Los módulos por debajo quedan abiertos
-// para repaso (unlocked) pero marcados `skipped`: sin XP ni check de completado.
+// Test de ubicación → módulo de arranque. Los módulos por debajo se CONVALIDAN:
+// quedan completados de verdad (check + XP), marcados con `placedCredit` para saber
+// que el crédito vino del test y poder revertirlo si el alumno decide repasar.
 function placementStartIdx(lvl) { return Math.max(0, Math.min(course.modules.length - 1, +lvl || 0)); }
+function creditLesson(l) {
+  const L = lp(l.id);
+  L.unlocked = true; L.readingCompleted = true; L.quizCompleted = true; L.placedCredit = true;
+  delete L.skipped;
+  l.contentBlocks.forEach(b => {
+    L.blocks[b.id] = Object.assign({}, L.blocks[b.id], { unlocked: true },
+      (b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length) ? { mq: true } : {});
+  });
+}
+function uncreditModule(mod) {
+  mod.lessons.forEach((l, i) => {
+    const L = lp(l.id);
+    if (!L.placedCredit) return;
+    delete L.placedCredit; delete L.quizCompleted; delete L.readingCompleted;
+    L.blocks = {};
+    L.unlocked = i === 0 ? true : false;
+  });
+  saveProgress(PROGRESS);
+}
+function isModulePlaced(mod) { return mod.lessons.every(l => isLessonPlaced(l.id)); }
 function applyPlacement(lvl) {
   const start = placementStartIdx(lvl);
   course.modules.forEach((m, i) => {
     if (i > start) return;
     if (i === start) { const L = lp(m.lessons[0].id); L.unlocked = true; delete L.skipped; return; }
-    m.lessons.forEach(l => { const L = lp(l.id); L.unlocked = true; L.skipped = true; });
+    m.lessons.forEach(creditLesson);
   });
+  PROGRESS['__placement'] = { lvl: start, ts: Date.now() };
   saveProgress(PROGRESS);
   return start;
 }
+// XP convalidado por módulo (para el reveal del test)
+function placementCredits(start) {
+  return course.modules.slice(0, start).map((m, i) => ({
+    lvl: ['A1', 'A2', 'B1', 'B2', 'C1'][i] || `M${i + 1}`,
+    xp: moduleXpMax(m)
+  }));
+}
+
 let _saveT = null;
 function scheduleSave() { if (WIPED || _saveT) return; _saveT = setTimeout(() => { _saveT = null; saveProgress(PROGRESS); }, 400); }
 
