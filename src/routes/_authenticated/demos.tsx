@@ -7,6 +7,7 @@ import {
   fetchDemos,
   isAdmin,
   saveDemo,
+  sessionInfo,
   slugProblem,
   suggestSlug,
   uploadBrandFile,
@@ -520,7 +521,69 @@ function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-6 py-6">{children}</main>
+      <SessionFooter />
     </div>
+  );
+}
+
+/**
+ * Con qué cuenta se está entrando. Está a la vista porque casi todo lo que
+ * falla en este panel falla por permisos, y sin esto no hay forma de saber si
+ * la sesión es la que uno cree.
+ */
+function SessionFooter() {
+  const s = useQuery({ queryKey: ["session-info"], queryFn: sessionInfo });
+  const d = s.data;
+
+  return (
+    <footer className="mx-auto max-w-6xl px-6 pb-10 pt-2">
+      <div className="rounded-lg border bg-muted/40 p-3 font-mono text-[11.5px] leading-relaxed">
+        {s.isLoading && <span className="text-muted-foreground">comprobando sesión…</span>}
+        {d && (
+          <div className="flex flex-wrap gap-x-6 gap-y-1">
+            <span>
+              <span className="text-muted-foreground">cuenta: </span>
+              <b>{d.email ?? "— sin sesión de Supabase —"}</b>
+            </span>
+            <span>
+              <span className="text-muted-foreground">user id: </span>
+              {d.userId ? d.userId.slice(0, 8) + "…" : "—"}
+            </span>
+            <span>
+              <span className="text-muted-foreground">roles: </span>
+              {d.roles.length ? d.roles.join(", ") : "ninguno"}
+            </span>
+            <span>
+              <span className="text-muted-foreground">admin: </span>
+              <b className={d.isAdmin ? "text-emerald-600" : "text-destructive"}>
+                {d.isAdmin ? "sí" : "no"}
+              </b>
+            </span>
+            {d.fakeLogin && (
+              <span className="text-destructive">
+                fake_login activo — no hay sesión real, toda escritura será rechazada
+              </span>
+            )}
+            {d.error && <span className="text-destructive">error: {d.error}</span>}
+          </div>
+        )}
+        {d && d.fakeLogin && (
+          <div className="mt-2 flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                localStorage.removeItem("fake_login");
+                localStorage.removeItem("fake_role");
+                location.reload();
+              }}
+            >
+              Quitar fake_login y recargar
+            </Button>
+          </div>
+        )}
+      </div>
+    </footer>
   );
 }
 
