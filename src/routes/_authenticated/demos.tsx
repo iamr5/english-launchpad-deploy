@@ -508,8 +508,14 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   kind={`mapa${i + 1}`}
                   value={get(cfg, `map.backgrounds.${i}`)}
                   onChange={(v: string) => {
-                    const bgs = [
-                      ...(get(cfg, "map.backgrounds", null) ?? [null, null, null, null, null]),
+                    const bgs: (string | null)[] = [
+                      ...(get<(string | null)[] | null>(cfg, "map.backgrounds", null) ?? [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                      ]),
                     ];
                     bgs[i] = v || null;
                     setCfg((c) => set(c, "map.backgrounds", bgs.some(Boolean) ? bgs : ""));
