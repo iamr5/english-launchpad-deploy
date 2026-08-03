@@ -3367,7 +3367,13 @@ function placementReveal(lvl, onDone) {
     const a = (i / LV.length) * Math.PI * 2;
     return `<div class="s-badge" style="transform:translate(${Math.round(Math.cos(a) * R)}px,${Math.round(Math.sin(a) * R)}px)">${l}</div>`;
   }).join('');
+  const dust = reduce ? '' : Array.from({ length: 11 }, () => {
+    const dur = (9 + Math.random() * 7).toFixed(1), del = (Math.random() * 9).toFixed(1);
+    const sz = (3 + Math.random() * 4).toFixed(1);
+    return `<span class="s-dust" style="left:${Math.round(Math.random() * 96)}%;width:${sz}px;height:${sz}px;animation-duration:${dur}s;animation-delay:-${del}s"></span>`;
+  }).join('');
   el.innerHTML = `
+    <div class="s-aura"></div>${dust}
     <div class="s-stage" id="s-stage">
       <div class="s-orbit" id="s-orbit">${orbit}</div>
       <img class="s-boti" id="s-boti" src="boti_head.svg" alt="">
@@ -3387,6 +3393,8 @@ function placementReveal(lvl, onDone) {
   // que el orden se mantenga y el veredicto siga siendo el último texto.
   const F = reduce ? 0.35 : 1;
   const later = (fn, ms) => { timers.push(setTimeout(fn, Math.round(ms * F))); };
+  // Variación humana en los tiempos: nada cae exactamente en la misma cadencia.
+  const jitter = (ms, pct) => Math.round(ms * (1 + (Math.random() * 2 - 1) * (reduce ? 0 : (pct || .14))));
   const suspense = [];
   const finish = () => {
     if (done) return; done = true;
@@ -3395,54 +3403,78 @@ function placementReveal(lvl, onDone) {
     setTimeout(() => { el.remove(); if (onDone) onDone(); }, 350);
   };
   const buzz = ms => { try { if (!reduce && navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
-  const setTitle = (txt) => { if (!verdictShown) el.querySelector('#s-t').textContent = txt; };
+  // Cross-fade entre textos de suspenso: nunca se reemplazan en seco.
+  const tNode = el.querySelector('#s-t');
+  const setTitle = (txt) => {
+    if (verdictShown) return;
+    tNode.classList.add('fade');
+    setTimeout(() => { if (!verdictShown) { tNode.textContent = txt; tNode.classList.remove('fade'); } }, Math.round(240 * F));
+  };
 
   // Falso frenazo: Boti "duda" y nombra un nivel equivocado antes del veredicto.
   const wrong = LV.filter(l => l !== target)[0] || 'A1';
-  suspense.push(setTimeout(() => { if (!done) setTitle(`¿${wrong}…?`); }, Math.round(1500 * F)));
-  suspense.push(setTimeout(() => { if (!done) setTitle('No, esperen…'); }, Math.round(2200 * F)));
+  suspense.push(setTimeout(() => { if (!done) setTitle(`¿${wrong}…?`); }, Math.round(1600 * F)));
+  suspense.push(setTimeout(() => { if (!done) setTitle('No, esperen…'); }, Math.round(2400 * F)));
 
   const reveal = () => {
     if (done) return;
     suspense.forEach(clearTimeout);
     verdictShown = true;
     buzz(40);
+    const orb = el.querySelector('#s-orbit');
+    if (orb) orb.classList.add('fade');
     const stage = el.querySelector('#s-stage');
     stage.innerHTML = `<div class="s-wave"></div><div class="s-wave w2"></div>` +
       `<div class="s-final">${target}</div>` +
       `<img class="s-boti cheer" src="boti_head.svg" alt="" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">`;
-    const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 600);
-    // El nivel se anuncia letra por letra.
+    const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 760);
+    // El nivel se anuncia con ritmo de habla: pausas distintas y respiro antes del cierre.
     const tEl = el.querySelector('#s-t'), txt = `¡${target}!`;
-    tEl.textContent = '';
-    txt.split('').forEach((ch, i) => later(() => { tEl.textContent += ch; }, 220 + i * 110));
+    tEl.classList.remove('fade'); tEl.textContent = '';
+    let acc = 260;
+    txt.split('').forEach((ch, i) => {
+      const last = i === txt.length - 1;
+      later(() => { tEl.insertAdjacentHTML('beforeend', `<i>${ch}</i>`); if (i) buzz(10); }, acc);
+      acc += jitter(last ? 260 : 130, .28);
+    });
     el.querySelector('#s-s').innerHTML = credits.length
       ? `Ese es tu punto de partida. Damos por aprobado ${credits.map(c => c.lvl).join(' y ')}.`
       : 'Empiezas desde los fundamentos, con todo por descubrir.';
     if (!reduce) {
-      const cols = ['#FFD86B', '#FFC53D', '#FFF3C4', '#1CB0F6'];
-      for (let i = 0; i < 26; i++) {
+      // Estallido desde el centro: cada pieza con su impulso, giro y ritmo.
+      const cols = ['#FFD86B', '#FFC53D', '#FFF3C4', '#1CB0F6', '#8BE08B'];
+      for (let i = 0; i < 34; i++) {
+        const a = (i / 34) * Math.PI * 2 + Math.random() * .5;
+        const r = 120 + Math.random() * 190;
         const s = document.createElement('span');
-        s.className = 'cft';
-        s.style.cssText = `position:absolute;top:-12px;width:10px;height:16px;border-radius:3px;left:${Math.round(Math.random() * 96)}%;background:${cols[i % cols.length]};animation:cft ${(2 + Math.random() * 1.6).toFixed(2)}s linear ${(Math.random() * 1.2).toFixed(2)}s infinite`;
+        s.className = 'cftb';
+        s.style.cssText = `--dx:${Math.round(Math.cos(a) * r)}px;--dy:${Math.round(Math.sin(a) * r * .8)}px;` +
+          `width:${(6 + Math.random() * 6).toFixed(1)}px;height:${(10 + Math.random() * 8).toFixed(1)}px;` +
+          `background:${cols[i % cols.length]};animation-duration:${(2.2 + Math.random() * 1.8).toFixed(2)}s;` +
+          `animation-delay:${(Math.random() * .35).toFixed(2)}s`;
         el.appendChild(s);
       }
+      setTimeout(() => el.querySelectorAll('.cftb').forEach(n => n.remove()), 4800);
     }
     const host = el.querySelector('#s-credits');
-    const base = 700, step = 620;
+    const base = 820;
+    let at = base;
+    const checkSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     credits.forEach((c, i) => {
       const row = document.createElement('div');
       row.className = 's-credit';
-      row.innerHTML = `<span>${c.lvl}</span><span>convalidado</span><span class="cx"><i class="ck" style="font-style:normal;opacity:0">✓</i> +<b class="n">0</b> XP</span>`;
+      row.innerHTML = `<span>${c.lvl}</span><span>convalidado</span><span class="cx"><i class="ck">${checkSvg}</i> +<b class="n">0</b> XP</span>`;
       host.appendChild(row);
       later(() => {
         row.classList.add('in', 'pulse');
-        row.style.opacity = '1'; row.style.transform = 'none';
+        row.style.opacity = '1';
         buzz(18);
         const ck = row.querySelector('.ck');
-        setTimeout(() => { ck.style.transition = 'opacity .3s ease, transform .3s ease'; ck.style.opacity = '1'; }, 140);
-        tickUp(row.querySelector('.n'), c.xp, Math.round(520 * F));
-      }, base + i * step);
+        setTimeout(() => ck.classList.add('draw'), 180);
+        tickUp(row.querySelector('.n'), c.xp, Math.round(760 * F));
+      }, at);
+      // Escalonado con leve solapamiento y variación: cascada, no lista.
+      at += jitter(520 - i * 18, .16);
     });
     const totalXpCredited = credits.reduce((a, c) => a + c.xp, 0);
     // Sin módulos convalidados (A1) la revelación tiene igual su momento: una
@@ -3454,42 +3486,55 @@ function placementReveal(lvl, onDone) {
         row.innerHTML = `<span>Desde cero</span><span>todo el camino es tuyo</span><span class="cx">A1 → C1</span>`;
         host.appendChild(row);
         row.classList.add('in');
-        row.style.opacity = '1'; row.style.transform = 'none';
+        row.style.opacity = '1';
         const track = document.createElement('div');
         track.className = 's-route';
         track.innerHTML = `<i></i>` + LV.map(l => `<span>${l}</span>`).join('');
         host.appendChild(track);
         requestAnimationFrame(() => track.classList.add('go'));
+        // Cada etiqueta se enciende cuando el trazo la alcanza.
+        const labels = [...track.querySelectorAll('span')];
+        labels.forEach((sp, i) => {
+          later(() => {
+            sp.classList.add('lit');
+            if (i) later(() => sp.classList.remove('lit'), 620);
+            else sp.classList.add('hold');
+          }, 120 + i * 430);
+        });
         buzz(30);
       }, base);
     }
+    at += credits.length ? 220 : 1900;
     later(() => {
       if (!credits.length) return;
       const tot = el.querySelector('#s-total');
       tot.innerHTML = `Total convalidado: <b class="n">0</b> XP`;
       tot.classList.add('in');
-      tickUp(tot.querySelector('.n'), totalXpCredited, Math.round(700 * F));
+      tickUp(tot.querySelector('.n'), totalXpCredited, Math.round(900 * F));
       buzz(60);
-    }, base + credits.length * step);
+    }, at);
     later(() => {
       const cta = el.querySelector('#s-cta');
       cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
       cta.querySelector('#s-go').onclick = finish;
-    }, base + credits.length * step + (credits.length ? 850 : 1500));
+    }, at + (credits.length ? 980 : 700));
   };
 
   el.querySelector('#s-skip').onclick = finish;
-  timers.push(setTimeout(reveal, Math.round(3600 * F)));
+  timers.push(setTimeout(reveal, Math.round(3900 * F)));
 }
 
-// Contador que sube de 0 a `to` en `ms` (usado en la revelación y en la cascada del mapa).
+// Contador que sube de 0 a `to` en `ms`: acelera al inicio, frena al final y
+// da un último "tirón" (overshoot leve) antes de asentarse en el valor exacto.
 function tickUp(node, to, ms) {
   if (!node) return;
   if (!ms) { node.textContent = String(to); return; }
   const t0 = performance.now();
   const step = now => {
     const p = Math.min(1, (now - t0) / ms);
-    node.textContent = String(Math.round(to * (1 - Math.pow(1 - p, 3))));
+    let e = 1 - Math.pow(1 - p, 3);
+    if (p > .62 && p < 1) e += Math.sin((p - .62) / .38 * Math.PI) * .035;
+    node.textContent = String(p >= 1 ? to : Math.round(to * e));
     if (p < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
