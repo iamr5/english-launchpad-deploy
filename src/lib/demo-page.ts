@@ -74,6 +74,12 @@ function themeCSS(cfg: DemoConfig) {
     `--accent-d:${c.accentDark ?? shadeHex(c.accent, -0.24)}`,
     `--button:${c.button ?? c.accent}`,
     `--spinner:${c.spinner ?? c.accent}`,
+    // Verde = acción principal (Empecemos / Continuar / Empezar, acierto).
+    // Azul = resalte (opción elegida, foco y pasos del onboarding).
+    `--green:${c.action ?? "#3FAA24"}`,
+    `--greenDark:${c.actionDark ?? shadeHex(c.action ?? "#3FAA24", -0.28)}`,
+    `--blue:${c.highlight ?? "#1CB0F6"}`,
+    `--blueDark:${c.highlightDark ?? shadeHex(c.highlight ?? "#1CB0F6", -0.24)}`,
   ];
   return `<style id="demo-theme">:root{${vars.join(";")}}</style>`;
 }
@@ -167,8 +173,15 @@ export function renderDemoPage(cfg: DemoConfig): Response {
   const html = template
     .replace(
       "<head>",
-      `<head><base href="${ASSET_BASE}">${headTags(cfg)}\n${themeCSS(cfg)}\n` +
+      `<head><base href="${ASSET_BASE}">${headTags(cfg)}\n` +
         `<script>window.DEMO=${json(demo)};</script>`,
+    )
+    // El tema se cierra el <head>: si fuera antes, el :root de la plantilla lo
+    // pisaría por ir después con la misma especificidad.
+    .replace(
+      "</head>",
+      `${themeCSS(cfg)}
+</head>`,
     )
     .replace("<!--MASCOT-SCRIPTS-->", mascotScripts(mascot))
     .replace("<title>Inglés para moverte</title>", `<title>${esc(cfg.meta.title)}</title>`);

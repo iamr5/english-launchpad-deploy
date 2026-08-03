@@ -120,6 +120,8 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
   const accent = g("colors.accent", DEFAULTS.colors.accent);
   const button = g("colors.button") || accent;
   const spinner = g("colors.spinner") || accent;
+  const action = g("colors.action") || "#3FAA24";
+  const highlight = g("colors.highlight") || "#1CB0F6";
   const mods = (get(cfg, "colors.modules", DEFAULTS.colors.modules) as string[]) ?? [];
   const packId = g("mascot.pack", "ozito");
   // Un pack subido no está en PACK_INFO: sus datos salen del manifiesto guardado.
@@ -283,7 +285,40 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
           <span style={{ fontSize: 12, color: "#7A7A7A" }}>ruedita de carga</span>
           <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
         </div>
-        <p style={caption}>Cabecera de módulo, color de cada módulo, botón y ruedita.</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 14 }}>
+          <button
+            style={{
+              background: action,
+              color: "#fff",
+              border: "none",
+              borderRadius: 12,
+              padding: "9px 18px",
+              fontWeight: 800,
+              boxShadow: `0 4px 0 ${shade(action, -0.28)}`,
+              cursor: "default",
+            }}
+          >
+            Empecemos
+          </button>
+          <span
+            style={{
+              flex: 1,
+              minWidth: 150,
+              border: `2px solid ${highlight}`,
+              color: highlight,
+              background: `color-mix(in srgb, ${highlight} 10%, transparent)`,
+              borderRadius: 12,
+              padding: "9px 12px",
+              fontWeight: 700,
+              fontSize: 13.5,
+            }}
+          >
+            Opción elegida
+          </span>
+        </div>
+        <p style={caption}>
+          Cabecera de módulo, colores de módulo, botón, ruedita, acción principal y resaltado.
+        </p>
       </div>
     );
   }
@@ -901,6 +936,18 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 hint="Si lo dejas vacío se usa el color de acento."
                 value={get(cfg, "colors.button")}
                 onChange={upd("colors.button")}
+              />
+              <ColorField
+                label="Botones de acción"
+                hint="Empecemos, Continuar, Empezar; y el acierto en los quizzes."
+                value={get(cfg, "colors.action", "#3FAA24")}
+                onChange={upd("colors.action")}
+              />
+              <ColorField
+                label="Resaltado"
+                hint="La opción que eliges en un quiz, y los pasos del onboarding."
+                value={get(cfg, "colors.highlight", "#1CB0F6")}
+                onChange={upd("colors.highlight")}
               />
               <ColorField
                 label="Ruedita de carga"

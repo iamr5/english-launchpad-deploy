@@ -42,6 +42,18 @@ export type DemoConfig = {
     modules: [string, string, string, string, string];
     /** Color de la ruedita de carga. Por defecto, `accent`. */
     spinner?: string;
+    /**
+     * Acción principal (verde de fábrica): los botones Empecemos / Continuar /
+     * Empezar, la respuesta correcta y la barra de progreso completa.
+     */
+    action?: string;
+    actionDark?: string;
+    /**
+     * Resalte (azul claro de fábrica): la opción elegida en un quiz, el foco de
+     * los campos y los pasos del onboarding.
+     */
+    highlight?: string;
+    highlightDark?: string;
   };
 
   mascot: {
