@@ -1360,7 +1360,8 @@ function applyPlacement(lvl) {
     if (i === start) { const L = lp(m.lessons[0].id); L.unlocked = true; delete L.skipped; return; }
     m.lessons.forEach(creditLesson);
   });
-  PROGRESS['__placement'] = { lvl: start, ts: Date.now() };
+  // revealPending: la primera llegada al mapa se pinta en vivo (cascada), una sola vez.
+  PROGRESS['__placement'] = { lvl: start, ts: Date.now(), revealPending: true };
   saveProgress(PROGRESS);
   return start;
 }
