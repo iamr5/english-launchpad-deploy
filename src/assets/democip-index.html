@@ -1993,7 +1993,9 @@ function renderModule(mod) {
   const modDone = mod.lessons.every(l => isLessonCompleted(l.id));
   document.getElementById('module-title').innerHTML = escapeHtml(moduleName(mod)) + (modDone ? ` ${checkBold(21, '#fff', 3)}` : '');
   const _mi = course.modules.indexOf(mod), _lv = ['A1', 'A2', 'B1', 'B2', 'C1'][_mi] || 'C1';
-  document.getElementById('module-kicker').textContent = `Módulo ${_mi + 1} · Nivel ${_lv}`;
+  document.getElementById('module-kicker').textContent = `Módulo ${_mi + 1} · Nivel ${_lv}` +
+    (isModulePlaced(mod) ? ' · Convalidado por el test de ubicación' : '');
+
   const _sm = document.getElementById('screen-module');
   const _col = modAccent(_mi); // per-module accent (--mod): top bar, button caps, ring, popovers
   _sm.style.setProperty('--mod', _col);
