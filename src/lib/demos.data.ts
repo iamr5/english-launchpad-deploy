@@ -41,7 +41,7 @@ export async function createDemo(row: {
     .insert({
       slug: row.slug,
       institution: row.institution,
-      config: row.config ?? {},
+      config: (row.config ?? {}) as never,
       published: false,
     })
     .select()
