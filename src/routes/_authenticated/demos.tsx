@@ -401,18 +401,33 @@ const caption: React.CSSProperties = {
 function ErrorNote({ error }: { error: Error }) {
   const msg = error?.message ?? "";
   const rls = /row-level security|violates row-level/i.test(msg);
+  const dup = /duplicate key|already exists/i.test(msg);
+  const format = /demos_slug_format|check constraint/i.test(msg);
+
+  const title = rls
+    ? "Tu cuenta no tiene permiso para esto"
+    : dup
+      ? "Ese enlace ya está ocupado"
+      : format
+        ? "Ese enlace no vale"
+        : "No se pudo guardar";
+
+  const help = rls
+    ? "Hay que darle permiso de administrador a tu cuenta. Abajo del todo puedes ver con cuál estás entrando."
+    : dup
+      ? "Ya hay un demo usando ese nombre. Elige otro."
+      : format
+        ? "Usa sólo minúsculas, números y guiones, entre 2 y 39 caracteres."
+        : "Inténtalo otra vez. Si vuelve a fallar, mira el detalle de abajo.";
+
   return (
-    <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 space-y-1">
-      <p className="text-sm font-medium text-destructive">
-        {rls ? "Tu cuenta no tiene permiso de administrador" : "No se pudo guardar"}
-      </p>
-      {rls && (
-        <p className="text-xs text-muted-foreground">
-          La base de datos rechazó la escritura. Hace falta una fila en <code>user_roles</code> con{" "}
-          <code>role = &apos;admin&apos;</code> para tu usuario.
-        </p>
-      )}
-      <pre className="text-[11px] text-muted-foreground whitespace-pre-wrap break-words">{msg}</pre>
+    <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 space-y-1.5">
+      <p className="text-sm font-medium text-destructive">{title}</p>
+      <p className="text-xs text-muted-foreground">{help}</p>
+      <details className="text-[11px] text-muted-foreground">
+        <summary className="cursor-pointer select-none">Ver detalle técnico</summary>
+        <pre className="whitespace-pre-wrap break-words mt-1">{msg}</pre>
+      </details>
     </div>
   );
 }
@@ -423,21 +438,26 @@ function AdminBanner() {
   if (admin.isLoading || admin.data?.ok) return null;
   return (
     <Card className="p-4 mb-4 border-amber-500/50 bg-amber-500/5">
-      <p className="text-sm font-medium">Estás en modo sólo lectura</p>
+      <p className="text-sm font-medium">Puedes mirar, pero no guardar</p>
       <p className="text-sm text-muted-foreground mt-1">
         {admin.data?.email
-          ? `La cuenta ${admin.data.email} no tiene el rol de administrador, así que crear y guardar fallará.`
-          : "No hay sesión iniciada."}
+          ? `La cuenta ${admin.data.email} no tiene permiso de administrador, así que crear un demo o guardar una edición se va a rechazar.`
+          : "No has iniciado sesión, así que no se puede guardar nada."}
       </p>
-      <p className="text-xs text-muted-foreground mt-2">
-        Se arregla con una fila en <code>user_roles</code>:
-      </p>
-      <pre className="text-[11px] bg-muted p-2 rounded mt-1 overflow-x-auto">
-        {`insert into public.user_roles (user_id, role)
+      <details className="mt-2">
+        <summary className="text-xs text-muted-foreground cursor-pointer select-none">
+          Cómo se arregla
+        </summary>
+        <p className="text-xs text-muted-foreground mt-1.5">
+          Ejecutando esto una vez en la base de datos:
+        </p>
+        <pre className="text-[11px] bg-muted p-2 rounded mt-1 overflow-x-auto">
+          {`insert into public.user_roles (user_id, role)
 select id, 'admin' from auth.users
 where lower(email) = lower('${admin.data?.email ?? "tu@correo.com"}')
 on conflict do nothing;`}
-      </pre>
+        </pre>
+      </details>
     </Card>
   );
 }
@@ -471,14 +491,17 @@ function DemosManager() {
       <Shell>
         <Card className="p-6 space-y-3">
           <h2 className="font-bold text-lg">
-            {noTable ? "La tabla de demos aún no existe" : "No se pudieron cargar los demos"}
+            {noTable ? "Todavía no está lista la base de datos" : "No se pudieron cargar los demos"}
           </h2>
           <p className="text-sm text-muted-foreground">
             {noTable
-              ? "Publica los cambios para que se aplique la migración que crea la tabla `demos`. Mientras tanto, los demos que ya existían se siguen sirviendo desde los archivos de src/demos."
-              : "Si acabas de entrar, comprueba que tu cuenta tenga el rol de administrador."}
+              ? "Falta publicar los cambios para que se cree la tabla donde se guardan los demos. Mientras tanto no se pierde nada: los enlaces que ya funcionaban siguen funcionando."
+              : "Puede ser un corte momentáneo. Recarga la página; si sigue igual, mira el detalle de abajo."}
           </p>
-          <pre className="text-xs bg-muted p-3 rounded-lg overflow-x-auto">{msg}</pre>
+          <details className="text-xs text-muted-foreground">
+            <summary className="cursor-pointer select-none">Ver detalle técnico</summary>
+            <pre className="bg-muted p-3 rounded-lg overflow-x-auto mt-1.5">{msg}</pre>
+          </details>
         </Card>
       </Shell>
     );
@@ -501,7 +524,7 @@ function DemosManager() {
           <DemoEditor key={current.slug} demo={current} />
         ) : (
           <Card className="p-8 text-center text-muted-foreground">
-            Todavía no hay ningún demo. Crea el primero.
+            Aún no hay ningún demo. Crea el primero con el formulario de la izquierda.
           </Card>
         )}
       </div>
@@ -516,7 +539,7 @@ function Shell({ children }: { children: React.ReactNode }) {
         <div className="mx-auto max-w-6xl px-6 py-5">
           <h1 className="text-2xl font-bold">Demos</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Cada demo es un enlace propio con los colores, el logo y la mascota de una institución.
+            Cada demo es un enlace con los colores, el logo y la mascota de una institución.
           </p>
         </div>
       </header>
@@ -537,47 +560,60 @@ function SessionFooter() {
 
   return (
     <footer className="mx-auto max-w-6xl px-6 pb-10 pt-2">
-      <div className="rounded-lg border bg-muted/40 p-3 font-mono text-[11.5px] leading-relaxed">
-        {s.isLoading && <span className="text-muted-foreground">comprobando sesión…</span>}
+      <div className="rounded-lg border bg-muted/40 p-3.5 text-[13px] leading-relaxed">
+        {s.isLoading && <span className="text-muted-foreground">Comprobando tu sesión…</span>}
         {d && (
-          <div className="flex flex-wrap gap-x-6 gap-y-1">
-            <span>
-              <span className="text-muted-foreground">cuenta: </span>
-              <b>{d.email ?? "— sin sesión de Supabase —"}</b>
-            </span>
-            <span>
-              <span className="text-muted-foreground">user id: </span>
-              {d.userId ? d.userId.slice(0, 8) + "…" : "—"}
-            </span>
-            <span>
-              <span className="text-muted-foreground">roles: </span>
-              {d.roles.length ? d.roles.join(", ") : "ninguno"}
-            </span>
-            <span>
-              <span className="text-muted-foreground">admin: </span>
-              <b className={d.isAdmin ? "text-emerald-600" : "text-destructive"}>
-                {d.isAdmin ? "sí" : "no"}
-              </b>
-            </span>
-            {/* fake_login sólo hace que el guardia de ruta no compruebe nada. Si
-                además hay sesión de Supabase, las consultas siguen yendo con
-                ella y se puede escribir con normalidad; lo grave es cuando no
-                la hay. */}
+          <>
+            <p>
+              Estás entrando como <b>{d.email ?? "nadie: no has iniciado sesión"}</b>
+              {d.email && (
+                <>
+                  {" y "}
+                  {d.isAdmin ? (
+                    <b className="text-emerald-600">puedes crear y editar demos</b>
+                  ) : (
+                    <b className="text-destructive">no puedes guardar cambios</b>
+                  )}
+                  .
+                </>
+              )}
+            </p>
+
+            {!d.isAdmin && d.email && (
+              <p className="text-muted-foreground mt-1">
+                Tu cuenta no tiene permiso de administrador, así que crear un demo o guardar una
+                edición se rechazará.
+              </p>
+            )}
+
+            {/* fake_login sólo hace que el guardia de la ruta no compruebe nada.
+                Si además hay sesión, las consultas van firmadas con ella y se
+                escribe con normalidad; lo grave es cuando no la hay. */}
             {d.fakeLogin && d.email && (
-              <span className="text-muted-foreground">
-                fake_login activo (sólo salta el guardia de ruta; la sesión real es la de arriba)
-              </span>
+              <p className="text-muted-foreground mt-1">
+                Tienes puesto el atajo de pruebas <code>fake_login</code>, pero no molesta: sólo
+                evita que la página te pida iniciar sesión. Lo que se guarda va con la cuenta de
+                arriba.
+              </p>
             )}
             {d.fakeLogin && !d.email && (
-              <span className="text-destructive">
-                fake_login activo y sin sesión de Supabase — toda escritura será rechazada
-              </span>
+              <p className="text-destructive mt-1">
+                Has entrado con el atajo de pruebas <code>fake_login</code> y sin cuenta, así que
+                nada de lo que hagas se va a guardar. Quítalo e inicia sesión.
+              </p>
             )}
-            {d.error && <span className="text-destructive">error: {d.error}</span>}
-          </div>
+
+            {d.error && <p className="text-destructive mt-1">Error al comprobarlo: {d.error}</p>}
+
+            <p className="text-muted-foreground mt-2 text-[11.5px]">
+              Datos técnicos, por si hacen falta: usuario{" "}
+              <code>{d.userId ? d.userId.slice(0, 8) + "…" : "—"}</code> · permisos{" "}
+              <code>{d.roles.length ? d.roles.join(", ") : "ninguno"}</code>
+            </p>
+          </>
         )}
         {d && d.fakeLogin && !d.email && (
-          <div className="mt-2 flex items-center gap-2">
+          <div className="mt-3">
             <Button
               size="sm"
               variant="outline"
@@ -587,7 +623,7 @@ function SessionFooter() {
                 location.reload();
               }}
             >
-              Quitar fake_login y recargar
+              Quitar el atajo e iniciar sesión
             </Button>
           </div>
         )}
@@ -736,7 +772,9 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
             aprendoenglish.com{url}
           </a>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {published ? "Visible para cualquiera con el enlace." : "Borrador: el enlace da 404."}
+            {published
+              ? "Cualquiera con el enlace puede abrirlo."
+              : "Es un borrador: quien abra el enlace verá una página de «no encontrado»."}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -776,7 +814,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <Field label="Institución" value={institution} onChange={setInstitution} />
               <Field
                 label="Texto de la cabecera"
-                hint="Vacío deja el logotipo AprendoEnglish."
+                hint="Si lo dejas vacío se usa el logotipo de AprendoEnglish."
                 value={get(cfg, "brand.headerText")}
                 onChange={upd("brand.headerText")}
               />
@@ -789,7 +827,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <FileField
                 label="Icono de la barra superior"
-                hint="Vacío usa la cabeza de la mascota."
+                hint="Si lo dejas vacío se usa la cabeza de la mascota."
                 slug={demo.slug}
                 kind="icono"
                 value={get(cfg, "brand.appbarIcon")}
@@ -827,13 +865,13 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <ColorField
                 label="Botones"
-                hint="Vacío usa el acento."
+                hint="Si lo dejas vacío se usa el color de acento."
                 value={get(cfg, "colors.button")}
                 onChange={upd("colors.button")}
               />
               <ColorField
                 label="Ruedita de carga"
-                hint="La que se ve al entrar a un mapa. Vacío usa el acento."
+                hint="La ruedita que gira mientras carga un mapa. Si lo dejas vacío se usa el color de acento."
                 value={get(cfg, "colors.spinner")}
                 onChange={upd("colors.spinner")}
               />
@@ -911,7 +949,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <Field
                 label="Cómo se llama"
-                hint="Vacío usa el nombre del pack. Aparece dentro de las lecciones."
+                hint="Cómo lo llaman las lecciones. Si lo dejas vacío se usa el nombre que trae la mascota."
                 value={get(cfg, "mascot.name")}
                 placeholder="Ozzy"
                 onChange={upd("mascot.name")}
@@ -933,7 +971,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
             <TabsContent value="textos" className="space-y-4">
               <Field
                 label="Cómo se dirige al alumno"
-                hint="Sustituye {{audience}} en todo el curso: «ingenier@», «estudiante»…"
+                hint="Así se dirige el curso al alumno: «ingenier@», «estudiante»… Se cambia en todas las lecciones a la vez."
                 value={get(cfg, "copy.audience")}
                 placeholder={DEFAULTS.copy.audience}
                 onChange={upd("copy.audience")}
@@ -954,7 +992,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <hr />
               <p className="text-sm font-medium">Iconos</p>
               <p className="text-xs text-muted-foreground -mt-2">
-                Un emoji, o la URL de una imagen.
+                Escribe un emoji o pega la dirección de una imagen.
               </p>
               <Field
                 label="Racha"
@@ -964,7 +1002,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <Field
                 label="Meta diaria"
-                hint="Vacío conserva el anillo de progreso."
+                hint="Si lo dejas vacío se conserva el anillo de progreso de siempre."
                 value={get(cfg, "icons.goal")}
                 placeholder="⏱"
                 onChange={upd("icons.goal")}
@@ -979,7 +1017,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
 
             <TabsContent value="mapa" className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                El fondo del mapa de cada módulo. Lo que dejes vacío usa el de siempre.
+                El fondo del mapa de cada módulo. Lo que dejes vacío conserva el de siempre.
               </p>
               {MODULE_LABELS.map((label, i) => (
                 <FileField
@@ -1041,8 +1079,8 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Guarda para ver los cambios aquí. Si acabas de guardar y no cambia, espera un momento y
-            recarga: la página cachea su configuración un minuto.
+            Esto muestra lo último guardado. Si acabas de guardar y no ves el cambio, espera unos
+            segundos y pulsa Recargar.
           </p>
         </div>
       </div>

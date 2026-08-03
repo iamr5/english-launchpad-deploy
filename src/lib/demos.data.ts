@@ -146,9 +146,9 @@ export async function uploadBrandFile(slug: string, kind: string, file: File): P
 
 /** Motivo por el que un slug no vale, o null si está bien. */
 export function slugProblem(slug: string): string | null {
-  if (!slug) return "Hace falta un nombre para el enlace.";
-  if (RESERVED_SLUGS.has(slug)) return `«${slug}» ya lo usa la aplicación. Elige otro.`;
-  if (!isValidSlug(slug)) return "Sólo minúsculas, números y guiones; entre 2 y 39 caracteres.";
+  if (!slug) return "Escribe un nombre para el enlace.";
+  if (RESERVED_SLUGS.has(slug)) return `«${slug}» ya lo usa una página del sitio. Elige otro.`;
+  if (!isValidSlug(slug)) return "Usa sólo minúsculas, números y guiones, entre 2 y 39 caracteres.";
   return null;
 }
 
