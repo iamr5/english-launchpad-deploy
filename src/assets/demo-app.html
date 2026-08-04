@@ -67,7 +67,11 @@
   .brand .b-aprendo { color: #000; }
   .brand .b-english { color: #539bec; }
   .brand .b-com     { color: #ea4e57; font-size: .72em; } /* smaller than the wordmark */
-  .appbar-en { height: 40px; margin: -2px -5px -2px 0; } /* Boti-head logo; negative right margin pulls the title closer; top/bottom overflow the bar instead of growing it */
+  .appbar-en { height: 40px; margin: -2px -5px -2px 0; }
+  /* Un escudo o logo subido no lleva los margenes negativos: esos estan pensados
+     para la cabeza de la mascota, que desborda la barra a proposito. Un emblema
+     institucional se quiere entero y con su aire. */
+  .appbar-en.brand-icon { height: 34px; margin: 0 7px 0 0; object-fit: contain; } /* Boti-head logo; negative right margin pulls the title closer; top/bottom overflow the bar instead of growing it */
   /* Module app bar: title row + a module-progress bar underneath */
   .appbar.appbar-col { flex-direction: column; align-items: stretch; gap: 5px; }
   .appbar-row { display: flex; align-items: center; gap: 6px; }
@@ -1346,8 +1350,11 @@ function applyIcons() {
   document.querySelectorAll('.streak-chip .sc-em').forEach(el => {
     el.outerHTML = iconHTML(CFG.icons.streak, 'sc-em');
   });
+  // Manda el icono que haya subido el demo; la cabeza de la mascota es sólo el
+  // respaldo. Al reves —que era como estaba— el icono propio nunca se veia.
   document.querySelectorAll('.appbar-en').forEach(img => {
-    const ic = mascotHeadIcon(); if (ic) img.src = ic;
+    const ic = CFG.brand.appbarIcon || mascotHeadIcon();
+    if (ic) { img.src = ic; img.classList.toggle('brand-icon', !!CFG.brand.appbarIcon); }
   });
   if (!CFG.icons.goal) return;   // sin icono propio se conserva el anillo
   document.querySelectorAll('.goal-chip .gc-ring').forEach(ring => {
