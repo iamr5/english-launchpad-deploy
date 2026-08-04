@@ -73,8 +73,12 @@
   .botibubble::after{content:''; position:absolute; left:50%; top:100%; transform:translateX(-50%); margin-top:-1.5px;
     border:10px solid transparent; border-bottom:0; border-top-color:var(--surface)}
   /* 1139.5 / 757.6 = 1.504 → el alto sale del ancho para no deformarlo */
-  .botistand{width:168px; height:253px}
-  .botimini{width:52px; height:78px; flex:none; margin:-4px 0 -10px}
+  /* position:relative es imprescindible: las capas de la mascota van absolutas
+     dentro, y sin un contenedor posicionado se resuelven contra un ancestro y
+     salen gigantes. El alto es un respaldo con la proporcion de Boti; al montar,
+     cada mascota lo recalcula con la suya. */
+  .botistand{position:relative; width:168px; height:253px}
+  .botimini{position:relative; width:52px; height:78px; flex:none; margin:-4px 0 -10px}
   @media (max-width:900px){ .botiside{padding-top:6px} }
 
   /* ===== STUDENT (phone) ===== */

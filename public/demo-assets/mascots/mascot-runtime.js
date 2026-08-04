@@ -111,10 +111,24 @@
       var el = typeof target === 'string' ? document.querySelector(target) : target;
       if (!el || !pack) return null;
       el.classList.add(api.rootClass());
+
+      // Las capas van con position:absolute e inset:0, asi que necesitan que el
+      // contenedor este posicionado. Si no lo esta, se resuelven contra algun
+      // ancestro y la mascota sale gigante. Se garantiza aqui para no depender
+      // de que cada sitio que la monte se acuerde.
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+
       el.innerHTML = api.html();
+
       if (opts && opts.width) {
         el.style.width = opts.width + 'px';
         el.style.height = (opts.width * api.ratio()) + 'px';
+      } else {
+        // Sin ancho pedido se respeta el del hueco, pero el alto se recalcula
+        // con la proporcion de ESTA mascota: el del hueco suele estar pensado
+        // para otra y la dejaria estirada.
+        var w = el.getBoundingClientRect().width;
+        if (w) el.style.height = (w * api.ratio()) + 'px';
       }
       return el;
     },
