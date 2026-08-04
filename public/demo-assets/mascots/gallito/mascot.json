@@ -9,7 +9,7 @@
   "rootClass": "gallito",
   "shadow": true,
   "artboard": { "width": 809.74, "height": 1179.21 },
-  "headIcon": "layers/head.svg",
+  "headIcon": "head-icon.svg",
   "layers": {
     "cape": "layers/cape.svg",
     "legs": "layers/legs.svg",

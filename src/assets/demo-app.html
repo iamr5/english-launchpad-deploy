@@ -80,7 +80,10 @@
     box-shadow: 0 5px 0 var(--mod-d, #5A123E); }
   .appbar.appbar-module .appbar-row { min-height: 46px; }
   .appbar.appbar-module .back::before { background: #fff; }
-  .appbar.appbar-module .mod-head { display: flex; flex-direction: column; min-width: 0; }
+  /* flex:1 hace que el titulo se quede con el hueco libre, asi el chip de la meta
+     se va al borde derecho en vez de quedar pegado al texto. */
+  .appbar.appbar-module .mod-head { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; }
+  .appbar.appbar-module .goal-chip { flex: 0 0 auto; margin-left: auto; }
   .appbar.appbar-module .mod-kicker { font-size: 13px; font-weight: 800; letter-spacing: .8px;
     text-transform: uppercase; opacity: .92; margin-bottom: 2px; }
   .appbar.appbar-module .title { color: #fff; font-size: 21px; font-weight: 800; line-height: 1.15; }
@@ -667,7 +670,7 @@
      costura (ola.svg); un demo puede sustituirla por su propia imagen, y
      entonces se estira de lado a lado en vez de repetirse. */
   .ob-ola { position: absolute; top: 0; left: 0; right: 0; height: 62px; z-index: 0;
-    pointer-events: none; color: var(--ola, var(--blue));
+    pointer-events: none; color: var(--ola, #0D47A1);
     background-image: var(--ola-img, none);
     background-repeat: repeat-x; background-position: center top; background-size: auto 100%; }
   .ob-ola.custom { background-repeat: no-repeat; background-size: 100% 100%; }
@@ -3609,7 +3612,7 @@ function placementReveal(lvl, onDone) {
       <div class="s-orbit" id="s-orbit">${orbit}</div>
       <img class="s-boti" id="s-boti" src="${mascotHeadIcon()}" alt="">
     </div>
-    <div class="s-t" id="s-t">Boti está decidiendo…</div>
+    <div class="s-t" id="s-t">${CFG.mascot.name || 'Boti'} está decidiendo…</div>
     <div class="s-s" id="s-s">Leyendo tus respuestas del test</div>
     <div class="s-credits" id="s-credits"></div>
     <div class="s-total" id="s-total"></div>
@@ -4084,7 +4087,7 @@ function obFinish() {
   saveProfile({ name: OB.name, goal: +OB.goal || 15, level: OB.lvl || 0, motive: OB.mot || '', created: new Date().toISOString() });
   applyPlacement(OB.lvl || 0);
   renderCourse();
-  toast('¡Hola, ' + OB.name + '! Boti te espera 🤖');
+  toast('¡Hola, ' + OB.name + '! ' + (CFG.mascot.name || 'Boti') + ' te espera ' + (CFG.mascot.emoji || ''));
 }
 // Finish onboarding and drop straight into the very first lesson (from the last-step bar).
 function obFinishToLesson() {
@@ -4093,7 +4096,7 @@ function obFinishToLesson() {
   const mod = course.modules[start], fl = mod.lessons[0];
   renderCourse();
   if (fl) openLesson(fl, mod);
-  toast('¡Hola, ' + OB.name + '! Boti te espera 🤖');
+  toast('¡Hola, ' + OB.name + '! ' + (CFG.mascot.name || 'Boti') + ' te espera ' + (CFG.mascot.emoji || ''));
 }
 function startOnboarding() { OB = { step: 0, name: '', mot: '', lvl: null, goal: '' }; PL = { state: 'intro', items: [], i: 0, sel: null, ok: {} }; show('onboard'); obRender(); }
 
