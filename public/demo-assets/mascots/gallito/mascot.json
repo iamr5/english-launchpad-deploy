@@ -1,0 +1,31 @@
+{
+  "id": "gallito",
+  "name": "Gallito",
+  "shortName": "Gallito",
+  "kind": "gallito guía",
+  "emoji": "🐓",
+  "engine": "layers",
+  "css": "mascot.css",
+  "rootClass": "gallito",
+  "shadow": true,
+  "artboard": { "width": 809.74, "height": 1179.21 },
+  "headIcon": "layers/head.svg",
+  "layers": {
+    "cape": "layers/cape.svg",
+    "legs": "layers/legs.svg",
+    "body": "layers/body.svg",
+    "head": "layers/head.svg",
+    "eyes": "layers/eyes.svg"
+  },
+  "stack": [
+    { "group": "torso", "children": [{ "layer": "cape" }] },
+    { "layer": "legs" },
+    {
+      "group": "torso",
+      "children": [
+        { "layer": "body" },
+        { "wrapper": "headbob", "children": [{ "layer": "head" }, { "layer": "eyes" }] }
+      ]
+    }
+  ]
+}

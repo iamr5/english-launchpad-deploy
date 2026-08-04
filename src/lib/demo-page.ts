@@ -1,6 +1,7 @@
 import template from "../assets/demo-app.html?raw";
 import ozitoPack from "../../public/demo-assets/mascots/ozito/mascot.json";
 import botiPack from "../../public/demo-assets/mascots/boti/mascot.json";
+import gallitoPack from "../../public/demo-assets/mascots/gallito/mascot.json";
 import { type DemoConfig, shadeHex } from "./demo-config";
 
 // Punto único donde se arma la página de un demo: coge la plantilla común y le
@@ -27,6 +28,7 @@ type MascotPack = {
 const BUILT_IN: Record<string, MascotPack> = {
   ozito: ozitoPack as MascotPack,
   boti: botiPack as MascotPack,
+  gallito: gallitoPack as MascotPack,
 };
 
 function esc(s: string) {

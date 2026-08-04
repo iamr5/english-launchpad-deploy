@@ -79,6 +79,13 @@ const PACK_INFO: Record<
     emoji: "🤖",
     head: "/demo-assets/mascots/boti/boti_head.svg",
   },
+  gallito: {
+    fullName: "Gallito",
+    name: "Gallito",
+    kind: "gallito guía",
+    emoji: "🐓",
+    head: "/demo-assets/mascots/gallito/layers/head.svg",
+  },
 };
 
 /** Oscurece un hex igual que lo hace el servidor, para que la sombra coincida. */
@@ -1031,6 +1038,11 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                       note: "Por defecto. Capas SVG animadas por CSS.",
                     },
                     { id: "boti", name: "Boti 🤖", note: "El robot. Lo usa /democip." },
+                    {
+                      id: "gallito",
+                      name: "Gallito 🐓",
+                      note: "Cabecea, parpadea y se estira; movimiento vertical.",
+                    },
                   ].map((p) => {
                     const active = get(cfg, "mascot.pack", "ozito") === p.id;
                     return (

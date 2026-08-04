@@ -8,6 +8,7 @@ eligiendo otro pack, sin tocar código.
 | --- | --- | --- | --- |
 | [`ozito/`](ozito/README.md) | Ozzy el Osito 🐻 | capas SVG + CSS | **Sí — empieza aquí** |
 | [`boti/`](boti/README.md) | Boti 🤖 | script (`boti.js`) | No |
+| [`gallito/`](gallito/README.md) | Gallito 🐓 | capas SVG + CSS | Sí, igual que ozito |
 
 `mascot-runtime.js` es el cargador común: lee un manifiesto y arma el DOM de la
 mascota. Para packs de capas construye el stack; para packs de script carga el

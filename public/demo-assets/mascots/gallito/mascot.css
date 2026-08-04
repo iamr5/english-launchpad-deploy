@@ -1,0 +1,99 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   gallito · mascot.css — la animación del Gallito.
+
+   Parte de la de Ozzy, con los cambios que pidió el encargo:
+
+     · sin brazos — el personaje no los tiene como capa aparte, así que no hay
+       péndulo: todo el movimiento nace del torso;
+     · las patas se ESTIRAN desde el suelo y no se despegan, igual que en Ozzy;
+     · la cara cabecea;
+     · el movimiento es sobre todo VERTICAL: las rotaciones son mínimas, sólo
+       lo justo para que no parezca un ascensor.
+
+   Los pivotes salen de dónde está de verdad cada pieza dentro del lienzo
+   809.74 × 1179.21: cabeza arriba (8–53% de alto), cuerpo en medio (57–83%),
+   patas hasta el suelo (57–97%) y ojos entre el 40% y el 57%. Van en porcentaje,
+   así que el gallito se ve igual a cualquier tamaño.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Sombra de piso: fija, el gallito está plantado. */
+.gallito .shadow {
+  position: absolute; left: 50%; bottom: 2.4%; width: 60%; height: 5%;
+  transform: translateX(-50%); border-radius: 50%;
+  background: rgba(0, 0, 0, .22);
+}
+
+.gallito .bear  { position: absolute; inset: 0; }
+.gallito .group { position: absolute; inset: 0; }
+.gallito .layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* El torso sube y baja; los pies no se enteran. */
+.gallito .torso { animation: gallito-bob 3.4s ease-in-out infinite; }
+
+/* El cuerpo respira desde donde se apoya en las patas. */
+.gallito .body { transform-origin: 51% 83%; animation: gallito-breathe 3.4s ease-in-out infinite; }
+
+/* La capa va detrás y se retrasa un poco: da sensación de peso. */
+.gallito .cape { transform-origin: 50% 60%; animation: gallito-cape 4.6s ease-in-out infinite; }
+
+/* Las patas se estiran desde el pie plantado para seguir la subida del torso. */
+.gallito .legs { transform-origin: 55% 97%; animation: gallito-legs 3.4s ease-in-out infinite; }
+
+/* La cabeza cabecea. El envoltorio mueve cabeza y ojos juntos: si se animara
+   sólo la cabeza, los ojos se quedarían atrás. */
+.gallito .headbob {
+  position: absolute; inset: 0;
+  transform-origin: 50% 52%;                 /* el cuello: donde la cabeza se une al cuerpo */
+  animation: gallito-head 3.4s ease-in-out infinite;
+}
+
+/* Parpadeo: los ojos se aplastan sobre su propio centro. Va en su propio ciclo,
+   más largo y sin relación con el del cuerpo, para que no caiga siempre en el
+   mismo punto del cabeceo. */
+.gallito .eyes {
+  transform-origin: 52.5% 47%;
+  animation: gallito-blink 5.9s ease-in-out infinite;
+}
+
+/* Rebote vertical: sólo sube y baja. */
+@keyframes gallito-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-1.9%); }
+}
+
+@keyframes gallito-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scaleX(1.014) scaleY(.988); }
+}
+
+/* Cabeceo: sobre todo vertical, con un grado escaso de giro. */
+@keyframes gallito-head {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  35%      { transform: translateY(-.9%) rotate(-.9deg); }
+  70%      { transform: translateY(-.5%) rotate(.7deg); }
+}
+
+/* La capa acompaña con un poco de retraso. */
+@keyframes gallito-cape {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-.7%) rotate(1.1deg); }
+}
+
+/* Estirón de las patas, con el pie quieto. */
+@keyframes gallito-legs {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(1.045); }
+}
+
+/* Dos parpadeos seguidos y una pausa larga: así no parece un metrónomo. */
+@keyframes gallito-blink {
+  0%, 86%  { transform: scaleY(1); }
+  88%      { transform: scaleY(.06); }
+  90%      { transform: scaleY(1); }
+  93%      { transform: scaleY(.06); }
+  95%,100% { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallito * { animation: none !important; }
+}
