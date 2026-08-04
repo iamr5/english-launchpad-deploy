@@ -1046,7 +1046,15 @@
   .sort .s-route span.lit.hold { animation: sortLabelBeat 2.4s ease-in-out infinite; }
   @keyframes sortLabelBeat { 0%,100% { transform: translateY(-2px) scale(1.12) } 50% { transform: translateY(-4px) scale(1.2) } }
   /* CTA: sube suave y un brillo la barre una vez */
-  .sort #s-cta .btn { position: relative; overflow: hidden; animation: sortCtaIn .7s cubic-bezier(.2,1.1,.3,1) both; }
+  /* El bloque final —convalidaciones, ruta, total y botones— entra de una sola
+     vez. Antes cada pieza aparecia en su fotograma y la pantalla se montaba a
+     trompicones. Los botones ya estan en el DOM desde el principio, con opacidad
+     0, asi que no hay salto de maquetacion cuando aparecen. */
+  .sort #s-credits, .sort #s-total, .sort #s-cta, .sort #s-skip {
+    opacity: 0; pointer-events: none; transition: opacity .42s ease; }
+  .sort.revealed #s-credits, .sort.revealed #s-total,
+  .sort.revealed #s-cta, .sort.revealed #s-skip { opacity: 1; pointer-events: auto; }
+  .sort #s-cta .btn { position: relative; overflow: hidden; }
   @keyframes sortCtaIn { 0% { opacity: 0; transform: translateY(14px) } 100% { opacity: 1; transform: none } }
   .sort #s-cta .btn::after { content: ''; position: absolute; top: 0; bottom: 0; width: 55%;
     background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent);
@@ -3636,7 +3644,6 @@ function placementReveal(lvl, onDone) {
     <div class="s-aura"></div>${dust}
     <div class="s-stage" id="s-stage">
       <div class="s-orbit" id="s-orbit">${orbit}</div>
-      <img class="s-boti" id="s-boti" src="${mascotHeadIcon()}" alt="">
     </div>
     <div class="s-t" id="s-t">${CFG.mascot.name || 'Boti'} está decidiendo…</div>
     <div class="s-s" id="s-s">Leyendo tus respuestas del test</div>
@@ -3688,8 +3695,7 @@ function placementReveal(lvl, onDone) {
     if (orb) orb.classList.add('fade');
     const stage = el.querySelector('#s-stage');
     stage.innerHTML = `<div class="s-wave"></div><div class="s-wave w2"></div>` +
-      `<div class="s-final">${target}</div>` +
-      `<img class="s-boti cheer" src="${mascotHeadIcon()}" alt="" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">`;
+      `<div class="s-final">${target}</div>`;
     const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 760);
     // El nivel se anuncia con ritmo de habla: pausas distintas y respiro antes del cierre.
     const tEl = el.querySelector('#s-t'), txt = `¡${target}!`;
@@ -3719,68 +3725,38 @@ function placementReveal(lvl, onDone) {
       }
       setTimeout(() => el.querySelectorAll('.cftb').forEach(n => n.remove()), 4800);
     }
+    // Todo lo que queda por mostrar se arma YA y entra de una sola vez. Antes
+    // cada pieza llegaba en su propio fotograma —fila, ruta, cada etiqueta de
+    // nivel, el total y al final el botón—, y la pantalla se montaba a
+    // trompicones delante del alumno.
     const host = el.querySelector('#s-credits');
-    const base = 820;
-    let at = base;
     const checkSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-    credits.forEach((c, i) => {
-      const row = document.createElement('div');
-      row.className = 's-credit';
-      row.innerHTML = `<span>${c.lvl}</span><span>convalidado</span><span class="cx"><i class="ck">${checkSvg}</i> +<b class="n">0</b> XP</span>`;
-      host.appendChild(row);
-      later(() => {
-        row.classList.add('in', 'pulse');
-        row.style.opacity = '1';
-        buzz(18);
-        const ck = row.querySelector('.ck');
-        setTimeout(() => ck.classList.add('draw'), 180);
-        tickUp(row.querySelector('.n'), c.xp, Math.round(760 * F));
-      }, at);
-      // Escalonado con leve solapamiento y variación: cascada, no lista.
-      at += jitter(520 - i * 18, .16);
-    });
-    const totalXpCredited = credits.reduce((a, c) => a + c.xp, 0);
-    // Sin módulos convalidados (A1) la revelación tiene igual su momento: una
-    // línea propia y la ruta A1→C1 dibujándose.
-    if (!credits.length) {
-      later(() => {
-        const row = document.createElement('div');
-        row.className = 's-credit zero';
-        row.innerHTML = `<span>Desde cero</span><span class="cx">A1 → C1</span>`;
-        host.appendChild(row);
-        row.classList.add('in');
-        row.style.opacity = '1';
-        const track = document.createElement('div');
-        track.className = 's-route';
-        track.innerHTML = `<i></i>` + LV.map(l => `<span>${l}</span>`).join('');
-        host.appendChild(track);
-        requestAnimationFrame(() => track.classList.add('go'));
-        // Cada etiqueta se enciende cuando el trazo la alcanza.
-        const labels = [...track.querySelectorAll('span')];
-        labels.forEach((sp, i) => {
-          later(() => {
-            sp.classList.add('lit');
-            if (i) later(() => sp.classList.remove('lit'), 620);
-            else sp.classList.add('hold');
-          }, 120 + i * 430);
-        });
-        buzz(30);
-      }, base);
-    }
-    at += credits.length ? 220 : 1900;
-    later(() => {
-      if (!credits.length) return;
+
+    if (credits.length) {
+      host.innerHTML = credits.map(c =>
+        `<div class="s-credit in" style="opacity:1"><span>${c.lvl}</span><span>convalidado</span>` +
+        `<span class="cx"><i class="ck draw">${checkSvg}</i> +<b class="n">${c.xp}</b> XP</span></div>`
+      ).join('');
       const tot = el.querySelector('#s-total');
-      tot.innerHTML = `Total convalidado: <b class="n">0</b> XP`;
+      tot.innerHTML = `Total convalidado: <b class="n">${credits.reduce((a, c) => a + c.xp, 0)}</b> XP`;
       tot.classList.add('in');
-      tickUp(tot.querySelector('.n'), totalXpCredited, Math.round(900 * F));
-      buzz(60);
-    }, at);
-    later(() => {
-      const cta = el.querySelector('#s-cta');
-      cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
-      cta.querySelector('#s-go').onclick = finish;
-    }, at + (credits.length ? 980 : 700));
+    } else {
+      // Sin convalidaciones, la ruta completa ya dibujada y el nivel de partida
+      // marcado; no se enciende etiqueta por etiqueta.
+      host.innerHTML =
+        `<div class="s-credit zero in" style="opacity:1"><span>Desde cero</span><span class="cx">A1 → C1</span></div>` +
+        `<div class="s-route go"><i></i>` +
+        LV.map(l => `<span class="lit${l === target ? ' hold' : ''}">${l}</span>`).join('') +
+        `</div>`;
+    }
+
+    const cta = el.querySelector('#s-cta');
+    cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
+    cta.querySelector('#s-go').onclick = finish;
+    buzz(60);
+    // Un fotograma para que el navegador tenga el bloque listo antes de encender
+    // la transición: si no, la primera vez entra sin fundido.
+    requestAnimationFrame(() => el.classList.add('revealed'));
   };
 
   el.querySelector('#s-skip').onclick = finish;
