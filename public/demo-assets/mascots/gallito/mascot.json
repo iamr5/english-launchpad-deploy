@@ -1,9 +1,9 @@
 {
   "id": "gallito",
-  "name": "Gallito",
+  "name": "Gallito el Tumi",
   "shortName": "Gallito",
-  "kind": "gallito guía",
-  "emoji": "🐓",
+  "kind": "tumi guía",
+  "emoji": "✨",
   "engine": "layers",
   "css": "mascot.css",
   "rootClass": "gallito",

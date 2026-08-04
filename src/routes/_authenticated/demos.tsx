@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createDemo,
   deleteDemo,
@@ -14,7 +14,7 @@ import {
   type DemoRow,
 } from "@/lib/demos.data";
 import { DEFAULTS } from "@/lib/demo-config";
-import { packChoices, packInfo } from "@/lib/mascot-packs";
+import { BUILT_IN_PACKS, packAsset, packChoices, packInfo } from "@/lib/mascot-packs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -842,11 +842,18 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
     if (id === "custom" && man) return g2("mascot.baseUrl") + man.headIcon;
     return (PACK_INFO[id] ?? PACK_INFO.ozito).head;
   })();
+  // Lo que trae la mascota elegida: se enseña como marca de agua en los campos.
   const packDefaults = (() => {
     const id = g2("mascot.pack", "ozito");
     const man = get(cfg, "mascot.manifest", null) as MascotManifest | null;
-    if (id === "custom" && man) return { fullName: man.name, name: man.shortName ?? man.name };
-    return PACK_INFO[id] ?? PACK_INFO.ozito;
+    if (id === "custom" && man)
+      return {
+        fullName: man.name,
+        name: man.shortName ?? man.name,
+        kind: man.kind ?? "mascota guía",
+        emoji: man.emoji ?? "✨",
+      };
+    return packInfo(id);
   })();
   const url = `/${demo.slug}`;
 
@@ -1006,6 +1013,11 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
             </TabsContent>
 
             <TabsContent value="mascota" className="space-y-4">
+              <MascotStage
+                packId={g2("mascot.pack", "ozito")}
+                manifest={get(cfg, "mascot.manifest", null) as MascotManifest | null}
+                baseUrl={g2("mascot.baseUrl")}
+              />
               <div className="space-y-1.5">
                 <Label>Personaje</Label>
                 <div className="grid gap-2 sm:grid-cols-2">
@@ -1052,28 +1064,28 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <Field
                 label="Nombre completo"
-                hint="Con el que se presenta al empezar: «Ozzy el Osito»."
+                hint={`Con el que se presenta al empezar: «${packDefaults.fullName}».`}
                 value={get(cfg, "mascot.fullName")}
                 placeholder={packDefaults.fullName}
                 onChange={upd("mascot.fullName")}
               />
               <Field
                 label="Nombre corto"
-                hint="Como lo llaman las lecciones el resto del tiempo: «Ozzy»."
+                hint={`Como lo llaman las lecciones el resto del tiempo: «${packDefaults.name}».`}
                 value={get(cfg, "mascot.name")}
                 placeholder={packDefaults.name}
                 onChange={upd("mascot.name")}
               />
               <Field
                 label="Qué es"
-                hint="«robot guía», «osito guía»…"
+                hint={`Qué clase de personaje es: «${packDefaults.kind}».`}
                 value={get(cfg, "mascot.kind")}
                 onChange={upd("mascot.kind")}
               />
               <Field
                 label="Emoji"
                 value={get(cfg, "mascot.emoji")}
-                placeholder="🐻"
+                placeholder={packDefaults.emoji}
                 onChange={upd("mascot.emoji")}
               />
             </TabsContent>
@@ -1563,6 +1575,109 @@ function MapModuleField({
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** Carga un script una sola vez, aunque se pida varias veces. */
+const loaded = new Map<string, Promise<void>>();
+function loadScript(src: string) {
+  if (!loaded.has(src)) {
+    loaded.set(
+      src,
+      new Promise<void>((res, rej) => {
+        const s = document.createElement("script");
+        s.src = src;
+        s.onload = () => res();
+        s.onerror = () => rej(new Error("No se pudo cargar " + src));
+        document.head.appendChild(s);
+      }),
+    );
+  }
+  return loaded.get(src)!;
+}
+
+/**
+ * La mascota montada de verdad y moviéndose, con el mismo runtime que usa la
+ * app. Antes aquí había una imagen fija de la cabeza, así que ninguna mascota
+ * parecía animarse por más que lo estuviera.
+ */
+function MascotStage({
+  packId,
+  manifest,
+  baseUrl,
+}: {
+  packId: string;
+  manifest: MascotManifest | null;
+  baseUrl: string;
+}) {
+  const box = useRef<HTMLDivElement | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    let dead = false;
+    const el = box.current;
+    if (!el) return;
+    el.innerHTML = "";
+    el.className = "";
+    setErr(null);
+
+    const pack =
+      packId === "custom" ? manifest : ((BUILT_IN_PACKS[packId] ?? null) as MascotManifest | null);
+    const dir = packId === "custom" ? baseUrl : packAsset(packId, "");
+    if (!pack) return;
+
+    (async () => {
+      try {
+        if (pack.engine === "script") {
+          // Packs con motor propio (Boti): se carga su archivo y se le delega.
+          await loadScript(dir + (pack.entry ?? "mascot.js"));
+          if (dead) return;
+          const g = (
+            window as unknown as Record<string, { mount: (e: Element, o?: unknown) => void }>
+          )[pack.global ?? "Boti"];
+          g?.mount(el, { interactive: false });
+        } else {
+          await loadScript("/demo-assets/mascots/mascot-runtime.js");
+          if (dead) return;
+          const M = (
+            window as unknown as {
+              Mascot?: { init: (m: unknown, b: string) => { mount: (e: Element) => void } };
+            }
+          ).Mascot;
+          M?.init(pack, dir).mount(el);
+        }
+      } catch (e) {
+        if (!dead) setErr((e as Error).message);
+      }
+    })();
+
+    return () => {
+      dead = true;
+    };
+  }, [packId, manifest, baseUrl]);
+
+  const ratio = (() => {
+    const p = packId === "custom" ? manifest : BUILT_IN_PACKS[packId];
+    const a = p?.artboard;
+    return a?.width ? a.height / a.width : 1.5;
+  })();
+  const W = 96;
+
+  return (
+    <div className="flex items-end gap-3 rounded-lg border bg-muted/30 p-3">
+      <div style={{ width: W, height: W * ratio, position: "relative" }} ref={box} />
+      <p className="text-xs text-muted-foreground">
+        {err ? (
+          <span className="text-destructive">{err}</span>
+        ) : (
+          <>
+            Así se mueve de verdad.
+            <br />
+            Si está quieta, mira si tu sistema tiene activado «reducir movimiento».
+          </>
+        )}
+      </p>
     </div>
   );
 }

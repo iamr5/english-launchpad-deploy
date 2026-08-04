@@ -1,6 +1,7 @@
 # Pack de mascota — `gallito`
 
-**Gallito** 🐓. Cinco capas SVG apiladas y animadas por CSS, igual que
+**Gallito el Tumi** ✨ — un tumi, el cuchillo ceremonial peruano, no un gallo:
+el nombre es suyo, no describe la especie. Cinco capas SVG apiladas y animadas por CSS, igual que
 [`ozito`](../ozito/README.md), del que sale su animación.
 
 ## Capas

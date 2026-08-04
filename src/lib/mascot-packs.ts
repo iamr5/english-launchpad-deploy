@@ -44,7 +44,7 @@ export function packAsset(id: string, file: string) {
 const NOTES: Record<string, string> = {
   ozito: "Por defecto. Capas SVG animadas por CSS.",
   boti: "El robot. Lo usa /democip.",
-  gallito: "Cabecea, parpadea y se estira; movimiento vertical.",
+  gallito: "Un tumi. Cabecea, parpadea y se estira; movimiento vertical.",
 };
 
 export type PackChoice = {

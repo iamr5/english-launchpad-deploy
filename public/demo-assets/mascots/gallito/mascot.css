@@ -16,6 +16,10 @@
    así que el gallito se ve igual a cualquier tamaño.
    ───────────────────────────────────────────────────────────────────────────── */
 
+/* Amplitud de todo el movimiento. Las animaciones multiplican por ella, así que
+   basta con bajarla para que el gallito se mueva menos sin quedarse tieso. */
+.gallito { --amp: 1; }
+
 /* Sombra de piso: fija, el gallito está plantado. */
 .gallito .shadow {
   position: absolute; left: 50%; bottom: 2.4%; width: 60%; height: 5%;
@@ -58,34 +62,35 @@
 /* Rebote vertical: sólo sube y baja. */
 @keyframes gallito-bob {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-1.9%); }
+  50%      { transform: translateY(calc(-1.9% * var(--amp))); }
 }
 
 @keyframes gallito-breathe {
   0%, 100% { transform: scale(1); }
-  50%      { transform: scaleX(1.014) scaleY(.988); }
+  50%      { transform: scaleX(calc(1 + .014 * var(--amp))) scaleY(calc(1 - .012 * var(--amp))); }
 }
 
 /* Cabeceo: sobre todo vertical, con un grado escaso de giro. */
 @keyframes gallito-head {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  35%      { transform: translateY(-.9%) rotate(-.9deg); }
-  70%      { transform: translateY(-.5%) rotate(.7deg); }
+  35%      { transform: translateY(calc(-.9% * var(--amp))) rotate(calc(-.9deg * var(--amp))); }
+  70%      { transform: translateY(calc(-.5% * var(--amp))) rotate(calc(.7deg * var(--amp))); }
 }
 
 /* La capa acompaña con un poco de retraso. */
 @keyframes gallito-cape {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-.7%) rotate(1.1deg); }
+  50%      { transform: translateY(calc(-.7% * var(--amp))) rotate(calc(1.1deg * var(--amp))); }
 }
 
 /* Estirón de las patas, con el pie quieto. */
 @keyframes gallito-legs {
   0%, 100% { transform: scaleY(1); }
-  50%      { transform: scaleY(1.045); }
+  50%      { transform: scaleY(calc(1 + .045 * var(--amp))); }
 }
 
-/* Dos parpadeos seguidos y una pausa larga: así no parece un metrónomo. */
+/* Dos parpadeos seguidos y una pausa larga: así no parece un metrónomo.
+   El parpadeo no marea a nadie, así que no se atenúa. */
 @keyframes gallito-blink {
   0%, 86%  { transform: scaleY(1); }
   88%      { transform: scaleY(.06); }
@@ -94,6 +99,14 @@
   95%,100% { transform: scaleY(1); }
 }
 
+/* Con "reducir movimiento" del sistema NO se para todo: se deja un resto de vida
+   —una cuarta parte de amplitud y el doble de lento—, que es lo que hace Boti
+   bajando su intensidad. Pararlo del todo dejaba a la mascota como una calcomanía. */
 @media (prefers-reduced-motion: reduce) {
-  .gallito * { animation: none !important; }
+  .gallito { --amp: .25; }
+  .gallito .torso,
+  .gallito .body,
+  .gallito .cape,
+  .gallito .legs,
+  .gallito .headbob { animation-duration: 8s; }
 }

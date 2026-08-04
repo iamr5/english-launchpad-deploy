@@ -6,7 +6,8 @@
    conserva sus valores originales; los dos únicos cambios son:
      · los @keyframes llevan prefijo `ozito-` (antes eran nombres globales tan
        genéricos como `head` o `breathe`, que chocarían entre mascotas);
-     · se añadió el bloque prefers-reduced-motion del final.
+     · se añadió el bloque prefers-reduced-motion del final, que ralentiza el
+       movimiento en vez de pararlo.
 
    Todo cuelga de .tr-bear (la clase raíz declarada en mascot.json → rootClass),
    así los nombres genéricos de capa no se filtran al resto de la app.
@@ -55,6 +56,18 @@
 /* Las piernas se estiran desde el pie plantado para seguir la subida del torso. */
 @keyframes ozito-legstretch { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.05); } }
 
+/* Con "reducir movimiento" del sistema no se para todo: se ralentiza. Pararlo
+   dejaba a la mascota como una calcomanía, y su vaivén es decorativo, no
+   informativo. */
 @media (prefers-reduced-motion: reduce) {
-  .tr-bear * { animation: none !important; }
+  .tr-bear .torso,
+  .tr-bear .head,
+  .tr-bear .glassesfollow,
+  .tr-bear .bowtie,
+  .tr-bear .leftarm,
+  .tr-bear .rightarm,
+  .tr-bear .leftleg,
+  .tr-bear .rightleg,
+  .tr-bear .body,
+  .tr-bear .tummy { animation-duration: 9s; }
 }
