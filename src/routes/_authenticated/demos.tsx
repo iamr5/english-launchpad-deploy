@@ -1615,6 +1615,16 @@ function MascotStage({
 }) {
   const box = useRef<HTMLDivElement | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  // Si el sistema pide menos movimiento, la mascota se mueve poco — y conviene
+  // decirlo, o parece que está rota.
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduced(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     let dead = false;
@@ -1669,17 +1679,29 @@ function MascotStage({
   return (
     <div className="flex items-end gap-3 rounded-lg border bg-muted/30 p-3">
       <div style={{ width: W, height: W * ratio, position: "relative" }} ref={box} />
-      <p className="text-xs text-muted-foreground">
+      <div className="text-xs text-muted-foreground">
         {err ? (
           <span className="text-destructive">{err}</span>
-        ) : (
+        ) : reduced ? (
+          // No hace falta que lo adivine nadie: si el sistema pide menos
+          // movimiento, se dice cuál es el ajuste y dónde está.
           <>
-            Así se mueve de verdad.
-            <br />
-            Si está quieta, mira si tu sistema tiene activado «reducir movimiento».
+            <p className="font-medium text-foreground">Se mueve poco a propósito</p>
+            <p className="mt-1">
+              Tu equipo tiene activado «reducir movimiento», así que las mascotas van a un cuarto de
+              su recorrido y más lento. A tus alumnos, sin ese ajuste, se les moverá del todo.
+            </p>
+            <p className="mt-1">
+              Se cambia en{" "}
+              <b>Configuración → Accesibilidad → Efectos visuales → Efectos de animación</b> en
+              Windows, o en{" "}
+              <b>Ajustes del Sistema → Accesibilidad → Pantalla → Reducir movimiento</b> en Mac.
+            </p>
           </>
+        ) : (
+          <p>Así se mueve de verdad, con la misma animación que verá el alumno.</p>
         )}
-      </p>
+      </div>
     </div>
   );
 }
