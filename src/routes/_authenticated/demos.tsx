@@ -14,6 +14,7 @@ import {
   type DemoRow,
 } from "@/lib/demos.data";
 import { DEFAULTS } from "@/lib/demo-config";
+import { packChoices, packInfo } from "@/lib/mascot-packs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,32 +62,9 @@ function set(o: Cfg, path: string, value: unknown): Cfg {
 
 const MODULE_LABELS = ["Módulo 1", "Módulo 2", "Módulo 3", "Módulo 4", "Módulo 5"];
 
-const PACK_INFO: Record<
-  string,
-  { fullName: string; name: string; kind: string; emoji: string; head: string }
-> = {
-  ozito: {
-    fullName: "Ozzy el Osito",
-    name: "Ozzy",
-    kind: "osito guía",
-    emoji: "🐻",
-    head: "/demo-assets/mascots/ozito/layers/head.svg",
-  },
-  boti: {
-    fullName: "Boti",
-    name: "Boti",
-    kind: "robot guía",
-    emoji: "🤖",
-    head: "/demo-assets/mascots/boti/boti_head.svg",
-  },
-  gallito: {
-    fullName: "Gallito",
-    name: "Gallito",
-    kind: "gallito guía",
-    emoji: "🐓",
-    head: "/demo-assets/mascots/gallito/layers/head.svg",
-  },
-};
+// Las mascotas incorporadas salen de mascot-packs.ts, el mismo sitio del que
+// tira el servidor: así no puede haber una que exista pero no se pueda elegir.
+const PACK_INFO = Object.fromEntries(packChoices().map((p) => [p.id, p]));
 
 /** Oscurece un hex igual que lo hace el servidor, para que la sombra coincida. */
 function shade(hex: string, amount: number) {
@@ -1031,19 +1009,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <div className="space-y-1.5">
                 <Label>Personaje</Label>
                 <div className="grid gap-2 sm:grid-cols-2">
-                  {[
-                    {
-                      id: "ozito",
-                      name: "Ozzy el Osito 🐻",
-                      note: "Por defecto. Capas SVG animadas por CSS.",
-                    },
-                    { id: "boti", name: "Boti 🤖", note: "El robot. Lo usa /democip." },
-                    {
-                      id: "gallito",
-                      name: "Gallito 🐓",
-                      note: "Cabecea, parpadea y se estira; movimiento vertical.",
-                    },
-                  ].map((p) => {
+                  {packChoices().map((p) => {
                     const active = get(cfg, "mascot.pack", "ozito") === p.id;
                     return (
                       <button
@@ -1053,7 +1019,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                           active ? "border-primary bg-accent" : "hover:bg-accent/50"
                         }`}
                       >
-                        <div className="font-medium text-sm">{p.name}</div>
+                        <div className="font-medium text-sm">{p.label}</div>
                         <div className="text-xs text-muted-foreground mt-0.5">{p.note}</div>
                       </button>
                     );

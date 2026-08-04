@@ -1,7 +1,5 @@
 import template from "../assets/demo-app.html?raw";
-import ozitoPack from "../../public/demo-assets/mascots/ozito/mascot.json";
-import botiPack from "../../public/demo-assets/mascots/boti/mascot.json";
-import gallitoPack from "../../public/demo-assets/mascots/gallito/mascot.json";
+import { BUILT_IN_PACKS, MASCOTS_DIR, type MascotPack } from "./mascot-packs";
 import { type DemoConfig, shadeHex } from "./demo-config";
 
 // Punto único donde se arma la página de un demo: coge la plantilla común y le
@@ -9,27 +7,6 @@ import { type DemoConfig, shadeHex } from "./demo-config";
 // demos; sólo lee window.DEMO y cae a sus valores de siempre si no existe.
 
 const ASSET_BASE = "/demo-assets/";
-const MASCOTS_DIR = "mascots/"; // relativo a ASSET_BASE
-
-type MascotPack = {
-  id: string;
-  name: string;
-  shortName?: string;
-  kind?: string;
-  emoji?: string;
-  engine: "layers" | "script";
-  artboard: { width: number; height: number };
-  headIcon: string;
-  entry?: string;
-  global?: string;
-  [k: string]: unknown;
-};
-
-const BUILT_IN: Record<string, MascotPack> = {
-  ozito: ozitoPack as MascotPack,
-  boti: botiPack as MascotPack,
-  gallito: gallitoPack as MascotPack,
-};
 
 function esc(s: string) {
   return s
@@ -106,7 +83,7 @@ function themeCSS(cfg: DemoConfig) {
  * ('ozito', 'boti') o dar la URL de uno subido.
  */
 function resolveMascot(cfg: DemoConfig) {
-  const built = BUILT_IN[cfg.mascot.pack];
+  const built = BUILT_IN_PACKS[cfg.mascot.pack];
 
   // Pack subido: su manifiesto viaja dentro de la configuración (lo guarda el
   // panel al subirlo), así no hay que ir a buscarlo para poder responder.
