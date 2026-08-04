@@ -44,11 +44,15 @@
 .gallito .legs { transform-origin: 50% 99%; animation: gallito-legs 3.4s ease-in-out infinite; }
 
 /* La cabeza cabecea. El envoltorio mueve cabeza y ojos juntos: si se animara
-   sólo la cabeza, los ojos se quedarían atrás. */
+   sólo la cabeza, los ojos se quedarían atrás.
+
+   Su periodo es DISTINTO al del torso (4.1s frente a 3.4s) a propósito: con el
+   mismo, la cabeza sube y baja a la vez que el cuerpo y parece soldada. Al
+   desacompasarlos, se ve cabecear. */
 .gallito .headbob {
   position: absolute; inset: 0;
   transform-origin: 50% 57%;                 /* el cuello: la cabeza llega hasta el 58% del lienzo */
-  animation: gallito-head 3.4s ease-in-out infinite;
+  animation: gallito-head 4.1s ease-in-out infinite;
 }
 
 /* Parpadeo: los ojos se aplastan sobre su propio centro. Va en su propio ciclo,
@@ -73,8 +77,8 @@
 /* Cabeceo: sobre todo vertical, con un grado escaso de giro. */
 @keyframes gallito-head {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  35%      { transform: translateY(calc(-1.8% * var(--amp))) rotate(calc(-1.6deg * var(--amp))); }
-  70%      { transform: translateY(calc(-1% * var(--amp))) rotate(calc(1.3deg * var(--amp))); }
+  35%      { transform: translateY(calc(-3.4% * var(--amp))) rotate(calc(-3.2deg * var(--amp))); }
+  70%      { transform: translateY(calc(-1.6% * var(--amp))) rotate(calc(2.6deg * var(--amp))); }
 }
 
 /* La capa acompaña con un poco de retraso. */

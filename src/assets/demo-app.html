@@ -3666,10 +3666,13 @@ function placementReveal(lvl, onDone) {
     setTimeout(() => { if (!verdictShown) { tNode.textContent = txt; tNode.classList.remove('fade'); } }, Math.round(240 * F));
   };
 
-  // Falso frenazo: Boti "duda" y nombra un nivel equivocado antes del veredicto.
+  // Falso frenazo: la mascota "duda" y nombra un nivel equivocado antes del
+  // veredicto. Cada frase necesita unos 2 s en pantalla para poder leerse: con
+  // menos, el suspense no se entiende y solo se ve un parpadeo de textos. El
+  // cambio entre frases se come 240 ms de fundido, asi que van contados aparte.
   const wrong = LV.filter(l => l !== target)[0] || 'A1';
-  suspense.push(setTimeout(() => { if (!done) setTitle(`¿${wrong}…?`); }, Math.round(1600 * F)));
-  suspense.push(setTimeout(() => { if (!done) setTitle('No, esperen…'); }, Math.round(2400 * F)));
+  suspense.push(setTimeout(() => { if (!done) setTitle(`¿${wrong}…?`); }, Math.round(2400 * F)));
+  suspense.push(setTimeout(() => { if (!done) setTitle('No, esperen…'); }, Math.round(4600 * F)));
 
   const reveal = () => {
     if (done) return;
@@ -3776,7 +3779,7 @@ function placementReveal(lvl, onDone) {
   };
 
   el.querySelector('#s-skip').onclick = finish;
-  timers.push(setTimeout(reveal, Math.round(3900 * F)));
+  timers.push(setTimeout(reveal, Math.round(6800 * F)));
 }
 
 // Contador que sube de 0 a `to` en `ms`: acelera al inicio, frena al final y
