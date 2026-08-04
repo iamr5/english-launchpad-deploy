@@ -1,4 +1,5 @@
 import template from "../assets/demo-app.html?raw";
+import dashboardTemplate from "../assets/demo-dashboard.html?raw";
 import { BUILT_IN_PACKS, MASCOTS_DIR, type MascotPack } from "./mascot-packs";
 import { type DemoConfig, shadeHex } from "./demo-config";
 
@@ -144,6 +145,48 @@ export function renderDemoNotFound(slug: string): Response {
 </div></body></html>`;
   return new Response(page, {
     status: 404,
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  });
+}
+
+/**
+ * Mete en una plantilla la configuración del demo: base de assets, cabeceras,
+ * tema y mascota. Lo comparten la app y el panel de progreso, que necesitan
+ * exactamente lo mismo.
+ */
+function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {}) {
+  const mascot = resolveMascot(cfg);
+  const demo = {
+    slug: cfg.slug,
+    institution: cfg.institution,
+    colors: cfg.colors,
+    icons: cfg.icons,
+    copy: cfg.copy,
+    brand: cfg.brand,
+    map: cfg.map,
+    features: cfg.features,
+    mascot: mascot.runtime,
+  };
+  return (
+    tpl
+      .replace(
+        "<head>",
+        `<head><base href="${ASSET_BASE}">${opts.head ? headTags(cfg) : ""}
+` + `<script>window.DEMO=${json(demo)};</script>`,
+      )
+      // El tema cierra el <head>: antes lo pisaría el :root de la plantilla.
+      .replace(
+        "</head>",
+        `${themeCSS(cfg)}
+</head>`,
+      )
+      .replace("<!--MASCOT-SCRIPTS-->", mascotScripts(mascot))
+  );
+}
+
+/** El panel de progreso, con la marca y la mascota del demo que lo abre. */
+export function renderDemoDashboard(cfg: DemoConfig): Response {
+  return new Response(inject(dashboardTemplate, cfg), {
     headers: { "Content-Type": "text/html; charset=utf-8" },
   });
 }

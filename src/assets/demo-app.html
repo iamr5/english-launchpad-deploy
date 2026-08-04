@@ -71,7 +71,8 @@
   /* Un escudo o logo subido no lleva los margenes negativos: esos estan pensados
      para la cabeza de la mascota, que desborda la barra a proposito. Un emblema
      institucional se quiere entero y con su aire. */
-  .appbar-en.brand-icon { height: 34px; margin: 0 7px 0 0; object-fit: contain; } /* Boti-head logo; negative right margin pulls the title closer; top/bottom overflow the bar instead of growing it */
+  .appbar-en.brand-icon { height: 34px; margin: 0 7px 0 0; object-fit: contain; }
+  .appbar-en[hidden] { display: none; }
   /* Module app bar: title row + a module-progress bar underneath */
   .appbar.appbar-col { flex-direction: column; align-items: stretch; gap: 5px; }
   .appbar-row { display: flex; align-items: center; gap: 6px; }
@@ -673,6 +674,7 @@
   /* Ola de la cabecera del onboarding. La de serie es un SVG que repite sin
      costura (ola.svg); un demo puede sustituirla por su propia imagen, y
      entonces se estira de lado a lado en vez de repetirse. */
+  .ob-ola[hidden] { display: none; }
   .ob-ola { position: absolute; top: 0; left: 0; right: 0; height: 62px; z-index: 0;
     pointer-events: none; color: var(--ola, #0D47A1);
     background-image: var(--ola-img, none);
@@ -1353,6 +1355,9 @@ function applyIcons() {
   // Manda el icono que haya subido el demo; la cabeza de la mascota es sólo el
   // respaldo. Al reves —que era como estaba— el icono propio nunca se veia.
   document.querySelectorAll('.appbar-en').forEach(img => {
+    // 'none' quita el icono y deja el titulo solo. Si no, manda el que haya
+    // subido el demo y la cabeza de la mascota queda de respaldo.
+    if (CFG.brand.appbarIcon === 'none') { img.hidden = true; return; }
     const ic = CFG.brand.appbarIcon || mascotHeadIcon();
     if (ic) { img.src = ic; img.classList.toggle('brand-icon', !!CFG.brand.appbarIcon); }
   });
@@ -1376,11 +1381,17 @@ function applyOla() {
   const el = document.getElementById('ob-ola');
   const scr = document.getElementById('screen-onboard');
   if (!el || !scr) return;
-  const custom = CFG.brand.ola;
-  if (custom === 'none') { el.style.display = 'none'; scr.classList.remove('has-ola'); return; }
-  const url = custom || 'ola.svg';
-  el.classList.toggle('custom', !!custom);
-  el.style.setProperty('--ola-img', 'url("' + url + '")');
+
+  // La ola NO sale por defecto: es de quien la pide. Vacio = sin ola;
+  // 'default' = la de serie (ola.svg, que repite sin costura); cualquier otra
+  // cosa se toma por la URL de una imagen propia, que se estira de lado a lado
+  // porque una imagen cualquiera no empalma consigo misma.
+  const v = (CFG.brand.ola || '').trim();
+  if (!v || v === 'none') { el.hidden = true; scr.classList.remove('has-ola'); return; }
+  const own = v !== 'default';
+  el.hidden = false;
+  el.classList.toggle('custom', own);
+  el.style.setProperty('--ola-img', 'url("' + (own ? v : 'ola.svg') + '")');
   if (CFG.colors.ola) el.style.setProperty('--ola', CFG.colors.ola);
   scr.classList.add('has-ola');
 }
@@ -2130,8 +2141,11 @@ function showSpinner(on) {
 }
 // El panel de progreso del demo vive en /demo-dashboard.
 function openDashboard() {
-  try { (window.top || window).location.href = '/demo-dashboard'; }
-  catch (e) { window.location.href = '/demo-dashboard'; }
+  // Le pasamos el slug: sin el, el panel no sabe de que demo es y no puede
+  // pintar ni la marca de la institucion ni su mascota.
+  const url = '/demo-dashboard' + (DEMO.slug ? '?d=' + encodeURIComponent(DEMO.slug) : '');
+  try { (window.top || window).location.href = url; }
+  catch (e) { window.location.href = url; }
 }
 function renderCourse() {
   show('course');

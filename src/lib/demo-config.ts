@@ -30,9 +30,10 @@ export type DemoConfig = {
     /** Icono de la barra superior. Por defecto, la cabeza de la mascota. */
     appbarIcon?: string;
     /**
-     * La ola de la cabecera del onboarding. Vacío usa la de serie (ola.svg, que
-     * repite sin costura y se pinta con `colors.ola`); una URL la sustituye por
-     * esa imagen, estirada de lado a lado; "none" la quita.
+     * La ola de la cabecera del onboarding. NO sale por defecto: vacío = sin
+     * ola. "default" pone la de serie (ola.svg, que repite sin costura y se
+     * pinta con `colors.ola`); una URL la sustituye por esa imagen, estirada de
+     * lado a lado, porque una imagen cualquiera no empalma consigo misma.
      */
     ola?: string;
   };

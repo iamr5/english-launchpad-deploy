@@ -226,7 +226,7 @@
   <div class="top">
     <div class="brand">
       <div>
-        <img class="brandlogo" src="Logo.png" alt="AprendoEnglish.com">
+        <img class="brandlogo" id="dash-logo" src="Logo.png" alt="AprendoEnglish.com">
         <span>Curso de inglés · alineado al MCER</span>
       </div>
     </div>
@@ -463,10 +463,29 @@
 
 </div>
 
-<script src="mascots/boti/boti.js"></script>
+<!--MASCOT-SCRIPTS-->
 <script>
-  // Monta cada [data-boti] de la pagina (una sola mascota compartida, dos instancias).
-  if(window.Boti) Boti.mountAll();
+  // Monta la mascota DEL DEMO en cada hueco [data-boti]. Sirve para los dos
+  // motores: los packs con script propio traen su global y se montan solos; los
+  // de capas se montan uno a uno con el runtime comun.
+  (function mountMascots(){
+    var M = window.DEMO && window.DEMO.mascot;
+    if (M && M.engine === 'layers' && window.Mascot) {
+      document.querySelectorAll('[data-boti]').forEach(function(el){ window.Mascot.mount(el); });
+    } else {
+      var g = window[(M && M.global) || 'Boti'];
+      if (g) g.mountAll();
+    }
+  })();
+
+  // Marca del demo: el nombre de la institucion y su logo, si lo tiene.
+  (function brandDashboard(){
+    var D = window.DEMO; if (!D) return;
+    var inst = document.getElementById('dash-inst');
+    if (inst && D.institution) inst.textContent = D.institution;
+    var logo = document.getElementById('dash-logo');
+    if (logo && D.brand && D.brand.logo) { logo.src = D.brand.logo; logo.alt = D.institution || ''; }
+  })();
 
   const btns=document.querySelectorAll('.seg button');
   const views={parent:document.getElementById('parent'),teacher:document.getElementById('teacher')};

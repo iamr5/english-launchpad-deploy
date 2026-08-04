@@ -202,12 +202,14 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
   );
 
   if (tab === "marca") {
-    const ola = g("brand.ola");
-    const olaColor = g("colors.ola") || highlight;
+    const ola = (g("brand.ola") || "").trim();
+    const olaOn = !!ola && ola !== "none";
+    const olaUrl = ola === "default" ? "/demo-assets/ola.svg" : ola;
+    const olaColor = g("colors.ola") || "#0D47A1";
     return (
       <div style={frame}>
         {AppBar}
-        {ola !== "none" && (
+        {olaOn && (
           <div style={{ marginTop: 12 }}>
             <div
               style={{
@@ -217,9 +219,9 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
                 borderBottom: "none",
                 background: "#fff",
                 color: olaColor,
-                backgroundImage: `url("${ola || "/demo-assets/ola.svg"}")`,
-                backgroundRepeat: ola ? "no-repeat" : "repeat-x",
-                backgroundSize: ola ? "100% 100%" : "auto 100%",
+                backgroundImage: `url("${olaUrl}")`,
+                backgroundRepeat: ola === "default" ? "repeat-x" : "no-repeat",
+                backgroundSize: ola === "default" ? "auto 100%" : "100% 100%",
                 backgroundPosition: "center top",
               }}
             />
@@ -240,7 +242,7 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
         )}
         <p style={caption}>
           La barra superior y la ola con la que abre el onboarding.
-          {!ola && " La de serie se repite sin costura a cualquier ancho."}
+          {ola === "default" && " La de serie se repite sin costura a cualquier ancho."}
         </p>
       </div>
     );
@@ -921,7 +923,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <FileField
                 label="Ola de la cabecera"
-                hint='Se ve arriba del todo al empezar. Vacío usa la de serie, que repite sin costura y toma el color de resaltado. Escribe "none" para quitarla.'
+                hint="No sale salvo que la pidas. Escribe default para la ola de serie, o sube tu propia imagen."
                 fallbackSrc="/demo-assets/ola.svg"
                 slug={demo.slug}
                 kind="ola"
