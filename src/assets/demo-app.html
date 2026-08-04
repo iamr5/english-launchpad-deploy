@@ -1393,14 +1393,17 @@ function applyOla() {
   if (!el || !scr) return;
 
   // La ola NO sale por defecto: es de quien la pide. Vacio = sin ola;
-  // 'default' = la de serie (ola.svg, que repite sin costura); cualquier otra
-  // cosa se toma por la URL de una imagen propia, que se estira de lado a lado
-  // porque una imagen cualquiera no empalma consigo misma.
+  // 'default' = la de serie (ola.svg); cualquier otra cosa se toma por la URL de
+  // una imagen propia. En los dos casos se repite a lo ancho, tantas veces como
+  // diga olaRepeats.
   const v = (CFG.brand.ola || '').trim();
   if (!v || v === 'none') { el.hidden = true; scr.classList.remove('has-ola'); return; }
   const own = v !== 'default';
   el.hidden = false;
-  el.classList.toggle('custom', own);
+  // Una imagen propia se REPITE igual que la de serie: casi siempre se dibuja
+  // para eso, y estirarla a lo ancho de la pantalla la deforma. Quien tenga una
+  // que no empalme consigo misma pone olaFit 'stretch' y se estira de lado a lado.
+  el.classList.toggle('stretch', own && CFG.brand.olaFit === 'stretch');
   el.style.setProperty('--ola-img', 'url("' + (own ? v : 'ola.svg') + '")');
   // Cuantas crestas caben a lo ancho. Por defecto 15; el demo puede pedir otras.
   const reps = Number(CFG.brand.olaRepeats);
