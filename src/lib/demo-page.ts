@@ -2,6 +2,7 @@ import template from "../assets/demo-app.html?raw";
 import dashboardTemplate from "../assets/demo-dashboard.html?raw";
 import { BUILT_IN_PACKS, MASCOTS_DIR, type MascotPack } from "./mascot-packs";
 import { type DemoConfig, shadeHex } from "./demo-config";
+import { issueCourseToken } from "./course-token";
 
 // Punto único donde se arma la página de un demo: coge la plantilla común y le
 // inyecta la configuración de esta institución. La plantilla no sabe nada de
@@ -154,8 +155,11 @@ export function renderDemoNotFound(slug: string): Response {
  * tema y mascota. Lo comparten la app y el panel de progreso, que necesitan
  * exactamente lo mismo.
  */
-function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {}) {
+async function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {}) {
   const mascot = resolveMascot(cfg);
+  // Pase para pedir el contenido del curso. Va dentro de la pagina, asi que solo
+  // lo tiene quien la ha abierto; caduca a las 6 h.
+  const courseToken = await issueCourseToken(cfg.slug);
   const demo = {
     slug: cfg.slug,
     institution: cfg.institution,
@@ -166,6 +170,7 @@ function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {}) {
     map: cfg.map,
     features: cfg.features,
     mascot: mascot.runtime,
+    courseToken,
   };
   return (
     tpl
@@ -185,43 +190,19 @@ function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {}) {
 }
 
 /** El panel de progreso, con la marca y la mascota del demo que lo abre. */
-export function renderDemoDashboard(cfg: DemoConfig): Response {
-  return new Response(inject(dashboardTemplate, cfg), {
+export async function renderDemoDashboard(cfg: DemoConfig): Promise<Response> {
+  return new Response(await inject(dashboardTemplate, cfg), {
     headers: { "Content-Type": "text/html; charset=utf-8" },
   });
 }
 
-export function renderDemoPage(cfg: DemoConfig): Response {
-  const mascot = resolveMascot(cfg);
-
-  // Sólo viaja al navegador lo que la plantilla realmente lee.
-  const demo = {
-    slug: cfg.slug,
-    institution: cfg.institution,
-    colors: cfg.colors,
-    icons: cfg.icons,
-    copy: cfg.copy,
-    brand: cfg.brand,
-    map: cfg.map,
-    features: cfg.features,
-    mascot: mascot.runtime,
-  };
-
-  const html = template
-    .replace(
-      "<head>",
-      `<head><base href="${ASSET_BASE}">${headTags(cfg)}\n` +
-        `<script>window.DEMO=${json(demo)};</script>`,
-    )
-    // El tema se cierra el <head>: si fuera antes, el :root de la plantilla lo
-    // pisaría por ir después con la misma especificidad.
-    .replace(
-      "</head>",
-      `${themeCSS(cfg)}
-</head>`,
-    )
-    .replace("<!--MASCOT-SCRIPTS-->", mascotScripts(mascot))
-    .replace("<title>Inglés para moverte</title>", `<title>${esc(cfg.meta.title)}</title>`);
+export async function renderDemoPage(cfg: DemoConfig): Promise<Response> {
+  // Misma inyección que el panel; lo propio de la app son las cabeceras para
+  // compartir y el título.
+  const html = (await inject(template, cfg, { head: true })).replace(
+    "<title>Inglés para moverte</title>",
+    `<title>${esc(cfg.meta.title)}</title>`,
+  );
 
   return new Response(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },

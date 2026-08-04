@@ -10,7 +10,7 @@ export const Route = createFileRoute("/$slug")({
     handlers: {
       GET: async ({ params }) => {
         const cfg = await getDemoConfig(params.slug);
-        return cfg ? renderDemoPage(cfg) : renderDemoNotFound(params.slug);
+        return cfg ? await renderDemoPage(cfg) : renderDemoNotFound(params.slug);
       },
     },
   },

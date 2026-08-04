@@ -16,7 +16,7 @@ export const Route = createFileRoute("/demo-dashboard")({
       GET: async ({ request }) => {
         const slug = new URL(request.url).searchParams.get("d");
         const cfg = slug ? await getDemoConfig(slug) : null;
-        if (cfg) return renderDemoDashboard(cfg);
+        if (cfg) return await renderDemoDashboard(cfg);
         return new Response(plain, {
           headers: { "Content-Type": "text/html; charset=utf-8" },
         });

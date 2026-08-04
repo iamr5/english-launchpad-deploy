@@ -1266,11 +1266,9 @@
      Abierto suelto, sin servidor, el marcador se queda tal cual y la pagina
      funciona sin mascota. -->
 <!--MASCOT-SCRIPTS-->
-<script src="placement_items.js"></script>
-<script src="data.js"></script>
-<script src="data_modulo3.js"></script>
-<script src="data_modulo4.js"></script>
-<script src="data_modulo5.js"></script>
+<!-- El contenido del curso ya no viaja como archivos sueltos: se pide a
+     /api/course/bundle con el pase que trae la pagina. Asi no se lo lleva nadie
+     con una sola peticion, y guardar el HTML no guarda las lecciones. -->
 <script>
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // CONFIGURACION DEL DEMO
@@ -1579,8 +1577,20 @@ function renderCollapsibleMarkdown(text) {
 // Progress (localStorage) — mirrors ElearningProgressManager
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 const PK = 'ingles_web_progress_v1';
-const course = applyTokens(window.COURSE_DATA);
-const allLessons = course.modules.flatMap(m => m.lessons);
+let course = null;
+let allLessons = [];
+
+// Trae el curso y deja todo listo para arrancar. Se llama una sola vez, antes de
+// pintar nada; el resto del codigo usa  desde dentro de funciones, que
+// para entonces ya esta cargado.
+async function loadCourse() {
+  const r = await fetch('/api/course/bundle?t=' + encodeURIComponent(DEMO.courseToken || ''), { credentials: 'same-origin' });
+  if (!r.ok) throw new Error('curso '+ r.status);
+  const data = await r.json();
+  window.PLACEMENT_ITEMS = data.placement || [];
+  course = applyTokens(data.course);
+  allLessons = course.modules.flatMap(m => m.lessons);
+}
 
 // WIPED: una vez que el usuario pide "Borrar TODO", ninguna escritura tardía
 // (guardado diferido, cronómetro) puede resucitar el progreso viejo.
@@ -4117,7 +4127,12 @@ if (/[?&]debug=1\b/.test(location.search)) document.body.classList.add('debug-fa
 applyIcons();
 applyOla();
 mascotMountStatic();
-if (loadProfile()) renderCourse(); else startOnboarding();
+loadCourse().then(() => {
+  if (loadProfile()) renderCourse(); else startOnboarding();
+}).catch(err => {
+  console.error(err);
+  document.body.innerHTML = '<div style="font:600 15px/1.5 system-ui;padding:40px;text-align:center;color:#5C5159">No se pudo cargar el curso.<br>Recarga la pagina para volver a intentarlo.</div>';
+});
 </script>
 </body>
 </html>

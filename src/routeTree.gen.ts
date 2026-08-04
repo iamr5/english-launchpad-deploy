@@ -22,6 +22,7 @@ import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/ap
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDemosRouteImport } from './routes/_authenticated/demos'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
+import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
@@ -89,6 +90,11 @@ const ApiBrandSplatRoute = ApiBrandSplatRouteImport.update({
   path: '/api/brand/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCourseBundleRoute = ApiCourseBundleRouteImport.update({
+  id: '/api/course/bundle',
+  path: '/api/course/bundle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
   id: '/api/public/share-invite',
   path: '/api/public/share-invite',
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/demos': typeof AuthenticatedDemosRoute
   '/api/brand/$': typeof ApiBrandSplatRoute
+  '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/demos': typeof AuthenticatedDemosRoute
   '/api/brand/$': typeof ApiBrandSplatRoute
+  '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/demos': typeof AuthenticatedDemosRoute
   '/api/brand/$': typeof ApiBrandSplatRoute
+  '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/demos'
     | '/api/brand/$'
+    | '/api/course/bundle'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/demos'
     | '/api/brand/$'
+    | '/api/course/bundle'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   id:
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/demos'
     | '/api/brand/$'
+    | '/api/course/bundle'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   PresentacionRoute: typeof PresentacionRoute
   PresentationRoute: typeof PresentationRoute
   ApiBrandSplatRoute: typeof ApiBrandSplatRoute
+  ApiCourseBundleRoute: typeof ApiCourseBundleRoute
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiBrandSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/course/bundle': {
+      id: '/api/course/bundle'
+      path: '/api/course/bundle'
+      fullPath: '/api/course/bundle'
+      preLoaderRoute: typeof ApiCourseBundleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/share-invite': {
       id: '/api/public/share-invite'
       path: '/api/public/share-invite'
@@ -354,6 +374,7 @@ const rootRouteChildren: RootRouteChildren = {
   PresentacionRoute: PresentacionRoute,
   PresentationRoute: PresentationRoute,
   ApiBrandSplatRoute: ApiBrandSplatRoute,
+  ApiCourseBundleRoute: ApiCourseBundleRoute,
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
