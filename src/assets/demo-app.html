@@ -678,8 +678,10 @@
   .ob-ola { position: absolute; top: 0; left: 0; right: 0; height: 62px; z-index: 0;
     pointer-events: none; color: var(--ola, #0D47A1);
     background-image: var(--ola-img, none);
-    background-repeat: repeat-x; background-position: center top; background-size: auto 100%; }
-  .ob-ola.custom { background-repeat: no-repeat; background-size: 100% 100%; }
+    background-repeat: repeat-x; background-position: center top;
+    background-size: calc(100% / var(--ola-n, 15)) 100%; }
+  /* Estirada de lado a lado: para una imagen suelta que no empalma consigo misma. */
+  .ob-ola.stretch { background-repeat: no-repeat; background-size: 100% 100%; }
   #screen-onboard .ob-wrap { position: relative; z-index: 1; }
   /* El contenido baja lo justo para no quedar debajo de la ola. */
   #screen-onboard.has-ola .ob-wrap { padding-top: 54px; }
@@ -1392,6 +1394,9 @@ function applyOla() {
   el.hidden = false;
   el.classList.toggle('custom', own);
   el.style.setProperty('--ola-img', 'url("' + (own ? v : 'ola.svg') + '")');
+  // Cuantas crestas caben a lo ancho. Por defecto 15; el demo puede pedir otras.
+  const reps = Number(CFG.brand.olaRepeats);
+  el.style.setProperty('--ola-n', String(reps > 0 ? Math.round(reps) : 15));
   if (CFG.colors.ola) el.style.setProperty('--ola', CFG.colors.ola);
   scr.classList.add('has-ola');
 }
@@ -3741,7 +3746,7 @@ function placementReveal(lvl, onDone) {
       later(() => {
         const row = document.createElement('div');
         row.className = 's-credit zero';
-        row.innerHTML = `<span>Desde cero</span><span>todo el camino es tuyo</span><span class="cx">A1 → C1</span>`;
+        row.innerHTML = `<span>Desde cero</span><span class="cx">A1 → C1</span>`;
         host.appendChild(row);
         row.classList.add('in');
         row.style.opacity = '1';

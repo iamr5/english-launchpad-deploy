@@ -36,6 +36,19 @@ export type DemoConfig = {
      * lado a lado, porque una imagen cualquiera no empalma consigo misma.
      */
     ola?: string;
+    /**
+     * Cómo encaja la imagen de la ola: "repeat" (por defecto) la repite a lo
+     * ancho, que es para lo que suele dibujarse; "stretch" la estira de lado a
+     * lado, útil si no empalma consigo misma y se le nota la costura.
+     */
+    olaFit?: "repeat" | "stretch";
+    /**
+     * Cuántas crestas caben a lo ancho de la pantalla. Por defecto 15. El ancho
+     * de cada repetición se calcula a partir de esto, no del tamaño natural de
+     * la imagen, para que la ola tenga la misma densidad en un móvil estrecho
+     * que en una tableta. Sólo aplica con olaFit "repeat".
+     */
+    olaRepeats?: number;
   };
 
   colors: {

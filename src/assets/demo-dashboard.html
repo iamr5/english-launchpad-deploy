@@ -79,6 +79,12 @@
      cada mascota lo recalcula con la suya. */
   .botistand{position:relative; width:168px; height:253px}
   .botimini{position:relative; width:52px; height:78px; flex:none; margin:-4px 0 -10px}
+  /* Blindaje: la mascota no se sale de su hueco pase lo que pase. Sus capas son
+     SVG de 809x1179; si el CSS del pack no llega a tiempo —o no llega— salen a
+     tamano natural y tapan la pantalla. Esto lo impide sin depender de nada. */
+  .botistand, .botimini{overflow:hidden}
+  .botistand img, .botimini img,
+  .botistand svg, .botimini svg{max-width:100%; max-height:100%}
   @media (max-width:900px){ .botiside{padding-top:6px} }
 
   /* ===== STUDENT (phone) ===== */

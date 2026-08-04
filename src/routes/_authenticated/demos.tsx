@@ -930,6 +930,53 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={g2("brand.ola")}
                 onChange={upd("brand.ola")}
               />
+              {!!g2("brand.ola") && g2("brand.ola") !== "none" && (
+                <div className="flex flex-wrap items-end gap-3 rounded-lg border p-3">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Cómo encaja</Label>
+                    <div className="flex gap-1">
+                      {[
+                        { id: "repeat", label: "Repetir" },
+                        { id: "stretch", label: "Estirar" },
+                      ].map((o) => {
+                        const on = (g2("brand.olaFit") || "repeat") === o.id;
+                        return (
+                          <Button
+                            key={o.id}
+                            size="sm"
+                            variant={on ? "default" : "outline"}
+                            onClick={() => upd("brand.olaFit")(o.id === "repeat" ? "" : o.id)}
+                          >
+                            {o.label}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {(g2("brand.olaFit") || "repeat") === "repeat" && (
+                    <div className="space-y-1.5">
+                      <Label className="text-xs">Crestas a lo ancho</Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={60}
+                        className="w-24"
+                        value={g2("brand.olaRepeats") || 15}
+                        onChange={(e) =>
+                          upd("brand.olaRepeats")(
+                            Number(e.target.value) === 15 ? "" : Number(e.target.value) || "",
+                          )
+                        }
+                      />
+                    </div>
+                  )}
+                  <p className="w-full text-xs text-muted-foreground">
+                    Repetir mantiene la misma densidad en cualquier pantalla: el ancho de cada
+                    cresta sale de este número, no del tamaño de la imagen. Estirar es para una
+                    imagen que no empalma consigo misma y se le nota la costura.
+                  </p>
+                </div>
+              )}
               <FileField
                 label="Icono de la barra superior"
                 hint="Si lo dejas vacío se usa la cabeza de la mascota."
