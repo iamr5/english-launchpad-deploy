@@ -1046,13 +1046,12 @@
   .sort .s-route span.lit.hold { animation: sortLabelBeat 2.4s ease-in-out infinite; }
   @keyframes sortLabelBeat { 0%,100% { transform: translateY(-2px) scale(1.12) } 50% { transform: translateY(-4px) scale(1.2) } }
   /* CTA: sube suave y un brillo la barre una vez */
-  /* El bloque final —convalidaciones, ruta, total y botones— entra de una sola
-     vez. Antes cada pieza aparecia en su fotograma y la pantalla se montaba a
-     trompicones. Los botones ya estan en el DOM desde el principio, con opacidad
-     0, asi que no hay salto de maquetacion cuando aparecen. */
-  .sort #s-credits, .sort #s-total, .sort #s-cta, .sort #s-skip {
+  /* Las convalidaciones y el total se encienden solos, uno a uno (.s-credit y
+     .s-total nacen con opacidad 0 y la ganan con .in): esa es la cascada.
+     Los botones NO — esos esperan a que termine, y estan maquetados desde el
+     principio para que al aparecer no empujen nada. */
+  .sort #s-cta, .sort #s-skip {
     opacity: 0; pointer-events: none; transition: opacity .42s ease; }
-  .sort.revealed #s-credits, .sort.revealed #s-total,
   .sort.revealed #s-cta, .sort.revealed #s-skip { opacity: 1; pointer-events: auto; }
   .sort #s-cta .btn { position: relative; overflow: hidden; }
   @keyframes sortCtaIn { 0% { opacity: 0; transform: translateY(14px) } 100% { opacity: 1; transform: none } }
@@ -3738,38 +3737,72 @@ function placementReveal(lvl, onDone) {
       }
       setTimeout(() => el.querySelectorAll('.cftb').forEach(n => n.remove()), 4800);
     }
-    // Todo lo que queda por mostrar se arma YA y entra de una sola vez. Antes
-    // cada pieza llegaba en su propio fotograma —fila, ruta, cada etiqueta de
-    // nivel, el total y al final el botón—, y la pantalla se montaba a
-    // trompicones delante del alumno.
+    // El final entra escalonado: cada convalidación con su check y su XP subiendo,
+    // y luego la ruta encendiendose nivel a nivel. Lo que NO se hace es crear los
+    // elementos sobre la marcha —eso era lo que daba el tiron: cada pieza nueva
+    // empujaba a las de abajo—. Se maquetan todos de una y la cascada solo les
+    // enciende la opacidad, asi el alto del bloque no cambia en ningun momento.
     const host = el.querySelector('#s-credits');
+    const base = 820;
+    let at = base;
     const checkSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
     if (credits.length) {
+      // Todas las filas ya en su sitio, invisibles.
       host.innerHTML = credits.map(c =>
-        `<div class="s-credit in" style="opacity:1"><span>${c.lvl}</span><span>convalidado</span>` +
-        `<span class="cx"><i class="ck draw">${checkSvg}</i> +<b class="n">${c.xp}</b> XP</span></div>`
+        `<div class="s-credit"><span>${c.lvl}</span><span>convalidado</span>` +
+        `<span class="cx"><i class="ck">${checkSvg}</i> +<b class="n">0</b> XP</span></div>`
       ).join('');
+      const rows = [...host.querySelectorAll('.s-credit')];
+      rows.forEach((row, i) => {
+        later(() => {
+          row.classList.add('in', 'pulse');
+          row.style.opacity = '1';
+          buzz(18);
+          const ck = row.querySelector('.ck');
+          setTimeout(() => ck.classList.add('draw'), 180);
+          tickUp(row.querySelector('.n'), credits[i].xp, Math.round(760 * F));
+        }, at);
+        // Escalonado con leve solapamiento y variación: cascada, no lista.
+        at += jitter(520 - i * 18, .16);
+      });
       const tot = el.querySelector('#s-total');
-      tot.innerHTML = `Total convalidado: <b class="n">${credits.reduce((a, c) => a + c.xp, 0)}</b> XP`;
-      tot.classList.add('in');
+      tot.innerHTML = `Total convalidado: <b class="n">0</b> XP`;
+      at += 220;
+      later(() => {
+        tot.classList.add('in');
+        tickUp(tot.querySelector('.n'), credits.reduce((a, c) => a + c.xp, 0), Math.round(900 * F));
+        buzz(60);
+      }, at);
     } else {
-      // Sin convalidaciones, la ruta completa ya dibujada y el nivel de partida
-      // marcado; no se enciende etiqueta por etiqueta.
+      // Sin convalidaciones: la linea propia y la ruta A1→C1 dibujandose.
       host.innerHTML =
-        `<div class="s-credit zero in" style="opacity:1"><span>Desde cero</span><span class="cx">A1 → C1</span></div>` +
-        `<div class="s-route go"><i></i>` +
-        LV.map(l => `<span class="lit${l === target ? ' hold' : ''}">${l}</span>`).join('') +
-        `</div>`;
+        `<div class="s-credit zero"><span>Desde cero</span><span class="cx">A1 → C1</span></div>` +
+        `<div class="s-route"><i></i>` + LV.map(l => `<span>${l}</span>`).join('') + `</div>`;
+      const row = host.querySelector('.s-credit');
+      const track = host.querySelector('.s-route');
+      later(() => {
+        row.classList.add('in');
+        row.style.opacity = '1';
+        requestAnimationFrame(() => track.classList.add('go'));
+        // Cada etiqueta se enciende cuando el trazo la alcanza.
+        [...track.querySelectorAll('span')].forEach((sp, i) => {
+          later(() => {
+            sp.classList.add('lit');
+            if (i) later(() => sp.classList.remove('lit'), 620);
+            else sp.classList.add('hold');
+          }, 120 + i * 430);
+        });
+        buzz(30);
+      }, base);
+      at = base + 1900;
     }
 
+    // Los botones ya estan maquetados; aqui solo se encienden, al final de todo.
     const cta = el.querySelector('#s-cta');
     cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
     cta.querySelector('#s-go').onclick = finish;
-    buzz(60);
-    // Un fotograma para que el navegador tenga el bloque listo antes de encender
-    // la transición: si no, la primera vez entra sin fundido.
-    requestAnimationFrame(() => el.classList.add('revealed'));
+    later(() => el.classList.add('revealed'), at + (credits.length ? 980 : 700));
   };
 
   el.querySelector('#s-skip').onclick = finish;
