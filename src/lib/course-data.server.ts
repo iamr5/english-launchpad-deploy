@@ -5,15 +5,13 @@
 // lecciones completas y el banco del test con sus respuestas—. Desde aquí sólo
 // salen por /api/course, que pide un pase y lleva la cuenta.
 //
-// Son .js escritos a mano (definen COURSE_DATA y window.PLACEMENT_ITEMS), así que
-// se evalúan una vez al arrancar el servidor y se guardan ya como objeto. No se
-// vuelve a evaluar por petición.
+// Son .js escritos a mano (definen COURSE_DATA y window.PLACEMENT_ITEMS). Se
+// evalúan EN TIEMPO DE BUILD por el plugin `virtual:course-content` de
+// vite.config.ts: el runtime de producción (Cloudflare Workers) no permite
+// `new Function`, así que hacerlo en caliente devolvía un 500.
 
-import data1 from "../content/data.js?raw";
-import data3 from "../content/data_modulo3.js?raw";
-import data4 from "../content/data_modulo4.js?raw";
-import data5 from "../content/data_modulo5.js?raw";
-import placement from "../content/placement_items.js?raw";
+import bundle from "virtual:course-content";
+
 
 type Lesson = {
   id: string;
