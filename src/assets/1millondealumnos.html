@@ -247,11 +247,6 @@ function renderCell(row, col) {
   if (["alumnos_aprox","ranking_precio"].includes(col)) return `<div class="num">${intfmt(v)}</div>`;
   if (col==="incremento_10_soles_pct") return `<div class="num">${pct(v)}</div>`;
   if (["precio_promedio_mensual_soles","pension_min_soles_mes","pension_max_soles_mes","costo_mensual_ingles_soles","costo_ingles_monto","costo_material_ingles_soles"].includes(col)) return `<div class="num">${money(v)}</div>`;
-  if (col==="modelo_ingles") {
-    const s = String(v||"");
-    const c = s==="Tarifa aparte" ? "yes" : s==="Incluido en pensión" ? "no" : s==="Mixto" ? "warn2" : "unknown";
-    return `<span class="badge ${c}">${esc(s||"\u2014")}</span>`;
-  }
   if (col==="ofrece_curso_ingles") return badge(v);
   if (String(v).startsWith("http://") || String(v).startsWith("https://")) return `<a href="${esc(v)}" target="_blank" rel="noopener">Abrir fuente ↗</a>`;
   return esc(v || "—");
@@ -273,8 +268,6 @@ function filteredRows() {
     if (reach === "sin_marcar" && rr !== "") return false;
     if (reach && reach !== "sin_marcar" && rr !== reach) return false;
 
-    const ep = $("englishPriceFilter").value;
-    if (ep && r.modelo_ingles !== ep) return false;
 
     if (price !== "") {
       const p = Number(r.precio_promedio_mensual_soles || 0);
@@ -300,8 +293,6 @@ function cardHTML(r){
   const money2 = v => (v===""||v==null||Number.isNaN(Number(v))) ? "—" : "S/ "+Number(v).toLocaleString("es-PE",{maximumFractionDigits:2});
   const mens = r.costo_mensual_ingles_soles;
   const mv = (mens===""||mens==null) ? "—" : money2(mens);
-  const mod = r.modelo_ingles||"";
-  const cls = mod==="Tarifa aparte" ? "yes" : mod==="Incluido en pensión" ? "no" : mod==="Mixto" ? "warn2" : "unknown";
   const rows = displayCols.filter(c=>c!=="universidad" && c!=="reach_status")
     .map(c=>`<div class="crow"><span class="ck">${esc(labels[c]||c)}</span><span class="cv">${renderCell(r,c)}</span></div>`).join("");
   return `<article class="card" data-id="${r._id}">
@@ -310,7 +301,6 @@ function cardHTML(r){
       <span class="cchev" aria-hidden="true">▾</span>
     </button>
     <div class="cmeta">
-      <span class="badge ${cls}">${esc(mod||"—")}</span>
       <span class="cpill">${esc(r.ciudad_sede_principal||"—")}</span>
     </div>
     <div class="cstats">
@@ -391,9 +381,9 @@ function updateStats() {
   $("statAvgLabel").textContent = `precio inglés promedio (${pr.length} de ${DATA.length})`;
 }
 
-["search","cityFilter","englishFilter","reachFilter","priceFilter","englishPriceFilter"].forEach(id => $(id).addEventListener("input", render));
+["search","cityFilter","englishFilter","reachFilter","priceFilter"].forEach(id => $(id).addEventListener("input", render));
 $("resetBtn").addEventListener("click", () => {
-  ["search","cityFilter","englishFilter","reachFilter","priceFilter","englishPriceFilter"].forEach(id => $(id).value="");
+  ["search","cityFilter","englishFilter","reachFilter","priceFilter"].forEach(id => $(id).value="");
   sortKey="alumnos_aprox"; sortDir=-1; updateFilterCount(); buildHeader(); render();
 });
 
@@ -424,7 +414,7 @@ function buildMobileSort(){
   });
 }
 
-const FILTER_IDS = ["cityFilter","englishFilter","reachFilter","englishPriceFilter","priceFilter"];
+const FILTER_IDS = ["cityFilter","englishFilter","reachFilter","priceFilter"];
 function updateFilterCount(){
   const n = FILTER_IDS.filter(id => $(id).value !== "").length;
   const b = $("filterCount");
