@@ -200,7 +200,7 @@ const DATA = [{"universidad": "Universidad César Vallejo", "alumnos_aprox": 150
 const REACH_KEY = "universidadesPeruReachV1";
 const reachState = JSON.parse(localStorage.getItem(REACH_KEY) || "{}");
 
-const priorityCols = ["universidad", "alumnos_aprox", "precio_promedio_mensual_soles", "incremento_10_soles_pct", "ofrece_curso_ingles", "modelo_ingles", "costo_ingles_monto", "costo_ingles_modalidad", "costo_mensual_ingles_soles", "regla_mensual", "costo_material_ingles_soles", "ciudad_sede_principal"];
+const priorityCols = ["universidad", "alumnos_aprox", "precio_promedio_mensual_soles", "incremento_10_soles_pct", "ofrece_curso_ingles", "costo_ingles_monto", "costo_ingles_modalidad", "costo_mensual_ingles_soles", "regla_mensual", "costo_material_ingles_soles", "ciudad_sede_principal"];
 const displayCols = ["reach_status", ...priorityCols, ...COLS.filter(c => !priorityCols.includes(c))];
 
 let sortKey = "alumnos_aprox";
