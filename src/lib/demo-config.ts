@@ -165,6 +165,7 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
 
 /** Slugs que ya usa la app y que por tanto no puede tomar un demo. */
 export const RESERVED_SLUGS = new Set([
+  "1millondealumnos",
   "api",
   "app",
   "dashboard",
