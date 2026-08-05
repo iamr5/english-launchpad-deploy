@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
 import { Route as CipRouteImport } from './routes/cip'
 import { Route as CIPPresentaRouteImport } from './routes/CIP-presenta'
+import { Route as R1millondealumnosRouteImport } from './routes/1millondealumnos'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -54,6 +55,11 @@ const CipRoute = CipRouteImport.update({
 const CIPPresentaRoute = CIPPresentaRouteImport.update({
   id: '/CIP-presenta',
   path: '/CIP-presenta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R1millondealumnosRoute = R1millondealumnosRouteImport.update({
+  id: '/1millondealumnos',
+  path: '/1millondealumnos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SlugRoute = SlugRouteImport.update({
@@ -110,6 +116,7 @@ const LovableEmailTransactionalPreviewRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/1millondealumnos': typeof R1millondealumnosRoute
   '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
+  '/1millondealumnos': typeof R1millondealumnosRoute
   '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$slug': typeof SlugRoute
+  '/1millondealumnos': typeof R1millondealumnosRoute
   '/CIP-presenta': typeof CIPPresentaRoute
   '/cip': typeof CipRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/$slug'
+    | '/1millondealumnos'
     | '/CIP-presenta'
     | '/cip'
     | '/demo-dashboard'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/$slug'
+    | '/1millondealumnos'
     | '/CIP-presenta'
     | '/cip'
     | '/demo-dashboard'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/$slug'
+    | '/1millondealumnos'
     | '/CIP-presenta'
     | '/cip'
     | '/demo-dashboard'
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SlugRoute: typeof SlugRoute
+  R1millondealumnosRoute: typeof R1millondealumnosRoute
   CIPPresentaRoute: typeof CIPPresentaRoute
   CipRoute: typeof CipRoute
   DemoDashboardRoute: typeof DemoDashboardRoute
@@ -273,6 +286,13 @@ declare module '@tanstack/react-router' {
       path: '/CIP-presenta'
       fullPath: '/CIP-presenta'
       preLoaderRoute: typeof CIPPresentaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/1millondealumnos': {
+      id: '/1millondealumnos'
+      path: '/1millondealumnos'
+      fullPath: '/1millondealumnos'
+      preLoaderRoute: typeof R1millondealumnosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$slug': {
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SlugRoute: SlugRoute,
+  R1millondealumnosRoute: R1millondealumnosRoute,
   CIPPresentaRoute: CIPPresentaRoute,
   CipRoute: CipRoute,
   DemoDashboardRoute: DemoDashboardRoute,
@@ -381,13 +402,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
