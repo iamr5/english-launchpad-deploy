@@ -5,15 +5,13 @@
 // lecciones completas y el banco del test con sus respuestas—. Desde aquí sólo
 // salen por /api/course, que pide un pase y lleva la cuenta.
 //
-// Son .js escritos a mano (definen COURSE_DATA y window.PLACEMENT_ITEMS), así que
-// se evalúan una vez al arrancar el servidor y se guardan ya como objeto. No se
-// vuelve a evaluar por petición.
+// Son .js escritos a mano (definen COURSE_DATA y window.PLACEMENT_ITEMS). Se
+// evalúan EN TIEMPO DE BUILD por el plugin `virtual:course-content` de
+// vite.config.ts: el runtime de producción (Cloudflare Workers) no permite
+// `new Function`, así que hacerlo en caliente devolvía un 500.
 
-import data1 from "../content/data.js?raw";
-import data3 from "../content/data_modulo3.js?raw";
-import data4 from "../content/data_modulo4.js?raw";
-import data5 from "../content/data_modulo5.js?raw";
-import placement from "../content/placement_items.js?raw";
+import bundle from "virtual:course-content";
+
 
 type Lesson = {
   id: string;
@@ -26,28 +24,16 @@ type Lesson = {
 type Module = { id: string; title: string; description?: string; lessons: Lesson[] };
 export type Course = { modules: Module[]; [k: string]: unknown };
 
-let cache: { course: Course; placement: unknown[] } | null = null;
+const cache = bundle as { course: Course; placement: unknown[] };
 
-/**
- * Evalúa los archivos de contenido y devuelve el curso ya armado.
- *
- * Se hace con `new Function` y no con import porque son scripts pensados para
- * el navegador: declaran constantes sueltas y cuelgan cosas de `window`. Se les
- * da un `window` de mentira para que no revienten.
- */
+/** El curso ya armado (evaluado en build). */
 function build() {
-  if (cache) return cache;
-  const src = [data1, data3, data4, data5, placement].join("\n;\n");
-  const fake: Record<string, unknown> = {};
-  const run = new Function(
-    "window",
-    `${src}\n;return { course: typeof COURSE_DATA !== "undefined" ? COURSE_DATA : window.COURSE_DATA, placement: window.PLACEMENT_ITEMS || [] };`,
-  );
-  const out = run(fake) as { course: Course; placement: unknown[] };
-  if (!out?.course?.modules?.length) throw new Error("El contenido del curso no se pudo evaluar.");
-  cache = out;
+  if (!cache?.course?.modules?.length) {
+    throw new Error("El contenido del curso no se pudo evaluar.");
+  }
   return cache;
 }
+
 
 /** El curso entero. */
 export function getCourse(): Course {

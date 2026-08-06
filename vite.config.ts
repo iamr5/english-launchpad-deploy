@@ -4,6 +4,7 @@
 //     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
 //     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
+import fs from "node:fs";
 import path from "node:path";
 import { loadEnv } from "vite";
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
@@ -12,6 +13,48 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 const serverEnv = loadEnv(process.env.NODE_ENV || "development", process.cwd(), "");
 Object.assign(process.env, serverEnv);
 
+// El contenido del curso son scripts de navegador (definen COURSE_DATA y
+// window.PLACEMENT_ITEMS). Se evalúan AQUÍ, en build, y se emiten como JSON:
+// el runtime de producción (Cloudflare Workers) prohíbe `new Function`, así que
+// evaluarlos en caliente hacía fallar /api/course/bundle con un 500.
+function courseContentPlugin() {
+  const VIRTUAL = "virtual:course-content";
+  const RESOLVED = "\0" + VIRTUAL;
+  const files = [
+    "data.js",
+    "data_modulo3.js",
+    "data_modulo4.js",
+    "data_modulo5.js",
+    "placement_items.js",
+  ];
+  return {
+    name: "course-content",
+    resolveId(id: string) {
+      return id === VIRTUAL ? RESOLVED : undefined;
+    },
+    load(this: { addWatchFile: (f: string) => void }, id: string) {
+      if (id !== RESOLVED) return undefined;
+      const dir = path.resolve(import.meta.dirname, "src/content");
+      const src = files
+        .map((f) => {
+          const p = path.join(dir, f);
+          this.addWatchFile(p);
+          return fs.readFileSync(p, "utf8");
+        })
+        .join("\n;\n");
+      const run = new Function(
+        "window",
+        `${src}\n;return { course: typeof COURSE_DATA !== "undefined" ? COURSE_DATA : window.COURSE_DATA, placement: window.PLACEMENT_ITEMS || [] };`,
+      );
+      const out = run({}) as { course?: { modules?: unknown[] } };
+      if (!out?.course?.modules?.length) {
+        throw new Error("El contenido del curso no se pudo evaluar en build.");
+      }
+      return `export default ${JSON.stringify(out)};`;
+    },
+  };
+}
+
 export default defineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
@@ -19,6 +62,7 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
+    plugins: [courseContentPlugin()],
     resolve: {
       alias: {
         "entities/lib/decode.js": path.resolve(
@@ -34,3 +78,4 @@ export default defineConfig({
     },
   },
 });
+
