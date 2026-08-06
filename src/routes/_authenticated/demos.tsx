@@ -30,6 +30,8 @@ import {
   type MascotManifest,
   type PackCheck,
 } from "@/lib/mascot-pack";
+import { MascotConstructor } from "@/components/mascot-constructor";
+import { estadoDePack } from "@/lib/escribimos";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/demos")({
@@ -1097,6 +1099,24 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   </a>
                 </p>
               </div>
+              <MascotConstructor
+                slug={demo.slug}
+                brandLogo={g2("brand.logo")}
+                manifest={get(cfg, "mascot.manifest", null) as MascotManifest | null}
+                enUso={
+                  g2("mascot.pack", "ozito") === "custom" &&
+                  !!estadoDePack(get(cfg, "mascot.manifest", null) as MascotManifest | null)
+                }
+                onUsar={(baseUrl, manifest) =>
+                  setCfg((c) =>
+                    set(
+                      set(set(c, "mascot.pack", "custom"), "mascot.baseUrl", baseUrl),
+                      "mascot.manifest",
+                      manifest,
+                    ),
+                  )
+                }
+              />
               <MascotPackField
                 slug={demo.slug}
                 pack={g2("mascot.pack", "ozito")}
