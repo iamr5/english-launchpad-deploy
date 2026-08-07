@@ -83,7 +83,9 @@ function splashHTML(cfg: DemoConfig) {
 
   // La marca: el logo si lo hay, si no el texto de cabecera, y si tampoco, el
   // nombre de la institución. Siempre hay algo que enseñar.
-  const logo = cfg.brand.logo;
+  // El de la bienvenida manda sobre el de cabecera: a pantalla completa suele
+  // pedir otra versión del logotipo.
+  const logo = s.logo || cfg.brand.logo;
   const rotulo = cfg.brand.headerText || cfg.institution || "";
   const marca = logo
     ? `<img class="sp-logo" src="${esc(logo)}" alt="${esc(rotulo)}">`
@@ -263,11 +265,19 @@ async function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {
   );
 }
 
+// La página de un demo se arma en cada petición y cambia en cuanto se guarda en
+// el panel. Sin cabecera, el navegador le asigna una caducidad por su cuenta y
+// recargar podía seguir enseñando lo anterior. `no-store` lo descarta: no es
+// contenido estático, y rehacerla cuesta una consulta que además va cacheada en
+// el servidor.
+const SIN_CACHE = {
+  "Content-Type": "text/html; charset=utf-8",
+  "Cache-Control": "no-store, must-revalidate",
+};
+
 /** El panel de progreso, con la marca y la mascota del demo que lo abre. */
 export async function renderDemoDashboard(cfg: DemoConfig): Promise<Response> {
-  return new Response(await inject(dashboardTemplate, cfg), {
-    headers: { "Content-Type": "text/html; charset=utf-8" },
-  });
+  return new Response(await inject(dashboardTemplate, cfg), { headers: SIN_CACHE });
 }
 
 export async function renderDemoPage(cfg: DemoConfig): Promise<Response> {
@@ -278,7 +288,5 @@ export async function renderDemoPage(cfg: DemoConfig): Promise<Response> {
     `<title>${esc(cfg.meta.title)}</title>`,
   );
 
-  return new Response(html, {
-    headers: { "Content-Type": "text/html; charset=utf-8" },
-  });
+  return new Response(html, { headers: SIN_CACHE });
 }

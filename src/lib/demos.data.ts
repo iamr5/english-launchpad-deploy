@@ -108,6 +108,28 @@ export async function createDemo(row: {
   return data as DemoRow;
 }
 
+/**
+ * Avisa al servidor de que tire su copia en memoria de este demo.
+ *
+ * Hace falta porque estas funciones corren en el NAVEGADOR —van con la sesión
+ * del usuario, es RLS quien autoriza— y la caché de getDemoConfig() vive en el
+ * servidor. Sin esto, guardar no se notaba hasta que caducaba sola.
+ *
+ * Si falla no se interrumpe nada: el guardado ya se hizo y la caché caduca
+ * igualmente; solo se tardaría unos segundos más en verlo.
+ */
+async function tirarCache(slug: string) {
+  try {
+    await fetch("/api/demos/invalidate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug }),
+    });
+  } catch {
+    /* el guardado ya está hecho; la caché caduca sola */
+  }
+}
+
 export async function saveDemo(
   slug: string,
   patch: Partial<Pick<DemoRow, "institution" | "config" | "published" | "notes">>,
@@ -119,12 +141,14 @@ export async function saveDemo(
     .select()
     .single();
   if (error) throw error;
+  await tirarCache(slug);
   return data as DemoRow;
 }
 
 export async function deleteDemo(slug: string) {
   const { error } = await supabase.from(TABLE).delete().eq("slug", slug);
   if (error) throw error;
+  await tirarCache(slug);
 }
 
 /**

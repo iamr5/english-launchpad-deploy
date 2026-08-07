@@ -232,6 +232,9 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
     const to = g("splash.colors.to") || shadeHex(accent, 0.12);
     const glow = g("splash.colors.accent") || shadeHex(accent, 0.45);
     const rotulo = headerText || institution || "";
+    // El de la bienvenida manda; si no hay, el de la cabecera. Igual que el
+    // servidor, para que el previo no enseñe uno y el visitante vea otro.
+    const spLogo = g("splash.logo") || logo;
     const off = !get<boolean>(cfg, "splash.enabled", true);
     return (
       <div style={frame}>
@@ -270,8 +273,8 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
                 ))}
             </div>
             <div className="sp-mark">
-              {logo ? (
-                <img className="sp-logo" src={logo} alt={rotulo} />
+              {spLogo ? (
+                <img className="sp-logo" src={spLogo} alt={rotulo} />
               ) : (
                 <div className="sp-word">{rotulo || "Tu institución"}</div>
               )}
@@ -280,9 +283,11 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
           </div>
         )}
         <p style={{ margin: "10px 2px 0", fontSize: 12, color: "#6B6B78" }}>
-          {logo
-            ? "Se usa el logo de la pestaña Marca."
-            : "Sin logo cargado sale el texto de cabecera. Súbelo en la pestaña Marca."}
+          {spLogo
+            ? g("splash.logo")
+              ? "Logo propio de la bienvenida."
+              : "Se usa el logo de la pestaña Marca."
+            : "Sin logo sale el texto de cabecera."}
         </p>
       </div>
     );
@@ -1181,6 +1186,17 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                       })}
                     </div>
                   </div>
+
+                  <FileField
+                    label="Logo de la bienvenida"
+                    hint="Si lo dejas vacío se usa el de la cabecera. A pantalla completa y sobre fondo oscuro suele hacer falta otra versión: la vertical, o la clara."
+                    fallbackSrc={get(cfg, "brand.logo") || undefined}
+                    fallbackLabel="el logo de la cabecera"
+                    slug={demo.slug}
+                    kind="splash"
+                    value={get(cfg, "splash.logo")}
+                    onChange={upd("splash.logo")}
+                  />
 
                   <Field
                     label="Frase"

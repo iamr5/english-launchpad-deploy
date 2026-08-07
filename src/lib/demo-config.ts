@@ -113,6 +113,13 @@ export type DemoConfig = {
     /** La frase bajo la marca. Vacío = solo marca. */
     phrase?: string;
     /**
+     * Logo propio de la bienvenida. Si falta se usa el de la cabecera
+     * (`brand.logo`). Existe porque el de cabecera suele ser una versión
+     * horizontal y pequeña, pensada para una barra; a pantalla completa y sobre
+     * un fondo oscuro casi siempre hace falta otra: la vertical, o la clara.
+     */
+    logo?: string;
+    /**
      * Paleta del fondo. Cualquier hueco se deriva del acento del demo, así que
      * un demo que no toque nada ya sale coherente con su marca.
      */
@@ -337,8 +344,16 @@ export function rowToConfig(row: {
 }
 
 // Pequeña caché en memoria: servir un demo no debería costar una consulta por
-// visita. Se vacía sola al minuto, y el panel la invalida al guardar.
-const CACHE_MS = 60_000;
+// visita. El panel la invalida al guardar (POST /api/demos/invalidate) y además
+// caduca sola.
+//
+// El minuto que tenía antes era demasiado para editar: como nadie llamaba a
+// invalidateDemoCache(), guardar un cambio y recargar seguía enseñando lo
+// anterior durante un minuto entero. Con la invalidación ya conectada esto es
+// solo la red de seguridad para instancias que no atendieron esa llamada, así
+// que 10 s sobran y el ahorro de consultas se mantiene: una visita normal
+// encadena varias peticiones en mucho menos que eso.
+const CACHE_MS = 10_000;
 const cache = new Map<string, { at: number; cfg: DemoConfig | null }>();
 
 export function invalidateDemoCache(slug?: string) {
