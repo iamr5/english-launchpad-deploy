@@ -39,7 +39,14 @@ export async function sendTemplateEmail(
 ): Promise<SendTemplateEmailResult> {
   const apiKey = process.env['LOVABLE_API_KEY']
   if (!apiKey) {
-    throw new Error('LOVABLE_API_KEY is not configured')
+    // Con `code` para que quien llame pueda distinguir "falta configurar" de
+    // "el envío falló". Sin esto llegaba como un Error pelado y acababa
+    // confundido con un fallo de envío real, que es un diagnóstico muy distinto.
+    const err = new Error(
+      'LOVABLE_API_KEY is not configured (email integration not connected in this environment)'
+    ) as Error & { code: string }
+    err.code = 'email_not_configured'
+    throw err
   }
 
   const template = TEMPLATES[templateName]
