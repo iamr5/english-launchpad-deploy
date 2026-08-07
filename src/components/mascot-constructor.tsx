@@ -347,6 +347,37 @@ export function MascotConstructor({
         </div>
       </div>
 
+      {/* Cuerpo: cambia dónde va el rostro y el hueco del logo en el polo.
+          Vale para los ocho personajes porque comparten el mismo arte. */}
+      {Object.keys(data.cuerpos ?? {}).length > 1 && (
+        <div className="space-y-1.5">
+          <Label>Polo</Label>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {Object.entries(data.cuerpos!).map(([id, v]) => {
+              const on = (S.cuerpo || "clasico") === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setS({ ...S, cuerpo: id })}
+                  className={`rounded-lg border p-2.5 text-left transition hover:bg-accent/50 ${
+                    on ? "border-primary bg-accent" : ""
+                  }`}
+                >
+                  <span className="text-sm font-medium">{v.nombre}</span>
+                  {v.detalle && (
+                    <span className="block text-xs text-muted-foreground leading-snug mt-0.5">
+                      {v.detalle}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="space-y-1.5">
         <Label>Personaje</Label>
         <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">

@@ -49,6 +49,23 @@ export type Personajes = {
   viewBox: string;
   body: { back: Figura[]; armL: Figura[]; armR: Figura[]; shirt: Figura[] };
   logoRect: { x: number; y: number; width: number; height: number };
+  /**
+   * Variantes de cuerpo. Comparten TODO el arte: la única diferencia medida
+   * entre ellas es cuánto sube el rostro respecto del torso (~20 unidades) y
+   * el tamaño del hueco del logo en el polo. Por eso una variante son cuatro
+   * números y no un dibujo nuevo — y por eso vale para los ocho personajes sin
+   * pedir arte de ninguno.
+   */
+  cuerpos?: Record<
+    string,
+    {
+      nombre: string;
+      detalle?: string;
+      /** Unidades que sube el rostro respecto del torso. */
+      subeCabeza: number;
+      logoRect: { x: number; y: number; width: number; height: number };
+    }
+  >;
   chars: Record<string, Personaje>;
 };
 
@@ -230,6 +247,8 @@ export type LogoModo = "none" | "color" | "img";
 
 export type EstadoMascota = {
   char: string;
+  /** Variante de cuerpo (ver Personajes.cuerpos). Vacío = la clásica. */
+  cuerpo?: string;
   /** Color base del pelaje. Los demás tonos de la especie salen de aquí. */
   fur: string;
   /** Rosado de mejillas y orejas, si la especie los tiene. */
@@ -376,10 +395,23 @@ ${
   ${q}#personaje,${q}#cabeza,${q}#brazo-izq,${q}#brazo-der,${q}.ojo,${q}#cola{animation-duration:9s}}`;
 }
 
+/**
+ * La variante de cuerpo en uso. Si el estado guardado no la trae —o nombra una
+ * que ya no existe— se cae a la clásica, que es el aspecto de siempre: así una
+ * mascota guardada antes de esto se sigue dibujando igual.
+ */
+export function cuerpoDe(data: Personajes, S: EstadoMascota) {
+  const v = data.cuerpos || {};
+  return (
+    v[S.cuerpo || ""] ||
+    v.clasico || { nombre: "Clásico", subeCabeza: 0, logoRect: data.logoRect }
+  );
+}
+
 /** La ranura del logo: sin logo, recuadro de color, o imagen recortada al rectángulo. */
 function bloqueLogo(data: Personajes, S: EstadoMascota, vars: Record<string, string>) {
   if (S.logo === "none") return "";
-  const r = data.logoRect,
+  const r = cuerpoDe(data, S).logoRect,
     k = S.logoEscala;
   // Escala desde el centro de la ranura, así el logo crece sin moverse de sitio.
   const an = r.width * k,
@@ -403,6 +435,8 @@ function interior(data: Personajes, S: EstadoMascota, vars: Record<string, strin
   const cabeza = c.head
     .map((g) => (g.ojo ? `<g class="ojo">${nodos(g.p, vars)}</g>` : nodos(g.p, vars)))
     .join("");
+  const dy = cuerpoDe(data, S).subeCabeza || 0;
+  const sube = dy ? ` transform="translate(0,${-dy})"` : "";
   return (
     `<g id="personaje">` +
     (S.cola && c.tail.length ? `<g id="cola">${nodos(c.tail, vars)}</g>` : "") +
@@ -411,8 +445,10 @@ function interior(data: Personajes, S: EstadoMascota, vars: Record<string, strin
     (c.mid.length ? `<g id="pecho">${nodos(c.mid, vars)}</g>` : "") +
     `<g id="polo">${nodos(B.shirt, vars)}</g>` +
     bloqueLogo(data, S, vars) +
-    `<g id="cabeza">${cabeza}</g>` +
-    (S.lentes ? `<g id="lentes">${nodos(c.glass, vars)}</g>` : "") +
+    // El rostro (y los lentes con él) suben lo que pida la variante. Es el
+    // único cambio de dibujo entre cuerpos: el arte es exactamente el mismo.
+    `<g id="cabeza"${sube}>${cabeza}</g>` +
+    (S.lentes ? `<g id="lentes"${sube}>${nodos(c.glass, vars)}</g>` : "") +
     `</g>`
   );
 }
