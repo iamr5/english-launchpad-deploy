@@ -1,0 +1,164 @@
+/* Pantalla de bienvenida y presencia de marca del demo.
+   Vive en su propio archivo porque lo usan DOS sitios: la plantilla del demo
+   (demo-app.html) y el previo del creador de demos. Si estuviera duplicado, el
+   previo acabaria ensenando algo distinto de lo que ve el visitante. */
+
+/*= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+  PANTALLA DE BIENVENIDA (splash)
+  Lo primero que ve quien abre el enlace. La pinta el servidor (ver
+  splashHTML en demo-page.ts), no el JS: si esperase al script se vería un
+  instante del demo desnudo antes de la marca.
+  Los tres colores llegan como variables desde la config del demo:
+    --sp-from  arranque del degradado
+    --sp-to    final del degradado
+    --sp-glow  luces, partículas y trazos
+  Cinco estilos, cada uno una puesta en escena distinta. Lo común (marca,
+  frase, entrada y salida) vive aquí arriba; abajo, lo propio de cada uno.
+  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =*/
+.sp { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center;
+  overflow: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; user-select: none;
+  background: linear-gradient(160deg, var(--sp-from, #2a1230), var(--sp-to, #7C1C56));
+  transition: opacity .75s ease, transform .75s cubic-bezier(.4,0,.2,1), filter .75s ease; }
+/* Se va hacia el espectador y se deshace: no es un corte, es una cortina que
+   se abre sobre el demo que ya está detrás. */
+.sp.out { opacity: 0; transform: scale(1.08); filter: blur(14px); pointer-events: none; }
+.sp-deco { position: absolute; inset: 0; pointer-events: none; }
+.sp-mark { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center;
+  gap: 20px; padding: 28px; text-align: center; max-width: 480px; }
+.sp-logo { max-width: min(64vw, 300px); max-height: 30vh; object-fit: contain; display: block;
+  animation: spMarkIn 1.5s cubic-bezier(.16,.85,.25,1) .15s both; }
+.sp-word { font-family: var(--font-round); font-weight: 800; color: #fff; letter-spacing: -.01em;
+  font-size: clamp(28px, 8vw, 46px); line-height: 1.15; text-shadow: 0 2px 30px rgba(0,0,0,.25);
+  animation: spMarkIn 1.5s cubic-bezier(.16,.85,.25,1) .15s both; }
+.sp-phrase { margin: 0; font-size: clamp(14px, 3.7vw, 17px); font-weight: 600; line-height: 1.55;
+  color: rgba(255,255,255,.9); text-wrap: balance;
+  animation: spPhraseIn 1.3s cubic-bezier(.2,.85,.3,1) .75s both; }
+/* Sale del desenfoque, se pasa un pelo de tamaño y se asienta: la marca
+   "llega", no aparece. */
+@keyframes spMarkIn {
+  0% { opacity: 0; transform: scale(.82) translateY(14px); filter: blur(16px) }
+  55% { opacity: 1; filter: blur(0) }
+  76% { transform: scale(1.025) translateY(-2px) }
+  100% { opacity: 1; transform: none; filter: blur(0) } }
+@keyframes spPhraseIn {
+  0% { opacity: 0; transform: translateY(14px); filter: blur(7px) }
+  100% { opacity: 1; transform: none; filter: blur(0) } }
+
+/* — 1 · AURORA — manchas de luz a la deriva. Dos periodos que no encajan
+     (9s y 11.5s): la luz nunca repite el mismo estado. */
+.sp-aurora .sp-deco::before, .sp-aurora .sp-deco::after {
+  content: ''; position: absolute; border-radius: 50%; filter: blur(60px); }
+.sp-aurora .sp-deco::before { width: 74vmax; height: 74vmax; left: -22vmax; top: -26vmax; opacity: .6;
+  background: radial-gradient(circle, var(--sp-glow), transparent 64%);
+  animation: spAuroraA 9s ease-in-out infinite; }
+.sp-aurora .sp-deco::after { width: 62vmax; height: 62vmax; right: -20vmax; bottom: -24vmax; opacity: .26;
+  background: radial-gradient(circle, #fff, transparent 60%);
+  animation: spAuroraB 11.5s ease-in-out infinite; }
+@keyframes spAuroraA {
+  0%,100% { transform: translate(0,0) scale(1) }
+  38% { transform: translate(9vmax,5vmax) scale(1.16) }
+  69% { transform: translate(-4vmax,8vmax) scale(.94) } }
+@keyframes spAuroraB {
+  0%,100% { transform: translate(0,0) scale(1.05) }
+  45% { transform: translate(-8vmax,-6vmax) scale(.88) }
+  72% { transform: translate(4vmax,-2vmax) scale(1) } }
+
+/* — 2 · CONSTELACIÓN — las partículas caen hacia la marca y se quedan
+     orbitando. El campo entero gira muy lento. */
+.sp-constelacion .sp-deco { animation: spField 30s linear infinite; }
+@keyframes spField { to { transform: rotate(360deg) } }
+.sp-constelacion .sp-deco i { position: absolute; left: 50%; top: 50%; width: 5px; height: 5px;
+  margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: var(--sp-glow);
+  box-shadow: 0 0 14px var(--sp-glow), 0 0 4px #fff;
+  animation: spStar 2.4s cubic-bezier(.18,.75,.28,1) calc(var(--i) * .07s) both,
+    spTwinkle 3.4s ease-in-out calc(1.6s + var(--i) * .13s) infinite; }
+/* El rotate se repite en cada fotograma: es lo que reparte las partículas en
+   círculo, así que no puede perderse al animar la distancia. */
+@keyframes spStar {
+  0% { transform: rotate(calc(var(--i) * 25.7deg)) translateX(78vmin) scale(.2); opacity: 0 }
+  55% { opacity: 1 }
+  100% { transform: rotate(calc(var(--i) * 25.7deg)) translateX(26vmin) scale(1); opacity: .92 } }
+@keyframes spTwinkle { 0%,100% { opacity: .92 } 50% { opacity: .3 } }
+
+/* — 3 · PRISMA — un haz barre la pantalla y se descompone al pasar. */
+.sp-prisma .sp-deco::before { content: ''; position: absolute; top: -40%; bottom: -40%; width: 34%;
+  left: -55%; transform: skewX(-14deg); filter: blur(26px);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.6), transparent);
+  animation: spBeam 3.6s cubic-bezier(.5,0,.28,1) .35s infinite; }
+.sp-prisma .sp-deco::after { content: ''; position: absolute; top: -40%; bottom: -40%; width: 26%;
+  left: -55%; transform: skewX(-14deg); filter: blur(16px); mix-blend-mode: screen;
+  background: linear-gradient(90deg, transparent, var(--sp-glow) 35%, #fff 50%, var(--sp-glow) 65%, transparent);
+  animation: spBeam 3.6s cubic-bezier(.5,0,.28,1) .52s infinite; }
+@keyframes spBeam { 0% { left: -55% } 62%,100% { left: 145% } }
+
+/* — 4 · PULSO — anillos que salen de la marca, como un sonar. */
+.sp-pulso .sp-deco::before, .sp-pulso .sp-deco::after, .sp-pulso .sp-mark::before {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 30vmin; height: 30vmin;
+  margin: -15vmin 0 0 -15vmin; border-radius: 50%; border: 2px solid var(--sp-glow);
+  opacity: 0; pointer-events: none; animation: spRing 3.6s cubic-bezier(.2,.65,.3,1) infinite; }
+.sp-pulso .sp-deco::after { animation-delay: 1.2s; }
+.sp-pulso .sp-mark::before { animation-delay: 2.4s; z-index: -1; }
+@keyframes spRing {
+  0% { transform: scale(.35); opacity: 0 }
+  18% { opacity: .75 }
+  100% { transform: scale(3.4); opacity: 0 } }
+
+/* — 5 · AMANECER — la luz sube desde abajo y enciende la marca a contraluz. */
+.sp-amanecer { background: linear-gradient(180deg, var(--sp-from) 0%, var(--sp-from) 38%, var(--sp-to) 100%); }
+.sp-amanecer .sp-deco::before { content: ''; position: absolute; left: 50%; width: 96vmin; height: 96vmin;
+  margin-left: -48vmin; bottom: -52vmin; border-radius: 50%;
+  background: radial-gradient(circle, var(--sp-glow) 0%, transparent 62%);
+  filter: blur(34px); animation: spRise 3.4s cubic-bezier(.22,.7,.3,1) both; }
+.sp-amanecer .sp-deco::after { content: ''; position: absolute; left: 0; right: 0; bottom: 26%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sp-glow), transparent);
+  opacity: .5; animation: spHorizon 3.4s ease-out both; }
+@keyframes spRise {
+  0% { transform: translateY(34vmin) scale(.62); opacity: 0 }
+  45% { opacity: .95 }
+  100% { transform: translateY(0) scale(1); opacity: .85 } }
+@keyframes spHorizon { 0% { opacity: 0; transform: scaleX(.3) } 100% { opacity: .5; transform: none } }
+
+/*= = = PRESENCIA DE MARCA a lo largo del demo = = =
+  El logo de la institución, repetido en los momentos que importan. Cada sitio
+  se enciende por separado desde el panel (brand.logoSpots); sin logo cargado
+  no se pinta nada. */
+/* Onboarding y test: pequeño, arriba, sin robar protagonismo al contenido. */
+.brand-spot { display: block; max-width: 116px; max-height: 30px; object-fit: contain;
+  margin: 0 auto 14px; opacity: .92;
+  animation: spotIn .8s cubic-bezier(.2,.9,.3,1) both; }
+@keyframes spotIn { 0% { opacity: 0; transform: translateY(-8px); filter: blur(4px) }
+  100% { opacity: .92; transform: none; filter: blur(0) } }
+/* Celebraciones: sobre fondo oscuro, así que se aclara y se separa del borde. */
+.brand-spot.on-dark { filter: brightness(0) invert(1); opacity: .8; max-height: 26px; margin-bottom: 6px; }
+.win .brand-spot { margin-bottom: 10px; }
+/* Marca de agua: presente pero fuera del camino. Se aparta de los botones
+   flotantes de debug y del CTA, que viven abajo a la derecha y en el centro. */
+.brand-wm { position: fixed; left: 12px; bottom: 10px; z-index: 45; pointer-events: none;
+  max-width: 84px; max-height: 24px; object-fit: contain; opacity: .28;
+  transition: opacity .4s ease; }
+body.in-quiz .brand-wm { opacity: .12; }
+
+/* El previo del panel (.sp-preview) queda fuera: ahí se está eligiendo el
+   estilo, y sin movimiento no hay nada que elegir. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) .sp:not(.sp-preview),
+  html:not([data-motion="full"]) .sp:not(.sp-preview) *,
+  html:not([data-motion="full"]) .sp:not(.sp-preview) *::before,
+  html:not([data-motion="full"]) .sp:not(.sp-preview) *::after,
+  html:not([data-motion="full"]) .brand-spot { animation: none !important; }
+  html:not([data-motion="full"]) .sp:not(.sp-preview) .sp-logo,
+  html:not([data-motion="full"]) .sp:not(.sp-preview) .sp-word,
+  html:not([data-motion="full"]) .sp:not(.sp-preview) .sp-phrase,
+  html:not([data-motion="full"]) .brand-spot { opacity: 1; transform: none; filter: none; }
+  html:not([data-motion="full"]) .brand-spot.on-dark { filter: brightness(0) invert(1); }
+}
+
+/* Previo del panel: el mismo splash, encajado en una caja en vez de a pantalla
+   completa. Sin `position:fixed` para que no se salga del formulario. */
+.sp.sp-preview { position: relative; inset: auto; width: 100%; height: 210px;
+  border-radius: 12px; cursor: default; z-index: 0; }
+.sp.sp-preview .sp-logo { max-height: 74px; max-width: 58%; }
+.sp.sp-preview .sp-word { font-size: 26px; }
+.sp.sp-preview .sp-phrase { font-size: 13px; }
+.sp.sp-preview .sp-mark { gap: 12px; padding: 16px; }

@@ -59,6 +59,52 @@ const STOCK = {
 };
 
 /** Las variables CSS que puede mover un demo. El resto del tema es fijo. */
+/**
+ * La pantalla de bienvenida, resuelta EN EL SERVIDOR.
+ *
+ * Va en el HTML que se envía, no la monta el JS: si esperara al script, el
+ * visitante vería un instante del demo desnudo antes de la marca, que es justo
+ * lo contrario de lo que busca un splash.
+ *
+ * Los colores viajan como variables CSS. Cualquier hueco se deriva del acento
+ * del demo, así que uno que no configure nada ya sale con su propia marca.
+ */
+function splashHTML(cfg: DemoConfig) {
+  const s = cfg.splash ?? {};
+  if (s.enabled === false) return "";
+
+  const accent = cfg.colors.accent;
+  const c = s.colors ?? {};
+  const from = c.from || shadeHex(accent, -0.55);
+  const to = c.to || shadeHex(accent, 0.12);
+  const glow = c.accent || shadeHex(accent, 0.45);
+  const style = s.style || "aurora";
+  const dur = Math.max(600, Math.min(10000, Number(s.duration) || 2600));
+
+  // La marca: el logo si lo hay, si no el texto de cabecera, y si tampoco, el
+  // nombre de la institución. Siempre hay algo que enseñar.
+  const logo = cfg.brand.logo;
+  const rotulo = cfg.brand.headerText || cfg.institution || "";
+  const marca = logo
+    ? `<img class="sp-logo" src="${esc(logo)}" alt="${esc(rotulo)}">`
+    : `<div class="sp-word">${esc(rotulo)}</div>`;
+
+  const frase = s.phrase ? `<p class="sp-phrase">${esc(s.phrase)}</p>` : "";
+
+  // `sp-deco` lo rellena cada estilo desde el CSS; las partículas de
+  // "constelación" son el único caso que necesita nodos de verdad.
+  const deco =
+    style === "constelacion"
+      ? Array.from({ length: 14 }, (_, i) => `<i style="--i:${i}"></i>`).join("")
+      : "";
+
+  return `<div id="demo-splash" class="sp sp-${esc(style)}" data-dur="${dur}"
+  style="--sp-from:${esc(from)};--sp-to:${esc(to)};--sp-glow:${esc(glow)}">
+  <div class="sp-deco">${deco}</div>
+  <div class="sp-mark">${marca}${frase}</div>
+</div>`;
+}
+
 function themeCSS(cfg: DemoConfig) {
   const c = cfg.colors;
 
@@ -189,6 +235,7 @@ async function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {
     icons: cfg.icons,
     copy: cfg.copy,
     brand: cfg.brand,
+    splash: cfg.splash,
     map: cfg.map,
     features: cfg.features,
     mascot: mascot.runtime,
@@ -208,6 +255,8 @@ async function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {
 </head>`,
       )
       .replace("<!--MASCOT-SCRIPTS-->", mascotScripts(mascot))
+      // El splash solo en la app; el panel de progreso no se abre en frío.
+      .replace("<!--SPLASH-->", () => (opts.head ? splashHTML(cfg) : ""))
       // El icono de la barra, resuelto antes de servir: si se deja el de la
       // plantilla, se ve a Boti mientras arranca el JS.
       .replace(/<img class="appbar-en"[^>]*>/, () => appbarIcon(cfg, mascot))

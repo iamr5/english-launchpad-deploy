@@ -6,6 +6,41 @@
 // gestión, getDemoConfig() leerá también de la tabla `demos` — el resto del
 // código no se entera, porque todo pasa por aquí.
 
+/**
+ * Los cinco estilos de splash. Cada uno es una puesta en escena distinta, no un
+ * cambio de color: el degradado ya es configurable aparte. La lista vive aquí
+ * para que el panel y la plantilla no puedan desincronizarse.
+ */
+export const SPLASH_STYLES = [
+  {
+    id: "aurora",
+    name: "Aurora",
+    hint: "Manchas de luz a la deriva; la marca emerge del desenfoque.",
+  },
+  {
+    id: "constelacion",
+    name: "Constelación",
+    hint: "Partículas que convergen y se enlazan alrededor de la marca.",
+  },
+  {
+    id: "prisma",
+    name: "Prisma",
+    hint: "Un haz barre la pantalla y se descompone en bandas de color.",
+  },
+  {
+    id: "pulso",
+    name: "Pulso",
+    hint: "Anillos concéntricos que laten desde la marca hacia afuera.",
+  },
+  {
+    id: "amanecer",
+    name: "Amanecer",
+    hint: "La luz sube desde abajo y enciende la marca a contraluz.",
+  },
+] as const;
+
+export type SplashStyle = (typeof SPLASH_STYLES)[number]["id"];
+
 export type DemoConfig = {
   /** Lo que va después del dominio: aprendoenglish.com/<slug> */
   slug: string;
@@ -49,6 +84,48 @@ export type DemoConfig = {
      * que en una tableta. Sólo aplica con olaFit "repeat".
      */
     olaRepeats?: number;
+    /**
+     * Dónde se repite el logo además de la cabecera. La cabecera ya lo tiene
+     * desde siempre (`logo`); esto es la presencia de marca en el resto del
+     * recorrido. Sin `logo` cargado no se pinta nada, así que activarlo en un
+     * demo sin logo no rompe nada.
+     */
+    logoSpots?: {
+      /** Onboarding y test de ubicación: las primeras pantallas de la visita. */
+      onboarding?: boolean;
+      /** Lección completada y veredicto del test: máxima atención. */
+      celebrations?: boolean;
+      /** Esquina inferior, translúcido, durante todo el demo. */
+      watermark?: boolean;
+    };
+  };
+
+  /**
+   * Pantalla de bienvenida. Sale en cada carga, antes del demo, y se puede
+   * saltar tocando. Es lo primero que ve quien abre el enlace, así que lleva la
+   * marca y una frase; el estilo decide la puesta en escena.
+   */
+  splash: {
+    /** false lo desactiva por completo. */
+    enabled?: boolean;
+    /** Puesta en escena. Ver SPLASH_STYLES. */
+    style?: SplashStyle;
+    /** La frase bajo la marca. Vacío = solo marca. */
+    phrase?: string;
+    /**
+     * Paleta del fondo. Cualquier hueco se deriva del acento del demo, así que
+     * un demo que no toque nada ya sale coherente con su marca.
+     */
+    colors?: {
+      /** Arranque del degradado. */
+      from?: string;
+      /** Final del degradado. */
+      to?: string;
+      /** Luces, partículas y trazos. */
+      accent?: string;
+    };
+    /** Milisegundos en pantalla antes de irse solo. Por defecto 2600. */
+    duration?: number;
   };
 
   colors: {
@@ -146,7 +223,10 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
     image: "https://aprendoenglish.com/social-preview.jpg",
     imageAlt: "AprendoEnglish.com — Inglés de clase mundial para tu institución",
   },
-  brand: {},
+  // La marca acompaña todo el recorrido. La marca de agua va aparte porque es
+  // la única que se ve siempre y puede estorbar: se enciende a mano.
+  brand: { logoSpots: { onboarding: true, celebrations: true, watermark: false } },
+  splash: { enabled: true, style: "aurora", phrase: "", colors: {}, duration: 2600 },
   colors: {
     accent: "#7C1C56",
     modules: ["#3faa24", "#ff6ba0", "#b875f5", "#1cb0f6", "#fd5d04"],

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createDemo,
@@ -13,7 +14,7 @@ import {
   uploadBrandFile,
   type DemoRow,
 } from "@/lib/demos.data";
-import { DEFAULTS } from "@/lib/demo-config";
+import { DEFAULTS, SPLASH_STYLES, shadeHex } from "@/lib/demo-config";
 import { BUILT_IN_PACKS, packAsset, packChoices, packInfo } from "@/lib/mascot-packs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -102,6 +103,25 @@ function Ico({ v, fallback, size = 18 }: { v: string; fallback: string; size?: n
  * configuración SIN guardar, así el cambio se ve al escribirlo — el previo de la
  * derecha va por iframe y sólo refleja lo ya guardado.
  */
+/**
+ * Trae /demo-assets/splash.css al panel — el mismo archivo que carga el demo.
+ * Se engancha una sola vez aunque haya varios previos en pantalla, y no se
+ * retira al desmontar: es un css estático, quitarlo solo provocaría parpadeos
+ * al cambiar de pestaña.
+ */
+function SplashCss() {
+  React.useEffect(() => {
+    const ID = "splash-css";
+    if (document.getElementById(ID)) return;
+    const link = document.createElement("link");
+    link.id = ID;
+    link.rel = "stylesheet";
+    link.href = "/demo-assets/splash.css";
+    document.head.appendChild(link);
+  }, []);
+  return null;
+}
+
 function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institution: string }) {
   const g = (p: string, f: unknown = "") => get(cfg, p, f) as string;
   const accent = g("colors.accent", DEFAULTS.colors.accent);
@@ -202,6 +222,71 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
       </span>
     </button>
   );
+
+  if (tab === "splash") {
+    // El previo monta el MISMO markup y el MISMO css que sirve demo-page.ts
+    // (splashHTML + /demo-assets/splash.css). Nada de re-dibujarlo aquí: si se
+    // duplicara, el panel acabaría enseñando algo distinto del demo real.
+    const style = g("splash.style") || DEFAULTS.splash.style!;
+    const from = g("splash.colors.from") || shadeHex(accent, -0.55);
+    const to = g("splash.colors.to") || shadeHex(accent, 0.12);
+    const glow = g("splash.colors.accent") || shadeHex(accent, 0.45);
+    const rotulo = headerText || institution || "";
+    const off = !get<boolean>(cfg, "splash.enabled", true);
+    return (
+      <div style={frame}>
+        <SplashCss />
+        {off ? (
+          <div
+            style={{
+              height: 210,
+              borderRadius: 12,
+              border: "1px dashed #C9C9D2",
+              display: "grid",
+              placeItems: "center",
+              color: "#8A8A97",
+              fontSize: 13,
+              fontWeight: 600,
+            }}
+          >
+            El demo abre directamente, sin bienvenida.
+          </div>
+        ) : (
+          <div
+            key={`${style}-${from}-${to}-${glow}`}
+            className={`sp sp-preview sp-${style}`}
+            style={
+              {
+                "--sp-from": from,
+                "--sp-to": to,
+                "--sp-glow": glow,
+              } as React.CSSProperties
+            }
+          >
+            <div className="sp-deco">
+              {style === "constelacion" &&
+                Array.from({ length: 14 }, (_, i) => (
+                  <i key={i} style={{ "--i": i } as React.CSSProperties} />
+                ))}
+            </div>
+            <div className="sp-mark">
+              {logo ? (
+                <img className="sp-logo" src={logo} alt={rotulo} />
+              ) : (
+                <div className="sp-word">{rotulo || "Tu institución"}</div>
+              )}
+              {!!g("splash.phrase") && <p className="sp-phrase">{g("splash.phrase")}</p>}
+            </div>
+          </div>
+        )}
+        <p style={{ margin: "10px 2px 0", fontSize: 12, color: "#6B6B78" }}>
+          {logo
+            ? "Se usa el logo de la pestaña Marca."
+            : "Sin logo cargado sale el texto de cabecera. Súbelo en la pestaña Marca."}
+        </p>
+      </div>
+    );
+  }
 
   if (tab === "marca") {
     const ola = (g("brand.ola") || "").trim();
@@ -897,6 +982,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="mb-4">
               <TabsTrigger value="marca">Marca</TabsTrigger>
+              <TabsTrigger value="splash">Bienvenida</TabsTrigger>
               <TabsTrigger value="colores">Colores</TabsTrigger>
               <TabsTrigger value="mascota">Mascota</TabsTrigger>
               <TabsTrigger value="textos">Textos</TabsTrigger>
@@ -979,6 +1065,49 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   </p>
                 </div>
               )}
+              <div className="rounded-lg border p-3 space-y-3">
+                <div>
+                  <Label className="text-xs font-medium">El logo por el demo</Label>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Además de la cabecera. Sin logo cargado no se pinta nada.
+                  </p>
+                </div>
+                {[
+                  {
+                    k: "onboarding",
+                    t: "Onboarding y test de nivel",
+                    d: "Las primeras pantallas de la visita.",
+                  },
+                  {
+                    k: "celebrations",
+                    t: "Celebraciones",
+                    d: "Lección completada y veredicto del test: máxima atención.",
+                  },
+                  {
+                    k: "watermark",
+                    t: "Marca de agua",
+                    d: "Esquina inferior, translúcido, durante todo el demo.",
+                  },
+                ].map((o) => (
+                  <label key={o.k} className="flex items-start gap-3 cursor-pointer">
+                    <Switch
+                      className="mt-0.5"
+                      checked={
+                        get(
+                          cfg,
+                          `brand.logoSpots.${o.k}`,
+                          (DEFAULTS.brand.logoSpots as Record<string, boolean>)[o.k],
+                        ) as boolean
+                      }
+                      onCheckedChange={(v) => upd(`brand.logoSpots.${o.k}`)(v)}
+                    />
+                    <span className="leading-tight">
+                      <span className="text-sm">{o.t}</span>
+                      <span className="block text-xs text-muted-foreground">{o.d}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
               <FileField
                 label="Icono de la barra superior"
                 hint="Si lo dejas vacío se usa la cabeza de la mascota."
@@ -1010,6 +1139,121 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={get(cfg, "meta.image")}
                 onChange={upd("meta.image")}
               />
+            </TabsContent>
+
+            <TabsContent value="splash" className="space-y-4">
+              <label className="flex items-start gap-3 cursor-pointer rounded-lg border p-3">
+                <Switch
+                  className="mt-0.5"
+                  checked={get(cfg, "splash.enabled", true) as boolean}
+                  onCheckedChange={(v) => upd("splash.enabled")(v)}
+                />
+                <span className="leading-tight">
+                  <span className="text-sm">Abrir con pantalla de bienvenida</span>
+                  <span className="block text-xs text-muted-foreground">
+                    Sale en cada carga, con la marca, y se salta tocando la pantalla.
+                  </span>
+                </span>
+              </label>
+
+              {(get(cfg, "splash.enabled", true) as boolean) && (
+                <>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Estilo</Label>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {SPLASH_STYLES.map((s) => {
+                        const on = (get(cfg, "splash.style", DEFAULTS.splash.style) as string) === s.id;
+                        return (
+                          <button
+                            key={s.id}
+                            type="button"
+                            onClick={() => upd("splash.style")(s.id)}
+                            className={`rounded-lg border p-2.5 text-left transition ${
+                              on ? "border-primary ring-1 ring-primary" : "hover:bg-muted/50"
+                            }`}
+                          >
+                            <span className="text-sm font-medium">{s.name}</span>
+                            <span className="block text-xs text-muted-foreground leading-snug mt-0.5">
+                              {s.hint}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <Field
+                    label="Frase"
+                    hint="Una línea. Si la dejas vacía sale solo la marca."
+                    placeholder="Inglés que se te queda"
+                    value={get(cfg, "splash.phrase")}
+                    onChange={upd("splash.phrase")}
+                  />
+
+                  <div className="rounded-lg border p-3 space-y-3">
+                    <div>
+                      <Label className="text-xs font-medium">Colores</Label>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Vacíos se derivan del acento del demo, así que ya salen con tu marca.
+                        Tócalos solo si quieres otra cosa.
+                      </p>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      <ColorField
+                        label="Degradado: inicio"
+                        value={get(cfg, "splash.colors.from")}
+                        fallback={shadeHex(
+                          get(cfg, "colors.accent", DEFAULTS.colors.accent) as string,
+                          -0.55,
+                        )}
+                        onChange={upd("splash.colors.from")}
+                      />
+                      <ColorField
+                        label="Degradado: final"
+                        value={get(cfg, "splash.colors.to")}
+                        fallback={shadeHex(
+                          get(cfg, "colors.accent", DEFAULTS.colors.accent) as string,
+                          0.12,
+                        )}
+                        onChange={upd("splash.colors.to")}
+                      />
+                      <ColorField
+                        label="Luces"
+                        value={get(cfg, "splash.colors.accent")}
+                        fallback={shadeHex(
+                          get(cfg, "colors.accent", DEFAULTS.colors.accent) as string,
+                          0.45,
+                        )}
+                        onChange={upd("splash.colors.accent")}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Cuánto dura</Label>
+                    <div className="flex items-center gap-3">
+                      <Input
+                        type="range"
+                        min={800}
+                        max={6000}
+                        step={200}
+                        className="flex-1"
+                        value={Number(get(cfg, "splash.duration", DEFAULTS.splash.duration))}
+                        onChange={(e) => upd("splash.duration")(Number(e.target.value))}
+                      />
+                      <span className="text-sm tabular-nums w-14 text-right">
+                        {(
+                          Number(get(cfg, "splash.duration", DEFAULTS.splash.duration)) / 1000
+                        ).toFixed(1)}
+                        s
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Se va sola al cumplirse, o antes si tocan la pantalla.
+                    </p>
+                  </div>
+                </>
+              )}
             </TabsContent>
 
             <TabsContent value="colores" className="space-y-4">
@@ -2044,27 +2288,35 @@ function ColorField({
   hint,
   value,
   onChange,
+  /**
+   * Lo que se usa cuando el campo está vacío. Sin esto, un color derivado (los
+   * del splash salen del acento) enseñaba un cuadrito morado que no tenía nada
+   * que ver con lo que de verdad se iba a pintar.
+   */
+  fallback,
 }: {
   label: string;
   hint?: string;
   value: string;
   onChange: (v: string) => void;
+  fallback?: string;
 }) {
   const valid = /^#[0-9a-fA-F]{6}$/.test(value ?? "");
+  const shown = valid ? value : (fallback ?? "#7C1C56");
   return (
     <div className="space-y-1.5">
       <Label>{label}</Label>
       <div className="flex gap-2">
         <input
           type="color"
-          value={valid ? value : "#7C1C56"}
+          value={shown}
           onChange={(e) => onChange(e.target.value)}
           className="h-9 w-12 rounded-md border cursor-pointer bg-transparent"
           aria-label={label}
         />
         <Input
           value={value ?? ""}
-          placeholder="#7C1C56"
+          placeholder={fallback ?? "#7C1C56"}
           onChange={(e) => onChange(e.target.value)}
           className="font-mono"
         />
