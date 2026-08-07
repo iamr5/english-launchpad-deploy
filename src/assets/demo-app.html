@@ -695,7 +695,11 @@
   .ob-top .segs { flex: 1 1 auto; }
   /* Boti + globo de dialogo ("talk row") — Boti plantado a la izquierda, globo a la altura de su cabeza */
   .ob-talk { display: flex; align-items: flex-end; gap: 14px; margin-bottom: 24px; }
-  .ob-boti { position: relative; flex: 0 0 auto; width: 96px; height: 145px; }
+  /* El ANCHO es lo que manda: el runtime recalcula el alto con la proporcion de
+     la mascota que use el demo, asi que estos altos son solo el valor de partida
+     (proporcion 1.5, la de Boti). Subido un 20 % respecto del original 96x145:
+     la mascota es la que presenta el curso y se veia pequena al lado del globo. */
+  .ob-boti { position: relative; flex: 0 0 auto; width: 116px; height: 174px; }
   .ob-bubble { position: relative; flex: 1 1 auto; background: #fff; border: 2px solid var(--line);
     border-radius: 18px; padding: 14px 16px; margin-bottom: 34px;
     font-size: 18px; font-weight: 800; line-height: 1.35; color: var(--ink); animation: tr-pop .25s ease both; }
@@ -708,7 +712,14 @@
   .ob-intro .ob-top { opacity: 0; pointer-events: none; }
   .ob-intro .ob-talk { flex: 1 1 auto; flex-direction: column-reverse; align-items: center; justify-content: center; gap: 22px; margin-bottom: 0; }
   .ob-intro .ob-body { flex: 0 0 auto; }
-  .ob-intro .ob-boti { width: 172px; height: 259px; }
+  .ob-intro .ob-boti { width: 208px; height: 312px; }
+  /* En pantallas estrechas crece menos: el globo va a su lado y por debajo de
+     unos 190px de ancho el texto se parte casi en cada palabra. Va DESPUES de
+     las dos reglas de arriba, que si no ganan ellas por orden. */
+  @media (max-width: 380px) {
+    .ob-boti { width: 104px; height: 156px; }
+    .ob-intro .ob-boti { width: 184px; height: 276px; }
+  }
   .ob-intro .ob-bubble { flex: 0 0 auto; margin-bottom: 0; font-size: 22px; text-align: center; max-width: 320px; }
   /* en el intro el pico apunta HACIA ABAJO, hacia Boti (el globo queda encima) */
   .ob-intro .ob-bubble::before { left: 50%; top: 100%; bottom: auto; transform: translateX(-50%);
@@ -918,8 +929,10 @@
     100% { transform: translate(-10px, -96vh) scale(.5); opacity: 0 } }
 
   .sort .s-stage { position: relative; z-index: 1; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; }
-  /* Boti pensando: dos ritmos superpuestos = respiración irregular, no loop de GIF */
-  .sort .s-boti { width: 118px; height: 118px; transform-origin: 50% 78%;
+  /* La mascota pensando: dos ritmos superpuestos = respiración irregular, no loop de GIF.
+     object-fit porque el icono de cabeza no tiene por qué ser cuadrado: cada
+     mascota trae el suyo y aquí entra sin deformarse. */
+  .sort .s-boti { width: 118px; height: 118px; object-fit: contain; transform-origin: 50% 78%;
     animation: sortThink 3.1s cubic-bezier(.45,.05,.55,.95) infinite, sortTilt 4.7s ease-in-out infinite; }
   @keyframes sortThink {
     0%,100% { transform: translateY(0) scale(1) }
@@ -929,9 +942,17 @@
   @keyframes sortTilt {
     0%,100% { rotate: -3.5deg } 33% { rotate: 2deg } 61% { rotate: -1deg } 80% { rotate: 3.5deg } }
 
-  /* Órbita con peso: arranca lento, acelera, se pasa de largo y vuelve */
+  /* Órbita con peso: arranca lento, acelera, se pasa de largo y vuelve.
+     Al terminar el giro NO se queda muerta: la rueda se mece hasta el veredicto.
+     Antes se paraba en seco a los 3,9s y quedaban casi tres segundos de fichas
+     congeladas mientras el texto decía que la mascota seguía decidiendo.
+     El vaivén empieza y acaba en 0° para engancharse sin salto con el giro,
+     que termina en 1800° (o sea, 0°). */
   .sort .s-orbit { position: absolute; inset: 0; will-change: transform;
-    animation: sortSpin 3.9s cubic-bezier(.42,0,.24,1) both; }
+    animation: sortSpin 3.9s cubic-bezier(.42,0,.24,1) both,
+               sortSway 5.2s ease-in-out 3.9s infinite; }
+  @keyframes sortSway {
+    0%,100% { transform: rotate(0deg) } 25% { transform: rotate(7deg) } 75% { transform: rotate(-7deg) } }
   @keyframes sortSpin {
     0% { transform: rotate(0deg) }
     14% { transform: rotate(90deg) }
@@ -942,11 +963,20 @@
     72% { transform: rotate(1140deg) }
     92% { transform: rotate(1742deg) }
     100% { transform: rotate(1800deg) } }
-  .sort .s-badge { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px 0 0 -27px;
+  /* Cada ficha va en su asiento: el asiento la coloca en la rueda (su transform
+     va en línea, uno por nivel) y ella baila DENTRO. Si bailara el mismo
+     elemento que lleva la posición, cada latido la mandaría al centro. */
+  .sort .s-seat { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px 0 0 -27px; }
+  .sort .s-badge { position: absolute; inset: 0;
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
     font-family: var(--font-round); font-weight: 800; font-size: 16px; color: #0a1b2b;
     background: #FFD86B; box-shadow: 0 6px 18px rgba(0,0,0,.35);
+    animation: sortBob 2.4s ease-in-out infinite;
     transition: opacity .5s ease, filter .5s ease; }
+  /* Cada una entra en el ciclo por un sitio distinto (el retardo negativo lo pone
+     el JS): a la vez serían cinco fichas latiendo al unísono, que es un pulso, no
+     un baile. */
+  @keyframes sortBob { 0%,100% { transform: translateY(0) scale(1) } 50% { transform: translateY(-7px) scale(1.06) } }
   .sort .s-orbit.fade .s-badge { opacity: 0; filter: blur(3px); }
 
   /* Veredicto: aterriza con rebotes decrecientes */
@@ -1061,7 +1091,7 @@
   @keyframes sortSheen { 0% { left: -70% } 100% { left: 130% } }
 
   @media (prefers-reduced-motion: reduce) {
-    .sort, .sort .s-orbit, .sort .s-final, .sort .s-wave, .sort .s-boti, .sort .s-credit.in,
+    .sort, .sort .s-orbit, .sort .s-badge, .sort .s-final, .sort .s-wave, .sort .s-boti, .sort .s-credit.in,
     .sort .s-flash, .sort .s-boti.cheer, .sort .s-credit.pulse, .sort .s-aura, .sort .s-dust,
     .sort .cftb, .sort .s-t i, .sort .s-s, .sort .s-total.in, .sort .s-route span.lit.hold,
     .sort #s-cta .btn, .sort #s-cta .btn::after { animation: none !important; }
@@ -3649,17 +3679,26 @@ function placementReveal(lvl, onDone) {
   const R = 108;
   const orbit = LV.map((l, i) => {
     const a = (i / LV.length) * Math.PI * 2;
-    return `<div class="s-badge" style="transform:translate(${Math.round(Math.cos(a) * R)}px,${Math.round(Math.sin(a) * R)}px)">${l}</div>`;
+    // El asiento la pone en su sitio de la rueda; el retardo negativo la mete en
+    // el baile por un punto distinto del ciclo que sus vecinas.
+    return `<div class="s-seat" style="transform:translate(${Math.round(Math.cos(a) * R)}px,${Math.round(Math.sin(a) * R)}px)">` +
+      `<div class="s-badge" style="animation-delay:-${(i * 0.47).toFixed(2)}s">${l}</div></div>`;
   }).join('');
   const dust = reduce ? '' : Array.from({ length: 11 }, () => {
     const dur = (9 + Math.random() * 7).toFixed(1), del = (Math.random() * 9).toFixed(1);
     const sz = (3 + Math.random() * 4).toFixed(1);
     return `<span class="s-dust" style="left:${Math.round(Math.random() * 96)}%;width:${sz}px;height:${sz}px;animation-duration:${dur}s;animation-delay:-${del}s"></span>`;
   }).join('');
+  // La mascota, en el centro de la órbita, mientras decide. Es quien está
+  // deliberando —lo dice el texto de abajo—, así que tiene que verse: sin ella
+  // el nivel salía de una rueda de fichas girando sola. El icono de cabeza es el
+  // del demo, el mismo de la barra superior y los globos.
+  const cabeza = mascotHeadIcon();
   el.innerHTML = `
     <div class="s-aura"></div>${dust}
     <div class="s-stage" id="s-stage">
       <div class="s-orbit" id="s-orbit">${orbit}</div>
+      ${cabeza ? `<img class="s-boti" id="s-boti" src="${cabeza}" alt="" aria-hidden="true">` : ''}
     </div>
     <div class="s-t" id="s-t">${CFG.mascot.name || 'Boti'} está decidiendo…</div>
     <div class="s-s" id="s-s">Leyendo tus respuestas del test</div>
