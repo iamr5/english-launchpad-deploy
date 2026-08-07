@@ -25,10 +25,13 @@ import {
   cambiarEspecie,
   colores,
   comoDataURI,
+  encuadrar,
   estadoDePack,
   estadoInicial,
   identidad,
   loadPersonajes,
+  logoDePack,
+  medirPersonaje,
   miniaturaSVG,
   packDeMascota,
   personajeSVG,
@@ -111,6 +114,7 @@ export function MascotConstructor({
   slug,
   brandLogo,
   manifest,
+  baseUrl,
   enUso,
   onUsar,
 }: {
@@ -119,6 +123,8 @@ export function MascotConstructor({
   brandLogo?: string;
   /** El manifiesto del pack en uso, para reabrir el constructor donde se dejó. */
   manifest: MascotManifest | null;
+  /** Dónde está el pack en uso: de ahí se rescata el logo que lleva incrustado. */
+  baseUrl?: string;
   /** Si el demo está usando ahora mismo una mascota hecha aquí. */
   enUso: boolean;
   onUsar: (baseUrl: string, manifest: MascotManifest) => void;
@@ -154,18 +160,37 @@ export function MascotConstructor({
     };
   }, [abierto, data, guardado]);
 
-  // El logo de la institución, ya como data URI: un SVG dentro de un <img> no
-  // carga nada de fuera, así que por URL saldría en blanco.
+  // El logo, siempre como data URI: un SVG dentro de un <img> no carga nada de
+  // fuera, así que por URL saldría en blanco. Al reabrir el constructor no está
+  // —no se guarda en la configuración— y hay que reponerlo: el de la institución
+  // se vuelve a leer, y el que subió alguien se saca del arte del pack, donde
+  // quedó incrustado. Sin esto, retocar la mascota la dejaría sin logo.
+  const repuesto = useRef<string | null>(null);
   useEffect(() => {
-    if (!S || S.logoFrom !== "brand" || S.logoImg || !brandLogo) return;
+    if (!S || S.logo !== "img" || S.logoImg) return;
+    const intento = `${S.logoFrom}|${baseUrl ?? ""}|${brandLogo ?? ""}`;
+    if (repuesto.current === intento) return; // ya se probó: no insistir en cada retoque
+    repuesto.current = intento;
+    const de = S.logoFrom;
     let vivo = true;
-    comoDataURI(brandLogo)
-      .then((uri) => vivo && setS((s) => (s ? { ...s, logoImg: uri } : s)))
-      .catch(() => vivo && toast.error("No se pudo leer el logo de la institución."));
+    (de === "brand" && brandLogo
+      ? comoDataURI(brandLogo)
+      : de === "file" && baseUrl
+        ? logoDePack(baseUrl)
+        : Promise.resolve(null)
+    )
+      .then((uri) => {
+        if (!vivo || !uri) return;
+        setS((s) => (s && !s.logoImg ? { ...s, logoImg: uri } : s));
+      })
+      .catch(
+        () =>
+          vivo && toast.error("No se pudo recuperar el logo. Vuelve a subirlo antes de guardar."),
+      );
     return () => {
       vivo = false;
     };
-  }, [S, brandLogo]);
+  }, [S, brandLogo, baseUrl]);
 
   const minis = useMemo(
     () =>
@@ -180,9 +205,28 @@ export function MascotConstructor({
     [data],
   );
 
+  // El encuadre de la especie: se mide el dibujo de verdad y se recorta el aire
+  // que le sobra, que es lo que la hacía verse pequeña dentro de su hueco. Sólo
+  // depende de la forma, así que se vuelve a medir al cambiar de especie o al
+  // quitar la cola o los lentes, no al tocar un color.
+  const forma = S && `${S.char}|${S.cola}|${S.lentes}`;
+  const marco = useMemo(() => {
+    if (!data || !S) return null;
+    const caja = medirPersonaje(data, S);
+    return caja ? { caja, ...encuadrar(caja) } : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, forma]);
+
   const svg = useMemo(
-    () => (data && S ? personajeSVG(data, S, { scope: "#esc-preview", id: "esc-preview" }) : ""),
-    [data, S],
+    () =>
+      data && S
+        ? personajeSVG(data, S, {
+            scope: "#esc-preview",
+            id: "esc-preview",
+            viewBox: marco?.viewBox,
+          })
+        : "",
+    [data, S, marco],
   );
 
   if (!abierto) {
@@ -232,10 +276,16 @@ export function MascotConstructor({
 
   async function usar() {
     if (!data || !S) return;
+    // Si el logo aún no está —se está reponiendo, o falló— más vale parar que
+    // generar la mascota sin él y que nadie lo note hasta verla publicada.
+    if (S.logo === "img" && !S.logoImg) {
+      toast.error("Falta la imagen del logo. Súbela, o elige «sin logo», antes de guardar.");
+      return;
+    }
     setSubiendo(true);
     try {
       const ident = identidad(data, S.char);
-      const { manifest: m, zip } = packDeMascota(data, S, ident);
+      const { manifest: m, zip } = packDeMascota(data, S, ident, marco?.caja);
       const { baseUrl, manifest: subido } = await uploadPack(slug, zip);
       // uploadPack devuelve el manifiesto que salió del zip; el estado del
       // constructor viaja dentro, así que se conserva tal cual.

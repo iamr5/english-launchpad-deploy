@@ -1126,7 +1126,11 @@
 <div id="app">
   <!-- COURSE (entry screen — the single-course landing was removed as redundant) -->
   <section id="screen-course" class="screen active">
-    <div class="appbar"><img class="appbar-en" src="mascots/boti/boti_head.svg" alt=""><div class="title" id="course-title"></div>
+    <!-- Sin src: lo escribe el servidor con la mascota DE ESTE demo (ver
+         appbarIcon() en src/lib/demo-page.ts). Antes iba aquí la cabeza de Boti
+         y la cambiaba applyIcons() al arrancar, asi que se le veia un instante
+         en demos cuya mascota es otra. -->
+    <div class="appbar"><img class="appbar-en" alt=""><div class="title" id="course-title"></div>
       <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0 min</span></button>
       <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()"><span class="sc-em">🔥</span><b id="streak-n">0</b></button>
     </div>

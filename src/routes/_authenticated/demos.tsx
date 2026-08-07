@@ -1103,6 +1103,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 slug={demo.slug}
                 brandLogo={g2("brand.logo")}
                 manifest={get(cfg, "mascot.manifest", null) as MascotManifest | null}
+                baseUrl={g2("mascot.baseUrl")}
                 enUso={
                   g2("mascot.pack", "ozito") === "custom" &&
                   !!estadoDePack(get(cfg, "mascot.manifest", null) as MascotManifest | null)

@@ -417,20 +417,105 @@ function interior(data: Personajes, S: EstadoMascota, vars: Record<string, strin
   );
 }
 
-/** El personaje entero. `scope` acota la animación cuando el SVG va en línea. */
+// ─────────────────────────────────────────────────────────────────────────────
+// Encuadre
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** La caja que ocupa el dibujo, en unidades del lienzo. La mide el navegador. */
+export type Caja = { x: number; y: number; w: number; h: number };
+
+export const ENCUADRE = {
+  /** Aire alrededor del dibujo. La cola barre unos 17 px y las orejas 14 al cabecear. */
+  margen: 24,
+  /**
+   * Proporción alto/ancho del pack. La app fija el ANCHO del hueco y deriva el
+   * alto con esto, y las posiciones del mapa están calibradas con la de Boti
+   * (1,5). Dándoles a todas las especies la misma, ninguna se descoloca.
+   */
+  ratio: 1.5,
+};
+
+const r2 = (n: number) => Math.round(n * 100) / 100;
+
+/**
+ * El encuadre de una especie a partir de su caja real.
+ *
+ * El lienzo de la entrega es común a las ocho y va justo para la más ancha, así
+ * que a las estrechas les sobra aire a los lados y salían pequeñas: el hueco lo
+ * fija el ancho, y un conejito que ocupa el 68 % de su lienzo se ve un tercio
+ * más chico que un oso que ocupa el 83 % del suyo. Recortando por especie cada
+ * una llena su hueco.
+ *
+ * Lo que falte para la proporción se añade ARRIBA, nunca abajo: el personaje
+ * está plantado en el suelo y la línea de piso tiene que quedarse donde está.
+ */
+export function encuadrar(caja: Caja) {
+  const m = ENCUADRE.margen;
+  let x0 = caja.x - m,
+    x1 = caja.x + caja.w + m;
+  const y1 = caja.y + caja.h + m;
+  let y0 = caja.y - m;
+
+  if ((y1 - y0) / (x1 - x0) < ENCUADRE.ratio) {
+    y0 = y1 - (x1 - x0) * ENCUADRE.ratio; // le falta alto: crece hacia arriba
+  } else {
+    const centro = (x0 + x1) / 2,
+      ancho = (y1 - y0) / ENCUADRE.ratio; // le falta ancho: se reparte a los lados
+    x0 = centro - ancho / 2;
+    x1 = centro + ancho / 2;
+  }
+  const w = r2(x1 - x0),
+    h = r2(y1 - y0);
+  return { viewBox: `${r2(x0)} ${r2(y0)} ${w} ${h}`, artboard: { width: w, height: h } };
+}
+
+/**
+ * El personaje entero. `scope` acota la animación cuando el SVG va en línea;
+ * `viewBox` lo encuadra a la especie (sin él sale en el lienzo común, que es lo
+ * que hay que usar para medirlo).
+ */
 export function personajeSVG(
   data: Personajes,
   S: EstadoMascota,
-  { anim = S.anim, scope = "", id = "" }: { anim?: boolean; scope?: string; id?: string } = {},
+  {
+    anim = S.anim,
+    scope = "",
+    id = "",
+    viewBox = data.viewBox,
+  }: { anim?: boolean; scope?: string; id?: string; viewBox?: string } = {},
 ) {
   const vars = colores(data, S),
     c = data.chars[S.char];
   const css = estilos(anim, S.cola ? c.pivot : null, scope);
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"` +
-    `${id ? ` id="${id}"` : ""} viewBox="${data.viewBox}">` +
+    `${id ? ` id="${id}"` : ""} viewBox="${viewBox}">` +
     `<style>${css}</style>${interior(data, S, vars)}</svg>`
   );
+}
+
+/**
+ * Mide el dibujo tal cual, sin animación, montándolo fuera de la vista. Sólo el
+ * navegador sabe dónde acaba un trazo, así que el encuadre se calcula aquí y no
+ * con una tabla escrita a mano que se quedaría vieja al redibujar el arte.
+ */
+export function medirPersonaje(data: Personajes, S: EstadoMascota): Caja | null {
+  if (typeof document === "undefined") return null;
+  const hueco = document.createElement("div");
+  hueco.setAttribute("aria-hidden", "true");
+  hueco.style.cssText =
+    "position:absolute;left:-10000px;top:0;width:200px;height:280px;pointer-events:none";
+  hueco.innerHTML = personajeSVG(data, S, { anim: false });
+  document.body.appendChild(hueco);
+  try {
+    const svg = hueco.firstElementChild as SVGSVGElement | null;
+    const b = svg?.getBBox();
+    return b && b.width ? { x: b.x, y: b.y, w: b.width, h: b.height } : null;
+  } catch {
+    return null;
+  } finally {
+    hueco.remove();
+  }
 }
 
 /**
@@ -595,13 +680,21 @@ const PACK_CSS = `/* escribimos · mascot.css
  * Arma el pack completo: manifiesto, hoja y las dos piezas de arte. Sale un zip
  * idéntico al que se subiría a mano, así pasa por la misma validación y se
  * guarda por el mismo camino que cualquier otro pack.
+ *
+ * `caja` es la medida real del dibujo, la que da el encuadre de esta especie. Sin
+ * ella se cae al lienzo común de la entrega, que va justo para la especie más
+ * ancha y deja pequeñas a las demás.
  */
 export function packDeMascota(
   data: Personajes,
   S: EstadoMascota,
   ident: Identidad,
+  caja?: Caja | null,
 ): { manifest: ManifiestoEscribimos; zip: File } {
-  const [, , w, h] = data.viewBox.split(/[\s,]+/).map(Number);
+  const [, , anchoLienzo, altoLienzo] = data.viewBox.split(/[\s,]+/).map(Number);
+  const marco = caja
+    ? encuadrar(caja)
+    : { viewBox: data.viewBox, artboard: { width: anchoLienzo, height: altoLienzo } };
   const { logoImg: _omitido, ...guardado } = S;
 
   const manifest: ManifiestoEscribimos = {
@@ -614,7 +707,7 @@ export function packDeMascota(
     css: "mascot.css",
     rootClass: "escribimos",
     shadow: false,
-    artboard: { width: w, height: h },
+    artboard: marco.artboard,
     headIcon: "head-icon.svg",
     layers: { personaje: "layers/personaje.svg" },
     stack: [{ layer: "personaje" }],
@@ -624,7 +717,9 @@ export function packDeMascota(
   const files: Record<string, Uint8Array> = {
     "mascot.json": strToU8(JSON.stringify(manifest, null, 2) + "\n"),
     "mascot.css": strToU8(PACK_CSS),
-    "layers/personaje.svg": strToU8(personajeSVG(data, S, { anim: S.anim })),
+    "layers/personaje.svg": strToU8(
+      personajeSVG(data, S, { anim: S.anim, viewBox: marco.viewBox }),
+    ),
     "head-icon.svg": strToU8(cabezaSVG(data, S)),
   };
 
@@ -633,6 +728,23 @@ export function packDeMascota(
     manifest,
     zip: new File([zip as BlobPart], `${manifest.id}.zip`, { type: "application/zip" }),
   };
+}
+
+/**
+ * Rescata el logo de un pack ya subido.
+ *
+ * En la configuración del demo sólo se guarda de dónde salió el logo, no la
+ * imagen: un data URI dentro del config lo hincharía. Pero la imagen sí está
+ * incrustada en el arte que se subió, así que al reabrir el constructor se saca
+ * de ahí. Sin esto, quien hubiera subido un logo propio tendría que volver a
+ * buscar el archivo cada vez que retoca la mascota, y si no lo encuentra, la
+ * vuelve a generar sin logo sin darse cuenta.
+ */
+export async function logoDePack(baseUrl: string): Promise<string | null> {
+  const r = await fetch(baseUrl.replace(/\/?$/, "/") + "layers/personaje.svg");
+  if (!r.ok) return null;
+  const m = /<image[^>]*href="(data:[^"]+)"/.exec(await r.text());
+  return m ? m[1].replace(/&amp;/g, "&") : null;
 }
 
 /**

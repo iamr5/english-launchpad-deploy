@@ -111,6 +111,28 @@ function resolveMascot(cfg: DemoConfig) {
   };
 }
 
+/**
+ * El icono de la barra superior, ya resuelto.
+ *
+ * La plantilla lo traía escrito a mano —la cabeza de Boti— y lo cambiaba el JS
+ * al arrancar. Con la caché fría eso deja ver a Boti un instante en un demo cuya
+ * mascota es otra: al cliente le parece que su personaje es uno más del montón.
+ * Al escribirlo aquí, el primer pintado ya es el suyo.
+ *
+ * La regla es la misma que aplica applyIcons() en la plantilla, y tiene que
+ * seguir siéndolo: manda el icono que haya subido el demo, la cabeza de la
+ * mascota es el respaldo, y «none» deja el título solo.
+ */
+function appbarIcon(cfg: DemoConfig, m: ReturnType<typeof resolveMascot>) {
+  const propio = cfg.brand.appbarIcon;
+  if (propio === "none") return `<img class="appbar-en" alt="" hidden>`;
+  const src = propio || m.runtime.headIcon;
+  if (!src) return `<img class="appbar-en" alt="" hidden>`;
+  // brand-icon achica el icono subido; la cabeza de la mascota va sin él, que
+  // desborda la barra a propósito.
+  return `<img class="appbar-en${propio ? " brand-icon" : ""}" src="${esc(src)}" alt="">`;
+}
+
 /** Las etiquetas <script> que cargan la mascota, según su motor. */
 function mascotScripts(m: ReturnType<typeof resolveMascot>) {
   if (!m.pack) return "";
@@ -186,6 +208,9 @@ async function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {
 </head>`,
       )
       .replace("<!--MASCOT-SCRIPTS-->", mascotScripts(mascot))
+      // El icono de la barra, resuelto antes de servir: si se deja el de la
+      // plantilla, se ve a Boti mientras arranca el JS.
+      .replace(/<img class="appbar-en"[^>]*>/, () => appbarIcon(cfg, mascot))
   );
 }
 

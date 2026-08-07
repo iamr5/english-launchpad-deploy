@@ -16,6 +16,20 @@ Lo que sale es un pack de una sola capa —el personaje entero, con su animació
 del propio SVG— porque estas especies se animan por grupos internos, no apilando
 archivos. El resto de la app no nota la diferencia: sigue siendo `engine: "layers"`.
 
+**El pack no usa el lienzo común, sino uno recortado a la especie.** El lienzo de
+`datos/personajes.json` va justo para la más ancha, así que a las estrechas les sobra
+aire a los lados: como la app fija el ANCHO del hueco y deriva el alto, un conejito
+que ocupa el 68 % de su lienzo se veía un tercio más chico que un oso que ocupa el
+83 % del suyo. El constructor mide el dibujo en el navegador —nadie más sabe dónde
+acaba un trazo— y encuadra cada especie a su caja más 24 px de aire, que es lo que
+barren la cola y las orejas al moverse. Así crecen entre un 7 % y un 25 % y todas
+llenan su hueco igual.
+
+Todos los packs salen con la misma proporción, 1,5 (la de Boti), porque las
+posiciones de la mascota en el mapa están calibradas con ella. Lo que falte para esa
+proporción se añade por arriba, nunca por abajo: la línea de piso no se mueve. El
+tope y el aire están en `ENCUADRE`, en `src/lib/escribimos.ts`.
+
 Un detalle de la data, por si alguien compara: la manga aparece dos veces, en
 `body.armL`/`body.armR` y otra vez dentro de `body.shirt`. El constructor las dibuja
 las dos —la del brazo se mueve, la del polo tapa— y el port hace lo mismo para no
