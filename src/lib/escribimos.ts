@@ -64,6 +64,12 @@ export type Personajes = {
       /** Unidades que sube el rostro respecto del torso. */
       subeCabeza: number;
       logoRect: { x: number; y: number; width: number; height: number };
+      /**
+       * Polo propio de la variante. Si falta se usa el de `body.shirt`. El del
+       * estampado es de cuello redondo y viene tal cual del SVG original, en
+       * una sola pieza plana; el clásico son 132 con sombreado y contorno.
+       */
+      shirt?: Figura[];
     }
   >;
   chars: Record<string, Personaje>;
@@ -443,7 +449,7 @@ function interior(data: Personajes, S: EstadoMascota, vars: Record<string, strin
     `<g id="cuerpo">${nodos(B.back, vars)}</g>` +
     `<g id="brazo-izq">${nodos(B.armL, vars)}</g><g id="brazo-der">${nodos(B.armR, vars)}</g>` +
     (c.mid.length ? `<g id="pecho">${nodos(c.mid, vars)}</g>` : "") +
-    `<g id="polo">${nodos(B.shirt, vars)}</g>` +
+    `<g id="polo">${nodos(cuerpoDe(data, S).shirt ?? B.shirt, vars)}</g>` +
     bloqueLogo(data, S, vars) +
     // El rostro (y los lentes con él) suben lo que pida la variante. Es el
     // único cambio de dibujo entre cuerpos: el arte es exactamente el mismo.
