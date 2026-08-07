@@ -182,8 +182,15 @@
   var uid = 0;
   var running = false;
   var last = 0;
+  // `<html data-motion="full">` fuerza la animacion completa aunque el sistema
+  // pida reducir movimiento. Lo usa el demo, que se enseña en equipos ajenos
+  // donde Windows suele traer los efectos apagados y Boti se quedaria tieso.
+  // Mismo interruptor que el CSS y que prefersReduced() en demo-app.html.
   var reduced = false;
-  try { reduced = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  try {
+    reduced = document.documentElement.getAttribute('data-motion') !== 'full' &&
+      matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
 
   var io = null;
   if (typeof IntersectionObserver !== 'undefined') {

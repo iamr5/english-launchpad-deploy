@@ -1,9 +1,23 @@
 <!DOCTYPE html>
-<html lang="es">
+<!-- data-motion="full": esta pieza es un DEMO comercial y se enseña en equipos
+     ajenos. Windows trae los efectos de animación a medias en muchos portátiles
+     y el ahorro de energía los apaga sobre la marcha sin avisar; con eso, la
+     revelación del nivel se ve completamente muerta y parece que la app es así.
+     Este atributo desactiva los bloques de prefers-reduced-motion de este
+     archivo (lo leen el CSS y prefersReduced() en el JS).
+     OJO: en el producto real NO debe ir — ahí la preferencia del sistema se
+     respeta. Quitar este atributo devuelve el comportamiento accesible. -->
+<html lang="es" data-motion="full">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>Inglés para moverte</title>
+<!-- Pantalla de bienvenida y presencia de marca. En archivo aparte porque el
+     creador de demos carga ESTE MISMO css para su previo: así lo que se elige
+     en el panel es exactamente lo que ve el visitante.
+     Va con <link> y no con @import para que bloquee el pintado: el splash es lo
+     primero que sale y no puede verse un instante sin estilo. -->
+<link rel="stylesheet" href="splash.css">
 <style>
   :root {
     --accent: #7C1C56;
@@ -190,7 +204,7 @@
     animation: sp-spin .8s linear infinite; }
   @keyframes sp-spin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) {
-    #map-spinner .sp-ring { animation-duration: 2.4s; }
+    html:not([data-motion="full"]) #map-spinner .sp-ring { animation-duration: 2.4s; }
   }
   /* la sombra de piso la dibuja boti.js (.boti-shadow): Boti queda plantado */
   .lpath .row { position: relative; display: flex; justify-content: center; }
@@ -787,8 +801,11 @@
   /* DEBUG-only floating buttons (reset progress / complete lesson / undo).
      Shown only when body.debug-fabs is set — see the startup code near the
      bottom of the page. Remove that class toggle to hide them for a demo. */
+  /* z-index 99: por encima de las celebraciones a pantalla completa (.win 90,
+     .sort 95) y por debajo del toast (100). Antes eran 60 y quedaban tapados
+     justo en las pantallas donde más falta hace poder saltar/reiniciar. */
   .debug-fab {
-    position: fixed; right: 14px; bottom: 78px; z-index: 60;
+    position: fixed; right: 14px; bottom: 78px; z-index: 99;
     width: 44px; height: 44px; border-radius: 50%; cursor: pointer; padding: 0;
     background: rgba(26,26,26,.55); border: 1.5px dashed rgba(255,255,255,.7);
     display: none; align-items: center; justify-content: center;
@@ -802,7 +819,7 @@
   .debug-fab.mq { bottom: 130px; }
   .debug-fab.undo { bottom: 182px; }
   .debug-fab.wipe { bottom: 234px; }
-  /* The FABs are z-index:60, above the quiz overlay/sheet (z-index:50) and pinned
+  /* The FABs are above the quiz overlay/sheet (z-index:50) and pinned
      bottom-right — exactly where the quiz's Confirmar/Siguiente button sits. Hide
      them whenever a sheet (mini-quiz, cierre, dialog) or the final-quiz screen is
      open, so they can't steal taps from the quiz button.
@@ -902,22 +919,65 @@
   /* Momento "sombrero seleccionador": revelación del nivel tras el test de ubicación.
      Todo aquí busca sentirse vivo: nada entra "de golpe", nada se repite idéntico. */
   .sort { position: fixed; inset: 0; z-index: 95; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; padding: 24px; overflow: hidden;
+    align-items: center; justify-content: flex-start; padding: 24px; overflow: hidden;
     background: radial-gradient(circle at 50% 42%, #123a5c 0%, #0a1b2b 70%);
-    animation: winIn .45s cubic-bezier(.2,.8,.3,1) both, sortAmbient 14s ease-in-out infinite; }
+    /* background-size > 100%: sin margen sobrante, animar background-position no
+       movía absolutamente nada. Ahora el foco de luz del fondo deriva de verdad. */
+    background-size: 165% 165%; background-position: 50% 42%;
+    animation: winIn .7s cubic-bezier(.2,.8,.3,1) both, sortAmbient 17s ease-in-out infinite; }
   @keyframes sortAmbient {
-    0%,100% { background-position: 50% 42% } 50% { background-position: 52% 46% } }
-  .sort.out { animation: winOut .35s ease both; }
+    0%,100% { background-position: 44% 38% }
+    35% { background-position: 58% 48% }
+    68% { background-position: 50% 34% } }
+  /* SALIDA — la parte que faltaba en todo esto.
+     Antes el cierre era un único winOut de 350ms sobre la pantalla entera: todo
+     desaparecía de golpe. Ahora cada pieza tiene su propia salida (`leave`) y se
+     van escalonadas de abajo a arriba — primero lo último que llegó — y el fondo
+     se disuelve al final, cuando ya no queda nada encima.
+     Los !important son necesarios: casi todo aquí termina con el fill de una
+     animación, y sin ellos la salida no llegaría a aplicarse. */
+  .sort .leave { opacity: 0 !important; transform: translateY(22px) scale(.965) !important;
+    filter: blur(7px) !important; animation: none !important;
+    transition: opacity .55s ease, transform .7s cubic-bezier(.4,0,.65,1), filter .55s ease !important; }
+  .sort.out { animation: sortOut .95s cubic-bezier(.4,0,.6,1) .32s both; }
+  @keyframes sortOut { 0% { opacity: 1 } 100% { opacity: 0 } }
 
-  /* Aire de la escena: halo que respira + polvo dorado subiendo lento */
-  .sort .s-aura { position: absolute; left: 50%; top: 42%; width: 460px; height: 460px; margin: -230px 0 0 -230px;
+  /* EL ARREGLO DE FONDO ————————————————————————————————————
+     Antes la columna se centraba con `justify-content:center`. Cada vez que
+     entraba contenido nuevo (tarjeta, filas, total, botón) el navegador
+     re-centraba en un solo fotograma: la escena entera pegaba un salto seco,
+     cinco veces seguidas. Ningún easing puede tapar eso — es reflow, no
+     animación. Ahora la columna se posiciona sola con transform y un
+     ResizeObserver la re-centra; cualquier cambio de altura se convierte en un
+     deslizamiento de 1.15s en vez de un corte. Es la diferencia entre
+     "pa, pa, pa" y algo que se acomoda. */
+  /* padding propio: al ser absoluta se posiciona contra la caja de padding de
+     .sort, así que el padding del contenedor no la separa de los bordes. */
+  .sort .s-col { position: absolute; left: 0; right: 0; top: 0; z-index: 1; padding: 20px 24px;
+    display: flex; flex-direction: column; align-items: center; will-change: transform; }
+  .sort .s-col.glide { transition: transform 1.15s cubic-bezier(.24,.86,.26,1); }
+
+  /* Aire de la escena: DOS halos con periodos que no encajan (6.8s y 9.3s) y
+     deriva propia. Al no coincidir nunca, la luz jamás repite el mismo estado:
+     es lo que separa "respira" de "loop". */
+  .sort .s-aura { position: absolute; left: 50%; top: 42%; width: 470px; height: 470px; margin: -235px 0 0 -235px;
     border-radius: 50%; pointer-events: none; z-index: 0;
-    background: radial-gradient(circle, rgba(255,216,107,.20) 0%, rgba(255,216,107,.06) 42%, transparent 68%);
-    animation: sortBreathe 5.4s ease-in-out infinite; }
+    background: radial-gradient(circle, rgba(255,216,107,.26) 0%, rgba(255,216,107,.09) 40%, transparent 68%);
+    animation: sortBreathe 6.8s ease-in-out infinite; transition: transform .6s ease, opacity .6s ease; }
   @keyframes sortBreathe {
-    0%,100% { transform: scale(.94); opacity: .55 }
-    45% { transform: scale(1.06); opacity: .95 }
-    72% { transform: scale(1.01); opacity: .72 } }
+    0%,100% { transform: translate(0,0) scale(.92); opacity: .5 }
+    38% { transform: translate(-15px,-11px) scale(1.09); opacity: .98 }
+    64% { transform: translate(11px,7px) scale(1); opacity: .68 }
+    83% { transform: translate(5px,-5px) scale(1.05); opacity: .84 } }
+  .sort .s-aura.b2 { width: 330px; height: 330px; margin: -165px 0 0 -165px; top: 46%;
+    background: radial-gradient(circle, rgba(28,176,246,.26) 0%, rgba(28,176,246,.08) 44%, transparent 70%);
+    animation: sortBreathe2 9.3s ease-in-out infinite; }
+  @keyframes sortBreathe2 {
+    0%,100% { transform: translate(20px,12px) scale(1.06); opacity: .3 }
+    45% { transform: translate(-18px,-15px) scale(.84); opacity: .66 }
+    72% { transform: translate(9px,-5px) scale(1); opacity: .4 } }
+  /* Inhalación previa al veredicto: la escena se recoge y se apaga un instante */
+  .sort.hush .s-aura { animation: none; transform: scale(.82); opacity: .28; }
   .sort .s-dust { position: absolute; bottom: -12px; width: 5px; height: 5px; border-radius: 50%;
     background: rgba(255,216,107,.55); pointer-events: none; z-index: 0; opacity: 0;
     animation: sortDust 12s linear infinite; }
@@ -929,11 +989,44 @@
     100% { transform: translate(-10px, -96vh) scale(.5); opacity: 0 } }
 
   .sort .s-stage { position: relative; z-index: 1; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; }
-  /* La mascota pensando: dos ritmos superpuestos = respiración irregular, no loop de GIF.
+  /* Anticipación → liberación, un solo arco continuo. Antes el hush terminaba
+     congelado en scale(.93) y al revelar se le quitaba la clase: la escena
+     pegaba un salto instantáneo a su tamaño. Ahora `boom` arranca justo donde
+     `hush` acabó y sigue el movimiento hasta pasarse y asentarse. */
+  .sort .s-stage.hush { animation: sortHush 1.05s cubic-bezier(.36,0,.22,1) both; }
+  @keyframes sortHush {
+    0% { transform: scale(1); filter: blur(0) }
+    70% { transform: scale(.89); filter: blur(1.6px) }
+    100% { transform: scale(.925); filter: blur(1.1px) } }
+  .sort .s-stage.hush .s-bpos { opacity: .3 !important; filter: blur(2px); }
+  .sort .s-stage.boom { animation: sortBoom 1.5s cubic-bezier(.2,1.18,.3,1) both; }
+  @keyframes sortBoom {
+    0% { transform: scale(.925); filter: blur(1.1px) }
+    30% { transform: scale(1.095); filter: blur(0) }
+    52% { transform: scale(.978) }
+    70% { transform: scale(1.022) }
+    84% { transform: scale(.993) }
+    94% { transform: scale(1.003) }
+    100% { transform: scale(1) } }
+  /* Boti llega a escena: el envoltorio hace la entrada, el img sigue con su
+     respiración propia (no se pueden animar dos transforms en el mismo nodo) */
+  .sort .s-botiw { position: relative; z-index: 2; animation: sortBotiIn 1.45s cubic-bezier(.2,1.05,.3,1) both; }
+  @keyframes sortBotiIn {
+    0% { opacity: 0; transform: translateY(34px) scale(.58); filter: blur(8px) }
+    54% { opacity: 1; transform: translateY(-9px) scale(1.08); filter: blur(0) }
+    78% { transform: translateY(3px) scale(.985) }
+    92% { transform: translateY(-1px) scale(1.004) }
+    100% { opacity: 1; transform: none; filter: blur(0) } }
+  /* Boti cede el escenario en vez de desaparecer: se hunde, se encoge y se
+     desenfoca mientras la insignia del nivel ya está creciendo encima. */
+  .sort .s-botiw.out { animation: none; opacity: 0; transform: translateY(18px) scale(.48); filter: blur(9px);
+    transition: opacity .72s ease, transform .9s cubic-bezier(.42,0,.66,1), filter .72s ease; }
+  /* La mascota pensando: dos ritmos superpuestos = respiración irregular, no
+     loop de GIF.
      object-fit porque el icono de cabeza no tiene por qué ser cuadrado: cada
-     mascota trae el suyo y aquí entra sin deformarse. */
+     demo trae la suya (gallito, ozito…) y aquí entra sin deformarse. */
   .sort .s-boti { width: 118px; height: 118px; object-fit: contain; transform-origin: 50% 78%;
-    animation: sortThink 3.1s cubic-bezier(.45,.05,.55,.95) infinite, sortTilt 4.7s ease-in-out infinite; }
+    animation: sortThink 3.9s cubic-bezier(.45,.05,.55,.95) infinite, sortTilt 5.8s ease-in-out infinite; }
   @keyframes sortThink {
     0%,100% { transform: translateY(0) scale(1) }
     28% { transform: translateY(-7px) scale(1.02) }
@@ -942,42 +1035,94 @@
   @keyframes sortTilt {
     0%,100% { rotate: -3.5deg } 33% { rotate: 2deg } 61% { rotate: -1deg } 80% { rotate: 3.5deg } }
 
-  /* Órbita con peso: arranca lento, acelera, se pasa de largo y vuelve.
-     Al terminar el giro NO se queda muerta: la rueda se mece hasta el veredicto.
-     Antes se paraba en seco a los 3,9s y quedaban casi tres segundos de fichas
-     congeladas mientras el texto decía que la mascota seguía decidiendo.
-     El vaivén empieza y acaba en 0° para engancharse sin salto con el giro,
-     que termina en 1800° (o sea, 0°). */
-  .sort .s-orbit { position: absolute; inset: 0; will-change: transform;
-    animation: sortSpin 3.9s cubic-bezier(.42,0,.24,1) both,
-               sortSway 5.2s ease-in-out 3.9s infinite; }
-  @keyframes sortSway {
-    0%,100% { transform: rotate(0deg) } 25% { transform: rotate(7deg) } 75% { transform: rotate(-7deg) } }
+  /* Órbita con peso: arranca lento, acelera, se pasa de largo y vuelve */
+  /* Dos anillos anidados. El de fuera va SIEMPRE, lentísimo (74s/vuelta): así el
+     conjunto nunca queda congelado, ni antes de girar ni después de parar —
+     antes se quedaba clavado 2.8s esperando el veredicto y se notaba muerto.
+     El de dentro hace el giro grande. Se componen porque son nodos distintos:
+     dos animaciones de transform en el mismo nodo se anulan entre sí. */
+  .sort .s-orbit { position: absolute; inset: 0; animation: orbDrift 26s linear infinite; }
+  @keyframes orbDrift { to { transform: rotate(360deg) } }
+  .sort .s-orbin { position: absolute; inset: 0; will-change: transform; }
+  .sort .s-orbin.spin { animation: sortSpin 8.2s cubic-bezier(.42,0,.24,1) both; }
+  /* Tres tiempos: arranca pesado, duda a media vuelta, y se apaga girando casi parado */
   @keyframes sortSpin {
     0% { transform: rotate(0deg) }
-    14% { transform: rotate(90deg) }
-    32% { transform: rotate(640deg) }
-    42% { transform: rotate(724deg) }   /* se pasa de largo */
-    50% { transform: rotate(694deg) }   /* retrocede por inercia */
-    56% { transform: rotate(706deg) }
-    72% { transform: rotate(1140deg) }
-    92% { transform: rotate(1742deg) }
+    7% { transform: rotate(38deg) }
+    17% { transform: rotate(300deg) }
+    28% { transform: rotate(700deg) }
+    36% { transform: rotate(940deg) }   /* velocidad máxima */
+    44% { transform: rotate(1078deg) }  /* se pasa de largo */
+    49% { transform: rotate(1050deg) }  /* retrocede por inercia */
+    54% { transform: rotate(1064deg) }
+    64% { transform: rotate(1340deg) }  /* vuelve a coger vuelo: sigue dudando */
+    76% { transform: rotate(1596deg) }
+    86% { transform: rotate(1728deg) }
+    94% { transform: rotate(1782deg) }  /* casi detenido, aún buscando */
     100% { transform: rotate(1800deg) } }
-  /* Cada ficha va en su asiento: el asiento la coloca en la rueda (su transform
-     va en línea, uno por nivel) y ella baila DENTRO. Si bailara el mismo
-     elemento que lleva la posición, cada latido la mandaría al centro. */
-  .sort .s-seat { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px 0 0 -27px; }
-  .sort .s-badge { position: absolute; inset: 0;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  /* DOS NODOS POR INSIGNIA — el motivo de que antes entraran tan secas.
+     El transform de un elemento es UNO solo: si lo usa la posición en la órbita,
+     no queda con qué animar la escala. Por eso las insignias solo se trasladaban
+     y, una vez colocadas, se quedaban congeladas.
+     Ahora `.s-bpos` se encarga de viajar (translate) y `.s-badge`, dentro, solo
+     de la escala: entra con un rebote elástico y sigue respirando para siempre. */
+  .sort .s-bpos { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px;
+    margin: -27px 0 0 -27px; border-radius: 50%; opacity: 0;
+    transition: opacity .72s ease, filter .72s ease; }
+  .sort .s-bpos.here { opacity: 1; }
+  /* Contrarrota el giro lento del anillo, mismo periodo y sentido opuesto, para
+     que las etiquetas no se vuelquen mientras dan vueltas alrededor de Boti.
+     Cancela exacto porque ambas animaciones nacen en el mismo innerHTML y por
+     tanto arrancan en el mismo instante. (El giro grande de la deliberación sí
+     las voltea, a propósito — es una rueda girando — y acaba en 1800°, múltiplo
+     de 360, así que aterrizan derechas.)
+     Lleva además el pulso de luz: box-shadow y transform no compiten entre sí. */
+  .sort .s-bin { width: 100%; height: 100%; border-radius: 50%;
+    animation: orbDriftBack 26s linear infinite, badgePulse 4.4s ease-in-out infinite; }
+  @keyframes orbDriftBack { to { transform: rotate(-360deg) } }
+  .sort .s-badge { width: 100%; height: 100%; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
     font-family: var(--font-round); font-weight: 800; font-size: 16px; color: #0a1b2b;
-    background: #FFD86B; box-shadow: 0 6px 18px rgba(0,0,0,.35);
-    animation: sortBob 2.4s ease-in-out infinite;
-    transition: opacity .5s ease, filter .5s ease; }
-  /* Cada una entra en el ciclo por un sitio distinto (el retardo negativo lo pone
-     el JS): a la vez serían cinco fichas latiendo al unísono, que es un pulso, no
-     un baile. */
-  @keyframes sortBob { 0%,100% { transform: translateY(0) scale(1) } 50% { transform: translateY(-7px) scale(1.06) } }
-  .sort .s-orbit.fade .s-badge { opacity: 0; filter: blur(3px); }
+    background: #FFD86B; box-shadow: 0 6px 18px rgba(0,0,0,.35); transform: scale(0); }
+  /* Se pasa de tamaño, rebota dos veces y se asienta; luego no para de respirar */
+  .sort .s-bpos.here .s-badge { animation: badgeIn 1.15s cubic-bezier(.2,1.5,.35,1) both,
+    badgeBreathe 4.2s ease-in-out 1.15s infinite; }
+  @keyframes badgeIn {
+    0% { transform: scale(0); filter: blur(7px) }
+    36% { transform: scale(1.45); filter: blur(0) }
+    54% { transform: scale(.86) }
+    69% { transform: scale(1.15) }
+    81% { transform: scale(.95) }
+    90% { transform: scale(1.04) }
+    96% { transform: scale(.99) }
+    100% { transform: scale(1); filter: blur(0) } }
+  @keyframes badgeBreathe {
+    0%,100% { transform: scale(1) } 50% { transform: scale(1.13) } }
+  /* Periodos distintos por insignia: si respiran todas al mismo compás se lee
+     como un efecto; desincronizadas se lee como cinco cosas vivas. */
+  .sort .s-bpos:nth-child(2) .s-badge { animation-duration: 1.15s, 5.3s; animation-delay: 0s, 1.9s; }
+  .sort .s-bpos:nth-child(3) .s-badge { animation-duration: 1.15s, 3.7s; animation-delay: 0s, 2.8s; }
+  .sort .s-bpos:nth-child(4) .s-badge { animation-duration: 1.15s, 4.8s; animation-delay: 0s, 1.4s; }
+  .sort .s-bpos:nth-child(5) .s-badge { animation-duration: 1.15s, 3.3s; animation-delay: 0s, 3.4s; }
+  /* Una luz recorre el anillo insignia a insignia. El desfase va sobre el
+     SEGUNDO valor del delay: el primero es la contrarrotación, que tiene que
+     seguir arrancando en cero o dejaría de cancelar el giro del anillo. */
+  @keyframes badgePulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,246,218,0) }
+    50% { box-shadow: 0 0 30px 7px rgba(255,246,218,.6) } }
+  .sort .s-bpos:nth-child(2) .s-bin { animation-delay: 0s, .88s; }
+  .sort .s-bpos:nth-child(3) .s-bin { animation-delay: 0s, 1.76s; }
+  .sort .s-bpos:nth-child(4) .s-bin { animation-delay: 0s, 2.64s; }
+  .sort .s-bpos:nth-child(5) .s-bin { animation-delay: 0s, 3.52s; }
+  /* Salida. 4 clases y !important porque durante el hush la regla
+     `.s-stage.hush .s-bpos` fija opacity .3 con !important y, al ser más
+     específica, ganaría: saldrían despedidas pero sin desvanecerse.
+     Sin `animation:none` — la trayectoria de salida es una animación generada
+     por insignia (bout0..4) y esto la anularía. */
+  .sort .s-stage .s-bpos.gone { opacity: 0 !important; filter: blur(6px) !important; }
+  /* !important: el JS pone opacity inline al colocar cada insignia en órbita,
+     y sin esto ni el atenuado del hush ni el fundido final llegarían a verse. */
+  .sort .s-orbit.fade .s-bpos { opacity: 0 !important; filter: blur(3px); }
 
   /* Veredicto: aterriza con rebotes decrecientes */
   .sort .s-final { position: relative; z-index: 2; width: 132px; height: 132px; border-radius: 50%;
@@ -985,55 +1130,186 @@
     font-weight: 800; font-size: 44px; color: #0a1b2b;
     background: radial-gradient(circle at 40% 35%, #FFF3C4, #FFC53D);
     box-shadow: 0 0 0 10px rgba(255,216,107,.18), 0 0 60px 18px rgba(255,197,61,.55);
-    animation: sortSettle 1.5s cubic-bezier(.33,.8,.34,1) both, sortGlow 3.6s ease-in-out 1.5s infinite; }
+    /* finalFloat va el último: toma el relevo del transform cuando sortSettle
+       acaba, así la insignia no se queda clavada tras aterrizar. */
+    animation: sortSettle 2s cubic-bezier(.33,.8,.34,1) both,
+      sortGlow 4.4s ease-in-out 2s infinite,
+      finalFloat 9.1s ease-in-out 2s infinite; }
+  /* La insignia CAMBIA DE TAMAÑO, no solo de sitio. Antes solo subía y bajaba
+     7px: el resultado era una bola quieta con un brillo detrás. */
+  @keyframes finalFloat {
+    0%,100% { transform: translateY(0) scale(1) rotate(0deg) }
+    36% { transform: translateY(-8px) scale(1.06) rotate(-1.4deg) }
+    67% { transform: translateY(3px) scale(.975) rotate(1deg) } }
+  /* Halo giratorio detrás del nivel. Gira Y late: al ser un mismo nodo, rotación
+     y escala tienen que ir en el mismo keyframe — dos animaciones de transform
+     sobre el mismo elemento se anularían. */
+  .sort .s-final::before { content: ''; position: absolute; inset: -30px; border-radius: 50%; z-index: -1;
+    background: conic-gradient(from 0deg, rgba(255,216,107,0) 0deg, rgba(255,216,107,.5) 90deg,
+      rgba(255,255,255,.3) 160deg, rgba(255,216,107,.22) 240deg, rgba(255,216,107,0) 360deg);
+    filter: blur(14px); animation: sortHalo 7.5s linear 1.2s infinite; }
+  @keyframes sortHalo {
+    0% { transform: rotate(0deg) scale(1) }
+    25% { transform: rotate(90deg) scale(1.14) }
+    50% { transform: rotate(180deg) scale(.94) }
+    75% { transform: rotate(270deg) scale(1.1) }
+    100% { transform: rotate(360deg) scale(1) } }
   @keyframes sortSettle {
-    0% { transform: scale(.06) rotate(-42deg); opacity: 0 }
-    26% { transform: scale(1.34) rotate(9deg); opacity: 1 }
-    44% { transform: scale(.9) rotate(-5deg) }
-    60% { transform: scale(1.12) rotate(3deg) }
-    74% { transform: scale(.96) rotate(-1.5deg) }
-    86% { transform: scale(1.04) rotate(.6deg) }
-    94% { transform: scale(.99) }
-    100% { transform: scale(1) rotate(0) } }
+    0% { transform: scale(.06) rotate(-42deg); opacity: 0; filter: blur(9px) }
+    24% { transform: scale(1.34) rotate(9deg); opacity: 1; filter: blur(0) }
+    41% { transform: scale(.9) rotate(-5deg) }
+    56% { transform: scale(1.12) rotate(3deg) }
+    69% { transform: scale(.96) rotate(-1.5deg) }
+    80% { transform: scale(1.045) rotate(.6deg) }
+    89% { transform: scale(.985) rotate(-.2deg) }
+    95% { transform: scale(1.006) }
+    100% { transform: scale(1) rotate(0); filter: blur(0) } }
+  /* El halo se abre y se cierra de verdad: 8→26px de anillo y 40→104 de
+     difusión. El recorrido anterior (10→16) no se llegaba a percibir. */
   @keyframes sortGlow {
-    0%,100% { box-shadow: 0 0 0 10px rgba(255,216,107,.16), 0 0 52px 14px rgba(255,197,61,.45) }
-    50% { box-shadow: 0 0 0 16px rgba(255,216,107,.10), 0 0 78px 26px rgba(255,197,61,.62) } }
+    0%,100% { box-shadow: 0 0 0 8px rgba(255,216,107,.18), 0 0 40px 10px rgba(255,197,61,.4) }
+    50% { box-shadow: 0 0 0 26px rgba(255,216,107,.07), 0 0 104px 34px rgba(255,197,61,.72) } }
 
   /* Dos ondas de distinta velocidad y grosor */
   .sort .s-wave { position: absolute; left: 50%; top: 50%; width: 140px; height: 140px; margin: -70px 0 0 -70px;
     border-radius: 50%; border: 3px solid rgba(255,216,107,.7);
-    animation: sortWave 1.5s cubic-bezier(.15,.75,.25,1) both; }
-  @keyframes sortWave { 0% { transform: scale(.35); opacity: .95 } 70% { opacity: .3 } 100% { transform: scale(3.6); opacity: 0 } }
-  .sort .s-wave.w2 { animation-duration: 2.2s; animation-delay: .22s; border-width: 1.5px; border-color: rgba(255,255,255,.42); }
+    animation: sortWave 2.1s cubic-bezier(.15,.75,.25,1) both; }
+  @keyframes sortWave { 0% { transform: scale(.35); opacity: .95 } 68% { opacity: .28 } 100% { transform: scale(3.8); opacity: 0 } }
+  .sort .s-wave.w2 { animation-duration: 3.1s; animation-delay: .34s; border-width: 1.5px; border-color: rgba(255,255,255,.42); }
 
+  /* RELEVO DE TEXTO ————————————————————————————————————————
+     Un cross-fade de dos bloques estáticos se lee como diapositivas. Aquí el
+     texto que se va se eleva y se deshace en desenfoque, y el que llega emerge
+     desde abajo saliendo de foco. El blur es lo que da sensación de aire y de
+     masa: sin él, cualquier entrada se siente recortada.
+     Además ambos tienen deriva permanente (periodos 8.6s y 11.4s, que no
+     encajan entre sí): aterrizan, pero nunca se quedan clavados. */
   .sort .s-t { font-family: var(--font-round); font-size: 26px; font-weight: 800; color: #FFF3C4; margin-top: 10px;
-    text-align: center; min-height: 34px; transition: opacity .28s ease, transform .28s ease; }
-  .sort .s-t.fade { opacity: 0; transform: translateY(4px); }
-  .sort .s-t i { display: inline-block; font-style: normal; animation: sortPop .34s cubic-bezier(.2,1.7,.4,1) both; }
-  @keyframes sortPop { 0% { opacity: 0; transform: translateY(8px) scale(.72) } 65% { transform: translateY(-2px) scale(1.14) } 100% { opacity: 1; transform: none } }
-  .sort .s-s { font-size: 15px; font-weight: 700; color: #CFE6F7; text-align: center; max-width: 340px; margin-top: 6px;
-    animation: tr-rise .6s cubic-bezier(.2,.9,.3,1) both; }
-  .sort .s-credits { display: flex; flex-direction: column; gap: 8px; margin: 16px 0 4px; width: 100%; max-width: 320px; z-index: 1; }
-  .sort .s-credit { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.08);
-    border: 1.5px solid rgba(255,255,255,.16); border-radius: 14px; padding: 10px 14px; color: #fff;
-    font-weight: 800; opacity: 0; transform: translateY(14px); }
-  /* Entra desde abajo, se adelanta un poco y se asienta */
-  .sort .s-credit.in { animation: sortRowIn .72s cubic-bezier(.22,1.2,.32,1) both; }
+    text-align: center; min-height: 34px; animation: tIdle 8.6s ease-in-out infinite;
+    transition: opacity .58s cubic-bezier(.4,0,.35,1), transform .58s cubic-bezier(.4,0,.35,1), filter .58s ease; }
+  .sort .s-t.fade { animation: none; opacity: 0; transform: translateY(-13px) scale(.955); filter: blur(9px); }
+  .sort .s-t.tin { animation: tIn .95s cubic-bezier(.16,.86,.26,1) both, tIdle 8.6s ease-in-out .95s infinite; }
+  @keyframes tIn {
+    0% { opacity: 0; transform: translateY(15px) scale(.96); filter: blur(9px) }
+    48% { opacity: 1 }
+    78% { transform: translateY(-1.5px) scale(1.004) }
+    100% { opacity: 1; transform: none; filter: blur(0) } }
+  @keyframes tIdle {
+    0%,100% { transform: translateY(0) } 42% { transform: translateY(-4px) } 71% { transform: translateY(1.6px) } }
+  /* Cada letra del nivel sigue meciéndose después de caer, y desfasada entre sí:
+     un bloque de texto quieto delata que la animación "terminó". */
+  .sort .s-t i { display: inline-block; font-style: normal;
+    animation: sortPop .78s cubic-bezier(.2,1.5,.35,1) both, letterSway 6.4s ease-in-out .78s infinite; }
+  @keyframes sortPop {
+    0% { opacity: 0; transform: translateY(14px) scale(.62); filter: blur(8px) }
+    52% { transform: translateY(-4px) scale(1.17); filter: blur(0) }
+    72% { transform: translateY(1.5px) scale(.975) }
+    87% { transform: translateY(-.5px) scale(1.008) }
+    100% { opacity: 1; transform: none; filter: blur(0) } }
+  @keyframes letterSway {
+    0%,100% { transform: translateY(0) rotate(0deg) }
+    31% { transform: translateY(-3.6px) rotate(-1.9deg) }
+    64% { transform: translateY(2.4px) rotate(1.3deg) } }
+  .sort .s-t i:nth-child(2) { animation-delay: 0s, 1.6s; }
+  .sort .s-t i:nth-child(3) { animation-delay: 0s, 3.1s; }
+  .sort .s-t i:nth-child(4) { animation-delay: 0s, .9s; }
+  .sort .s-t i:nth-child(5) { animation-delay: 0s, 2.4s; }
+  .sort .s-s { font-size: 15px; font-weight: 700; color: #CFE6F7; text-align: center; max-width: 300px; margin-top: 8px;
+    min-height: 20px; opacity: 0; transform: translateY(11px); filter: blur(7px);
+    transition: opacity .72s ease, transform .78s cubic-bezier(.2,.9,.3,1), filter .72s ease; }
+  .sort .s-s.in { opacity: 1; transform: none; filter: blur(0);
+    animation: sIdle 11.4s ease-in-out .82s infinite; }
+  @keyframes sIdle {
+    0%,100% { transform: translateY(0) } 38% { transform: translateY(-3px) } 69% { transform: translateY(1.8px) } }
+
+  /* Resultados: una sola tarjeta (cabecera + filas + total), no piezas sueltas */
+  /* display:none hasta el veredicto para que TODO el contenido (filas, total,
+     botón) entre en el layout de una sola vez. Un único reflow, deslizado por
+     .s-col; a partir de ahí solo opacidad y transform: cero saltos. */
+  .sort .s-panel { display: none;
+    width: 100%; max-width: 320px; z-index: 1; margin: 20px 0 2px; padding: 14px 14px 12px;
+    background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.13); border-radius: 20px;
+    opacity: 0; transform: translateY(22px) scale(.965); filter: blur(8px);
+    transition: opacity 1.05s ease, transform 1.05s cubic-bezier(.2,.95,.3,1), filter 1.05s ease; }
+  .sort .s-panel.on { display: block; }
+  /* Respira: deriva vertical + el borde recogiendo y soltando luz, muy lento */
+  .sort .s-panel.in { opacity: 1; transform: none; filter: blur(0);
+    animation: panelBreathe 8.4s ease-in-out 1.4s infinite; }
+  @keyframes panelBreathe {
+    0%,100% { transform: translateY(0); box-shadow: 0 0 0 rgba(255,216,107,0), inset 0 0 0 rgba(255,216,107,0); border-color: rgba(255,255,255,.13) }
+    52% { transform: translateY(-3.5px); box-shadow: 0 0 30px rgba(255,216,107,.14), inset 0 0 26px rgba(255,216,107,.06); border-color: rgba(255,216,107,.24) } }
+  .sort .s-ph { opacity: 0; transform: translateY(9px); filter: blur(5px);
+    transition: opacity .85s ease, transform .85s cubic-bezier(.2,.9,.3,1), filter .85s ease; }
+  .sort .s-ph.in { opacity: 1; transform: none; filter: blur(0); }
+  .sort .s-ph { font-size: 10.5px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase;
+    color: rgba(207,230,247,.55); margin: 0 2px 11px; }
+  .sort .s-credits { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .sort .s-credit { position: relative; display: flex; align-items: center; gap: 11px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.10); border-radius: 14px; padding: 9px 11px; color: #fff;
+    opacity: 0; transform: translateY(14px); }
+  /* Entra desde abajo saliendo de foco, se adelanta y se asienta — y después
+     sigue flotando (rowFloat), con periodo distinto por fila para que no vayan
+     al unísono. Una fila inmóvil delata el corte de la animación. */
+  .sort .s-credit.in { animation: sortRowIn 1.25s cubic-bezier(.22,1.12,.32,1) both,
+    rowFloat 9.2s ease-in-out 1.25s infinite; }
   @keyframes sortRowIn {
-    0% { opacity: 0; transform: translateY(18px) scale(.97) }
-    55% { opacity: 1; transform: translateY(-4px) scale(1.015) }
-    78% { transform: translateY(1px) scale(.998) }
-    100% { opacity: 1; transform: none } }
-  .sort .s-credit .cx { margin-left: auto; color: #FFD86B; display: flex; align-items: center; gap: 4px; }
+    0% { opacity: 0; transform: translateY(26px) scale(.95); filter: blur(7px) }
+    48% { opacity: 1; transform: translateY(-5px) scale(1.018); filter: blur(0) }
+    70% { transform: translateY(2px) scale(.995) }
+    85% { transform: translateY(-1px) scale(1.004) }
+    94% { transform: translateY(.3px) }
+    100% { opacity: 1; transform: none; filter: blur(0) } }
+  @keyframes rowFloat {
+    0%,100% { transform: translateY(0) } 44% { transform: translateY(-3.2px) } 73% { transform: translateY(1.4px) } }
+  .sort .s-credits .s-credit:nth-child(2).in { animation-delay: 0s, 3.4s; }
+  .sort .s-credits .s-credit:nth-child(3).in { animation-delay: 0s, 6.1s; }
+  .sort .s-credits .s-credit:nth-child(4).in { animation-delay: 0s, 1.7s; }
+  /* Acción solapada: las tres zonas de la fila no llegan a la vez. Es lo que
+     separa "entró un div" de algo animado a mano. */
+  .sort .s-credit.in .cl { animation: partIn .95s cubic-bezier(.2,1.25,.3,1) .12s backwards; }
+  .sort .s-credit.in .cm { animation: partIn .95s cubic-bezier(.2,1.1,.3,1) .26s backwards; }
+  .sort .s-credit.in .cx { animation: partIn .95s cubic-bezier(.2,1.1,.3,1) .4s backwards; }
+  @keyframes partIn {
+    0% { opacity: 0; transform: translateX(-11px) scale(.86); filter: blur(4px) }
+    100% { opacity: 1; transform: none; filter: blur(0) } }
+  /* Insignia del nivel a la izquierda: ancla la fila y se lee de un vistazo */
+  .sort .s-credit .cl { position: relative; overflow: hidden;
+    flex: 0 0 auto; width: 36px; height: 36px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-round); font-weight: 800; font-size: 14px; color: #0a1b2b;
+    background: linear-gradient(155deg, #FFEEB8, #FFC53D); box-shadow: 0 3px 10px rgba(255,197,61,.3); }
+  /* Un brillo cruza cada insignia cada pocos segundos, desfasado por fila */
+  .sort .s-credit .cl::after { content: ''; position: absolute; top: -60%; left: -130%;
+    width: 55%; height: 220%; transform: skewX(-18deg); pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.6), transparent);
+    animation: clSheen 6.2s cubic-bezier(.4,0,.3,1) 1.8s infinite; }
+  @keyframes clSheen { 0% { left: -130% } 20%,100% { left: 190% } }
+  .sort .s-credits .s-credit:nth-child(2) .cl::after { animation-delay: 3.9s; }
+  .sort .s-credits .s-credit:nth-child(3) .cl::after { animation-delay: 6s; }
+  .sort .s-credits .s-credit:nth-child(4) .cl::after { animation-delay: 2.7s; }
+  .sort .s-credit .cm { display: flex; flex-direction: column; gap: 2px; min-width: 0; line-height: 1.2; }
+  .sort .s-credit .cm b, .sort .s-credit .cm small {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sort .s-credit .cm b { font-size: 13.5px; font-weight: 800; }
+  .sort .s-credit .cm small { font-size: 11px; font-weight: 700; color: rgba(207,230,247,.6); }
+  .sort .s-credit .cx { margin-left: auto; color: #FFD86B; display: flex; align-items: center; gap: 5px;
+    font-weight: 800; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .sort .s-credit .ck svg { display: block; }
   .sort .s-credit .ck path { stroke-dasharray: 26; stroke-dashoffset: 26; transition: stroke-dashoffset .5s cubic-bezier(.3,.9,.3,1); }
   .sort .s-credit .ck.draw path { stroke-dashoffset: 0; }
   .sort .btn { max-width: 320px; width: 100%; margin-top: 18px; }
-  .sort .s-skip { margin-top: 10px; background: none; border: 0; color: #9FC2DA; font-weight: 700; cursor: pointer; z-index: 1; }
+  .sort .s-skip { margin-top: 10px; background: none; border: 0; color: #9FC2DA; font-weight: 700; cursor: pointer; z-index: 1;
+    transition: opacity .6s ease, transform .6s ease; }
+  /* Con el veredicto ya en pantalla, "Saltar" sobra: manda "Empezar en X" */
+  .sort .s-skip.gone { opacity: 0; transform: translateY(8px); pointer-events: none; }
   .sort .s-flash { position: fixed; inset: 0; pointer-events: none; z-index: 3; opacity: 0;
     background: radial-gradient(circle at 50% 42%, #FFF6DA 0%, #FFE49A 45%, rgba(255,228,154,0) 78%);
-    animation: sortFlash .7s cubic-bezier(.1,.8,.3,1) both; }
-  @keyframes sortFlash { 0% { opacity: 0 } 9% { opacity: .88 } 34% { opacity: .3 } 100% { opacity: 0 } }
+    animation: sortFlash 1.15s cubic-bezier(.16,.7,.3,1) both; }
+  /* Fogonazo más largo y menos violento: un pico a 0.88 en 60ms es un golpe
+     seco de fotograma. Sube en 170ms y se apaga en cola larga. */
+  @keyframes sortFlash {
+    0% { opacity: 0 } 15% { opacity: .68 } 38% { opacity: .26 } 66% { opacity: .09 } 100% { opacity: 0 } }
   /* Boti reacciona: sobresalto y luego alegría que se calma */
   .sort .s-boti.cheer { animation: sortCheer 1.9s cubic-bezier(.28,1.1,.35,1) both, sortHover 2.4s ease-in-out 1.9s infinite;
     filter: drop-shadow(0 0 18px rgba(255,216,107,.85)); }
@@ -1046,14 +1322,24 @@
     80% { transform: translateY(0) scale(.99) rotate(-1.5deg) }
     100% { transform: translateY(-4px) scale(1) rotate(0) } }
   @keyframes sortHover { 0%,100% { transform: translateY(-4px) rotate(-2deg) } 50% { transform: translateY(-11px) rotate(2.5deg) } }
-  .sort .s-total { margin-top: 12px; font-family: var(--font-round); font-weight: 800; font-size: 18px;
-    color: #FFD86B; opacity: 0; transform: translateY(6px); transition: opacity .45s ease, transform .45s cubic-bezier(.2,1.1,.3,1); }
-  .sort .s-total.in { opacity: 1; transform: none; animation: sortTotalGlow 1.4s ease-out both; }
+  /* Total: pie de la misma tarjeta, separado por una línea. Etiqueta izq., cifra der. */
+  .sort .s-total { display: none; align-items: baseline; justify-content: space-between; gap: 10px;
+    margin-top: 12px; padding-top: 11px; border-top: 1px solid rgba(255,255,255,.11);
+    font-weight: 800; font-size: 13px; color: rgba(207,230,247,.7);
+    opacity: 0; transform: translateY(6px); transition: opacity .45s ease, transform .45s cubic-bezier(.2,1.1,.3,1); }
+  .sort .s-total.on { display: flex; }
+  .sort .s-total .tv { font-family: var(--font-round); font-size: 20px; color: #FFD86B;
+    font-variant-numeric: tabular-nums; }
+  .sort .s-total.in { opacity: 1; transform: none; }
+  .sort .s-total.in .tv { animation: sortTotalGlow 1.4s ease-out both; }
   @keyframes sortTotalGlow {
     0% { text-shadow: 0 0 0 rgba(255,216,107,0) } 30% { text-shadow: 0 0 22px rgba(255,216,107,.95) }
     100% { text-shadow: 0 0 8px rgba(255,216,107,.25) } }
-  .sort .s-credit.pulse { animation: sortRowIn .72s cubic-bezier(.22,1.2,.32,1) both, sortPulse .9s cubic-bezier(.2,.8,.3,1) both; }
-  @keyframes sortPulse { 0% { box-shadow: 0 0 0 0 rgba(255,216,107,.5) } 100% { box-shadow: 0 0 0 18px rgba(255,216,107,0) } }
+  /* El pulso vive en un ::after y no en la lista de animaciones de la fila: si
+     compartiera lista pisaría el rowFloat y la fila volvería a quedarse quieta. */
+  .sort .s-credit.pulse::after { content: ''; position: absolute; inset: 0; border-radius: inherit;
+    pointer-events: none; animation: sortPulse 1.15s cubic-bezier(.2,.8,.3,1) both; }
+  @keyframes sortPulse { 0% { box-shadow: 0 0 0 0 rgba(255,216,107,.5) } 100% { box-shadow: 0 0 0 20px rgba(255,216,107,0) } }
   /* Confeti que estalla desde el centro y luego cae */
   .sort .cftb { position: absolute; left: 50%; top: 40%; width: 9px; height: 14px; border-radius: 3px;
     pointer-events: none; z-index: 4; opacity: 0; animation: cftBurst 2.8s cubic-bezier(.12,.7,.3,1) both; }
@@ -1062,42 +1348,146 @@
     8% { opacity: 1 }
     32% { transform: translate(var(--dx), var(--dy)) rotate(220deg) scale(1) }
     100% { opacity: 0; transform: translate(calc(var(--dx) * 1.35), 76vh) rotate(880deg) scale(.9) } }
-  /* Ruta A1→C1 cuando no hay módulos convalidados */
-  .sort .s-route { position: relative; display: flex; justify-content: space-between; align-items: center;
-    width: 100%; margin-top: 14px; padding: 10px 4px 0; }
-  .sort .s-route i { position: absolute; left: 4px; right: 4px; top: 4px; height: 4px; border-radius: 999px;
-    background: rgba(255,255,255,.18); }
+  /* Ruta A1→C1 cuando no hay módulos convalidados.
+     Semántica: NO es una barra de progreso. Es la ruta *prevista*. El trazo que
+     se dibuja es un reconocimiento del camino (tenue, se apaga al llegar), no
+     terreno conquistado. Solo A1 queda encendido — ahí estás. C1 es una meta
+     hueca: se ve, no se ha alcanzado. */
+  .sort .s-route { position: relative; display: flex; justify-content: space-between; align-items: flex-start;
+    width: 100%; margin-top: 6px; padding: 2px 2px 0; }
+  .sort .s-route i { position: absolute; left: 9px; right: 9px; top: 8px; height: 4px; border-radius: 999px;
+    background: rgba(255,255,255,.12); }
+  /* Del oro (donde estás) al azul apagado (lo que falta): se lee de un vistazo */
   .sort .s-route i::after { content: ''; position: absolute; inset: 0; width: 0; border-radius: 999px;
-    background: linear-gradient(90deg, #FFD86B, #1CB0F6); transition: width 1.9s cubic-bezier(.62,.02,.24,1); }
+    background: linear-gradient(90deg, rgba(255,216,107,.75) 0%, rgba(255,216,107,.28) 22%, rgba(159,194,218,.22) 60%, rgba(159,194,218,.16) 100%);
+    transition: width 3.5s cubic-bezier(.48,.04,.24,1); }
   .sort .s-route.go i::after { width: 100%; }
-  .sort .s-route span { font-weight: 800; font-size: 12px; color: rgba(255,255,255,.55); padding-top: 10px;
-    transition: color .5s ease, text-shadow .5s ease, transform .5s cubic-bezier(.2,1.3,.3,1); }
-  .sort .s-route span.lit { color: #FFD86B; text-shadow: 0 0 12px rgba(255,216,107,.7); transform: translateY(-2px) scale(1.12); }
-  .sort .s-route span.lit.hold { animation: sortLabelBeat 2.4s ease-in-out infinite; }
-  @keyframes sortLabelBeat { 0%,100% { transform: translateY(-2px) scale(1.12) } 50% { transform: translateY(-4px) scale(1.2) } }
-  /* CTA: sube suave y un brillo la barre una vez */
-  /* Las convalidaciones y el total se encienden solos, uno a uno (.s-credit y
-     .s-total nacen con opacidad 0 y la ganan con .in): esa es la cascada.
-     Los botones NO — esos esperan a que termine, y estan maquetados desde el
-     principio para que al aparecer no empujen nada. */
-  .sort #s-cta, .sort #s-skip {
-    opacity: 0; pointer-events: none; transition: opacity .42s ease; }
-  .sort.revealed #s-cta, .sort.revealed #s-skip { opacity: 1; pointer-events: auto; }
-  .sort #s-cta .btn { position: relative; overflow: hidden; }
-  @keyframes sortCtaIn { 0% { opacity: 0; transform: translateY(14px) } 100% { opacity: 1; transform: none } }
-  .sort #s-cta .btn::after { content: ''; position: absolute; top: 0; bottom: 0; width: 55%;
+  /* Un destello recorre la ruta cada pocos segundos: sigue viva, sin avanzar */
+  .sort .s-route.done i::before { content: ''; position: absolute; inset: 0; border-radius: 999px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.3) 50%, transparent 100%);
+    background-size: 38% 100%; background-repeat: no-repeat;
+    animation: routeShimmer 4.2s cubic-bezier(.45,.05,.5,.95) 1s infinite; }
+  @keyframes routeShimmer { 0% { background-position: -42% 0 } 60%,100% { background-position: 142% 0 } }
+  /* Cabeza de cometa: recorre la ruta una vez y se apaga al llegar */
+  .sort .s-route u { position: absolute; top: 10px; left: 9px; width: 0; height: 0; z-index: 2; opacity: 0;
+    transition: left 3.5s cubic-bezier(.48,.04,.24,1), opacity .6s ease; }
+  .sort .s-route.go u { left: calc(100% - 9px); opacity: 1; }
+  .sort .s-route.done u { opacity: 0; }
+  .sort .s-route u::before { content: ''; position: absolute; left: -9px; top: -9px; width: 18px; height: 18px;
+    border-radius: 50%; background: radial-gradient(circle, #FFF6DA 0%, rgba(255,216,107,.8) 40%, rgba(255,216,107,0) 72%); }
+  .sort .s-route span { position: relative; z-index: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 7px; }
+  /* TODOS los nodos respiran, siempre — no solo el de "estás aquí". La escala
+     la lleva SIEMPRE una animación (nunca una declaración suelta en `.lit`),
+     porque una animación gana a la declaración y dejaría el nodo clavado. */
+  .sort .s-route span b { width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box;
+    background: #10293e; border: 3px solid rgba(255,255,255,.2);
+    animation: dotBreathe 5.2s ease-in-out infinite;
+    transition: background .45s ease, border-color .45s ease, box-shadow .45s ease; }
+  @keyframes dotBreathe { 0%,100% { transform: scale(1) } 50% { transform: scale(1.17) } }
+  /* Los <span> son los hijos 3..7 del track: antes van el <i> de la línea y el
+     <u> del cometa. Cada uno con su periodo, para que no respiren a la vez. */
+  .sort .s-route span:nth-child(4) b { animation-duration: 4.3s; animation-delay: .9s; }
+  .sort .s-route span:nth-child(5) b { animation-duration: 6.1s; animation-delay: 2.1s; }
+  .sort .s-route span:nth-child(6) b { animation-duration: 4.8s; animation-delay: 1.4s; }
+  .sort .s-route span:nth-child(7) b { animation-duration: 5.7s; animation-delay: 3s; }
+  .sort .s-route span em { font-style: normal; font-weight: 800; font-size: 11px; color: rgba(255,255,255,.4);
+    transition: color .45s ease, text-shadow .45s ease, transform .45s cubic-bezier(.2,1.3,.3,1); }
+  /* Destello al paso del cometa: se enciende, respira más fuerte y se apaga */
+  .sort .s-route span.lit b { background: #FFD86B; border-color: rgba(255,216,107,.35);
+    box-shadow: 0 0 14px rgba(255,216,107,.75);
+    animation: dotBreatheLit 2.6s ease-in-out infinite; }
+  @keyframes dotBreatheLit { 0%,100% { transform: scale(1.16) } 50% { transform: scale(1.36) } }
+  .sort .s-route span.lit em { color: #FFD86B; text-shadow: 0 0 12px rgba(255,216,107,.6); transform: scale(1.1); }
+  /* "Estás aquí": el único que se queda encendido. Late de tamaño y de luz a la
+     vez — dos animaciones que tocan propiedades distintas, así que conviven. */
+  .sort .s-route span.lit.hold b { animation: dotBreatheLit 2.6s ease-in-out infinite,
+    routeHere 3.4s ease-in-out infinite; }
+  @keyframes routeHere {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,216,107,.5), 0 0 12px rgba(255,216,107,.7) }
+    55% { box-shadow: 0 0 0 10px rgba(255,216,107,0), 0 0 26px rgba(255,216,107,1) } }
+  .sort .s-route span.lit.hold em { animation: sortLabelBeat 2.8s ease-in-out infinite; }
+  @keyframes sortLabelBeat { 0%,100% { transform: scale(1.1) } 50% { transform: translateY(-2px) scale(1.18) } }
+  /* Meta: anillo hueco. Visible, deseable, claramente no alcanzado — pero vivo */
+  /* Relleno opaco como el resto: con `transparent` se veía el trazo cruzando
+     por dentro y el nodo parecía un agujero. La meta se distingue por el aro
+     claro y su pulso, no por estar hueca. */
+  .sort .s-route span.goal b { background: #10293e; border-color: rgba(207,230,247,.62);
+    box-shadow: 0 0 0 0 rgba(207,230,247,.35);
+    animation: dotBreathe 4.6s ease-in-out infinite, routeGoal 3.4s ease-in-out infinite; }
+  .sort .s-route span.goal em { color: rgba(207,230,247,.7); }
+  @keyframes routeGoal {
+    0%,100% { box-shadow: 0 0 0 0 rgba(207,230,247,.3) }
+    60% { box-shadow: 0 0 0 8px rgba(207,230,247,0) } }
+  /* Rótulos que dejan explícito qué es cada extremo */
+  .sort .s-rcap { display: flex; justify-content: space-between; margin: 2px 1px 0;
+    font-size: 9.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    opacity: 0; transition: opacity .6s ease; }
+  .sort .s-rcap.in { opacity: 1; }
+  .sort .s-rcap span:first-child { color: rgba(255,216,107,.85); }
+  .sort .s-rcap span:last-child { color: rgba(207,230,247,.5); }
+  /* Fila "desde cero": misma anatomía que una convalidación, otro color */
+  .sort .s-credit.zero { background: none; border: 0; padding: 0 2px; }
+  .sort .s-credit.zero .cl { background: linear-gradient(155deg, #CDEBFF, #1CB0F6); color: #05263c;
+    box-shadow: 0 3px 10px rgba(28,176,246,.28); }
+  .sort .s-credit.zero .cx { color: rgba(207,230,247,.75); font-size: 11px; letter-spacing: .06em;
+    text-transform: uppercase; background: rgba(255,255,255,.08); border-radius: 999px; padding: 4px 9px; }
+  /* CTA: se pinta con el resto (para no provocar otro reflow) pero invisible;
+     `in` la trae. Luego respira despacio como todo lo demás. */
+  .sort #s-cta .btn { position: relative; overflow: hidden; opacity: 0; }
+  .sort #s-cta .btn.in { animation: sortCtaIn .85s cubic-bezier(.2,1.05,.3,1) both,
+    ctaFloat 6.7s ease-in-out .85s infinite; }
+  @keyframes sortCtaIn {
+    0% { opacity: 0; transform: translateY(16px) scale(.97); filter: blur(5px) }
+    100% { opacity: 1; transform: none; filter: blur(0) } }
+  @keyframes ctaFloat {
+    0%,100% { transform: translateY(0) } 47% { transform: translateY(-2.6px) } 76% { transform: translateY(1px) } }
+  /* El brillo no se dispara al pintar el botón sino al mostrarlo, y vuelve a
+     pasar cada 7.4s: un CTA que brilla una sola vez se apaga para siempre. */
+  .sort #s-cta .btn::after { content: ''; position: absolute; top: 0; bottom: 0; width: 55%; left: -70%;
     background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent);
-    transform: skewX(-18deg); animation: sortSheen 1.1s ease-out .55s both; }
-  @keyframes sortSheen { 0% { left: -70% } 100% { left: 130% } }
+    transform: skewX(-18deg); }
+  .sort #s-cta .btn.in::after { animation: sortSheen 7.4s cubic-bezier(.35,0,.3,1) .7s infinite; }
+  @keyframes sortSheen { 0% { left: -70% } 16%,100% { left: 130% } }
 
+  /* MENOS MOVIMIENTO — versión calmada, no cadáver.
+     Antes esto era `animation:none` + `transition:none` sobre `.sort *`: mataba
+     hasta los fundidos y dejaba la pantalla apareciendo a golpes. La norma de
+     accesibilidad pide quitar el movimiento grande (desplazamientos, giros,
+     paralaje), no prohibir que algo aparezca suavemente. Así que aquí se
+     conserva la opacidad y se quita todo lo que se desplaza o gira.
+     `html[data-motion="full"]` lo anula — ver prefersReduced() en el JS. */
   @media (prefers-reduced-motion: reduce) {
-    .sort, .sort .s-orbit, .sort .s-badge, .sort .s-final, .sort .s-wave, .sort .s-boti, .sort .s-credit.in,
-    .sort .s-flash, .sort .s-boti.cheer, .sort .s-credit.pulse, .sort .s-aura, .sort .s-dust,
-    .sort .cftb, .sort .s-t i, .sort .s-s, .sort .s-total.in, .sort .s-route span.lit.hold,
-    .sort #s-cta .btn, .sort #s-cta .btn::after { animation: none !important; }
-    .sort .s-credit, .sort .s-t i { opacity: 1; transform: none; }
-    .sort .s-flash, .sort .s-dust, .sort .cftb { display: none; }
-    .sort .s-aura { opacity: .5; }
+    /* Sin `transform: none` universal: se lo comería el centrado de .s-col (que
+       ES un transform) y la posición en órbita de cada .s-bpos. Solo se apagan
+       las animaciones y las transiciones se reducen a opacidad. */
+    html:not([data-motion="full"]) .sort,
+    html:not([data-motion="full"]) .sort *,
+    html:not([data-motion="full"]) .sort *::before,
+    html:not([data-motion="full"]) .sort *::after {
+      animation: none !important;
+      transition-property: opacity !important; transition-duration: .5s !important; }
+    /* Reposo visible de lo que arranca desplazado o invisible y dependía de la
+       animación para llegar a su sitio. */
+    html:not([data-motion="full"]) .sort .s-credit,
+    html:not([data-motion="full"]) .sort .s-s,
+    html:not([data-motion="full"]) .sort .s-t,
+    html:not([data-motion="full"]) .sort .s-t i,
+    html:not([data-motion="full"]) .sort .s-panel,
+    html:not([data-motion="full"]) .sort .s-ph,
+    html:not([data-motion="full"]) .sort .s-total,
+    html:not([data-motion="full"]) .sort .s-badge,
+    html:not([data-motion="full"]) .sort .s-botiw,
+    html:not([data-motion="full"]) .sort #s-cta .btn {
+      opacity: 1 !important; transform: none !important; filter: none !important; }
+    html:not([data-motion="full"]) .sort .s-route.go i::after { width: 100%; }
+    html:not([data-motion="full"]) .sort .s-flash,
+    html:not([data-motion="full"]) .sort .s-dust,
+    html:not([data-motion="full"]) .sort .cftb,
+    html:not([data-motion="full"]) .sort .s-route u,
+    html:not([data-motion="full"]) .sort .s-wave,
+    html:not([data-motion="full"]) .sort .s-credit .cl::after { display: none !important; }
+    html:not([data-motion="full"]) .sort .s-aura { opacity: .5; }
   }
 
   /* Llegada al mapa: cascada de módulos/nodos convalidados */
@@ -1119,7 +1509,10 @@
     border: 2px solid #FFD86B; border-radius: 999px; padding: 6px 14px; font-weight: 800;
     color: var(--ink); box-shadow: 0 6px 18px rgba(0,0,0,.16); }
   @media (prefers-reduced-motion: reduce) {
-    .mod-card.fill-in, .lpath .node.fill-in, .lpath .node.here-pulse, .mod-card .fill-flash { animation: none !important; }
+    html:not([data-motion="full"]) .mod-card.fill-in,
+    html:not([data-motion="full"]) .lpath .node.fill-in,
+    html:not([data-motion="full"]) .lpath .node.here-pulse,
+    html:not([data-motion="full"]) .mod-card .fill-flash { animation: none !important; }
   }
 
 
@@ -1143,16 +1536,44 @@
   .ob-opt.pl-opt { font-size: 16px; }
   .pl-skip { display: block; margin: 14px auto 0; border: none; background: none; cursor: pointer;
     font-family: inherit; font-size: 14.5px; font-weight: 700; color: var(--muted2); text-decoration: underline; }
+  /* Cada pregunta entra escalonada en vez de aparecer de golpe.
+     `backwards` y no `both`: al terminar, el elemento vuelve a sus estilos
+     normales y :active sigue dando feedback al pulsar. La clase `enter` solo
+     se pone al cambiar de pregunta — al seleccionar una opción se re-renderiza
+     y no queremos que todo vuelva a entrar. */
+  @keyframes plRise { 0% { opacity: 0; transform: translateY(11px) } 100% { opacity: 1; transform: none } }
+  .pl-count.enter { animation: plRise .4s cubic-bezier(.2,.9,.3,1) backwards; }
+  .pl-q.enter { animation: plRise .46s cubic-bezier(.2,.9,.3,1) .06s backwards; }
+  .pl-opt.enter { animation: plRise .44s cubic-bezier(.2,.9,.3,1) backwards; }
+  .pl-opt.enter:nth-child(1) { animation-delay: .14s; }
+  .pl-opt.enter:nth-child(2) { animation-delay: .21s; }
+  .pl-opt.enter:nth-child(3) { animation-delay: .28s; }
+  .pl-opt.enter:nth-child(4) { animation-delay: .35s; }
+  .pl-skip.enter { animation: plRise .4s ease .42s backwards; }
   .pl-result { text-align: center; padding: 10px 0; }
+  .pl-result .pl-txt { animation: plRise .5s cubic-bezier(.2,.9,.3,1) .2s backwards; }
+  .pl-result .pl-sub { animation: plRise .5s cubic-bezier(.2,.9,.3,1) .34s backwards; }
+  @media (prefers-reduced-motion: reduce) {
+    html:not([data-motion="full"]) .pl-count.enter,
+    html:not([data-motion="full"]) .pl-q.enter,
+    html:not([data-motion="full"]) .pl-opt.enter,
+    html:not([data-motion="full"]) .pl-skip.enter,
+    html:not([data-motion="full"]) .pl-result .pl-txt,
+    html:not([data-motion="full"]) .pl-result .pl-sub { animation: none !important; }
+  }
+  /* Colores vía color-mix sobre --blue: los trae el trabajo de tematización por
+     institución, para que la insignia siga la marca de cada demo. */
   .pl-badge { width: 96px; height: 96px; margin: 0 auto 14px; border-radius: 28px; background: color-mix(in srgb, var(--blue) 12%, transparent);
     border: 2px solid color-mix(in srgb, var(--blue) 35%, transparent); color: var(--blueDark, #1488C0);
     display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 900;
     animation: fbPop .4s cubic-bezier(.2,1.3,.3,1) both; }
   .pl-txt { font-size: 18px; font-weight: 800; color: var(--ink); }
   .pl-sub { font-size: 14px; font-weight: 600; color: var(--muted2); margin-top: 6px; line-height: 1.4; }
+
 </style>
 </head>
 <body>
+<!--SPLASH-->
 <div id="app">
   <!-- COURSE (entry screen — the single-course landing was removed as redundant) -->
   <section id="screen-course" class="screen active">
@@ -1418,6 +1839,66 @@ function moduleBg(n) {
 // y pintada del color del demo. Si el demo sube su propia imagen se usa esa y se
 // estira de lado a lado: una imagen cualquiera no empalma consigo misma.
 // brand.ola = 'none' la quita.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Bienvenida y presencia de marca.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+// El splash ya viene pintado desde el servidor (splashHTML en demo-page.ts).
+// Aquí solo se decide cuándo se va: por tiempo o porque lo tocan.
+function mountSplash() {
+  const sp = document.getElementById('demo-splash');
+  if (!sp) return;
+  // Con "menos movimiento" no tiene sentido retener la pantalla: la puesta en
+  // escena no se ve, así que se acorta a lo justo para leer la frase.
+  const dur = prefersReduced() ? 900 : Math.max(600, +sp.dataset.dur || 2600);
+  let gone = false;
+  const close = () => {
+    if (gone) return; gone = true;
+    sp.classList.add('out');
+    // Se retira del DOM al acabar la transición: dejarlo aunque sea invisible
+    // mantiene vivas sus animaciones infinitas por nada.
+    setTimeout(() => sp.remove(), 900);
+  };
+  // Saltable con un toque, como se pidió: impacto de marca sin hacer esperar.
+  sp.addEventListener('click', close);
+  sp.addEventListener('touchstart', close, { passive: true });
+  setTimeout(close, dur);
+}
+
+// El logo de la institución, repetido donde toca. Cada sitio se enciende por
+// separado desde el panel; sin logo cargado esto no hace nada.
+function mountBrandLogos() {
+  const logo = (CFG.brand && CFG.brand.logo) || '';
+  if (!logo) return;
+  const spots = (CFG.brand && CFG.brand.logoSpots) || {};
+  const alt = escapeHtml(CFG.brand.headerText || CFG.institution || '');
+
+  if (spots.watermark) {
+    const wm = document.createElement('img');
+    wm.className = 'brand-wm';
+    wm.src = logo; wm.alt = ''; wm.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(wm);
+  }
+  if (spots.onboarding) {
+    // Sobre la barra de pasos: se ve desde el primer segundo y no empuja nada,
+    // porque .ob-top ya reserva su alto.
+    const top = document.querySelector('#screen-onboard .ob-top');
+    if (top && !top.previousElementSibling?.classList.contains('brand-spot')) {
+      top.insertAdjacentHTML('beforebegin',
+        `<img class="brand-spot" src="${logo}" alt="${alt}">`);
+    }
+  }
+}
+
+/** El logo para las pantallas de celebración (fondo oscuro). '' si no toca. */
+function brandSpotHTML(onDark) {
+  const logo = (CFG.brand && CFG.brand.logo) || '';
+  const spots = (CFG.brand && CFG.brand.logoSpots) || {};
+  if (!logo || !spots.celebrations) return '';
+  const alt = escapeHtml(CFG.brand.headerText || CFG.institution || '');
+  return `<img class="brand-spot${onDark ? ' on-dark' : ''}" src="${logo}" alt="${alt}">`;
+}
+
 function applyOla() {
   const el = document.getElementById('ob-ola');
   const scr = document.getElementById('screen-onboard');
@@ -1716,6 +2197,8 @@ function applyPlacement(lvl) {
 function placementCredits(start) {
   return course.modules.slice(0, start).map((m, i) => ({
     lvl: ['A1', 'A2', 'B1', 'B2', 'C1'][i] || `M${i + 1}`,
+    name: moduleName(m),
+    lessons: m.lessons.length,
     xp: moduleXpMax(m)
   }));
 }
@@ -2423,12 +2906,20 @@ function bindShare() {
         })
       });
       const j = await r.json().catch(() => ({}));
+      // Sin esto, cinco fallos muy distintos (correo sin configurar, dominio sin
+      // verificar, límite de intentos, rechazo del proveedor) se veían todos
+      // como el mismo "Intenta de nuevo" y no había forma de saber cuál era.
+      if (!j.ok) console.warn('[share-invite]', r.status, j);
       if (r.ok && j.ok) { ok = true; toast('Invitación enviada a ' + v); }
       else if (j.reason === 'domain_not_verified') { ok = true; toast('Invitado guardado. El envío de correos se activa en unas horas.'); }
+      else if (j.reason === 'email_not_configured') toast('El envío de correos no está configurado en este entorno.');
+      else if (j.reason === 'emails_disabled') toast('El envío de correos está desactivado ahora mismo.');
       else if (j.reason === 'recipient_suppressed') toast('Ese correo no acepta mensajes nuestros.');
-      else if (j.reason === 'rate_limited') toast('Demasiados intentos. Espera un momento.');
+      else if (j.reason === 'rate_limited') toast('Demasiados intentos. Espera una hora y vuelve a probar.');
+      else if (j.reason === 'invalid_input' || j.reason === 'invalid_body') toast('Ese correo no es válido.');
       else toast('No pudimos enviar la invitación. Intenta de nuevo.');
     } catch (e) {
+      console.warn('[share-invite] la petición no llegó al servidor:', e);
       toast('No pudimos enviar la invitación. Intenta de nuevo.');
     }
     if (ok) {
@@ -3666,47 +4157,111 @@ function suggestReview(lesson, weight) {
   setTimeout(() => { if (!document.body.contains(el)) return; el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 9000);
 }
 
+// ¿El sistema pide menos movimiento? Se respeta SIEMPRE por defecto, pero
+// `<html data-motion="full">` lo anula. Existe por dos motivos concretos:
+//  1) Windows trae los "efectos de animación" desactivados en bastantes equipos
+//     (y en todos los que van en ahorro de batería). Con eso puesto esta
+//     pantalla se ve muerta y parece que la animación está rota.
+//  2) El demo se enseña en portátiles ajenos, donde no vas a ir a Configuración.
+// El CSS mira el mismo atributo, así que los dos lados van siempre de acuerdo.
+function prefersReduced() {
+  if (document.documentElement.getAttribute('data-motion') === 'full') return false;
+  return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
 // Momento "sombrero seleccionador": revelación del nivel al terminar el test.
 // Distinta de lessonCelebration a propósito — es un momento único, no una lección más.
-function placementReveal(lvl, onDone) {
+function placementReveal(lvl, onDone, stats) {
   const LV = ['A1', 'A2', 'B1', 'B2', 'C1'];
   const target = LV[lvl] || 'A1';
   const credits = placementCredits(lvl);
-  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = prefersReduced();
   const old = document.getElementById('sort-hat'); if (old) old.remove();
   const el = document.createElement('div');
   el.id = 'sort-hat'; el.className = 'sort';
   const R = 108;
+  // TRAYECTORIA EN ARCO, no en línea recta.
+  // Antes cada insignia iba del centro a su hueco por el camino más corto: eso
+  // es exactamente lo que delata una animación hecha a ojo. Nada con masa viaja
+  // en recta. Aquí cada una sale del centro con ~58° de retraso angular, barre
+  // hacia su posición describiendo una curva, se pasa de radio y vuelve.
+  // Los keyframes se generan por insignia porque cada destino es distinto y
+  // animar variables CSS (@property) no es fiable en todos los navegadores.
+  const ARC = 1.0;              // radianes de barrido (~57°)
+  let genCss = '';
   const orbit = LV.map((l, i) => {
-    const a = (i / LV.length) * Math.PI * 2;
-    // El asiento la pone en su sitio de la rueda; el retardo negativo la mete en
-    // el baile por un punto distinto del ciclo que sus vecinas.
-    return `<div class="s-seat" style="transform:translate(${Math.round(Math.cos(a) * R)}px,${Math.round(Math.sin(a) * R)}px)">` +
-      `<div class="s-badge" style="animation-delay:-${(i * 0.47).toFixed(2)}s">${l}</div></div>`;
+    const a = (i / LV.length) * Math.PI * 2 - Math.PI / 2; // A1 arriba
+    // f = fracción de radio, d = desfase angular respecto al destino
+    const P = (f, d) => `translate(${(Math.cos(a + d) * R * f).toFixed(1)}px, ${(Math.sin(a + d) * R * f).toFixed(1)}px)`;
+    genCss +=
+      `@keyframes bfly${i}{` +
+        `0%{transform:${P(0, -ARC)}}` +
+        `40%{transform:${P(1.17, -ARC * .3)}}` +   // se pasa de largo, aún girando
+        `63%{transform:${P(.91, ARC * .06)}}` +    // rebota hacia dentro
+        `80%{transform:${P(1.05, -ARC * .02)}}` +
+        `92%{transform:${P(.985, 0)}}` +
+        `100%{transform:${P(1, 0)}}}` +
+      // Salida: sigue la tangente hacia afuera, no retrocede por donde vino
+      `@keyframes bout${i}{` +
+        `0%{transform:${P(1, 0)}}` +
+        `28%{transform:${P(.88, ARC * .05)}}` +    // se encoge antes de salir
+        `100%{transform:${P(2.3, ARC * .55)}}}` +
+      `.sort .s-bpos.b${i}.here{animation:bfly${i} 1.5s cubic-bezier(.28,.72,.24,1) both}` +
+      `.sort .s-bpos.b${i}.gone{animation:bout${i} 1.15s cubic-bezier(.5,0,.75,1) both}`;
+    return `<div class="s-bpos b${i}" data-x="${Math.round(Math.cos(a) * R)}" data-y="${Math.round(Math.sin(a) * R)}">` +
+      `<div class="s-bin"><div class="s-badge">${l}</div></div></div>`;
   }).join('');
   const dust = reduce ? '' : Array.from({ length: 11 }, () => {
     const dur = (9 + Math.random() * 7).toFixed(1), del = (Math.random() * 9).toFixed(1);
     const sz = (3 + Math.random() * 4).toFixed(1);
     return `<span class="s-dust" style="left:${Math.round(Math.random() * 96)}%;width:${sz}px;height:${sz}px;animation-duration:${dur}s;animation-delay:-${del}s"></span>`;
   }).join('');
-  // La mascota, en el centro de la órbita, mientras decide. Es quien está
-  // deliberando —lo dice el texto de abajo—, así que tiene que verse: sin ella
-  // el nivel salía de una rueda de fichas girando sola. El icono de cabeza es el
-  // del demo, el mismo de la barra superior y los globos.
+  const nAns = Math.max(0, (stats && stats.answers) | 0);
+  const nBands = Math.max(0, (stats && stats.bands) | 0);
+  // El demo ya no es solo de Boti: cada institución trae su mascota (gallito,
+  // ozito…). Nombre e icono salen de la config, nunca fijos en el texto.
+  // `cabeza` puede venir vacía: un pack sin icono de cabeza no debe dejar un
+  // <img> roto en mitad del escenario.
+  const mascota = (CFG.mascot && CFG.mascot.name) || 'Boti';
   const cabeza = mascotHeadIcon();
   el.innerHTML = `
-    <div class="s-aura"></div>${dust}
-    <div class="s-stage" id="s-stage">
-      <div class="s-orbit" id="s-orbit">${orbit}</div>
-      ${cabeza ? `<img class="s-boti" id="s-boti" src="${cabeza}" alt="" aria-hidden="true">` : ''}
-    </div>
-    <div class="s-t" id="s-t">${CFG.mascot.name || 'Boti'} está decidiendo…</div>
-    <div class="s-s" id="s-s">Leyendo tus respuestas del test</div>
-    <div class="s-credits" id="s-credits"></div>
-    <div class="s-total" id="s-total"></div>
-    <div id="s-cta"></div>
-    <button class="s-skip" id="s-skip">Saltar</button>`;
+    <style>${genCss}</style>
+    <div class="s-aura"></div><div class="s-aura b2"></div>${dust}
+    <div class="s-col" id="s-col">
+      ${brandSpotHTML(true)}
+      <div class="s-stage" id="s-stage">
+        <div class="s-orbit"><div class="s-orbin" id="s-orbin">${orbit}</div></div>
+        ${cabeza ? `<div class="s-botiw"><img class="s-boti" id="s-boti" src="${cabeza}" alt="" aria-hidden="true"></div>` : ''}
+      </div>
+      <div class="s-t" id="s-t">¡Test completado!</div>
+      <div class="s-s" id="s-s">${nAns
+        ? `<b class="n">0</b> respuestas${nBands ? ` · ${nBands} ${nBands === 1 ? 'nivel evaluado' : 'niveles evaluados'}` : ''}`
+        : `${mascota} ya tiene tus respuestas`}</div>
+      <div class="s-panel" id="s-panel">
+        <div class="s-ph" id="s-ph"></div>
+        <div class="s-credits" id="s-credits"></div>
+        <div class="s-total" id="s-total"></div>
+      </div>
+      <div id="s-cta"></div>
+      <button class="s-skip" id="s-skip">Saltar</button>
+    </div>`;
   document.body.appendChild(el);
+
+  // La columna se centra ella misma con transform. Cualquier cambio de altura
+  // (la tarjeta, el botón, un texto que pasa a dos líneas) se convierte en un
+  // deslizamiento de 1.15s en vez del salto de fotograma que da el reflow.
+  const col = el.querySelector('#s-col');
+  const recenter = () => {
+    col.style.transform = `translateY(${Math.round((el.clientHeight - col.offsetHeight) / 2)}px)`;
+  };
+  recenter();
+  let ro = null;
+  requestAnimationFrame(() => {
+    col.classList.add('glide');            // el primer centrado es instantáneo
+    el.querySelector('#s-s').classList.add('in');
+    if (window.ResizeObserver) { ro = new ResizeObserver(recenter); ro.observe(col); }
+  });
+  window.addEventListener('resize', recenter);
 
   let done = false;
   let verdictShown = false;
@@ -3721,141 +4276,319 @@ function placementReveal(lvl, onDone) {
   const finish = () => {
     if (done) return; done = true;
     timers.forEach(clearTimeout); suspense.forEach(clearTimeout);
-    el.classList.add('out');
-    setTimeout(() => { el.remove(); if (onDone) onDone(); }, 350);
+    if (ro) ro.disconnect();
+    window.removeEventListener('resize', recenter);
+    // Salida escalonada de abajo a arriba: se va primero lo último que llegó.
+    // Antes todo desaparecía junto en un fundido de 350ms — la escena se
+    // cerraba de golpe justo después de haberse construido con cuidado.
+    ['#s-skip', '#s-cta .btn', '#s-panel', '#s-s', '#s-t', '#s-stage'].forEach((sel, i) => {
+      const n = el.querySelector(sel);
+      if (n) setTimeout(() => n.classList.add('leave'), i * 85);
+    });
+    el.classList.add('out');   // el fondo se disuelve al final, ya vacío
+    setTimeout(() => { el.remove(); if (onDone) onDone(); }, 1150);
   };
   const buzz = ms => { try { if (!reduce && navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
-  // Cross-fade entre textos de suspenso: nunca se reemplazan en seco.
+  // RELEVO, no cross-fade. El texto saliente se eleva y se deshace en blur; el
+  // entrante emerge desde abajo saliendo de foco. Los dos tramos se solapan un
+  // poco (la salida dura 420ms y la entrada arranca a los 340) para que no haya
+  // ni un instante con la línea vacía — ese hueco es lo que se lee como corte.
   const tNode = el.querySelector('#s-t');
+  const sNode = el.querySelector('#s-s');
   const setTitle = (txt) => {
     if (verdictShown) return;
+    tNode.classList.remove('tin');   // quitar antes: su fill pisaría a `fade`
     tNode.classList.add('fade');
-    setTimeout(() => { if (!verdictShown) { tNode.textContent = txt; tNode.classList.remove('fade'); } }, Math.round(240 * F));
+    setTimeout(() => {
+      if (verdictShown) return;
+      tNode.textContent = txt;
+      tNode.classList.remove('fade');
+      void tNode.offsetWidth;        // reinicia la animación de entrada
+      tNode.classList.add('tin');
+    }, Math.round(430 * F));         // entra antes de que el saliente acabe (580ms)
+  };
+  const setSub = (txt, force) => {
+    if (verdictShown && !force) return;
+    sNode.classList.remove('in');
+    setTimeout(() => {
+      if (verdictShown && !force) return;
+      sNode.innerHTML = txt; sNode.classList.add('in');
+    }, Math.round(540 * F));
   };
 
-  // Falso frenazo: la mascota "duda" y nombra un nivel equivocado antes del
-  // veredicto. Cada frase necesita unos 2 s en pantalla para poder leerse: con
-  // menos, el suspense no se entiende y solo se ve un parpadeo de textos. El
-  // cambio entre frases se come 240 ms de fundido, asi que van contados aparte.
-  const wrong = LV.filter(l => l !== target)[0] || 'A1';
-  suspense.push(setTimeout(() => { if (!done) setTitle(`¿${wrong}…?`); }, Math.round(2400 * F)));
-  suspense.push(setTimeout(() => { if (!done) setTitle('No, esperen…'); }, Math.round(4600 * F)));
+  const beat = (fn, ms) => suspense.push(setTimeout(() => { if (!done) fn(); }, Math.round(ms * F)));
+
+  // GUION POR RESULTADO — antes la deliberación era idéntica para todos y el
+  // nivel equivocado salía siempre de `LV.filter(l => l !== target)[0]`, o sea
+  // A1 o A2: para un C1 aquello no daba ninguna tensión, era absurdo.
+  // Ahora Boti duda con el nivel ADYACENTE (el error creíble) y cada resultado
+  // tiene su propio tono: A1 arranca, C1 se sorprende.
+  const SCRIPT = [
+    { wrong: 'A2', t1: 'Mmm…',       t2: 'Mejor desde el principio',
+      s0: 'Leyendo tus respuestas del test', s1: 'Hay base, pero falta asentarla',
+      s2: 'No, todavía no',        v: 'Empiezas por los fundamentos.' },
+    { wrong: 'A1', t1: 'A ver…',     t2: 'No, un peldaño más',
+      s0: 'Leyendo tus respuestas del test', s1: 'Los básicos los llevas sueltos',
+      s2: 'No, eso ya lo dominas',  v: 'Los fundamentos ya los tienes.' },
+    { wrong: 'A2', t1: 'Mmm…',       t2: 'No, esto llega más lejos',
+      s0: 'Leyendo tus respuestas del test', s1: 'Aquí ya hay conversación',
+      s2: 'No, se queda corto',     v: 'Ya te defiendes solo.' },
+    { wrong: 'B1', t1: 'Vaya…',      t2: 'No, apunta más arriba',
+      s0: 'Leyendo tus respuestas del test', s1: 'Esto tiene bastante nivel',
+      s2: 'No, esto es otra liga',  v: 'Manejas los matices.' },
+    { wrong: 'B2', t1: 'Vaya, vaya…', t2: 'No, todavía más arriba',
+      s0: 'Leyendo tus respuestas del test', s1: 'Esto no es lo habitual',
+      s2: 'Casi nadie llega aquí',  v: 'Nivel de dominio.' }
+  ];
+  const SC = SCRIPT[Math.max(0, Math.min(SCRIPT.length - 1, lvl | 0))];
+  const wrong = SC.wrong;
+
+  // ACTO 1 (0–3.9s) — cierre del test. Boti llega, se cuenta lo hecho y las
+  // cinco insignias viajan a la órbita, una a una.
+  if (nAns) beat(() => tickUp(sNode.querySelector('.n'), nAns, Math.round(1400 * F)), 560);
+  beat(() => { setTitle('Ahora, tu nivel'); setSub(`${mascota} va a colocarte`); }, 2200);
+  const badges = [...el.querySelectorAll('.s-bpos')];
+  badges.forEach((b, i) => {
+    beat(() => {
+      // La curva y el rebote los lleva la animación generada (bfly{i}); con
+      // "menos movimiento" no hay animación, así que ahí sí hace falta colocarla.
+      if (reduce) b.style.transform = `translate(${b.dataset.x}px, ${b.dataset.y}px)`;
+      b.classList.add('here');
+      buzz(7);
+    }, 2750 + i * 210);
+  });
+  // ACTO 2 (3.9–12s) — la duda. Cada relevo de texto dura ~1.5s (0.58 de
+  // salida + 0.95 de entrada) y los beats van a ~1.5s: siempre hay una frase
+  // entrando mientras otra sale. Nunca queda la línea quieta esperando.
+  beat(() => {
+    const orb = el.querySelector('#s-orbin'); if (orb) orb.classList.add('spin');
+    setTitle(`${mascota} está decidiendo…`); setSub(SC.s0);
+  }, 3900);
+  beat(() => setSub(SC.s1), 6400);
+  beat(() => setTitle(SC.t1), 7700);
+  beat(() => setTitle(`¿${wrong}…?`), 9300);
+  beat(() => setSub(SC.s2), 10000);
+  beat(() => setTitle(SC.t2), 11200);
+  // Inhalación: la escena se recoge un segundo antes de estallar.
+  beat(() => { el.classList.add('hush'); const st = el.querySelector('#s-stage'); if (st) st.classList.add('hush'); }, 12000);
 
   const reveal = () => {
     if (done) return;
     suspense.forEach(clearTimeout);
     verdictShown = true;
     buzz(40);
-    const orb = el.querySelector('#s-orbit');
-    if (orb) orb.classList.add('fade');
+    const orbOuter = el.querySelector('.s-orbit');
+    const botiw = el.querySelector('.s-botiw');
     const stage = el.querySelector('#s-stage');
-    stage.innerHTML = `<div class="s-wave"></div><div class="s-wave w2"></div>` +
-      `<div class="s-final">${target}</div>`;
-    const f = document.createElement('div'); f.className = 's-flash'; el.appendChild(f); setTimeout(() => f.remove(), 760);
-    // El nivel se anuncia con ritmo de habla: pausas distintas y respiro antes del cierre.
-    const tEl = el.querySelector('#s-t'), txt = `¡${target}!`;
-    tEl.classList.remove('fade'); tEl.textContent = '';
-    let acc = 260;
+
+    // ——— CAMBIO DE ACTO, NO CORTE DE MONTAJE ———
+    // Antes esto era `stage.innerHTML = ...`: la órbita, las cinco insignias y
+    // Boti se borraban en un fotograma y aparecía el nivel. Era el momento más
+    // brusco de toda la secuencia. Ahora la escena vieja SALE — las insignias
+    // salen despedidas hacia afuera una a una, Boti se hunde y se desenfoca — y
+    // el veredicto entra encima mientras ellas todavía se están yendo.
+    badges.forEach((b, i) => {
+      setTimeout(() => b.classList.add('gone'), Math.round(i * 85 * F));
+    });
+    if (botiw) botiw.classList.add('out');
+
+    // La entrada arranca a mitad de la salida: se solapan, no se turnan.
+    const V = Math.round(560 * F);
+    setTimeout(() => {
+      if (done) return;
+      el.classList.remove('hush');
+      stage.classList.remove('hush'); stage.classList.add('boom');
+      stage.insertAdjacentHTML('beforeend',
+        `<div class="s-wave"></div><div class="s-wave w2"></div>` +
+        `<div class="s-final">${target}</div>` +
+        (cabeza ? `<img class="s-boti cheer" src="${cabeza}" alt="" aria-hidden="true" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">` : ''));
+      const f = document.createElement('div'); f.className = 's-flash';
+      el.appendChild(f); setTimeout(() => f.remove(), 1250);
+      confetti();
+    }, V);
+    // Los restos se retiran cuando ya han terminado de salir, no antes.
+    timers.push(setTimeout(() => {
+      if (orbOuter) orbOuter.remove();
+      if (botiw) botiw.remove();
+    }, Math.round(1700 * F)));
+
+    // ——— ÚNICO REFLOW DE TODA LA SECUENCIA ———
+    // Se construye AQUÍ todo lo que queda (cabecera, filas, ruta, total, botón),
+    // invisible pero ya ocupando su sitio. Antes cada pieza se insertaba en su
+    // turno y el layout se recolocaba de golpe cinco veces. A partir de esta
+    // línea nada cambia de tamaño: solo se animan opacidad y transform.
+    const host = el.querySelector('#s-credits');
+    const panel = el.querySelector('#s-panel');
+    const ph = el.querySelector('#s-ph');
+    const tot = el.querySelector('#s-total');
+    const cta = el.querySelector('#s-cta');
+    const totalXpCredited = credits.reduce((a, c) => a + c.xp, 0);
+    const checkSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    ph.textContent = credits.length ? 'Ya lo tienes aprobado' : 'Tu ruta completa';
+    const rows = credits.map(c => {
+      const row = document.createElement('div');
+      row.className = 's-credit';
+      row.innerHTML = `<span class="cl">${c.lvl}</span>` +
+        `<span class="cm"><b>${escapeHtml(c.name)}</b><small>${c.lessons} lecciones convalidadas</small></span>` +
+        `<span class="cx"><i class="ck">${checkSvg}</i>+<b class="n">0</b> XP</span>`;
+      host.appendChild(row);
+      return row;
+    });
+    let zeroRow = null, track = null, cap = null, labels = [];
+    if (!credits.length) {
+      zeroRow = document.createElement('div');
+      zeroRow.className = 's-credit zero';
+      zeroRow.innerHTML = `<span class="cl">A1</span>` +
+        `<span class="cm"><b>Empiezas desde cero</b><small>Todo el camino es tuyo</small></span>` +
+        `<span class="cx">${LV.length} niveles</span>`;
+      host.appendChild(zeroRow);
+      track = document.createElement('div');
+      track.className = 's-route';
+      track.innerHTML = `<i></i><u></u>` + LV.map(l => `<span><b></b><em>${l}</em></span>`).join('');
+      host.appendChild(track);
+      cap = document.createElement('div');
+      cap.className = 's-rcap';
+      cap.innerHTML = `<span>Estás aquí</span><span>Tu meta</span>`;
+      host.appendChild(cap);
+      labels = [...track.querySelectorAll('span')];
+    } else {
+      tot.innerHTML = `<span>Total convalidado</span><span class="tv"><b class="n">0</b> XP</span>`;
+      tot.classList.add('on');
+    }
+    cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
+    const goBtn = cta.querySelector('#s-go');
+    goBtn.onclick = finish;
+    panel.classList.add('on');   // aquí, y solo aquí, cambia la altura
+
+    // El título viejo se va con su propia salida mientras las insignias se
+    // dispersan; las letras del nivel empiezan a caer cuando esa salida termina.
+    const tEl = el.querySelector('#s-t');
+    tEl.classList.remove('tin');
+    tEl.classList.add('fade');
+    const txt = `¡${target}!`;
+    let acc = 700;
+    later(() => { tEl.classList.remove('fade'); tEl.textContent = ''; }, 560);
     txt.split('').forEach((ch, i) => {
       const last = i === txt.length - 1;
       later(() => { tEl.insertAdjacentHTML('beforeend', `<i>${ch}</i>`); if (i) buzz(10); }, acc);
-      acc += jitter(last ? 260 : 130, .28);
+      // Ritmo de habla: pausas distintas y respiro largo antes del cierre.
+      acc += jitter(last ? 460 : 240, .28);
     });
-    el.querySelector('#s-s').innerHTML = credits.length
-      ? `Ese es tu punto de partida. Damos por aprobado ${credits.map(c => c.lvl).join(' y ')}.`
-      : 'Empiezas desde los fundamentos, con todo por descubrir.';
-    if (!reduce) {
-      // Estallido desde el centro: cada pieza con su impulso, giro y ritmo.
+    // La frase llega después del nivel, no a la vez: primero se asimila el dato.
+    later(() => setSub(SC.v, true), acc + 340);
+    function confetti() {
+      if (reduce) return;
+      // Tres oleadas en vez de un solo estallido: 34 piezas saliendo en el mismo
+      // fotograma se leen como un golpe, no como algo que revienta y cae.
       const cols = ['#FFD86B', '#FFC53D', '#FFF3C4', '#1CB0F6', '#8BE08B'];
-      for (let i = 0; i < 34; i++) {
-        const a = (i / 34) * Math.PI * 2 + Math.random() * .5;
-        const r = 120 + Math.random() * 190;
-        const s = document.createElement('span');
-        s.className = 'cftb';
-        s.style.cssText = `--dx:${Math.round(Math.cos(a) * r)}px;--dy:${Math.round(Math.sin(a) * r * .8)}px;` +
-          `width:${(6 + Math.random() * 6).toFixed(1)}px;height:${(10 + Math.random() * 8).toFixed(1)}px;` +
-          `background:${cols[i % cols.length]};animation-duration:${(2.2 + Math.random() * 1.8).toFixed(2)}s;` +
-          `animation-delay:${(Math.random() * .35).toFixed(2)}s`;
-        el.appendChild(s);
-      }
-      setTimeout(() => el.querySelectorAll('.cftb').forEach(n => n.remove()), 4800);
+      const burst = (n, spread, delay) => {
+        for (let i = 0; i < n; i++) {
+          const a = (i / n) * Math.PI * 2 + Math.random() * .6;
+          const r = spread + Math.random() * 190;
+          const s = document.createElement('span');
+          s.className = 'cftb';
+          s.style.cssText = `--dx:${Math.round(Math.cos(a) * r)}px;--dy:${Math.round(Math.sin(a) * r * .8)}px;` +
+            `width:${(6 + Math.random() * 6).toFixed(1)}px;height:${(10 + Math.random() * 8).toFixed(1)}px;` +
+            `background:${cols[i % cols.length]};animation-duration:${(2.4 + Math.random() * 2).toFixed(2)}s;` +
+            `animation-delay:${(delay + Math.random() * .4).toFixed(2)}s`;
+          el.appendChild(s);
+        }
+      };
+      // El volumen sube con el nivel: un C1 merece más fiesta que un A1.
+      const k = 1 + lvl * .3;
+      burst(Math.round(22 * k), 120, 0);
+      burst(Math.round(9 * k), 90, .34);
+      burst(Math.round(6 * k), 150, .78);
+      setTimeout(() => el.querySelectorAll('.cftb').forEach(n => n.remove()), 5600);
     }
-    // El final entra escalonado: cada convalidación con su check y su XP subiendo,
-    // y luego la ruta encendiendose nivel a nivel. Lo que NO se hace es crear los
-    // elementos sobre la marcha —eso era lo que daba el tiron: cada pieza nueva
-    // empujaba a las de abajo—. Se maquetan todos de una y la cascada solo les
-    // enciende la opacidad, asi el alto del bloque no cambia en ningun momento.
-    const host = el.querySelector('#s-credits');
-    const base = 820;
-    let at = base;
-    const checkSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-    if (credits.length) {
-      // Todas las filas ya en su sitio, invisibles.
-      host.innerHTML = credits.map(c =>
-        `<div class="s-credit"><span>${c.lvl}</span><span>convalidado</span>` +
-        `<span class="cx"><i class="ck">${checkSvg}</i> +<b class="n">0</b> XP</span></div>`
-      ).join('');
-      const rows = [...host.querySelectorAll('.s-credit')];
-      rows.forEach((row, i) => {
+    // ——— A partir de aquí, solo clases: ni una inserción más en el layout ———
+    // La tarjeta empieza a subir mientras todavía caen las letras del nivel:
+    // los dos gestos se solapan en lugar de esperarse.
+    const base = 1900;
+    let at = base;
+    later(() => panel.classList.add('in'), base - 700);
+    later(() => ph.classList.add('in'), base - 300);
+    rows.forEach((row, i) => {
+      const c = credits[i];
+      later(() => {
+        row.classList.add('in', 'pulse');
+        row.style.opacity = '1';
+        buzz(18);
+        const ck = row.querySelector('.ck');
+        setTimeout(() => ck.classList.add('draw'), 460);
+        tickUp(row.querySelector('.n'), c.xp, Math.round(1300 * F));
+      }, at);
+      // Escalonado con leve solapamiento y variación: cascada, no lista.
+      at += jitter(850 - i * 28, .16);
+    });
+    if (!credits.length) {
+      later(() => {
+        zeroRow.classList.add('in');
+        zeroRow.style.opacity = '1';
+      }, base);
+      // El trazo arranca cuando la fila ya se ha asentado: dos gestos, no uno.
+      later(() => track.classList.add('go'), base + 620);
+      // El cometa solo reconoce el camino: cada nodo destella a su paso y vuelve
+      // a apagarse. A1 se queda encendido (estás aquí); C1 es la meta, hueca —
+      // nada de dejar la ruta pintada como si ya estuviera recorrida.
+      const lastI = labels.length - 1;
+      labels.forEach((sp, i) => {
         later(() => {
-          row.classList.add('in', 'pulse');
-          row.style.opacity = '1';
-          buzz(18);
-          const ck = row.querySelector('.ck');
-          setTimeout(() => ck.classList.add('draw'), 180);
-          tickUp(row.querySelector('.n'), credits[i].xp, Math.round(760 * F));
-        }, at);
-        // Escalonado con leve solapamiento y variación: cascada, no lista.
-        at += jitter(520 - i * 18, .16);
+          sp.classList.add('lit');
+          buzz(i ? 8 : 22);
+          if (i === 0) sp.classList.add('hold');
+          // Al pasar el cometa el nodo se apaga: el camino sigue por recorrer.
+          else later(() => sp.classList.remove('lit'), i === lastI ? 620 : 900);
+        }, base + 680 + i * 850);
       });
-      const tot = el.querySelector('#s-total');
-      tot.innerHTML = `Total convalidado: <b class="n">0</b> XP`;
-      at += 220;
+      // Llegada: se apaga el cometa, C1 pasa a ser meta (anillo hueco) y la
+      // ruta queda en reposo, latiendo. `goal` se pone aquí y no antes para
+      // que su animación no pise el destello del paso del cometa.
+      later(() => {
+        track.classList.add('done');
+        labels[lastI].classList.add('goal');
+        cap.classList.add('in');
+      }, base + 680 + lastI * 850 + 680);
+    }
+    at += credits.length ? 700 : 4100;
+    if (credits.length) {
       later(() => {
         tot.classList.add('in');
-        tickUp(tot.querySelector('.n'), credits.reduce((a, c) => a + c.xp, 0), Math.round(900 * F));
+        tickUp(tot.querySelector('.n'), totalXpCredited, Math.round(1450 * F));
         buzz(60);
       }, at);
-    } else {
-      // Sin convalidaciones: la linea propia y la ruta A1→C1 dibujandose.
-      host.innerHTML =
-        `<div class="s-credit zero"><span>Desde cero</span><span class="cx">A1 → C1</span></div>` +
-        `<div class="s-route"><i></i>` + LV.map(l => `<span>${l}</span>`).join('') + `</div>`;
-      const row = host.querySelector('.s-credit');
-      const track = host.querySelector('.s-route');
-      later(() => {
-        row.classList.add('in');
-        row.style.opacity = '1';
-        requestAnimationFrame(() => track.classList.add('go'));
-        // Cada etiqueta se enciende cuando el trazo la alcanza.
-        [...track.querySelectorAll('span')].forEach((sp, i) => {
-          later(() => {
-            sp.classList.add('lit');
-            if (i) later(() => sp.classList.remove('lit'), 620);
-            else sp.classList.add('hold');
-          }, 120 + i * 430);
-        });
-        buzz(30);
-      }, base);
-      at = base + 1900;
     }
-
-    // Los botones ya estan maquetados; aqui solo se encienden, al final de todo.
-    const cta = el.querySelector('#s-cta');
-    cta.innerHTML = `<button class="btn green" id="s-go">Empezar en ${target}</button>`;
-    cta.querySelector('#s-go').onclick = finish;
-    later(() => el.classList.add('revealed'), at + (credits.length ? 980 : 700));
+    // El CTA entra y, con él, "Saltar" se retira: ya no pinta nada al lado de
+    // "Empezar en X". Se apaga primero y solo después deja el hueco, para que el
+    // recentrado de la columna se lleve el cambio de altura deslizando.
+    // Sale aquí y no antes para no quitar la vía de escape mientras se construye
+    // la tarjeta, que son varios segundos.
+    later(() => {
+      goBtn.classList.add('in');
+      const skipBtn = el.querySelector('#s-skip');
+      if (skipBtn) {
+        skipBtn.classList.add('gone');
+        later(() => { skipBtn.style.display = 'none'; }, 640);
+      }
+    }, at + (credits.length ? 1450 : 950));
   };
 
   el.querySelector('#s-skip').onclick = finish;
-  timers.push(setTimeout(reveal, Math.round(6800 * F)));
+  // ACTO 3 — veredicto. ~12.8s desde que se cierra el test.
+  timers.push(setTimeout(reveal, Math.round(12800 * F)));
 }
 
 // Contador que sube de 0 a `to` en `ms`: acelera al inicio, frena al final y
 // da un último "tirón" (overshoot leve) antes de asentarse en el valor exacto.
 function tickUp(node, to, ms) {
   if (!node) return;
+  // Reserva el ancho del valor final: al pasar de "0" a "120" el elemento
+  // ensanchaba y la cifra (y lo que tuviera al lado) daba un tirón lateral en
+  // mitad del conteo. Con el hueco reservado, el número rueda en su sitio.
+  node.style.display = 'inline-block';
+  node.style.minWidth = String(to).length + 'ch';
+  node.style.textAlign = 'right';
   if (!ms) { node.textContent = String(to); return; }
   const t0 = performance.now();
   const step = now => {
@@ -3880,6 +4613,7 @@ function lessonCelebration(lesson, onDone) {
     cft += `<span class="cft" style="left:${Math.round(Math.random() * 96)}%;background:${cols[i % cols.length]};animation-delay:${(Math.random() * 2).toFixed(2)}s;animation-duration:${(2 + Math.random() * 1.6).toFixed(2)}s"></span>`;
   }
   el.innerHTML = `${cft}
+    ${brandSpotHTML(true)}
     <img class="w-boti" src="${mascotHeadIcon()}" alt="">
     <div class="w-t">¡Lección completada!</div>
     <div class="w-s">${escapeHtml(lessonName(lesson))}</div>
@@ -3982,6 +4716,7 @@ const OB_BUBBLES = [
 const PL_UMBRAL = 5;          // aciertos (de 8) para superar una banda
 const PL_CORTE = 2;           // <= esto en una banda ⇒ se detiene el test
 let PL = { state: 'intro', items: [], i: 0, sel: null, ok: {}, stopped: false };
+let _plShownQ = -1;   // última pregunta ya pintada: distingue cambio de ítem de re-render
 function plShuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -3994,6 +4729,7 @@ function plBuild() {
     plShuffle(bank.filter(it => it.band === band)).forEach(it => items.push(it));
   });
   PL = { state: items.length ? 'q' : 'result', items, i: 0, sel: null, ok: {}, stopped: false };
+  _plShownQ = -1;
   if (!items.length) OB.lvl = 0;
 }
 // aciertos por banda, solo sobre lo efectivamente respondido
@@ -4047,17 +4783,26 @@ function plRender() {
     return;
   }
   const it = PL.items[PL.i];
-  host.innerHTML = `<div class="pl-count">Pregunta ${PL.i + 1} de ${PL.items.length} · nivel ${escapeHtml(it.band)}</div>
-    <div class="pl-q">${escapeHtml(it.q)}</div>
+  // Solo se anima al cambiar de pregunta: seleccionar una opción re-renderiza
+  // el mismo ítem y ahí un re-entrada completa sería un parpadeo molesto.
+  const en = PL.i === _plShownQ ? '' : ' enter';
+  _plShownQ = PL.i;
+  host.innerHTML = `<div class="pl-count${en}">Pregunta ${PL.i + 1} de ${PL.items.length} · nivel ${escapeHtml(it.band)}</div>
+    <div class="pl-q${en}">${escapeHtml(it.q)}</div>
     <div class="ob-opts">${it.opts.map((o, i) =>
-      `<button class="ob-opt pl-opt${PL.sel === i ? ' sel' : ''}" data-pl="${i}"><span>${escapeHtml(o)}</span></button>`).join('')}</div>
-    <button class="pl-skip" id="pl-skip">No lo sé</button>`;
+      `<button class="ob-opt pl-opt${en}${PL.sel === i ? ' sel' : ''}" data-pl="${i}"><span>${escapeHtml(o)}</span></button>`).join('')}</div>
+    <button class="pl-skip${en}" id="pl-skip">No lo sé</button>`;
   host.querySelectorAll('[data-pl]').forEach(b => b.onclick = () => { PL.sel = +b.dataset.pl; plRender(); obSyncNext(); });
   host.querySelector('#pl-skip').onclick = () => { PL.sel = -1; plNext(); };
 }
 function plFinish() {
   OB.lvl = plLevel(); PL.state = 'result';
-  placementReveal(OB.lvl, () => { plRender(); obRender(); });
+  // Lo respondido alimenta el arranque de la revelación ("23 respuestas · 3
+  // niveles evaluados"): el cierre del test cuenta algo real, no un relleno.
+  placementReveal(OB.lvl, () => { plRender(); obRender(); }, {
+    answers: Object.keys(PL.ok).length,
+    bands: Object.keys(plTally()).length
+  });
   plRender(); obRender();
 }
 
@@ -4202,6 +4947,8 @@ function startOnboarding() { OB = { step: 0, name: '', mot: '', lvl: null, goal:
 if (/[?&]debug=1\b/.test(location.search)) document.body.classList.add('debug-fabs');
 applyIcons();
 applyOla();
+mountSplash();
+mountBrandLogos();
 mascotMountStatic();
 loadCourse().then(() => {
   if (loadProfile()) renderCourse(); else startOnboarding();

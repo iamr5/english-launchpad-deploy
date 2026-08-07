@@ -58,16 +58,19 @@
 
 /* Con "reducir movimiento" del sistema no se para todo: se ralentiza. Pararlo
    dejaba a la mascota como una calcomanía, y su vaivén es decorativo, no
-   informativo. */
+   informativo.
+   Encima, `<html data-motion="full">` desactiva incluso ese frenado: el demo se
+   enseña en equipos ajenos donde Windows suele traer los efectos de animación
+   apagados, y ahí queremos la velocidad real. */
 @media (prefers-reduced-motion: reduce) {
-  .tr-bear .torso,
-  .tr-bear .head,
-  .tr-bear .glassesfollow,
-  .tr-bear .bowtie,
-  .tr-bear .leftarm,
-  .tr-bear .rightarm,
-  .tr-bear .leftleg,
-  .tr-bear .rightleg,
-  .tr-bear .body,
-  .tr-bear .tummy { animation-duration: 9s; }
+  html:not([data-motion="full"]) .tr-bear .torso,
+  html:not([data-motion="full"]) .tr-bear .head,
+  html:not([data-motion="full"]) .tr-bear .glassesfollow,
+  html:not([data-motion="full"]) .tr-bear .bowtie,
+  html:not([data-motion="full"]) .tr-bear .leftarm,
+  html:not([data-motion="full"]) .tr-bear .rightarm,
+  html:not([data-motion="full"]) .tr-bear .leftleg,
+  html:not([data-motion="full"]) .tr-bear .rightleg,
+  html:not([data-motion="full"]) .tr-bear .body,
+  html:not([data-motion="full"]) .tr-bear .tummy { animation-duration: 9s; }
 }
