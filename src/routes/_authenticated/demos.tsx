@@ -43,10 +43,12 @@ import {
 
 import {
   arteAntiguo,
+  descargarArchivo,
   estadoDePack,
   loadPersonajes,
   logoDePack,
   medirPersonaje,
+  nombreArchivo,
   packDeMascota,
 } from "@/lib/escribimos";
 
@@ -2273,7 +2275,7 @@ function MisMascotas({
     const logo = await logoDePack(m.baseUrl);
     const S = { ...guardado, logoImg: logo ?? "" };
     const caja = medirPersonaje(data, S);
-    return packDeMascota(data, S, caja ? { ...ident(m) } : ident(m), caja);
+    return packDeMascota(data, S, ident(m), caja);
   }
 
   function ident(m: SavedMascot) {
