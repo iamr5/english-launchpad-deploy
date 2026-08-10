@@ -584,6 +584,13 @@ export function MascotConstructor({
           {subiendo ? "Guardando…" : "Usar sólo en este demo"}
         </Button>
         {enUso && <span className="text-xs text-muted-foreground">En uso en este demo.</span>}
+        <Button variant="outline" size="sm" onClick={descargar}>
+          Descargar pack (.zip)
+        </Button>
+        <Button variant="ghost" size="sm" onClick={descargarSVG}>
+          Descargar dibujo (.svg)
+        </Button>
+
 
         <a
           className="text-xs underline text-muted-foreground"
