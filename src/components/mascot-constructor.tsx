@@ -64,8 +64,9 @@ function CampoColor({
 
   return (
     <div className={`space-y-1.5 ${disabled ? "opacity-45 pointer-events-none" : ""}`}>
-      <div className="flex items-center gap-2">
-        <Label className="flex-1">{etiqueta}</Label>
+      <div className="flex flex-wrap items-center gap-2">
+        <Label className="min-w-0 flex-1 break-words leading-snug">{etiqueta}</Label>
+
         <Input
           value={texto}
           maxLength={7}
