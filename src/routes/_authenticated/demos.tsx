@@ -33,13 +33,23 @@ import {
 } from "@/lib/mascot-pack";
 import { MascotConstructor } from "@/components/mascot-constructor";
 import {
+  LIBRARY_FOLDER,
   deleteMascot,
   listSavedMascots,
   renameMascot,
+  saveMascot,
   type SavedMascot,
 } from "@/lib/mascot-library";
 
-import { estadoDePack } from "@/lib/escribimos";
+import {
+  arteAntiguo,
+  estadoDePack,
+  loadPersonajes,
+  logoDePack,
+  medirPersonaje,
+  packDeMascota,
+} from "@/lib/escribimos";
+
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/demos")({
