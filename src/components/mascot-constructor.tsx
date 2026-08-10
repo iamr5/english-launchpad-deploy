@@ -118,6 +118,7 @@ export function MascotConstructor({
   baseUrl,
   enUso,
   onUsar,
+  onGuardada,
 }: {
   slug: string;
   /** Logo de la institución, si lo hay: es lo que se ofrece para la ranura del polo. */
@@ -129,6 +130,8 @@ export function MascotConstructor({
   /** Si el demo está usando ahora mismo una mascota hecha aquí. */
   enUso: boolean;
   onUsar: (baseUrl: string, manifest: MascotManifest) => void;
+  /** Se acaba de guardar una mascota en la biblioteca: hay que refrescar la parrilla. */
+  onGuardada?: () => void;
 }) {
   const guardado = useMemo(() => estadoDePack(manifest), [manifest]);
   // Si el demo ya lleva una mascota de aquí, el constructor se abre solo. Si no,
@@ -138,6 +141,9 @@ export function MascotConstructor({
   const [error, setError] = useState<string | null>(null);
   const [S, setS] = useState<EstadoMascota | null>(null);
   const [subiendo, setSubiendo] = useState(false);
+  // Con qué nombre se guarda en la biblioteca. Vacío = el del personaje.
+  const [nombre, setNombre] = useState("");
+
 
   useEffect(() => {
     if (!abierto || data) return;
