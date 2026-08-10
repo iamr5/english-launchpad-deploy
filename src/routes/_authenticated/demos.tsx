@@ -1403,6 +1403,21 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   </a>
                 </p>
               </div>
+              <MisMascotas
+                key={libTick}
+                baseUrl={g2("mascot.baseUrl")}
+                pack={g2("mascot.pack", "ozito")}
+                onPick={(baseUrl, manifest) =>
+                  setCfg((c) =>
+                    set(
+                      set(set(c, "mascot.pack", "custom"), "mascot.baseUrl", baseUrl),
+                      "mascot.manifest",
+                      manifest,
+                    ),
+                  )
+                }
+                onChanged={() => setLibTick((n) => n + 1)}
+              />
               <MascotConstructor
                 slug={demo.slug}
                 brandLogo={g2("brand.logo")}
@@ -1421,7 +1436,9 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     ),
                   )
                 }
+                onGuardada={() => setLibTick((n) => n + 1)}
               />
+
               <MascotPackField
                 slug={demo.slug}
                 pack={g2("mascot.pack", "ozito")}
