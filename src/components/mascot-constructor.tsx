@@ -330,22 +330,34 @@ export function MascotConstructor({
               Colores de fábrica
             </Button>
           </div>
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-start gap-2 text-sm">
             <Switch
+              className="mt-0.5 shrink-0"
               checked={S.cola && tieneCola}
               disabled={!tieneCola}
               onCheckedChange={(v) => setS({ ...S, cola: v })}
             />
-            {tieneCola ? "Con cola" : "Esta especie no tiene cola"}
+            <span className="min-w-0 break-words leading-snug">
+              {tieneCola ? "Con cola" : "Esta especie no tiene cola"}
+            </span>
           </label>
-          <label className="flex items-center gap-2 text-sm">
-            <Switch checked={S.lentes} onCheckedChange={(v) => setS({ ...S, lentes: v })} />
-            Con lentes
+          <label className="flex items-start gap-2 text-sm">
+            <Switch
+              className="mt-0.5 shrink-0"
+              checked={S.lentes}
+              onCheckedChange={(v) => setS({ ...S, lentes: v })}
+            />
+            <span className="min-w-0 leading-snug">Con lentes</span>
           </label>
-          <label className="flex items-center gap-2 text-sm">
-            <Switch checked={S.anim} onCheckedChange={(v) => setS({ ...S, anim: v })} />
-            Con animación
+          <label className="flex items-start gap-2 text-sm">
+            <Switch
+              className="mt-0.5 shrink-0"
+              checked={S.anim}
+              onCheckedChange={(v) => setS({ ...S, anim: v })}
+            />
+            <span className="min-w-0 leading-snug">Con animación</span>
           </label>
+
         </div>
       </div>
 
