@@ -406,12 +406,12 @@ export function MascotConstructor({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
           <CampoColor etiqueta="Pelaje" valor={S.fur} paleta={PELAJE} onChange={color("fur")} />
           {/* Los demás tonos de la especie salen del base guardando su relación
               original con él; cada uno se puede fijar a mano si hace falta. */}
           {derivados("--f").length > 0 && (
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               <span className="text-xs text-muted-foreground">Tonos derivados</span>
               {derivados("--f").map((v) => (
                 <input
@@ -420,11 +420,12 @@ export function MascotConstructor({
                   value={vars[v]}
                   title={`${vars[v]}${S.fijos[v] ? " · fijado a mano" : ""}`}
                   onChange={(e) => setS({ ...S, fijos: { ...S.fijos, [v]: e.target.value } })}
-                  className={`h-6 w-6 cursor-pointer rounded-md border bg-transparent ${
+                  className={`h-6 w-6 shrink-0 cursor-pointer rounded-md border bg-transparent ${
                     S.fijos[v] ? "ring-2 ring-primary ring-offset-1" : ""
                   }`}
                 />
               ))}
+
               {Object.keys(S.fijos).length > 0 && (
                 <button
                   type="button"
