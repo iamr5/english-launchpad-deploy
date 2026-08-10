@@ -363,13 +363,13 @@ export function MascotConstructor({
                   type="button"
                   aria-pressed={on}
                   onClick={() => setS({ ...S, cuerpo: id })}
-                  className={`rounded-lg border p-2.5 text-left transition hover:bg-accent/50 ${
+                  className={`min-w-0 rounded-lg border p-2.5 text-left transition hover:bg-accent/50 ${
                     on ? "border-primary bg-accent" : ""
                   }`}
                 >
-                  <span className="text-sm font-medium">{v.nombre}</span>
+                  <span className="block text-sm font-medium break-words">{v.nombre}</span>
                   {v.detalle && (
-                    <span className="block text-xs text-muted-foreground leading-snug mt-0.5">
+                    <span className="block text-xs text-muted-foreground leading-snug mt-0.5 break-words">
                       {v.detalle}
                     </span>
                   )}
@@ -382,22 +382,26 @@ export function MascotConstructor({
 
       <div className="space-y-1.5">
         <Label>Personaje</Label>
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+        <div className="grid grid-cols-3 gap-2 min-[420px]:grid-cols-4 sm:grid-cols-6 lg:grid-cols-8">
           {minis.map((m) => (
             <button
               key={m.id}
               type="button"
               aria-pressed={m.id === S.char}
               onClick={() => setS(cambiarEspecie(data, S, m.id))}
-              className={`rounded-lg border p-1 text-center transition hover:bg-accent/50 ${
+              className={`min-w-0 rounded-lg border p-1 text-center transition hover:bg-accent/50 ${
                 m.id === S.char ? "border-primary bg-accent" : ""
               }`}
             >
-              <span className="block" dangerouslySetInnerHTML={{ __html: m.svg }} />
-              <b className="block text-[11px] font-medium leading-tight">{m.nombre}</b>
-              <i className="block text-[10px] not-italic text-muted-foreground">{m.en}</i>
+              <span
+                className="block [&>svg]:h-auto [&>svg]:w-full"
+                dangerouslySetInnerHTML={{ __html: m.svg }}
+              />
+              <b className="block truncate text-[11px] font-medium leading-tight">{m.nombre}</b>
+              <i className="block truncate text-[10px] not-italic text-muted-foreground">{m.en}</i>
             </button>
           ))}
+
         </div>
       </div>
 
