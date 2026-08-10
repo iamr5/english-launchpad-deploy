@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { uploadPack, type MascotManifest } from "@/lib/mascot-pack";
+import { LIBRARY_FOLDER, saveMascot } from "@/lib/mascot-library";
+
 import {
   ESCRIBIMOS_DIR,
   PELAJE,
