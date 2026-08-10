@@ -2200,6 +2200,115 @@ function IconField({
 }
 
 /**
+ * Las mascotas guardadas en la biblioteca: las que se hicieron en el
+ * constructor o se subieron y se quisieron conservar. Se ofrecen igual que las
+ * incorporadas, y desde aquí se renombran o se quitan.
+ */
+function MisMascotas({
+  baseUrl,
+  pack,
+  onPick,
+  onChanged,
+}: {
+  baseUrl: string;
+  pack: string;
+  onPick: (baseUrl: string, manifest: MascotManifest) => void;
+  onChanged: () => void;
+}) {
+  const [items, setItems] = useState<SavedMascot[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    listSavedMascots()
+      .then((l) => vivo && setItems(l))
+      .catch((e) => vivo && setError((e as Error).message));
+    return () => {
+      vivo = false;
+    };
+  }, []);
+
+  if (error) return <p className="text-xs text-destructive">Mis mascotas: {error}</p>;
+  if (!items) return <p className="text-xs text-muted-foreground">Cargando tus mascotas…</p>;
+  if (!items.length) return null;
+
+  return (
+    <div className="space-y-1.5">
+      <Label>Mis mascotas</Label>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {items.map((m) => {
+          const active = pack === "custom" && baseUrl === m.baseUrl;
+          return (
+            <div
+              key={m.id}
+              className={`flex min-w-0 items-center gap-2 rounded-lg border p-2 transition ${
+                active ? "border-primary bg-accent" : "hover:bg-accent/50"
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => onPick(m.baseUrl, m.manifest)}
+                className="flex min-w-0 flex-1 items-center gap-2 text-left"
+              >
+                {m.thumb ? (
+                  <img src={m.thumb} alt="" className="h-10 w-10 shrink-0 object-contain" />
+                ) : (
+                  <span className="text-xl">{m.emoji ?? "✨"}</span>
+                )}
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-medium">
+                    {m.name} {m.emoji}
+                  </span>
+                  <span className="block truncate text-xs text-muted-foreground">
+                    {m.kind ?? "mascota guía"}
+                  </span>
+                </span>
+              </button>
+              <button
+                type="button"
+                className="shrink-0 text-xs underline text-muted-foreground"
+                onClick={async () => {
+                  const nuevo = window.prompt("Nuevo nombre", m.name);
+                  if (!nuevo?.trim()) return;
+                  try {
+                    await renameMascot(m.id, nuevo.trim());
+                    onChanged();
+                  } catch (e) {
+                    toast.error((e as Error).message);
+                  }
+                }}
+              >
+                Renombrar
+              </button>
+              <button
+                type="button"
+                className="shrink-0 text-xs underline text-muted-foreground"
+                onClick={async () => {
+                  if (!window.confirm(`¿Quitar «${m.name}» de tus mascotas?`)) return;
+                  try {
+                    await deleteMascot(m.id);
+                    toast.success("Quitada de tus mascotas. Los demos que la usan siguen igual.");
+                    onChanged();
+                  } catch (e) {
+                    toast.error((e as Error).message);
+                  }
+                }}
+              >
+                Quitar
+              </button>
+            </div>
+          );
+        })}
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Quitar una de aquí no cambia los demos que ya la usan.
+      </p>
+    </div>
+  );
+}
+
+
+/**
  * Descargar la plantilla y subir un pack propio. Es lo que permite tener una
  * mascota que no sea ninguna de las dos incorporadas.
  */
