@@ -65,11 +65,13 @@ export type Personajes = {
       subeCabeza: number;
       logoRect: { x: number; y: number; width: number; height: number };
       /**
-       * Polo propio de la variante. Si falta se usa el de `body.shirt`. El del
-       * estampado es de cuello redondo y viene tal cual del SVG original, en
-       * una sola pieza plana; el clásico son 132 con sombreado y contorno.
+       * Polo propio de la variante. Si falta se usa el de `body.shirt`. El de
+       * cuello redondo son tres piezas sacadas del SVG original —contorno,
+       * el pelaje que asoma por el cuello (va con `--f0`, así vale para las
+       * ocho especies) y el polo— frente a las 129 del clásico.
        */
       shirt?: Figura[];
+
     }
   >;
   chars: Record<string, Personaje>;

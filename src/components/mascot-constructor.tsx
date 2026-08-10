@@ -64,8 +64,9 @@ function CampoColor({
 
   return (
     <div className={`space-y-1.5 ${disabled ? "opacity-45 pointer-events-none" : ""}`}>
-      <div className="flex items-center gap-2">
-        <Label className="flex-1">{etiqueta}</Label>
+      <div className="flex flex-wrap items-center gap-2">
+        <Label className="min-w-0 flex-1 break-words leading-snug">{etiqueta}</Label>
+
         <Input
           value={texto}
           maxLength={7}
@@ -314,12 +315,13 @@ export function MascotConstructor({
 
       <div className="flex flex-wrap items-start gap-4">
         <div
-          className="w-[150px] shrink-0 rounded-lg border bg-muted/30 p-2"
+          className="w-[150px] max-w-full shrink-0 rounded-lg border bg-muted/30 p-2 [&>svg]:h-auto [&>svg]:w-full"
           // El SVG se pinta entero de una vez: es el mismo que acaba dentro del
           // pack, así lo que se ve aquí es exactamente lo que verá el alumno.
           dangerouslySetInnerHTML={{ __html: svg }}
         />
-        <div className="min-w-[220px] flex-1 space-y-2">
+        <div className="min-w-0 flex-1 space-y-2 sm:min-w-[220px]">
+
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" size="sm" onClick={() => setS(alAzar(data, S))}>
               Sorpréndeme
@@ -328,22 +330,34 @@ export function MascotConstructor({
               Colores de fábrica
             </Button>
           </div>
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-start gap-2 text-sm">
             <Switch
+              className="mt-0.5 shrink-0"
               checked={S.cola && tieneCola}
               disabled={!tieneCola}
               onCheckedChange={(v) => setS({ ...S, cola: v })}
             />
-            {tieneCola ? "Con cola" : "Esta especie no tiene cola"}
+            <span className="min-w-0 break-words leading-snug">
+              {tieneCola ? "Con cola" : "Esta especie no tiene cola"}
+            </span>
           </label>
-          <label className="flex items-center gap-2 text-sm">
-            <Switch checked={S.lentes} onCheckedChange={(v) => setS({ ...S, lentes: v })} />
-            Con lentes
+          <label className="flex items-start gap-2 text-sm">
+            <Switch
+              className="mt-0.5 shrink-0"
+              checked={S.lentes}
+              onCheckedChange={(v) => setS({ ...S, lentes: v })}
+            />
+            <span className="min-w-0 leading-snug">Con lentes</span>
           </label>
-          <label className="flex items-center gap-2 text-sm">
-            <Switch checked={S.anim} onCheckedChange={(v) => setS({ ...S, anim: v })} />
-            Con animación
+          <label className="flex items-start gap-2 text-sm">
+            <Switch
+              className="mt-0.5 shrink-0"
+              checked={S.anim}
+              onCheckedChange={(v) => setS({ ...S, anim: v })}
+            />
+            <span className="min-w-0 leading-snug">Con animación</span>
           </label>
+
         </div>
       </div>
 
@@ -361,13 +375,13 @@ export function MascotConstructor({
                   type="button"
                   aria-pressed={on}
                   onClick={() => setS({ ...S, cuerpo: id })}
-                  className={`rounded-lg border p-2.5 text-left transition hover:bg-accent/50 ${
+                  className={`min-w-0 rounded-lg border p-2.5 text-left transition hover:bg-accent/50 ${
                     on ? "border-primary bg-accent" : ""
                   }`}
                 >
-                  <span className="text-sm font-medium">{v.nombre}</span>
+                  <span className="block text-sm font-medium break-words">{v.nombre}</span>
                   {v.detalle && (
-                    <span className="block text-xs text-muted-foreground leading-snug mt-0.5">
+                    <span className="block text-xs text-muted-foreground leading-snug mt-0.5 break-words">
                       {v.detalle}
                     </span>
                   )}
@@ -380,32 +394,36 @@ export function MascotConstructor({
 
       <div className="space-y-1.5">
         <Label>Personaje</Label>
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+        <div className="grid grid-cols-3 gap-2 min-[420px]:grid-cols-4 sm:grid-cols-6 lg:grid-cols-8">
           {minis.map((m) => (
             <button
               key={m.id}
               type="button"
               aria-pressed={m.id === S.char}
               onClick={() => setS(cambiarEspecie(data, S, m.id))}
-              className={`rounded-lg border p-1 text-center transition hover:bg-accent/50 ${
+              className={`min-w-0 rounded-lg border p-1 text-center transition hover:bg-accent/50 ${
                 m.id === S.char ? "border-primary bg-accent" : ""
               }`}
             >
-              <span className="block" dangerouslySetInnerHTML={{ __html: m.svg }} />
-              <b className="block text-[11px] font-medium leading-tight">{m.nombre}</b>
-              <i className="block text-[10px] not-italic text-muted-foreground">{m.en}</i>
+              <span
+                className="block [&>svg]:h-auto [&>svg]:w-full"
+                dangerouslySetInnerHTML={{ __html: m.svg }}
+              />
+              <b className="block truncate text-[11px] font-medium leading-tight">{m.nombre}</b>
+              <i className="block truncate text-[10px] not-italic text-muted-foreground">{m.en}</i>
             </button>
           ))}
+
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
           <CampoColor etiqueta="Pelaje" valor={S.fur} paleta={PELAJE} onChange={color("fur")} />
           {/* Los demás tonos de la especie salen del base guardando su relación
               original con él; cada uno se puede fijar a mano si hace falta. */}
           {derivados("--f").length > 0 && (
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               <span className="text-xs text-muted-foreground">Tonos derivados</span>
               {derivados("--f").map((v) => (
                 <input
@@ -414,11 +432,12 @@ export function MascotConstructor({
                   value={vars[v]}
                   title={`${vars[v]}${S.fijos[v] ? " · fijado a mano" : ""}`}
                   onChange={(e) => setS({ ...S, fijos: { ...S.fijos, [v]: e.target.value } })}
-                  className={`h-6 w-6 cursor-pointer rounded-md border bg-transparent ${
+                  className={`h-6 w-6 shrink-0 cursor-pointer rounded-md border bg-transparent ${
                     S.fijos[v] ? "ring-2 ring-primary ring-offset-1" : ""
                   }`}
                 />
               ))}
+
               {Object.keys(S.fijos).length > 0 && (
                 <button
                   type="button"
@@ -432,10 +451,17 @@ export function MascotConstructor({
           )}
           {S.pink && (
             <>
-              <label className="flex items-center gap-2 text-sm">
-                <Switch checked={S.linkPink} onCheckedChange={(v) => setS({ ...S, linkPink: v })} />
-                Mejillas y orejas siguen al pelaje
+              <label className="flex items-start gap-2 text-sm">
+                <Switch
+                  className="mt-0.5 shrink-0"
+                  checked={S.linkPink}
+                  onCheckedChange={(v) => setS({ ...S, linkPink: v })}
+                />
+                <span className="min-w-0 break-words leading-snug">
+                  Mejillas y orejas siguen al pelaje
+                </span>
               </label>
+
               <CampoColor
                 etiqueta="Rosados"
                 valor={vars["--p0"] ?? "#FDA5AC"}
@@ -447,7 +473,8 @@ export function MascotConstructor({
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
+
           {UNIFORME.map(([clave, etiqueta, paleta]) => (
             <CampoColor
               key={clave}
