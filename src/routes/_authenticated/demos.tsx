@@ -2339,6 +2339,18 @@ function MisMascotas({
                   </span>
                 </span>
               </button>
+              {arteAntiguo(m.manifest) && (
+                <button
+                  type="button"
+                  disabled={rehaciendo === m.id}
+                  className="shrink-0 text-xs underline text-amber-600 disabled:opacity-50"
+                  title="Se dibujó con una versión anterior del arte (polo y altura del rostro)."
+                  onClick={() => regenerar(m)}
+                >
+                  {rehaciendo === m.id ? "Redibujando…" : "Actualizar arte"}
+                </button>
+              )}
+
               <button
                 type="button"
                 className="shrink-0 text-xs underline text-muted-foreground"
