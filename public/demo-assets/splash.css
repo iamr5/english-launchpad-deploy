@@ -178,4 +178,8 @@ body.in-quiz .brand-wm { opacity: calc(var(--wm-op) * .43); }
 .sp.sp-preview .sp-logo { max-height: 74px; max-width: 58%; }
 .sp.sp-preview .sp-word { font-size: 26px; }
 .sp.sp-preview .sp-phrase { font-size: 13px; }
+/* La caja del previo es mucho menor que una pantalla: las órbitas se encogen
+   para que sigan rodeando el logo y no se pierdan fuera del recuadro. */
+.sp.sp-preview .sp-stars { --star-r0: 240px; --star-r1: 78px; }
+.sp.sp-preview .sp-stars i { width: 4px; height: 4px; margin: -2px 0 0 -2px; }
 .sp.sp-preview .sp-mark { gap: 12px; padding: 16px; }
