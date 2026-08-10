@@ -285,18 +285,22 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
               } as React.CSSProperties
             }
           >
-            <div className="sp-deco">
-              {style === "constelacion" &&
-                Array.from({ length: 14 }, (_, i) => (
-                  <i key={i} style={{ "--i": i } as React.CSSProperties} />
-                ))}
-            </div>
+            <div className="sp-deco" />
             <div className="sp-mark">
-              {spLogo ? (
-                <img className="sp-logo" src={spLogo} alt={rotulo} />
-              ) : (
-                <div className="sp-word">{rotulo || "Tu institución"}</div>
-              )}
+              <span className="sp-halo">
+                {spLogo ? (
+                  <img className="sp-logo" src={spLogo} alt={rotulo} />
+                ) : (
+                  <div className="sp-word">{rotulo || "Tu institución"}</div>
+                )}
+                {style === "constelacion" && (
+                  <span className="sp-stars">
+                    {Array.from({ length: 14 }, (_, i) => (
+                      <i key={i} style={{ "--i": i } as React.CSSProperties} />
+                    ))}
+                  </span>
+                )}
+              </span>
               {!!g("splash.phrase") && <p className="sp-phrase">{g("splash.phrase")}</p>}
             </div>
           </div>

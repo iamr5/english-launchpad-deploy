@@ -87,22 +87,23 @@ function splashHTML(cfg: DemoConfig) {
   // pedir otra versión del logotipo.
   const logo = s.logo || cfg.brand.logo;
   const rotulo = cfg.brand.headerText || cfg.institution || "";
-  const marca = logo
+
+  // Las partículas de "constelación" son el único caso que necesita nodos de
+  // verdad, y viven pegadas al logo: giran y convergen tomándolo como centro.
+  const estrellas =
+    style === "constelacion"
+      ? `<span class="sp-stars">${Array.from({ length: 14 }, (_, i) => `<i style="--i:${i}"></i>`).join("")}</span>`
+      : "";
+  const nucleo = logo
     ? `<img class="sp-logo" src="${esc(logo)}" alt="${esc(rotulo)}">`
     : `<div class="sp-word">${esc(rotulo)}</div>`;
+  const marca = `<span class="sp-halo">${nucleo}${estrellas}</span>`;
 
   const frase = s.phrase ? `<p class="sp-phrase">${esc(s.phrase)}</p>` : "";
 
-  // `sp-deco` lo rellena cada estilo desde el CSS; las partículas de
-  // "constelación" son el único caso que necesita nodos de verdad.
-  const deco =
-    style === "constelacion"
-      ? Array.from({ length: 14 }, (_, i) => `<i style="--i:${i}"></i>`).join("")
-      : "";
-
   return `<div id="demo-splash" class="sp sp-${esc(style)}" data-dur="${dur}"
   style="--sp-from:${esc(from)};--sp-to:${esc(to)};--sp-glow:${esc(glow)}">
-  <div class="sp-deco">${deco}</div>
+  <div class="sp-deco"></div>
   <div class="sp-mark">${marca}${frase}</div>
 </div>`;
 }
