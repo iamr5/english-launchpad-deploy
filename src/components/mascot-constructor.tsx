@@ -144,7 +144,7 @@ export function MascotConstructor({
   const [S, setS] = useState<EstadoMascota | null>(null);
   const [subiendo, setSubiendo] = useState(false);
   // Con qué nombre se guarda en la biblioteca. Vacío = el del personaje.
-  const [nombre, setNombre] = useState("");
+  const [nombre, setNombre] = useState(manifest?.name ?? "");
 
 
   useEffect(() => {
