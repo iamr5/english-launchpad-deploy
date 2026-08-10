@@ -778,6 +778,8 @@ export function packDeMascota(
     layers: { personaje: "layers/personaje.svg" },
     stack: [{ layer: "personaje" }],
     escribimos: guardado,
+    escribimosArte: ARTE_VERSION,
+
   };
 
   const files: Record<string, Uint8Array> = {
