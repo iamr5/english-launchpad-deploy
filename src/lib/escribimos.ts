@@ -686,13 +686,35 @@ export function alAzar(data: Personajes, prev: EstadoMascota): EstadoMascota {
  */
 export type EstadoGuardado = Omit<EstadoMascota, "logoImg">;
 
-export type ManifiestoEscribimos = MascotManifest & { escribimos: EstadoGuardado };
+/**
+ * La versión del arte con la que se generó un pack.
+ *
+ * El SVG del pack es un dibujo ya hecho: si se corrige el arte (por ejemplo el
+ * polo de cuello redondo y la altura del rostro que lo acompaña), las mascotas
+ * guardadas antes siguen mostrando el dibujo viejo hasta volver a generarlas.
+ * Este sello permite avisarlo en el panel y rehacerlas de un toque.
+ *
+ * Subir el número cuando cambie el arte o la geometría.
+ */
+export const ARTE_VERSION = 2;
+
+export type ManifiestoEscribimos = MascotManifest & {
+  escribimos: EstadoGuardado;
+  escribimosArte?: number;
+};
 
 /** Si un manifiesto lo hizo este constructor, devuelve el estado con el que se hizo. */
 export function estadoDePack(m: MascotManifest | null): EstadoGuardado | null {
   const e = (m as ManifiestoEscribimos | null)?.escribimos;
   return e && typeof e === "object" && e.char ? e : null;
 }
+
+/** ¿Este pack se dibujó con una versión anterior del arte? */
+export function arteAntiguo(m: MascotManifest | null): boolean {
+  if (!estadoDePack(m)) return false; // no lo hizo el constructor: no se toca
+  return ((m as ManifiestoEscribimos).escribimosArte ?? 1) < ARTE_VERSION;
+}
+
 
 export type Identidad = { name: string; shortName: string; kind: string; emoji: string };
 
@@ -756,6 +778,8 @@ export function packDeMascota(
     layers: { personaje: "layers/personaje.svg" },
     stack: [{ layer: "personaje" }],
     escribimos: guardado,
+    escribimosArte: ARTE_VERSION,
+
   };
 
   const files: Record<string, Uint8Array> = {

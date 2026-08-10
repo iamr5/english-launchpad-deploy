@@ -106,6 +106,19 @@ export type DemoConfig = {
     watermarkSource?: "logo" | "icon" | "custom";
     /** La imagen propia de la marca de agua, cuando `watermarkSource` es "custom". */
     watermarkImage?: string;
+    /**
+     * Dónde se planta la marca de agua. Por defecto abajo a la izquierda, que es
+     * donde estaba antes de poder moverla: los demos ya publicados no cambian.
+     */
+    watermarkPos?: "tl" | "tc" | "tr" | "cc" | "bl" | "bc" | "br";
+    /** Separación del borde, en píxeles (horizontal y vertical). Ignorada al centrar. */
+    watermarkX?: number;
+    watermarkY?: number;
+    /** Ancho máximo en píxeles. El alto sale de la proporción de la imagen. */
+    watermarkSize?: number;
+    /** Opacidad de 0 a 1. */
+    watermarkOpacity?: number;
+
   };
 
 

@@ -132,12 +132,24 @@
 /* Celebraciones: sobre fondo oscuro, así que se aclara y se separa del borde. */
 .brand-spot.on-dark { filter: brightness(0) invert(1); opacity: .8; max-height: 26px; margin-bottom: 6px; }
 .win .brand-spot { margin-bottom: 10px; }
-/* Marca de agua: presente pero fuera del camino. Se aparta de los botones
-   flotantes de debug y del CTA, que viven abajo a la derecha y en el centro. */
-.brand-wm { position: fixed; left: 12px; bottom: 10px; z-index: 45; pointer-events: none;
-  max-width: 84px; max-height: 24px; object-fit: contain; opacity: .28;
-  transition: opacity .4s ease; }
-body.in-quiz .brand-wm { opacity: .12; }
+/* Marca de agua: presente pero SIEMPRE por debajo de la interfaz. Va en la capa
+   0, así que cualquier botón, tarjeta u hoja (que viven de la 1 para arriba) le
+   pasa por encima en vez de quedar tapado. Sitio, separación, tamaño y
+   transparencia salen del panel a través de estas variables. */
+.brand-wm { position: fixed; z-index: 0; pointer-events: none;
+  --wm-x: 12px; --wm-y: 10px; --wm-size: 84px; --wm-op: .28;
+  width: var(--wm-size); max-width: 45vw; height: auto; object-fit: contain;
+  opacity: var(--wm-op); transition: opacity .4s ease; }
+/* Las nueve posiciones. El centro no usa separación: manda el centro exacto. */
+.brand-wm.wm-tl { top: var(--wm-y); left: var(--wm-x); }
+.brand-wm.wm-tc { top: var(--wm-y); left: 50%; transform: translateX(-50%); }
+.brand-wm.wm-tr { top: var(--wm-y); right: var(--wm-x); }
+.brand-wm.wm-cc { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.brand-wm.wm-bl { bottom: var(--wm-y); left: var(--wm-x); }
+.brand-wm.wm-bc { bottom: var(--wm-y); left: 50%; transform: translateX(-50%); }
+.brand-wm.wm-br { bottom: var(--wm-y); right: var(--wm-x); }
+body.in-quiz .brand-wm { opacity: calc(var(--wm-op) * .43); }
+
 
 /* El previo del panel (.sp-preview) queda fuera: ahí se está eligiendo el
    estilo, y sin movimiento no hay nada que elegir. */
