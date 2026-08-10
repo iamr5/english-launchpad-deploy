@@ -2240,6 +2240,7 @@ function MisMascotas({
 }) {
   const [items, setItems] = useState<SavedMascot[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [rehaciendo, setRehaciendo] = useState<string | null>(null);
 
   useEffect(() => {
     let vivo = true;
@@ -2251,9 +2252,50 @@ function MisMascotas({
     };
   }, []);
 
+  /**
+   * Vuelve a dibujar una mascota con el arte actual.
+   *
+   * El pack guardado es un SVG ya hecho: al corregir el arte (el polo de cuello
+   * redondo y la altura del rostro, por ejemplo) las mascotas guardadas antes
+   * seguirían mostrando el dibujo viejo. Con el estado que viaja dentro del
+   * manifiesto se rehace igual, sólo que con el arte de hoy.
+   */
+  async function regenerar(m: SavedMascot) {
+    const guardado = estadoDePack(m.manifest);
+    if (!guardado) return;
+    setRehaciendo(m.id);
+    try {
+      const data = await loadPersonajes();
+      const logo = await logoDePack(m.baseUrl);
+      const S = { ...guardado, logoImg: logo ?? "" };
+      const caja = medirPersonaje(data, S);
+      const ident = {
+        name: m.name,
+        shortName: m.shortName ?? m.name,
+        kind: m.kind ?? "mascota guía",
+        emoji: m.emoji ?? "✨",
+      };
+      const { manifest, zip } = packDeMascota(data, S, ident, caja);
+      const subido = await uploadPack(LIBRARY_FOLDER, zip);
+      await saveMascot({
+        name: m.name,
+        manifest: { ...subido.manifest, ...manifest },
+        baseUrl: subido.baseUrl,
+      });
+      toast.success(`«${m.name}» se volvió a dibujar con el arte actual.`);
+      onChanged();
+      setItems(await listSavedMascots());
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setRehaciendo(null);
+    }
+  }
+
   if (error) return <p className="text-xs text-destructive">Mis mascotas: {error}</p>;
   if (!items) return <p className="text-xs text-muted-foreground">Cargando tus mascotas…</p>;
   if (!items.length) return null;
+
 
   return (
     <div className="space-y-1.5">
