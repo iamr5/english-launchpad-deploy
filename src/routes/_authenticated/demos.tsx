@@ -1163,8 +1163,24 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                           : "El logo de la cabecera. Sin logo cargado no se pinta nada."}
                       </p>
                     )}
+                    <WatermarkPlacement
+                      src={
+                        (g2("brand.watermarkSource") === "custom"
+                          ? (get(cfg, "brand.watermarkImage") as string)
+                          : g2("brand.watermarkSource") === "icon"
+                            ? ((get(cfg, "brand.appbarIcon") as string) || mascotHead)
+                            : (get(cfg, "brand.logo") as string)) || ""
+                      }
+                      pos={(g2("brand.watermarkPos") || "bl") as WmPos}
+                      x={num(get(cfg, "brand.watermarkX"), 12)}
+                      y={num(get(cfg, "brand.watermarkY"), 10)}
+                      size={num(get(cfg, "brand.watermarkSize"), 84)}
+                      opacity={num(get(cfg, "brand.watermarkOpacity"), 0.28)}
+                      onChange={(k, v) => upd(`brand.watermark${k}`)(v)}
+                    />
                   </div>
                 )}
+
               </div>
 
               <FileField
