@@ -1889,12 +1889,20 @@ function mountBrandLogos() {
   if (spots.watermark) {
     const wmSrc = watermarkSrc();
     if (wmSrc) {
+      const b = CFG.brand || {};
+      const pos = ['tl','tc','tr','cc','bl','bc','br'].includes(b.watermarkPos) ? b.watermarkPos : 'bl';
+      const num = (v, d) => (typeof v === 'number' && isFinite(v) ? v : d);
       const wm = document.createElement('img');
-      wm.className = 'brand-wm';
+      wm.className = 'brand-wm wm-' + pos;
+      wm.style.setProperty('--wm-x', num(b.watermarkX, 12) + 'px');
+      wm.style.setProperty('--wm-y', num(b.watermarkY, 10) + 'px');
+      wm.style.setProperty('--wm-size', num(b.watermarkSize, 84) + 'px');
+      wm.style.setProperty('--wm-op', String(num(b.watermarkOpacity, 0.28)));
       wm.src = wmSrc; wm.alt = ''; wm.setAttribute('aria-hidden', 'true');
       document.body.appendChild(wm);
     }
   }
+
   if (!logo) return;
   if (spots.onboarding) {
 
