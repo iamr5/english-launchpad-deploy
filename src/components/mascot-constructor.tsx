@@ -281,29 +281,65 @@ export function MascotConstructor({
     if (next) setS(next);
   };
 
-  async function usar() {
-    if (!data || !S) return;
+  /** El pack listo para subir, o null si falta algo (se avisa por qué). */
+  function armar() {
+    if (!data || !S) return null;
     // Si el logo aún no está —se está reponiendo, o falló— más vale parar que
     // generar la mascota sin él y que nadie lo note hasta verla publicada.
     if (S.logo === "img" && !S.logoImg) {
       toast.error("Falta la imagen del logo. Súbela, o elige «sin logo», antes de guardar.");
-      return;
+      return null;
     }
+    const ident = identidad(data, S.char);
+    const nombreFinal = nombre.trim() || ident.name;
+    const { zip } = packDeMascota(
+      data,
+      S,
+      { ...ident, name: nombreFinal, shortName: nombre.trim() || ident.shortName },
+      marco?.caja,
+    );
+    return { ident, nombre: nombreFinal, zip };
+  }
+
+  async function usar() {
+    const listo = armar();
+    if (!listo) return;
     setSubiendo(true);
     try {
-      const ident = identidad(data, S.char);
-      const { manifest: m, zip } = packDeMascota(data, S, ident, marco?.caja);
-      const { baseUrl, manifest: subido } = await uploadPack(slug, zip);
+      const { baseUrl, manifest: subido } = await uploadPack(slug, listo.zip);
       // uploadPack devuelve el manifiesto que salió del zip; el estado del
       // constructor viaja dentro, así que se conserva tal cual.
       onUsar(baseUrl, subido);
-      toast.success(`${ident.name} ${ident.emoji} lista. Guarda para aplicarla.`);
+      toast.success(`${listo.nombre} ${listo.ident.emoji} lista. Guarda para aplicarla.`);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
       setSubiendo(false);
     }
   }
+
+  /**
+   * Guardarla en la biblioteca: sus archivos van a una carpeta común, no a la
+   * del demo, para que cualquier otro demo pueda apuntar a ellos. De paso se
+   * aplica aquí, que es lo que se espera al acabar de diseñarla.
+   */
+  async function guardarEnBiblioteca() {
+    const listo = armar();
+    if (!listo) return;
+    setSubiendo(true);
+    try {
+      const { baseUrl, manifest: subido } = await uploadPack(LIBRARY_FOLDER, listo.zip);
+      await saveMascot({ name: listo.nombre, manifest: subido, baseUrl });
+      onUsar(baseUrl, subido);
+      onGuardada?.();
+      toast.success(`${listo.nombre} ${listo.ident.emoji} guardada en tus mascotas.`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setSubiendo(false);
+    }
+  }
+
 
   return (
     <div className="rounded-lg border p-3 space-y-4">
