@@ -64,11 +64,15 @@
   45% { transform: translate(-8vmax,-6vmax) scale(.88) }
   72% { transform: translate(4vmax,-2vmax) scale(1) } }
 
-/* — 2 · CONSTELACIÓN — las partículas caen hacia la marca y se quedan
-     orbitando. El campo entero gira muy lento. */
-.sp-constelacion .sp-deco { animation: spField 30s linear infinite; }
+/* — 2 · CONSTELACIÓN — las partículas caen hacia el logo de la bienvenida y se
+     quedan orbitándolo. El campo entero gira muy lento alrededor de ese mismo
+     centro: por eso vive dentro de `.sp-halo` (que envuelve al logo) y no en la
+     capa a pantalla completa. */
+.sp-halo { position: relative; display: inline-block; line-height: 0; }
+.sp-stars { position: absolute; left: 50%; top: 50%; width: 0; height: 0;
+  z-index: -1; pointer-events: none; animation: spField 30s linear infinite; }
 @keyframes spField { to { transform: rotate(360deg) } }
-.sp-constelacion .sp-deco i { position: absolute; left: 50%; top: 50%; width: 5px; height: 5px;
+.sp-stars i { position: absolute; left: 0; top: 0; width: 5px; height: 5px;
   margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: var(--sp-glow);
   box-shadow: 0 0 14px var(--sp-glow), 0 0 4px #fff;
   animation: spStar 2.4s cubic-bezier(.18,.75,.28,1) calc(var(--i) * .07s) both,
@@ -76,10 +80,11 @@
 /* El rotate se repite en cada fotograma: es lo que reparte las partículas en
    círculo, así que no puede perderse al animar la distancia. */
 @keyframes spStar {
-  0% { transform: rotate(calc(var(--i) * 25.7deg)) translateX(78vmin) scale(.2); opacity: 0 }
+  0% { transform: rotate(calc(var(--i) * 25.7deg)) translateX(var(--star-r0, 72vmin)) scale(.2); opacity: 0 }
   55% { opacity: 1 }
-  100% { transform: rotate(calc(var(--i) * 25.7deg)) translateX(26vmin) scale(1); opacity: .92 } }
+  100% { transform: rotate(calc(var(--i) * 25.7deg)) translateX(var(--star-r1, 17vmin)) scale(1); opacity: .92 } }
 @keyframes spTwinkle { 0%,100% { opacity: .92 } 50% { opacity: .3 } }
+
 
 /* — 3 · PRISMA — un haz barre la pantalla y se descompone al pasar. */
 .sp-prisma .sp-deco::before { content: ''; position: absolute; top: -40%; bottom: -40%; width: 34%;
