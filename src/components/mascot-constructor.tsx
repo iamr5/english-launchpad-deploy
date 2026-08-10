@@ -27,7 +27,10 @@ import {
   cambiarEspecie,
   colores,
   comoDataURI,
+  descargarArchivo,
   encuadrar,
+  nombreArchivo,
+
   estadoDePack,
   estadoInicial,
   identidad,
