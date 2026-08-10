@@ -461,7 +461,8 @@ export function MascotConstructor({
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
+
           {UNIFORME.map(([clave, etiqueta, paleta]) => (
             <CampoColor
               key={clave}
