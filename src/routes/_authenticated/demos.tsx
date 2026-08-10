@@ -2343,6 +2343,22 @@ function Field({
   );
 }
 
+/** Lee un hex escrito a mano: con o sin «#», de 3 o de 6 dígitos. '' si no lo es. */
+function normalizeHex(raw: string) {
+  const t = (raw ?? "").trim().replace(/^#/, "");
+  if (/^[0-9a-fA-F]{6}$/.test(t)) return "#" + t.toUpperCase();
+  if (/^[0-9a-fA-F]{3}$/.test(t))
+    return (
+      "#" +
+      t
+        .split("")
+        .map((c) => c + c)
+        .join("")
+        .toUpperCase()
+    );
+  return "";
+}
+
 function ColorField({
   label,
   hint,
@@ -2361,6 +2377,15 @@ function ColorField({
   onChange: (v: string) => void;
   fallback?: string;
 }) {
+  // El campo se escribe carácter a carácter: si se pintara desde el estado,
+  // «#1» se descartaría antes de acabar de teclear. Se guarda el texto en
+  // curso y sólo se emite cuando ya se puede leer como color.
+  const [texto, setTexto] = useState(value ?? "");
+  const tocando = useRef(false);
+  useEffect(() => {
+    if (!tocando.current) setTexto(value ?? "");
+  }, [value]);
+
   const valid = /^#[0-9a-fA-F]{6}$/.test(value ?? "");
   const shown = valid ? value : (fallback ?? "#7C1C56");
   return (
@@ -2370,19 +2395,36 @@ function ColorField({
         <input
           type="color"
           value={shown}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value.toUpperCase())}
           className="h-9 w-12 rounded-md border cursor-pointer bg-transparent"
           aria-label={label}
         />
         <Input
-          value={value ?? ""}
+          value={texto}
           placeholder={fallback ?? "#7C1C56"}
-          onChange={(e) => onChange(e.target.value)}
+          spellCheck={false}
+          onFocus={() => (tocando.current = true)}
+          onBlur={() => {
+            tocando.current = false;
+            // Al salir, lo escrito se deja en su forma canónica; si no era un
+            // color se recupera lo último válido para no dejar basura a la vista.
+            setTexto(normalizeHex(texto) || (texto.trim() === "" ? "" : (value ?? "")));
+          }}
+          onChange={(e) => {
+            const v = e.target.value;
+            setTexto(v);
+            if (v.trim() === "") return onChange("");
+            const hex = normalizeHex(v);
+            if (hex) onChange(hex);
+          }}
           className="font-mono"
         />
       </div>
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </div>
+  );
+}
+
   );
 }
 
