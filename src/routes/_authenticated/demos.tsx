@@ -1112,7 +1112,51 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     </span>
                   </label>
                 ))}
+                {(get(cfg, "brand.logoSpots.watermark", false) as boolean) && (
+                  <div className="rounded-md border bg-muted/30 p-3 space-y-2">
+                    <Label className="text-xs">Qué imagen usa la marca de agua</Label>
+                    <div className="flex flex-wrap gap-1">
+                      {[
+                        { id: "logo", label: "El logo de la cabecera" },
+                        { id: "icon", label: "El icono de la barra" },
+                        { id: "custom", label: "Otra imagen" },
+                      ].map((o) => {
+                        const on = (g2("brand.watermarkSource") || "logo") === o.id;
+                        return (
+                          <Button
+                            key={o.id}
+                            size="sm"
+                            variant={on ? "default" : "outline"}
+                            onClick={() =>
+                              upd("brand.watermarkSource")(o.id === "logo" ? "" : o.id)
+                            }
+                          >
+                            {o.label}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                    {g2("brand.watermarkSource") === "custom" ? (
+                      <FileField
+                        label="Imagen de la marca de agua"
+                        hint="Se pinta translúcida en la esquina inferior. Un PNG o SVG con fondo transparente queda mejor."
+                        slug={demo.slug}
+                        kind="marca-agua"
+                        fallbackLabel="sin imagen"
+                        value={get(cfg, "brand.watermarkImage")}
+                        onChange={upd("brand.watermarkImage")}
+                      />
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        {g2("brand.watermarkSource") === "icon"
+                          ? "El icono de la barra superior; si no has subido uno, la cabeza de la mascota."
+                          : "El logo de la cabecera. Sin logo cargado no se pinta nada."}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
+
               <FileField
                 label="Icono de la barra superior"
                 hint="Si lo dejas vacío se usa la cabeza de la mascota."
@@ -2299,6 +2343,22 @@ function Field({
   );
 }
 
+/** Lee un hex escrito a mano: con o sin «#», de 3 o de 6 dígitos. '' si no lo es. */
+function normalizeHex(raw: string) {
+  const t = (raw ?? "").trim().replace(/^#/, "");
+  if (/^[0-9a-fA-F]{6}$/.test(t)) return "#" + t.toUpperCase();
+  if (/^[0-9a-fA-F]{3}$/.test(t))
+    return (
+      "#" +
+      t
+        .split("")
+        .map((c) => c + c)
+        .join("")
+        .toUpperCase()
+    );
+  return "";
+}
+
 function ColorField({
   label,
   hint,
@@ -2317,6 +2377,15 @@ function ColorField({
   onChange: (v: string) => void;
   fallback?: string;
 }) {
+  // El campo se escribe carácter a carácter: si se pintara desde el estado,
+  // «#1» se descartaría antes de acabar de teclear. Se guarda el texto en
+  // curso y sólo se emite cuando ya se puede leer como color.
+  const [texto, setTexto] = useState(value ?? "");
+  const tocando = useRef(false);
+  useEffect(() => {
+    if (!tocando.current) setTexto(value ?? "");
+  }, [value]);
+
   const valid = /^#[0-9a-fA-F]{6}$/.test(value ?? "");
   const shown = valid ? value : (fallback ?? "#7C1C56");
   return (
@@ -2326,14 +2395,28 @@ function ColorField({
         <input
           type="color"
           value={shown}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value.toUpperCase())}
           className="h-9 w-12 rounded-md border cursor-pointer bg-transparent"
           aria-label={label}
         />
         <Input
-          value={value ?? ""}
+          value={texto}
           placeholder={fallback ?? "#7C1C56"}
-          onChange={(e) => onChange(e.target.value)}
+          spellCheck={false}
+          onFocus={() => (tocando.current = true)}
+          onBlur={() => {
+            tocando.current = false;
+            // Al salir, lo escrito se deja en su forma canónica; si no era un
+            // color se recupera lo último válido para no dejar basura a la vista.
+            setTexto(normalizeHex(texto) || (texto.trim() === "" ? "" : (value ?? "")));
+          }}
+          onChange={(e) => {
+            const v = e.target.value;
+            setTexto(v);
+            if (v.trim() === "") return onChange("");
+            const hex = normalizeHex(v);
+            if (hex) onChange(hex);
+          }}
           className="font-mono"
         />
       </div>
@@ -2341,6 +2424,8 @@ function ColorField({
     </div>
   );
 }
+
+
 
 function FileField({
   label,

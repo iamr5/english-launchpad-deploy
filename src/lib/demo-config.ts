@@ -98,7 +98,16 @@ export type DemoConfig = {
       /** Esquina inferior, translúcido, durante todo el demo. */
       watermark?: boolean;
     };
+    /**
+     * De dónde sale la imagen de la marca de agua: el logo de la cabecera (por
+     * defecto), el icono de la barra superior —o la cabeza de la mascota, si no
+     * hay icono propio— o una imagen distinta subida para esto.
+     */
+    watermarkSource?: "logo" | "icon" | "custom";
+    /** La imagen propia de la marca de agua, cuando `watermarkSource` es "custom". */
+    watermarkImage?: string;
   };
+
 
   /**
    * Pantalla de bienvenida. Sale en cada carga, antes del demo, y se puede
