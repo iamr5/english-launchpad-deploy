@@ -32,6 +32,13 @@ import {
   type PackCheck,
 } from "@/lib/mascot-pack";
 import { MascotConstructor } from "@/components/mascot-constructor";
+import {
+  deleteMascot,
+  listSavedMascots,
+  renameMascot,
+  type SavedMascot,
+} from "@/lib/mascot-library";
+
 import { estadoDePack } from "@/lib/escribimos";
 import { toast } from "sonner";
 
