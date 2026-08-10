@@ -2464,6 +2464,204 @@ function MascotPackField({
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Marca de agua: dónde va, cuánto ocupa y cuánto se nota
+// ─────────────────────────────────────────────────────────────────────────────
+
+type WmPos = "tl" | "tc" | "tr" | "cc" | "bl" | "bc" | "br";
+
+/** Un número de la configuración, o el de siempre si no hay nada guardado. */
+function num(v: unknown, d: number): number {
+  const n = typeof v === "string" ? Number(v) : v;
+  return typeof n === "number" && isFinite(n) ? n : d;
+}
+
+const WM_POS: { id: WmPos; label: string }[] = [
+  { id: "tl", label: "Arriba izq." },
+  { id: "tc", label: "Arriba centro" },
+  { id: "tr", label: "Arriba der." },
+  { id: "cc", label: "Centro" },
+  { id: "bl", label: "Abajo izq." },
+  { id: "bc", label: "Abajo centro" },
+  { id: "br", label: "Abajo der." },
+];
+
+/**
+ * Sitio, separación, tamaño y transparencia de la marca de agua, con un previo
+ * en vivo: se ve dónde cae sin tener que publicar el demo y abrirlo.
+ */
+function WatermarkPlacement({
+  src,
+  pos,
+  x,
+  y,
+  size,
+  opacity,
+  onChange,
+}: {
+  src: string;
+  pos: WmPos;
+  x: number;
+  y: number;
+  size: number;
+  opacity: number;
+  onChange: (campo: "Pos" | "X" | "Y" | "Size" | "Opacity", valor: string | number) => void;
+}) {
+  // El previo es un móvil de 360 de ancho encogido a la caja del panel.
+  const ANCHO = 360;
+  const [caja, setCaja] = useState(240);
+  const escala = caja / ANCHO;
+  const centrado = pos === "cc";
+  const estilo: React.CSSProperties = {
+    position: "absolute",
+    width: size * escala,
+    opacity,
+    pointerEvents: "none",
+    ...(pos.startsWith("t") ? { top: y * escala } : {}),
+    ...(pos.startsWith("b") ? { bottom: y * escala } : {}),
+    ...(pos.endsWith("l") ? { left: x * escala } : {}),
+    ...(pos.endsWith("r") ? { right: x * escala } : {}),
+    ...(pos.endsWith("c") && !centrado
+      ? { left: "50%", transform: "translateX(-50%)" }
+      : {}),
+    ...(centrado ? { top: "50%", left: "50%", transform: "translate(-50%,-50%)" } : {}),
+  };
+
+  return (
+    <div className="space-y-3 pt-1">
+      <div>
+        <Label className="text-xs">Dónde va</Label>
+        <div className="flex flex-wrap gap-1 mt-1">
+          {WM_POS.map((o) => (
+            <Button
+              key={o.id}
+              size="sm"
+              variant={pos === o.id ? "default" : "outline"}
+              onClick={() => onChange("Pos", o.id)}
+            >
+              {o.label}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Slider2
+          label="Separación horizontal"
+          value={x}
+          min={0}
+          max={120}
+          step={1}
+          suffix="px"
+          disabled={centrado || pos.endsWith("c")}
+          onChange={(v) => onChange("X", v)}
+        />
+        <Slider2
+          label="Separación vertical"
+          value={y}
+          min={0}
+          max={200}
+          step={1}
+          suffix="px"
+          disabled={centrado}
+          onChange={(v) => onChange("Y", v)}
+        />
+        <Slider2
+          label="Tamaño"
+          value={size}
+          min={32}
+          max={260}
+          step={2}
+          suffix="px"
+          onChange={(v) => onChange("Size", v)}
+        />
+        <Slider2
+          label="Transparencia"
+          value={Math.round(opacity * 100)}
+          min={4}
+          max={100}
+          step={1}
+          suffix="%"
+          onChange={(v) => onChange("Opacity", Math.round(v) / 100)}
+        />
+      </div>
+
+      <div>
+        <Label className="text-xs">Cómo queda</Label>
+        <div
+          ref={(el) => {
+            if (el && el.clientWidth && Math.abs(el.clientWidth - caja) > 2) setCaja(el.clientWidth);
+          }}
+          className="relative mt-1 w-full max-w-[260px] overflow-hidden rounded-lg border bg-background"
+          style={{ aspectRatio: "9 / 16" }}
+        >
+          {/* Un boceto de la pantalla: barra, tarjetas y el botón flotante, para
+              comprobar que la marca de agua pasa por debajo de todo. */}
+          <div className="absolute inset-x-0 top-0 h-6 bg-muted" />
+          <div className="absolute left-3 right-3 top-9 h-10 rounded-md bg-muted/70" />
+          <div className="absolute left-3 right-3 top-22 h-10 rounded-md bg-muted/70" />
+          <div className="absolute bottom-3 left-3 right-3 h-9 rounded-full bg-primary/80" />
+          {src ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={src} alt="" style={estilo} />
+          ) : (
+            <p className="absolute inset-x-2 bottom-16 text-center text-[10px] text-muted-foreground">
+              Sube la imagen para verla aquí
+            </p>
+          )}
+        </div>
+        <p className="mt-1 text-xs text-muted-foreground">
+          La marca de agua se pinta por debajo de botones y tarjetas: nunca los tapa.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** Un deslizador con su etiqueta y su número, sin depender de más componentes. */
+function Slider2({
+  label,
+  value,
+  min,
+  max,
+  step,
+  suffix,
+  disabled,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  suffix: string;
+  disabled?: boolean;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <label className={`block min-w-0 ${disabled ? "opacity-50" : ""}`}>
+      <span className="flex items-baseline justify-between gap-2 text-xs">
+        <span className="truncate">{label}</span>
+        <span className="text-muted-foreground shrink-0">
+          {value}
+          {suffix}
+        </span>
+      </span>
+      <input
+        type="range"
+        className="mt-1 w-full accent-primary"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        disabled={disabled}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
+    </label>
+  );
+}
+
+
 function Field({
   label,
   hint,
