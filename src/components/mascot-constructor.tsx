@@ -315,12 +315,13 @@ export function MascotConstructor({
 
       <div className="flex flex-wrap items-start gap-4">
         <div
-          className="w-[150px] shrink-0 rounded-lg border bg-muted/30 p-2"
+          className="w-[150px] max-w-full shrink-0 rounded-lg border bg-muted/30 p-2 [&>svg]:h-auto [&>svg]:w-full"
           // El SVG se pinta entero de una vez: es el mismo que acaba dentro del
           // pack, así lo que se ve aquí es exactamente lo que verá el alumno.
           dangerouslySetInnerHTML={{ __html: svg }}
         />
-        <div className="min-w-[220px] flex-1 space-y-2">
+        <div className="min-w-0 flex-1 space-y-2 sm:min-w-[220px]">
+
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" size="sm" onClick={() => setS(alAzar(data, S))}>
               Sorpréndeme
