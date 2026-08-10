@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { uploadPack, type MascotManifest } from "@/lib/mascot-pack";
+import { LIBRARY_FOLDER, saveMascot } from "@/lib/mascot-library";
+
 import {
   ESCRIBIMOS_DIR,
   PELAJE,
@@ -118,6 +120,7 @@ export function MascotConstructor({
   baseUrl,
   enUso,
   onUsar,
+  onGuardada,
 }: {
   slug: string;
   /** Logo de la institución, si lo hay: es lo que se ofrece para la ranura del polo. */
@@ -129,6 +132,8 @@ export function MascotConstructor({
   /** Si el demo está usando ahora mismo una mascota hecha aquí. */
   enUso: boolean;
   onUsar: (baseUrl: string, manifest: MascotManifest) => void;
+  /** Se acaba de guardar una mascota en la biblioteca: hay que refrescar la parrilla. */
+  onGuardada?: () => void;
 }) {
   const guardado = useMemo(() => estadoDePack(manifest), [manifest]);
   // Si el demo ya lleva una mascota de aquí, el constructor se abre solo. Si no,
@@ -138,6 +143,9 @@ export function MascotConstructor({
   const [error, setError] = useState<string | null>(null);
   const [S, setS] = useState<EstadoMascota | null>(null);
   const [subiendo, setSubiendo] = useState(false);
+  // Con qué nombre se guarda en la biblioteca. Vacío = el del personaje.
+  const [nombre, setNombre] = useState(manifest?.name ?? "");
+
 
   useEffect(() => {
     if (!abierto || data) return;
@@ -275,29 +283,65 @@ export function MascotConstructor({
     if (next) setS(next);
   };
 
-  async function usar() {
-    if (!data || !S) return;
+  /** El pack listo para subir, o null si falta algo (se avisa por qué). */
+  function armar() {
+    if (!data || !S) return null;
     // Si el logo aún no está —se está reponiendo, o falló— más vale parar que
     // generar la mascota sin él y que nadie lo note hasta verla publicada.
     if (S.logo === "img" && !S.logoImg) {
       toast.error("Falta la imagen del logo. Súbela, o elige «sin logo», antes de guardar.");
-      return;
+      return null;
     }
+    const ident = identidad(data, S.char);
+    const nombreFinal = nombre.trim() || ident.name;
+    const { zip } = packDeMascota(
+      data,
+      S,
+      { ...ident, name: nombreFinal, shortName: nombre.trim() || ident.shortName },
+      marco?.caja,
+    );
+    return { ident, nombre: nombreFinal, zip };
+  }
+
+  async function usar() {
+    const listo = armar();
+    if (!listo) return;
     setSubiendo(true);
     try {
-      const ident = identidad(data, S.char);
-      const { manifest: m, zip } = packDeMascota(data, S, ident, marco?.caja);
-      const { baseUrl, manifest: subido } = await uploadPack(slug, zip);
+      const { baseUrl, manifest: subido } = await uploadPack(slug, listo.zip);
       // uploadPack devuelve el manifiesto que salió del zip; el estado del
       // constructor viaja dentro, así que se conserva tal cual.
       onUsar(baseUrl, subido);
-      toast.success(`${ident.name} ${ident.emoji} lista. Guarda para aplicarla.`);
+      toast.success(`${listo.nombre} ${listo.ident.emoji} lista. Guarda para aplicarla.`);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
       setSubiendo(false);
     }
   }
+
+  /**
+   * Guardarla en la biblioteca: sus archivos van a una carpeta común, no a la
+   * del demo, para que cualquier otro demo pueda apuntar a ellos. De paso se
+   * aplica aquí, que es lo que se espera al acabar de diseñarla.
+   */
+  async function guardarEnBiblioteca() {
+    const listo = armar();
+    if (!listo) return;
+    setSubiendo(true);
+    try {
+      const { baseUrl, manifest: subido } = await uploadPack(LIBRARY_FOLDER, listo.zip);
+      await saveMascot({ name: listo.nombre, manifest: subido, baseUrl });
+      onUsar(baseUrl, subido);
+      onGuardada?.();
+      toast.success(`${listo.nombre} ${listo.ident.emoji} guardada en tus mascotas.`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setSubiendo(false);
+    }
+  }
+
 
   return (
     <div className="rounded-lg border p-3 space-y-4">
@@ -489,11 +533,32 @@ export function MascotConstructor({
 
       <LogoDelPolo S={S} setS={setS} brandLogo={brandLogo} paletaLogo={UNIFORME[0][2]} />
 
+      <div className="space-y-2 border-t pt-3">
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="min-w-0 flex-1 space-y-1.5 sm:min-w-[220px]">
+            <Label>Nombre de la mascota</Label>
+            <Input
+              value={nombre}
+              placeholder={data.chars[S.char].nombre}
+              onChange={(e) => setNombre(e.target.value)}
+            />
+          </div>
+          <Button size="sm" disabled={subiendo} onClick={guardarEnBiblioteca}>
+            {subiendo ? "Guardando…" : "Guardar en mis mascotas"}
+          </Button>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Queda arriba, junto a las mascotas incorporadas, y se puede usar en cualquier demo. Si ya
+          hay una guardada con ese nombre, se actualiza.
+        </p>
+      </div>
+
       <div className="flex flex-wrap items-center gap-2 border-t pt-3">
-        <Button size="sm" disabled={subiendo} onClick={usar}>
-          {subiendo ? "Guardando…" : "Usar esta mascota"}
+        <Button variant="outline" size="sm" disabled={subiendo} onClick={usar}>
+          {subiendo ? "Guardando…" : "Usar sólo en este demo"}
         </Button>
         {enUso && <span className="text-xs text-muted-foreground">En uso en este demo.</span>}
+
         <a
           className="text-xs underline text-muted-foreground"
           href={ESCRIBIMOS_DIR + "constructor.html"}

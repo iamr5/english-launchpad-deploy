@@ -83,6 +83,48 @@ export type Database = {
           },
         ]
       }
+      mascot_library: {
+        Row: {
+          base_url: string
+          created_at: string
+          created_by: string | null
+          emoji: string | null
+          id: string
+          kind: string | null
+          manifest: Json
+          name: string
+          short_name: string | null
+          thumb: string | null
+          updated_at: string
+        }
+        Insert: {
+          base_url: string
+          created_at?: string
+          created_by?: string | null
+          emoji?: string | null
+          id?: string
+          kind?: string | null
+          manifest?: Json
+          name: string
+          short_name?: string | null
+          thumb?: string | null
+          updated_at?: string
+        }
+        Update: {
+          base_url?: string
+          created_at?: string
+          created_by?: string | null
+          emoji?: string | null
+          id?: string
+          kind?: string | null
+          manifest?: Json
+          name?: string
+          short_name?: string | null
+          thumb?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
