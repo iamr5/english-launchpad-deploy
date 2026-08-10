@@ -2263,6 +2263,52 @@ function MisMascotas({
   }, []);
 
   /**
+   * Rehace el pack de una mascota guardada a partir del estado que viaja en su
+   * manifiesto. Sirve tanto para actualizar su arte como para descargarla.
+   */
+  async function armarPack(m: SavedMascot) {
+    const guardado = estadoDePack(m.manifest);
+    if (!guardado) return null;
+    const data = await loadPersonajes();
+    const logo = await logoDePack(m.baseUrl);
+    const S = { ...guardado, logoImg: logo ?? "" };
+    const caja = medirPersonaje(data, S);
+    return packDeMascota(data, S, caja ? { ...ident(m) } : ident(m), caja);
+  }
+
+  function ident(m: SavedMascot) {
+    return {
+      name: m.name,
+      shortName: m.shortName ?? m.name,
+      kind: m.kind ?? "mascota guía",
+      emoji: m.emoji ?? "✨",
+    };
+  }
+
+  /**
+   * Bajarla al disco: el zip es el mismo pack que se sube, así que se puede
+   * guardar aparte o volver a subirlo en otro demo. Si es una mascota antigua
+   * sin su estado guardado, al menos se baja el dibujo tal como está publicado.
+   */
+  async function descargar(m: SavedMascot) {
+    setRehaciendo(m.id);
+    try {
+      const listo = await armarPack(m);
+      if (listo) {
+        descargarArchivo(listo.zip, `${nombreArchivo(m.name)}.zip`);
+      } else {
+        const r = await fetch(m.baseUrl.replace(/\/?$/, "/") + "layers/personaje.svg");
+        if (!r.ok) throw new Error("No se encontró el dibujo de esta mascota.");
+        descargarArchivo(await r.blob(), `${nombreArchivo(m.name)}.svg`);
+      }
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setRehaciendo(null);
+    }
+  }
+
+  /**
    * Vuelve a dibujar una mascota con el arte actual.
    *
    * El pack guardado es un SVG ya hecho: al corregir el arte (el polo de cuello
@@ -2271,21 +2317,12 @@ function MisMascotas({
    * manifiesto se rehace igual, sólo que con el arte de hoy.
    */
   async function regenerar(m: SavedMascot) {
-    const guardado = estadoDePack(m.manifest);
-    if (!guardado) return;
     setRehaciendo(m.id);
     try {
-      const data = await loadPersonajes();
-      const logo = await logoDePack(m.baseUrl);
-      const S = { ...guardado, logoImg: logo ?? "" };
-      const caja = medirPersonaje(data, S);
-      const ident = {
-        name: m.name,
-        shortName: m.shortName ?? m.name,
-        kind: m.kind ?? "mascota guía",
-        emoji: m.emoji ?? "✨",
-      };
-      const { manifest, zip } = packDeMascota(data, S, ident, caja);
+      const listo = await armarPack(m);
+      if (!listo) throw new Error("Esta mascota no guarda su diseño; vuelve a crearla.");
+      const { manifest, zip } = listo;
+
       const subido = await uploadPack(LIBRARY_FOLDER, zip);
       await saveMascot({
         name: m.name,
