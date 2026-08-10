@@ -342,6 +342,29 @@ export function MascotConstructor({
     }
   }
 
+  /**
+   * Bajarla al disco. El zip es el mismo pack que se sube, así que sirve para
+   * guardarlo aparte, mandárselo a alguien o volver a subirlo más adelante.
+   */
+  function descargar() {
+    const listo = armar();
+    if (!listo) return;
+    descargarArchivo(listo.zip, `${nombreArchivo(listo.nombre)}.zip`);
+    toast.success(`${listo.nombre} ${listo.ident.emoji} descargada.`);
+  }
+
+  /** El dibujo suelto, para usarlo en una lámina o un diseño. */
+  function descargarSVG() {
+    if (!data || !S) return;
+    const marcoSVG = marco?.caja
+      ? encuadrar(marco.caja)
+      : { viewBox: data.viewBox };
+    const svg = personajeSVG(data, S, { anim: S.anim, viewBox: marcoSVG.viewBox });
+    const base = nombreArchivo(nombre.trim() || data.chars[S.char].nombre);
+    descargarArchivo(new Blob([svg], { type: "image/svg+xml" }), `${base}.svg`);
+  }
+
+
 
   return (
     <div className="rounded-lg border p-3 space-y-4">
