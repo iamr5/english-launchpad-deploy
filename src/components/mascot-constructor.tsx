@@ -439,10 +439,17 @@ export function MascotConstructor({
           )}
           {S.pink && (
             <>
-              <label className="flex items-center gap-2 text-sm">
-                <Switch checked={S.linkPink} onCheckedChange={(v) => setS({ ...S, linkPink: v })} />
-                Mejillas y orejas siguen al pelaje
+              <label className="flex items-start gap-2 text-sm">
+                <Switch
+                  className="mt-0.5 shrink-0"
+                  checked={S.linkPink}
+                  onCheckedChange={(v) => setS({ ...S, linkPink: v })}
+                />
+                <span className="min-w-0 break-words leading-snug">
+                  Mejillas y orejas siguen al pelaje
+                </span>
               </label>
+
               <CampoColor
                 etiqueta="Rosados"
                 valor={vars["--p0"] ?? "#FDA5AC"}
