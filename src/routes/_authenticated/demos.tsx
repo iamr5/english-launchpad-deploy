@@ -900,6 +900,9 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
   const [published, setPublished] = useState(demo.published);
   const [previewKey, setPreviewKey] = useState(0);
   const [tab, setTab] = useState("marca");
+  // Sube uno cada vez que la biblioteca de mascotas cambia, para releerla.
+  const [libTick, setLibTick] = useState(0);
+
 
   const dirty =
     JSON.stringify(cfg) !== JSON.stringify(demo.config ?? {}) ||
