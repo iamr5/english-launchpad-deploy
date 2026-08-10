@@ -2389,6 +2389,17 @@ function MisMascotas({
                   {rehaciendo === m.id ? "Redibujando…" : "Actualizar arte"}
                 </button>
               )}
+              <button
+                type="button"
+                disabled={rehaciendo === m.id}
+                className="shrink-0 text-xs underline text-muted-foreground disabled:opacity-50"
+                title="Baja el pack (.zip) con el dibujo, el ícono y la ficha de la mascota."
+                onClick={() => descargar(m)}
+              >
+                Descargar
+              </button>
+
+
 
               <button
                 type="button"
