@@ -2425,8 +2425,7 @@ function ColorField({
   );
 }
 
-  );
-}
+
 
 function FileField({
   label,
