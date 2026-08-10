@@ -533,11 +533,32 @@ export function MascotConstructor({
 
       <LogoDelPolo S={S} setS={setS} brandLogo={brandLogo} paletaLogo={UNIFORME[0][2]} />
 
+      <div className="space-y-2 border-t pt-3">
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="min-w-0 flex-1 space-y-1.5 sm:min-w-[220px]">
+            <Label>Nombre de la mascota</Label>
+            <Input
+              value={nombre}
+              placeholder={data.chars[S.char].nombre}
+              onChange={(e) => setNombre(e.target.value)}
+            />
+          </div>
+          <Button size="sm" disabled={subiendo} onClick={guardarEnBiblioteca}>
+            {subiendo ? "Guardando…" : "Guardar en mis mascotas"}
+          </Button>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Queda arriba, junto a las mascotas incorporadas, y se puede usar en cualquier demo. Si ya
+          hay una guardada con ese nombre, se actualiza.
+        </p>
+      </div>
+
       <div className="flex flex-wrap items-center gap-2 border-t pt-3">
-        <Button size="sm" disabled={subiendo} onClick={usar}>
-          {subiendo ? "Guardando…" : "Usar esta mascota"}
+        <Button variant="outline" size="sm" disabled={subiendo} onClick={usar}>
+          {subiendo ? "Guardando…" : "Usar sólo en este demo"}
         </Button>
         {enUso && <span className="text-xs text-muted-foreground">En uso en este demo.</span>}
+
         <a
           className="text-xs underline text-muted-foreground"
           href={ESCRIBIMOS_DIR + "constructor.html"}
