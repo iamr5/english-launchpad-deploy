@@ -1865,21 +1865,39 @@ function mountSplash() {
   setTimeout(close, dur);
 }
 
+// La imagen de la marca de agua: el logo de la cabecera por defecto, el icono
+// de la barra superior (con la cabeza de la mascota de respaldo), o una imagen
+// propia subida sólo para esto.
+function watermarkSrc() {
+  const b = CFG.brand || {};
+  const src = b.watermarkSource || 'logo';
+  if (src === 'custom') return b.watermarkImage || '';
+  if (src === 'icon') {
+    if (b.appbarIcon === 'none') return mascotHeadIcon() || '';
+    return b.appbarIcon || mascotHeadIcon() || '';
+  }
+  return b.logo || '';
+}
+
 // El logo de la institución, repetido donde toca. Cada sitio se enciende por
-// separado desde el panel; sin logo cargado esto no hace nada.
+// separado desde el panel; sin imagen cargada esto no hace nada.
 function mountBrandLogos() {
   const logo = (CFG.brand && CFG.brand.logo) || '';
-  if (!logo) return;
   const spots = (CFG.brand && CFG.brand.logoSpots) || {};
-  const alt = escapeHtml(CFG.brand.headerText || CFG.institution || '');
+  const alt = escapeHtml((CFG.brand && CFG.brand.headerText) || CFG.institution || '');
 
   if (spots.watermark) {
-    const wm = document.createElement('img');
-    wm.className = 'brand-wm';
-    wm.src = logo; wm.alt = ''; wm.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(wm);
+    const wmSrc = watermarkSrc();
+    if (wmSrc) {
+      const wm = document.createElement('img');
+      wm.className = 'brand-wm';
+      wm.src = wmSrc; wm.alt = ''; wm.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(wm);
+    }
   }
+  if (!logo) return;
   if (spots.onboarding) {
+
     // Sobre la barra de pasos: se ve desde el primer segundo y no empuja nada,
     // porque .ob-top ya reserva su alto.
     const top = document.querySelector('#screen-onboard .ob-top');
