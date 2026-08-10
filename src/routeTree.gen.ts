@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
 import { Route as CipRouteImport } from './routes/cip'
 import { Route as AutonomaPresentacionRouteImport } from './routes/autonoma-presentacion'
+import { Route as ApavitPresentacionRouteImport } from './routes/apavit-presentacion'
 import { Route as CIPPresentaRouteImport } from './routes/CIP-presenta'
 import { Route as R1millondealumnosRouteImport } from './routes/1millondealumnos'
 import { Route as SlugRouteImport } from './routes/$slug'
@@ -57,6 +58,11 @@ const CipRoute = CipRouteImport.update({
 const AutonomaPresentacionRoute = AutonomaPresentacionRouteImport.update({
   id: '/autonoma-presentacion',
   path: '/autonoma-presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApavitPresentacionRoute = ApavitPresentacionRouteImport.update({
+  id: '/apavit-presentacion',
+  path: '/apavit-presentacion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CIPPresentaRoute = CIPPresentaRouteImport.update({
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/$slug': typeof SlugRoute
   '/1millondealumnos': typeof R1millondealumnosRoute
   '/CIP-presenta': typeof CIPPresentaRoute
+  '/apavit-presentacion': typeof ApavitPresentacionRoute
   '/autonoma-presentacion': typeof AutonomaPresentacionRoute
   '/cip': typeof CipRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/$slug': typeof SlugRoute
   '/1millondealumnos': typeof R1millondealumnosRoute
   '/CIP-presenta': typeof CIPPresentaRoute
+  '/apavit-presentacion': typeof ApavitPresentacionRoute
   '/autonoma-presentacion': typeof AutonomaPresentacionRoute
   '/cip': typeof CipRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRoute
   '/1millondealumnos': typeof R1millondealumnosRoute
   '/CIP-presenta': typeof CIPPresentaRoute
+  '/apavit-presentacion': typeof ApavitPresentacionRoute
   '/autonoma-presentacion': typeof AutonomaPresentacionRoute
   '/cip': typeof CipRoute
   '/demo-dashboard': typeof DemoDashboardRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/1millondealumnos'
     | '/CIP-presenta'
+    | '/apavit-presentacion'
     | '/autonoma-presentacion'
     | '/cip'
     | '/demo-dashboard'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/1millondealumnos'
     | '/CIP-presenta'
+    | '/apavit-presentacion'
     | '/autonoma-presentacion'
     | '/cip'
     | '/demo-dashboard'
@@ -235,6 +246,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/1millondealumnos'
     | '/CIP-presenta'
+    | '/apavit-presentacion'
     | '/autonoma-presentacion'
     | '/cip'
     | '/demo-dashboard'
@@ -257,6 +269,7 @@ export interface RootRouteChildren {
   SlugRoute: typeof SlugRoute
   R1millondealumnosRoute: typeof R1millondealumnosRoute
   CIPPresentaRoute: typeof CIPPresentaRoute
+  ApavitPresentacionRoute: typeof ApavitPresentacionRoute
   AutonomaPresentacionRoute: typeof AutonomaPresentacionRoute
   CipRoute: typeof CipRoute
   DemoDashboardRoute: typeof DemoDashboardRoute
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/autonoma-presentacion'
       fullPath: '/autonoma-presentacion'
       preLoaderRoute: typeof AutonomaPresentacionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apavit-presentacion': {
+      id: '/apavit-presentacion'
+      path: '/apavit-presentacion'
+      fullPath: '/apavit-presentacion'
+      preLoaderRoute: typeof ApavitPresentacionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/CIP-presenta': {
@@ -429,6 +449,7 @@ const rootRouteChildren: RootRouteChildren = {
   SlugRoute: SlugRoute,
   R1millondealumnosRoute: R1millondealumnosRoute,
   CIPPresentaRoute: CIPPresentaRoute,
+  ApavitPresentacionRoute: ApavitPresentacionRoute,
   AutonomaPresentacionRoute: AutonomaPresentacionRoute,
   CipRoute: CipRoute,
   DemoDashboardRoute: DemoDashboardRoute,
