@@ -828,3 +828,33 @@ export async function comoDataURI(src: string | Blob): Promise<string> {
     r.readAsDataURL(blob);
   });
 }
+
+/**
+ * Baja un archivo al disco de quien está usando el panel.
+ *
+ * El pack se arma en el navegador, así que no hay una URL que enlazar: se
+ * fabrica una temporal, se pulsa un enlace invisible y se suelta enseguida
+ * (si no, el blob se queda en memoria toda la sesión).
+ */
+export function descargarArchivo(archivo: Blob, nombre: string) {
+  const url = URL.createObjectURL(archivo);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nombre;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/** Nombre de archivo apto para cualquier sistema: sin tildes ni signos raros. */
+export function nombreArchivo(nombre: string) {
+  return (
+    nombre
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .toLowerCase() || "mascota"
+  );
+}
