@@ -168,6 +168,107 @@ export async function uploadBrandFile(slug: string, kind: string, file: File): P
   return `/api/brand/${path}`;
 }
 
+// ── SVG: leer sus colores y volver a pintarlo ──────────────────────────────
+//
+// Un logo o un icono en .svg es texto: se pueden cambiar sus colores aquí mismo
+// en vez de tener que reexportarlo fuera. Se trabaja sobre el marcado original
+// y se sube una copia nueva, así el archivo de partida sigue intacto.
+
+const CSS_NAMES: Record<string, string> = {
+  black: "#000000",
+  white: "#FFFFFF",
+  red: "#FF0000",
+  lime: "#00FF00",
+  green: "#008000",
+  blue: "#0000FF",
+  yellow: "#FFFF00",
+  cyan: "#00FFFF",
+  aqua: "#00FFFF",
+  magenta: "#FF00FF",
+  fuchsia: "#FF00FF",
+  silver: "#C0C0C0",
+  gray: "#808080",
+  grey: "#808080",
+  maroon: "#800000",
+  olive: "#808000",
+  purple: "#800080",
+  teal: "#008080",
+  navy: "#000080",
+  orange: "#FFA500",
+};
+
+/** Pasa cualquier forma de color CSS habitual en un SVG a #RRGGBB, o null. */
+export function toHex(raw: string): string | null {
+  const v = raw.trim().toLowerCase();
+  if (!v || v === "none" || v === "transparent" || v === "currentcolor" || v.startsWith("url("))
+    return null;
+  if (CSS_NAMES[v]) return CSS_NAMES[v];
+  let m = /^#([0-9a-f]{3})$/.exec(v);
+  if (m) return ("#" + [...m[1]].map((c) => c + c).join("")).toUpperCase();
+  m = /^#([0-9a-f]{6})$/.exec(v);
+  if (m) return ("#" + m[1]).toUpperCase();
+  m = /^#([0-9a-f]{8})$/.exec(v);
+  if (m) return ("#" + m[1].slice(0, 6)).toUpperCase();
+  m = /^rgba?\(\s*([0-9.]+)[\s,]+([0-9.]+)[\s,]+([0-9.]+)/.exec(v);
+  if (m) {
+    const p = m
+      .slice(1, 4)
+      .map((n) => Math.max(0, Math.min(255, Math.round(parseFloat(n)))))
+      .map((n) => n.toString(16).padStart(2, "0"))
+      .join("");
+    return ("#" + p).toUpperCase();
+  }
+  return null;
+}
+
+// Todo lo que en un SVG puede llevar un color: atributos de presentación,
+// `style="..."` en línea y las reglas de un bloque <style>.
+const COLOR_RE =
+  /(fill|stroke|stop-color|flood-color|lighting-color|color)\s*[:=]\s*("|'|)\s*(#[0-9a-fA-F]{3,8}|rgba?\([^)]*\)|[a-zA-Z]+)\s*\2/g;
+
+/** Descarga el texto de un SVG (mismo origen: /api/brand/…). */
+export async function fetchSvgText(url: string): Promise<string> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("No se pudo leer el SVG.");
+  return await res.text();
+}
+
+/** Los colores distintos que usa el dibujo, en orden de aparición. */
+export function svgColors(text: string): string[] {
+  const out: string[] = [];
+  for (const m of text.matchAll(COLOR_RE)) {
+    const hex = toHex(m[3]);
+    if (hex && !out.includes(hex)) out.push(hex);
+  }
+  return out;
+}
+
+/**
+ * Devuelve el SVG con los colores cambiados. Con un mapa, sustituye cada color
+ * por el suyo; con un solo color, lo tiñe entero (y le pone `fill` a las formas
+ * que no declaraban ninguno, que si no saldrían negras).
+ */
+export function recolorSvg(text: string, spec: Record<string, string> | string): string {
+  const unico = typeof spec === "string" ? toHex(spec) : null;
+  let out = text.replace(COLOR_RE, (full, prop: string, q: string, val: string) => {
+    const hex = toHex(val);
+    if (!hex) return full;
+    const nuevo = unico ?? (spec as Record<string, string>)[hex];
+    if (!nuevo) return full;
+    const sep = full.includes(":") && !full.includes("=") ? ": " : "=";
+    return sep === ": " ? `${prop}: ${nuevo}` : `${prop}=${q || '"'}${nuevo}${q || '"'}`;
+  });
+  if (unico) {
+    // Formas sin fill declarado: el negro por defecto del navegador.
+    out = out.replace(
+      /<(path|circle|rect|ellipse|polygon|polyline|g)\b([^>]*)>/g,
+      (full, tag: string, attrs: string) =>
+        /fill\s*[:=]/.test(attrs) ? full : `<${tag}${attrs} fill="${unico}">`,
+    );
+  }
+  return out;
+}
+
 /** Motivo por el que un slug no vale, o null si está bien. */
 export function slugProblem(slug: string): string | null {
   if (!slug) return "Escribe un nombre para el enlace.";
