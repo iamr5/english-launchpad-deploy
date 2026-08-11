@@ -12,6 +12,9 @@ import {
   slugProblem,
   suggestSlug,
   uploadBrandFile,
+  fetchSvgText,
+  svgColors,
+  recolorSvg,
   type DemoRow,
 } from "@/lib/demos.data";
 import { DEFAULTS, SPLASH_STYLES, shadeHex } from "@/lib/demo-config";
