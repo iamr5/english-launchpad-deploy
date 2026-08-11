@@ -2982,7 +2982,185 @@ function FileField({
           </Button>
         )}
       </div>
+      {/* Un .svg es texto: sus colores se pueden cambiar aquí mismo. */}
+      {value && /\.svg(\?|$)/i.test(value) && (
+        <SvgTint slug={slug} kind={kind} url={value} onChange={onChange} />
+      )}
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
+
+/**
+ * Recolorear un SVG subido. Lee los colores que usa el dibujo, deja cambiarlos
+ * uno a uno o teñirlo entero, y sube una copia nueva. El archivo de partida se
+ * guarda para poder restablecer.
+ */
+function SvgTint({
+  slug,
+  kind,
+  url,
+  onChange,
+}: {
+  slug: string;
+  kind: string;
+  url: string;
+  onChange: (v: string) => void;
+}) {
+  const [abierto, setAbierto] = useState(false);
+  const [texto, setTexto] = useState<string | null>(null);
+  const [colores, setColores] = useState<string[]>([]);
+  const [mapa, setMapa] = useState<Record<string, string>>({});
+  const [unico, setUnico] = useState("#000000");
+  const [busy, setBusy] = useState(false);
+  // La URL del archivo sin teñir: la primera que se vio en este campo.
+  const origen = useRef(url);
+  const cargado = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!abierto || cargado.current === url) return;
+    let vivo = true;
+    (async () => {
+      try {
+        const t = await fetchSvgText(url);
+        if (!vivo) return;
+        cargado.current = url;
+        setTexto(t);
+        setColores(svgColors(t));
+        setMapa({});
+      } catch {
+        if (vivo) toast.error("No se pudo leer este SVG.");
+      }
+    })();
+    return () => {
+      vivo = false;
+    };
+  }, [abierto, url]);
+
+  async function aplicar(spec: Record<string, string> | string) {
+    if (!texto) return;
+    setBusy(true);
+    try {
+      const nuevo = recolorSvg(texto, spec);
+      const file = new File([nuevo], "color.svg", { type: "image/svg+xml" });
+      const nuevaUrl = await uploadBrandFile(slug, `${kind}-color`, file);
+      cargado.current = nuevaUrl;
+      setTexto(nuevo);
+      setColores(svgColors(nuevo));
+      setMapa({});
+      onChange(nuevaUrl);
+      toast.success("Color aplicado.");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (!abierto) {
+    return (
+      <button
+        type="button"
+        className="text-xs text-muted-foreground underline underline-offset-2"
+        onClick={() => setAbierto(true)}
+      >
+        Color del SVG
+      </button>
+    );
+  }
+
+  const pendientes = Object.keys(mapa).length > 0;
+
+  return (
+    <div className="rounded-md border p-3 space-y-2.5">
+      <div className="flex items-center justify-between">
+        <Label className="text-xs">Color del SVG</Label>
+        <button
+          type="button"
+          className="text-xs text-muted-foreground underline underline-offset-2"
+          onClick={() => setAbierto(false)}
+        >
+          Cerrar
+        </button>
+      </div>
+
+      {texto === null ? (
+        <p className="text-xs text-muted-foreground">Leyendo el archivo…</p>
+      ) : (
+        <>
+          {colores.length > 0 ? (
+            <div className="flex flex-wrap gap-3">
+              {colores.slice(0, 8).map((c) => (
+                <div key={c} className="flex items-center gap-1.5">
+                  <input
+                    type="color"
+                    value={mapa[c] ?? c}
+                    onChange={(e) =>
+                      setMapa((m) => ({ ...m, [c]: e.target.value.toUpperCase() }))
+                    }
+                    className="h-8 w-9 cursor-pointer rounded border bg-transparent"
+                    aria-label={`Color ${c}`}
+                  />
+                  <Input
+                    value={mapa[c] ?? c}
+                    spellCheck={false}
+                    onChange={(e) => {
+                      const hex = normalizeHex(e.target.value);
+                      setMapa((m) => ({ ...m, [c]: hex || e.target.value }));
+                    }}
+                    className="h-8 w-24 font-mono text-xs"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              El dibujo no declara colores propios; usa «Todo de un color».
+            </p>
+          )}
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="sm"
+              disabled={busy || !pendientes}
+              onClick={() => {
+                const limpio: Record<string, string> = {};
+                for (const [k, v] of Object.entries(mapa)) {
+                  const hex = normalizeHex(v);
+                  if (hex && hex !== k) limpio[k] = hex;
+                }
+                if (Object.keys(limpio).length) aplicar(limpio);
+              }}
+            >
+              {busy ? "Aplicando…" : "Aplicar colores"}
+            </Button>
+            <span className="mx-1 h-5 w-px bg-border" />
+            <input
+              type="color"
+              value={unico}
+              onChange={(e) => setUnico(e.target.value.toUpperCase())}
+              className="h-8 w-9 cursor-pointer rounded border bg-transparent"
+              aria-label="Un solo color"
+            />
+            <Button size="sm" variant="outline" disabled={busy} onClick={() => aplicar(unico)}>
+              Todo de un color
+            </Button>
+            {url !== origen.current && (
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={busy}
+                onClick={() => {
+                  cargado.current = null;
+                  onChange(origen.current);
+                }}
+              >
+                Restablecer
+              </Button>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
