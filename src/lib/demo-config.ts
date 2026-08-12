@@ -228,7 +228,16 @@ export type DemoConfig = {
     };
     /** Milisegundos en pantalla antes de irse solo. Por defecto 2600. */
     duration?: number;
+    /** Fuente del rótulo grande (cuando no hay logo). Vacío = la de interfaz. */
+    titleFont?: string;
+    /** Color del rótulo grande. Vacío = blanco, como hoy. */
+    titleColor?: string;
+    /** Fuente de la frase. Vacío = la que hereda hoy. */
+    phraseFont?: string;
+    /** Color de la frase. Vacío = blanco al 90%, como hoy. */
+    phraseColor?: string;
   };
+
 
   colors: {
     /** Color principal: cabeceras de módulo, chips, acentos. */
