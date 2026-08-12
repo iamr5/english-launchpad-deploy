@@ -190,6 +190,20 @@ export type DemoConfig = {
      *      deja opcional para no cambiarle el aspecto a los demos ya hechos.
      */
     footerColor?: "module" | "action";
+    /** Color del texto principal (títulos y párrafos). Vacío = el de siempre. */
+    ink?: string;
+    /** Color del texto secundario (subtítulos y textos apagados). */
+    muted?: string;
+    /** Color del rótulo de la cabecera. Vacío = como está hoy. */
+    header?: string;
+  };
+
+  /** Tipografías del demo. Vacío = las de siempre (sin descargar nada). */
+  type?: {
+    /** Fuente de la interfaz: títulos, botones, mapa, cabecera. */
+    uiFont?: string;
+    /** Fuente de lectura: párrafos y tablas dentro de las lecciones. */
+    bodyFont?: string;
   };
 
   mascot: {
