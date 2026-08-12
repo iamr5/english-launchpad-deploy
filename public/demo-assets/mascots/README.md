@@ -10,10 +10,10 @@ eligiendo otro pack, sin tocar código.
 | [`boti/`](boti/README.md) | Boti 🤖 | script (`boti.js`) | No |
 | [`gallito/`](gallito/README.md) | Gallito el Tumi ✨ | capas SVG + CSS | Sí, igual que ozito |
 
-[`escribimos/`](escribimos/README.md) no es un pack: es la data de ocho personajes
-—conejito, gatito, llamita, mapachito, monito, osito, perrito y zorrito— y el
+[`escribimos/`](escribimos/README.md) no es un pack: es la data de nueve personajes
+—conejito, gatito, llamita, mapachito, monito, osito, perrito, torito y zorrito— y el
 constructor que los arma. No sale en la lista de mascotas incorporadas porque no hay
-una mascota que elegir, sino ocho que colorear; el pack se genera al usarla.
+una mascota que elegir, sino nueve que colorear; el pack se genera al usarla.
 
 `mascot-runtime.js` es el cargador común: lee un manifiesto y arma el DOM de la
 mascota. Para packs de capas construye el stack; para packs de script carga el
