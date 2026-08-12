@@ -78,9 +78,11 @@
   /* "AprendoEnglish.com" wordmark — rounded typeface (ui-rounded → SF Pro Rounded on Apple;
      rounded fallbacks elsewhere, no web fetch so it stays offline-safe). Per-word colors. */
   .brand { font-family: var(--font-round); font-weight: 700; letter-spacing: .01em; font-size: 1.2em; } /* scales the whole wordmark up; .com stays proportional (em-based) */
-  .brand .b-aprendo { color: #000; }
-  .brand .b-english { color: #539bec; }
-  .brand .b-com     { color: #ea4e57; font-size: .72em; } /* smaller than the wordmark */
+  /* --brand-ink: color propio del rótulo de la cabecera. Sin definir, cada
+     palabra conserva su color de siempre. */
+  .brand .b-aprendo { color: var(--brand-ink, #000); }
+  .brand .b-english { color: var(--brand-ink, #539bec); }
+  .brand .b-com     { color: var(--brand-ink, #ea4e57); font-size: .72em; } /* smaller than the wordmark */
   .appbar-en { height: 40px; margin: -2px -5px -2px 0; }
   /* Un escudo o logo subido no lleva los margenes negativos: esos estan pensados
      para la cabeza de la mascota, que desborda la barra a proposito. Un emblema
