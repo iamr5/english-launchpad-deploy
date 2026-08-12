@@ -185,9 +185,13 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
   // demo-page.ts, para que lo que se ve aquí sea lo que verá el visitante.
   const uiFont = g("type.uiFont");
   const bodyFont = g("type.bodyFont");
-  useDemoFonts([uiFont, bodyFont]);
+  const headerFont = g("brand.headerFont");
+  const spTitleFont = g("splash.titleFont");
+  const spPhraseFont = g("splash.phraseFont");
+  useDemoFonts([uiFont, bodyFont, headerFont, spTitleFont, spPhraseFont]);
   const ink = g("colors.ink") || "#1A1A1A";
   const headerInk = g("colors.header");
+
 
   const frame: React.CSSProperties = {
     fontFamily: fontStack(uiFont, "ui") || "ui-rounded, 'Segoe UI', system-ui, sans-serif",
