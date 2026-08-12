@@ -186,7 +186,13 @@ export type DemoConfig = {
     /** Opacidad de 0 a 1. */
     watermarkOpacity?: number;
 
+    /**
+     * Fuente del rótulo escrito de la cabecera (id de DEMO_FONTS). Vacío =
+     * hereda la fuente de interfaz, como hasta hoy.
+     */
+    headerFont?: string;
   };
+
 
 
   /**
