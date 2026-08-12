@@ -23,7 +23,7 @@ mascota. Para packs de capas construye el stack; para packs de script carga el
 
 Desde **`/demos` → pestaña Mascota**, sin dibujar nada:
 
-**Diseñar una mascota** — ocho personajes ya dibujados a los que se les elige el
+**Diseñar una mascota** — nueve personajes ya dibujados a los que se les elige el
 pelaje, el uniforme y el logo del polo. *Usar esta mascota* arma el pack y lo guarda
 como mascota propia del demo. Es el camino corto, y para la mayoría de instituciones
 es suficiente. Los personajes y el porqué del cálculo de color, en
