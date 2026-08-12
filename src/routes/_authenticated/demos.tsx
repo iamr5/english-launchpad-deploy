@@ -1342,6 +1342,23 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     onChange={upd("splash.logo")}
                   />
 
+                  <div className="rounded-lg border p-3 space-y-3">
+                    <Label className="text-xs font-medium">Rótulo (sin logo)</Label>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <FontField
+                        label="Fuente"
+                        value={g2("splash.titleFont")}
+                        onChange={upd("splash.titleFont")}
+                      />
+                      <ColorField
+                        label="Color"
+                        fallback="#FFFFFF"
+                        value={get(cfg, "splash.titleColor")}
+                        onChange={upd("splash.titleColor")}
+                      />
+                    </div>
+                  </div>
+
                   <Field
                     label="Frase"
                     hint="Una línea. Si la dejas vacía sale solo la marca."
@@ -1349,6 +1366,21 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     value={get(cfg, "splash.phrase")}
                     onChange={upd("splash.phrase")}
                   />
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <FontField
+                      label="Fuente de la frase"
+                      value={g2("splash.phraseFont")}
+                      onChange={upd("splash.phraseFont")}
+                    />
+                    <ColorField
+                      label="Color de la frase"
+                      fallback="#FFFFFF"
+                      value={get(cfg, "splash.phraseColor")}
+                      onChange={upd("splash.phraseColor")}
+                    />
+                  </div>
+
 
                   <div className="rounded-lg border p-3 space-y-3">
                     <div>
