@@ -1074,6 +1074,22 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={get(cfg, "brand.headerText")}
                 onChange={upd("brand.headerText")}
               />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <FontField
+                  label="Fuente del rótulo"
+                  hint="Solo el texto de la cabecera. Vacío = la fuente de interfaz."
+                  value={g2("brand.headerFont")}
+                  onChange={upd("brand.headerFont")}
+                />
+                <ColorField
+                  label="Color del rótulo"
+                  hint="El mismo de «Texto de la cabecera» en Colores."
+                  fallback="#1A1A1A"
+                  value={get(cfg, "colors.header")}
+                  onChange={upd("colors.header")}
+                />
+              </div>
+
               <FileField
                 label="Logo"
                 fallbackLabel="logotipo AprendoEnglish"
