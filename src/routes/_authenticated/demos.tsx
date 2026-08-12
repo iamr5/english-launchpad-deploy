@@ -1425,6 +1425,45 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   />
                 ))}
               </div>
+
+              <hr />
+              <p className="text-sm font-medium">Tipografía</p>
+              <FontField
+                label="Fuente de la interfaz"
+                hint="Títulos, botones, mapa y cabecera."
+                value={g2("type.uiFont")}
+                onChange={upd("type.uiFont")}
+              />
+              <FontField
+                label="Fuente de lectura"
+                hint="Párrafos y tablas dentro de las lecciones."
+                value={g2("type.bodyFont")}
+                onChange={upd("type.bodyFont")}
+              />
+
+              <hr />
+              <p className="text-sm font-medium">Color de letra</p>
+              <ColorField
+                label="Texto principal"
+                hint="Títulos y párrafos. Vacío = el de siempre."
+                fallback="#1A1A1A"
+                value={get(cfg, "colors.ink")}
+                onChange={upd("colors.ink")}
+              />
+              <ColorField
+                label="Texto secundario"
+                hint="Subtítulos y textos apagados."
+                fallback="#7A7A7A"
+                value={get(cfg, "colors.muted")}
+                onChange={upd("colors.muted")}
+              />
+              <ColorField
+                label="Texto de la cabecera"
+                hint="El rótulo de la barra superior. Vacío = como está hoy."
+                fallback="#1A1A1A"
+                value={get(cfg, "colors.header")}
+                onChange={upd("colors.header")}
+              />
             </TabsContent>
 
             <TabsContent value="mascota" className="space-y-4">
