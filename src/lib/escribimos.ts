@@ -86,6 +86,7 @@ export const EMOJIS: Record<string, string> = {
   monito: "🐵",
   osito: "🐻",
   perrito: "🐶",
+  torito: "🐂",
   zorrito: "🦊",
 };
 
