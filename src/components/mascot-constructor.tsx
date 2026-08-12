@@ -246,9 +246,9 @@ export function MascotConstructor({
       <div className="rounded-lg border p-3 space-y-2">
         <p className="text-sm font-medium">Diseñar una mascota</p>
         <p className="text-xs text-muted-foreground">
-          Ocho personajes con el mismo cuerpo —conejito, gatito, llamita, mapachito, monito, osito,
-          perrito y zorrito— a los que se les elige el color del pelaje, el uniforme y el logo del
-          polo. Sale una mascota propia sin dibujar nada.
+          Nueve personajes con el mismo cuerpo —conejito, gatito, llamita, mapachito, monito, osito,
+          perrito, torito y zorrito— a los que se les elige el color del pelaje, el uniforme y el
+          logo del polo. Sale una mascota propia sin dibujar nada.
         </p>
         <Button variant="outline" size="sm" onClick={() => setAbierto(true)}>
           Abrir el constructor
