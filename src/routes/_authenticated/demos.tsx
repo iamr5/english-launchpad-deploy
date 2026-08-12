@@ -315,8 +315,17 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
                 "--sp-from": from,
                 "--sp-to": to,
                 "--sp-glow": glow,
+                ...(fontStack(spTitleFont, "ui")
+                  ? { "--sp-word-font": fontStack(spTitleFont, "ui") }
+                  : {}),
+                ...(g("splash.titleColor") ? { "--sp-word-ink": g("splash.titleColor") } : {}),
+                ...(fontStack(spPhraseFont, "ui")
+                  ? { "--sp-phrase-font": fontStack(spPhraseFont, "ui") }
+                  : {}),
+                ...(g("splash.phraseColor") ? { "--sp-phrase-ink": g("splash.phraseColor") } : {}),
               } as React.CSSProperties
             }
+
           >
             <div className="sp-deco" />
             <div className="sp-mark">
