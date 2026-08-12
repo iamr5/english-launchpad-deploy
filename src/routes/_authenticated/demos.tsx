@@ -17,7 +17,14 @@ import {
   recolorSvg,
   type DemoRow,
 } from "@/lib/demos.data";
-import { DEFAULTS, SPLASH_STYLES, shadeHex } from "@/lib/demo-config";
+import {
+  DEFAULTS,
+  DEMO_FONTS,
+  SPLASH_STYLES,
+  fontStack,
+  fontsHref,
+  shadeHex,
+} from "@/lib/demo-config";
 import { BUILT_IN_PACKS, packAsset, packChoices, packInfo } from "@/lib/mascot-packs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
