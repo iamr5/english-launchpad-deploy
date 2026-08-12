@@ -41,6 +41,73 @@ export const SPLASH_STYLES = [
 
 export type SplashStyle = (typeof SPLASH_STYLES)[number]["id"];
 
+/**
+ * Las tipografías que puede elegir un demo. La lista vive aquí para que el
+ * panel y la plantilla no se desincronicen. `google` vacío = no se descarga
+ * nada (la pila del sistema, que es el aspecto actual).
+ */
+export const DEMO_FONTS = [
+  { id: "", name: "Sistema (por defecto)", stack: "", google: "" },
+  { id: "nunito", name: "Nunito", stack: "'Nunito'", google: "Nunito:wght@400;600;700;800" },
+  { id: "baloo", name: "Baloo 2", stack: "'Baloo 2'", google: "Baloo+2:wght@400;600;700;800" },
+  {
+    id: "quicksand",
+    name: "Quicksand",
+    stack: "'Quicksand'",
+    google: "Quicksand:wght@400;600;700",
+  },
+  { id: "poppins", name: "Poppins", stack: "'Poppins'", google: "Poppins:wght@400;600;700;800" },
+  {
+    id: "montserrat",
+    name: "Montserrat",
+    stack: "'Montserrat'",
+    google: "Montserrat:wght@400;600;700;800",
+  },
+  { id: "inter", name: "Inter", stack: "'Inter'", google: "Inter:wght@400;600;700;800" },
+  { id: "rubik", name: "Rubik", stack: "'Rubik'", google: "Rubik:wght@400;600;700;800" },
+  { id: "fredoka", name: "Fredoka", stack: "'Fredoka'", google: "Fredoka:wght@400;600;700" },
+  { id: "outfit", name: "Outfit", stack: "'Outfit'", google: "Outfit:wght@400;600;700;800" },
+  {
+    id: "worksans",
+    name: "Work Sans",
+    stack: "'Work Sans'",
+    google: "Work+Sans:wght@400;600;700;800",
+  },
+  { id: "lora", name: "Lora", stack: "'Lora'", google: "Lora:wght@400;600;700" },
+  {
+    id: "merriweather",
+    name: "Merriweather",
+    stack: "'Merriweather'",
+    google: "Merriweather:wght@400;700",
+  },
+] as const;
+
+export type DemoFontId = (typeof DEMO_FONTS)[number]["id"];
+
+export function demoFont(id?: string) {
+  return DEMO_FONTS.find((f) => f.id === (id ?? "")) ?? DEMO_FONTS[0];
+}
+
+/** La familia CSS completa de una fuente elegida, o "" si es la del sistema. */
+export function fontStack(id: string | undefined, kind: "ui" | "body") {
+  const f = demoFont(id);
+  if (!f.stack) return "";
+  const fallback =
+    kind === "ui"
+      ? "ui-rounded, 'Segoe UI', system-ui, sans-serif"
+      : "-apple-system, 'Segoe UI', Roboto, sans-serif";
+  return `${f.stack}, ${fallback}`;
+}
+
+/** El <link> a Google Fonts para las fuentes elegidas, o "" si no hace falta. */
+export function fontsHref(...ids: (string | undefined)[]) {
+  const fams = [...new Set(ids.map((i) => demoFont(i).google).filter(Boolean))];
+  if (!fams.length) return "";
+  return `https://fonts.googleapis.com/css2?${fams
+    .map((f) => `family=${f}`)
+    .join("&")}&display=swap`;
+}
+
 export type DemoConfig = {
   /** Lo que va después del dominio: aprendoenglish.com/<slug> */
   slug: string;
@@ -190,6 +257,20 @@ export type DemoConfig = {
      *      deja opcional para no cambiarle el aspecto a los demos ya hechos.
      */
     footerColor?: "module" | "action";
+    /** Color del texto principal (títulos y párrafos). Vacío = el de siempre. */
+    ink?: string;
+    /** Color del texto secundario (subtítulos y textos apagados). */
+    muted?: string;
+    /** Color del rótulo de la cabecera. Vacío = como está hoy. */
+    header?: string;
+  };
+
+  /** Tipografías del demo. Vacío = las de siempre (sin descargar nada). */
+  type?: {
+    /** Fuente de la interfaz: títulos, botones, mapa, cabecera. */
+    uiFont?: string;
+    /** Fuente de lectura: párrafos y tablas dentro de las lecciones. */
+    bodyFont?: string;
   };
 
   mascot: {
