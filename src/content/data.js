@@ -355,6 +355,19 @@ Usamos **I am** para varias cosas:
         tap('Toca la palabra incorrecta:', ['I', 'are', 'Juan', 'and', 'I', 'am', 'happy.'], 1, 'am'),
         tap('Toca la palabra incorrecta:', ['I', 'am', 'on', 'the', 'bus', 'and', 'I', 'is', 'tired.'], 7, 'am'),
         rebuild('🎧 Reconstruye lo que escuchas:', 'I am 25 years old', ['I', 'am', '25', 'years', 'old', 'are', 'is', 'happy', 'today']),
+        mc('Lee: "I am Juan. I am 25 years old. I am on the bus every day. I am happy today." — ¿Qué sabemos de Juan?', [
+          'Que tiene 25 años y viaja en bus.',
+          'Que tiene 15 años y viaja en bus.',
+          'Que tiene 25 años y maneja el bus.',
+          'Que tiene 25 años y hoy no salió.'], 0),
+        mc('Lee: "I am Juan. I am 25 years old. I am on the bus every day. I am happy today." — ¿Qué es cierto solo hoy?', [
+          'Que está feliz.',
+          'Que tiene 25 años.',
+          'Que se llama Juan.',
+          'Que viaja en bus.'], 0),
+        writing('Escríbelo en inglés: "Yo estoy en el bus."', ['I am on the bus.'],
+          { hint: 'Con "I" el to be siempre es "am".',
+            reject: [['I on the bus.', 'Falta el verbo: I am on the bus.'], ['I is on the bus.', 'Con "I" va "am", no "is".'], ['I are on the bus.', 'Con "I" va "am", no "are".']] }),
       ] },
     { id: 'modulo2-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Hablar de tu grupo – We are…**
 
@@ -378,6 +391,19 @@ En inglés no diferenciamos ser vs estar: todo es *are* aquí.`,
         tap('Toca la palabra incorrecta:', ['I', 'am', 'a', 'student', 'and', 'we', 'is', 'friends.'], 6, 'are'),
         tap('Toca la palabra incorrecta:', ['We', 'am', 'at', 'home', 'and', 'I', 'am', 'tired.'], 1, 'are'),
         rebuild('🎧 Reconstruye lo que escuchas:', 'We are friends', ['We', 'are', 'friends', 'am', 'is', 'I', 'happy', 'students']),
+        mc('Lee: "My brother and I are Peruvian. We are friends. Today we are at home." — ¿A quiénes incluye "we"?', [
+          'A quien escribe y a su hermano.',
+          'Solo a su hermano.',
+          'A quien escribe y a sus amigos.',
+          'A toda su familia.'], 0),
+        mc('Lee: "My brother and I are Peruvian. We are friends. Today we are at home." — ¿Qué es cierto solo hoy?', [
+          'Que están en casa.',
+          'Que son peruanos.',
+          'Que son amigos.',
+          'Que son hermanos.'], 0),
+        writing('Escríbelo en inglés: "Nosotros somos amigos."', ['We are friends.'],
+          { hint: 'Con "we" ya no va "am".',
+            reject: [['We am friends.', 'El "am" es solo para "I": con "we" va "are".'], ['We is friends.', 'Con "we" va "are", no "is".']] }),
       ] },
     { id: 'modulo2-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**3.** **Hablar con alguien directamente – You are…**
 
@@ -399,6 +425,19 @@ En inglés **you are** significa **"tú eres/estás"** **y también** **"ustedes
         tap('Toca la palabra incorrecta:', ['You', 'are', 'very', 'kind', 'and', 'we', 'is', 'friends.'], 6, 'are'),
         tap('Toca la palabra incorrecta:', ['I', 'am', 'ready', 'and', 'you', 'is', 'ready', 'too.'], 5, 'are'),
         rebuild('🎧 Reconstruye lo que escuchas:', 'You are my friend', ['You', 'are', 'my', 'friend', 'is', 'am', 'we', 'teacher']),
+        mc('Una profesora le dice a TODO el salón: "You are ready. You are very kind." — ¿A quiénes les habla?', [
+          'A todos los alumnos.',
+          'A un solo alumno.',
+          'A los otros profesores.',
+          'A los papás de los alumnos.'], 0),
+        mc('Después le dice lo mismo a UN alumno: "You are ready." — ¿Cambió algo en inglés?', [
+          'No: "you" sirve para uno y para varios.',
+          'Sí: ahora se escribe distinto.',
+          'Sí: ahora ya no lleva "are".',
+          'No, porque le habla al mismo salón.'], 0),
+        writing('Escríbelo en inglés: "Tú eres muy amable."', ['You are very kind.'],
+          { hint: 'Con "you" va "are".',
+            reject: [['You is very kind.', 'Con "you" va "are", no "is".'], ['You am very kind.', 'El "am" es solo para "I".']] }),
       ] },
     { id: 'modulo2-teoria-4', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**4.** **Hablar de otros en plural – They are…**
 
@@ -420,6 +459,16 @@ Cuando hablas de **un grupo de gente** que no está presente, usas **they are** 
         tap('Toca la palabra incorrecta:', ['We', 'are', 'friends', 'and', 'they', 'is', 'teachers.'], 5, 'are'),
         tap('Toca la palabra incorrecta:', ['They', 'am', 'in', 'the', 'park', 'and', 'I', 'am', 'happy.'], 1, 'are'),
         rebuild('🎧 Reconstruye lo que escuchas:', 'They are my friends', ['They', 'are', 'my', 'friends', 'is', 'am', 'we', 'teachers']),
+        mc('Lee: "My cousins are teachers. They are in the park on Sundays." — ¿Quiénes están en el parque los domingos?', [
+          'Los primos, que son maestros.',
+          'Los alumnos de los primos.',
+          'Quien escribe, con sus primos.',
+          'Nadie: solo van los sábados.'], 0),
+        mc('Lee: "Rosa and Milagros are teachers. Luis and Juan are teachers too. They are in the park." — ¿A quiénes se refiere "they"?', [
+          'A los cuatro.',
+          'Solo a Rosa y Milagros.',
+          'Solo a Luis y Juan.',
+          'Solo a los maestros hombres.'], 0),
       ] },
     { id: 'modulo2-teoria-5', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**5.** **Hablar de otro en singular – He/She is…; It is…**
 
@@ -445,6 +494,19 @@ La regla de oro: En **tercera persona singular** (he, she, it), SIEMPRE usamos *
         tap('Toca la palabra incorrecta:', ['She', 'is', 'a', 'doctor', 'and', 'they', 'is', 'happy.'], 6, 'are'),
         tap('Toca la palabra incorrecta:', ['I', 'am', 'tired', 'but', 'he', 'are', 'fine.'], 5, 'is'),
         rebuild('🎧 Reconstruye lo que escuchas:', 'She is my friend', ['She', 'is', 'my', 'friend', 'He', 'are', 'am', 'teacher']),
+        mc('Lee: "My sister is a doctor. The hospital is in Lima. It is very big." — ¿Qué es muy grande?', [
+          'El hospital.',
+          'Lima.',
+          'La hermana.',
+          'El trabajo de la hermana.'], 0),
+        mc('Lee: "My brothers are teachers. My sister is a doctor. She is in Lima today." — ¿Quién está en Lima hoy?', [
+          'La hermana.',
+          'Los hermanos.',
+          'Toda la familia.',
+          'Los hermanos y la hermana.'], 0),
+        writing('Escríbelo en inglés: "Ella es doctora."', ['She is a doctor.'],
+          { hint: 'Con "she" va "is". Ojo: la profesión lleva "a".',
+            reject: [['She is doctor.', 'Falta el "a": She is a doctor.'], ['She are a doctor.', 'Con "she" va "is", no "are".'], ['She am a doctor.', 'El "am" es solo para "I".']] }),
       ] },
     { id: 'modulo2-resumen', type: 'resumen', markdown: `## **🎯 Resumen: Is-abella y sus alias**
 
@@ -542,6 +604,19 @@ En contextos reales, **siempre usarás la forma contraída**. Por ejemplo:
         tap('Toca la palabra incorrecta:', ["He's", 'my', 'friend', 'and', "it're", 'easy.'], 4, "it's"),
         rebuild('Escucha y reconstruye:', "She's very happy", ["She's", 'very', 'happy', "He's", "She're", 'sad']),
         rebuild('Escucha y reconstruye:', "It's cold today", ["It's", 'cold', 'today', "He's", "It're", 'hot']),
+        mc('Lee: "Rosa is my sister and Luis is my brother. She\'s my friend and he\'s tired." — ¿Quién está cansado?', [
+          'Luis, el hermano.',
+          'Rosa, la hermana.',
+          'Los dos.',
+          'Quien escribe el texto.'], 0),
+        mc('Lee: "Luis is my brother. He\'s a doctor and he\'s tired today." — ¿Qué sabemos de Luis?', [
+          'Que es doctor y hoy está cansado.',
+          'Que es doctor y siempre está cansado.',
+          'Que es su amigo y está cansado.',
+          'Que es maestro y hoy está cansado.'], 0),
+        writing('Escríbelo en inglés: "Ella es mi amiga."', ["She's my friend."],
+          { hint: 'Usa la forma contraída: she + is → she\'s.',
+            reject: [["She're my friend.", 'Con "she" es "she\'s", no "she\'re".'], ['She are my friend.', 'Con "she" va "is".']] }),
       ] },
     { id: 'modulo3-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Las amigas de Is-abella: I'm, You're, We're, They're**
 
@@ -570,6 +645,19 @@ Estas contracciones son incluso **más pequeñas** que la de Is-abella. Aquí, l
         tap('Toca la palabra incorrecta:', ["We're", 'late', 'but', "they'm", 'early.'], 3, "they're"),
         rebuild('Escucha y reconstruye:', "I'm from Lima", ["I'm", 'from', 'Lima', "You're", "I're", 'Cusco']),
         rebuild('Escucha y reconstruye:', "They're at school", ["They're", 'at', 'school', "We're", "They's", 'home']),
+        mc('Lee: "My brother and I are from Trujillo. We\'re late. My cousins are in Lima and they\'re at school." — ¿A quiénes incluye "we\'re"?', [
+          'A quien escribe y a su hermano.',
+          'A los primos.',
+          'Solo a quien escribe.',
+          'A todos los del texto.'], 0),
+        mc('Lee: "My brother and I are from Trujillo. We\'re late. My cousins are in Lima and they\'re at school." — ¿Quiénes están en el colegio?', [
+          'Los primos.',
+          'Quien escribe y su hermano.',
+          'Todos.',
+          'Nadie: llegaron tarde.'], 0),
+        writing('Escríbelo en inglés: "Ellos están en el colegio."', ["They're at school."],
+          { hint: 'Usa la forma contraída: they + are → they\'re.',
+            reject: [["They's at school.", 'Con "they" es "they\'re", no "they\'s".'], ['They is at school.', 'Con "they" va "are".']] }),
       ] },
     { id: 'modulo3-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**3.** **Las negaciones: isn't y aren't**
 
@@ -599,6 +687,19 @@ Ejemplos:
         tap('Toca la palabra incorrecta:', ["I'm", 'happy', 'but', 'she', "amn't", 'tired.'], 4, "isn't"),
         rebuild('Escucha y reconstruye:', "She isn't ready", ['She', "isn't", 'ready', 'They', "aren't", "amn't"]),
         rebuild('Escucha y reconstruye:', "I'm not happy", ["I'm", 'not', 'happy', "You're", "amn't", 'sad']),
+        mc('Lee: "My sister isn\'t ready. My cousins are in Trujillo and they aren\'t here." — ¿Quiénes no están aquí?', [
+          'Los primos.',
+          'La hermana.',
+          'Quien escribe el texto.',
+          'Nadie: todos ya llegaron.'], 0),
+        mc('Lee: "My sister isn\'t ready. My brothers aren\'t here. I\'m not ready today." — ¿Quiénes no están listos?', [
+          'La hermana y quien escribe.',
+          'Solo la hermana.',
+          'La hermana y los hermanos.',
+          'Todos.'], 0),
+        writing('Escríbelo en inglés: "Yo no estoy feliz."', ["I'm not happy."],
+          { hint: 'Ojo: "am not" no se junta en una sola palabra.',
+            reject: [["I amn't happy.", 'No existe "amn\'t": es "I\'m not happy."'], ["I aren't happy.", 'Con "I" no va "aren\'t".']] }),
       ] },
     { id: 'modulo3-teoria-4', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**4.** **¿Cuándo usar contracciones?**
 
@@ -627,6 +728,16 @@ Las contracciones son **la forma natural** de hablar en inglés en contextos cot
         mc('¿Cuál afirmación sobre las contracciones es CORRECTA?', ['Son obligatorias en contextos formales', 'Son la norma en el habla cotidiana', 'Solo se usan al escribir', 'Son incorrectas en inglés real'], 1),
         tap('Toca la palabra incorrecta:', ["We're", 'late', 'and', "they's", 'tired.'], 3, "they're"),
         rebuild('Escucha y reconstruye (habla natural):', "It's nice to meet you", ["It's", 'nice', 'to', 'meet', 'you', 'It', 'is', 'her']),
+        mc('Tu prima te escribe por WhatsApp: "I\'m at the bus station. We\'re late." — ¿Qué está pasando?', [
+          'Está en el paradero y van tarde.',
+          'Está en el paradero y llegaron temprano.',
+          'Está en su casa y van tarde.',
+          'Perdió el bus y ya no va.'], 0),
+        mc('Los dos textos dicen lo mismo: "I\'m not ready. We\'re late." / "I am not ready. We are late." — ¿En qué se diferencian?', [
+          'Solo en que uno usa contracciones.',
+          'En que uno dice algo distinto.',
+          'En que uno tiene errores.',
+          'En que uno habla del pasado.'], 0),
       ] },
     { id: 'modulo3-resumen', type: 'resumen', markdown: `## **🎯 Resumen: Los disfraces de Is-abella**
 
@@ -715,6 +826,19 @@ Imagina que tienes algo frente a ti y quieres decir qué es. Sigue estos pasos:
         tap('Toca la palabra incorrecta:', ['This', 'is', 'a', 'phone', 'and', 'it', 'are', 'new.'], 6, 'is'),
         tap('Toca la palabra incorrecta:', ['This', 'is', 'a', 'book.', 'That', 'is', 'blue.'], 4, 'It'),
         rebuild('🎧 Presenta algo cercano y descríbelo:', 'This is a cat. It is small.', ['This', 'is', 'a', 'cat.', 'It', 'is', 'small.', 'That', 'These', 'are', 'the']),
+        mc('Lee: "This is a book. It is blue. This is a phone and it is new." — ¿Qué es nuevo?', [
+          'El teléfono.',
+          'El libro.',
+          'El libro y el teléfono.',
+          'Nada: los dos son azules.'], 0),
+        mc('Lee: "This is a cat. It is small. This is a book. It is new." — ¿Qué dice el texto?', [
+          'Que el gato es pequeño y el libro es nuevo.',
+          'Que el gato es nuevo y el libro es pequeño.',
+          'Que el gato y el libro son nuevos.',
+          'Que el gato y el libro son pequeños.'], 0),
+        writing('Escríbelo en inglés: "Esto es un teléfono y es nuevo."', ['This is a phone and it is new.'],
+          { hint: 'Presenta con "This is" y sigue con "It is" para no repetir el nombre.',
+            reject: [['This is a phone and it are new.', 'Con "it" va "is": it is new.'], ['This is a phone and that is new.', 'Para lo ya mencionado va "it", no "that".'], ['This is a phone and is new.', 'En inglés el sujeto no se omite: and it is new.']] }),
       ] },
     { id: 'modulo4-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**📌 ¿Cuándo usar "a" y cuándo "an"?**
 
@@ -733,6 +857,19 @@ Ambos significan *"un/una"*, pero se eligen según el **sonido** con el que empi
         tap('Toca la palabra incorrecta:', ['an', 'old', 'bus', 'and', 'a', 'egg'], 4, 'an'),
         tap('Toca la palabra incorrecta:', ['a', 'table', 'and', 'a', 'apple'], 3, 'an'),
         rebuild('🎧 Arma el artículo correcto:', 'an apple and a cat', ['an', 'apple', 'and', 'a', 'cat', 'the', 'egg', 'an', 'bus']),
+        mc('Lee: "This is an apple. This is a table and it is new. This is a university and this is an old bus." — ¿Qué es nuevo?', [
+          'La mesa.',
+          'La manzana.',
+          'El bus.',
+          'La universidad.'], 0),
+        mc('Lee: "This is an apple. This is a table and it is new. This is a university and this is an old bus." — ¿Qué dice el texto de la mesa y del bus?', [
+          'Que la mesa es nueva y el bus es viejo.',
+          'Que la mesa es vieja y el bus es nuevo.',
+          'Que los dos son nuevos.',
+          'Que los dos son viejos.'], 0),
+        writing('Escríbelo en inglés: "Esto es una manzana."', ['This is an apple.'],
+          { hint: 'Fíjate en el sonido inicial: "apple" empieza con sonido de vocal.',
+            reject: [['This is a apple.', 'Antes de sonido de vocal va "an": an apple.'], ['This is apple.', 'En singular no puede faltar el artículo: an apple.']] }),
       ] },
     { id: 'modulo4-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🎯 Poniéndolo todo junto: this/that/it + artículos**
 
@@ -769,6 +906,19 @@ Ahora combinamos todo en frases reales. Fíjate cómo cambia **this/that**, apar
         tap('Toca la palabra incorrecta:', ['This', 'is', 'an', 'cat', 'and', 'it', 'is', 'blue.'], 2, 'a'),
         tap('Toca la palabra incorrecta:', ['That', 'is', 'a', 'old', 'bus', 'and', 'it', 'is', 'yellow.'], 2, 'an'),
         rebuild('🎧 Presenta lejos y describe con "the":', 'That is a bus. The bus is yellow.', ['That', 'is', 'a', 'bus.', 'The', 'bus', 'is', 'yellow.', 'This', 'an', 'it', 'old']),
+        mc('Lee: "This is a cat. It is blue. That is a bus. It is yellow." — ¿Qué es amarillo?', [
+          'El bus.',
+          'El gato.',
+          'El gato y el bus.',
+          'Nada: los dos son azules.'], 0),
+        mc('Lee: "That is a bus. The bus is yellow. This is a cat and it is blue." — ¿De qué bus habla la segunda oración?', [
+          'Del mismo bus que acaba de señalar.',
+          'De otro bus que está más cerca.',
+          'De cualquier bus de la ciudad.',
+          'De un bus nuevo, no del amarillo.'], 0),
+        writing('Escríbelo en inglés: "Ese es un bus viejo y es amarillo."', ['That is an old bus and it is yellow.'],
+          { hint: 'Está lejos, así que va "that"; y antes de "old" va "an".',
+            reject: [['That is a old bus and it is yellow.', 'Antes de sonido de vocal va "an": an old bus.'], ['This is an old bus and it is yellow.', 'Si está lejos va "that", no "this".'], ['That is an old bus and is yellow.', 'Falta el sujeto: and it is yellow.']] }),
       ] },
     { id: 'modulo4-resumen', type: 'resumen', markdown: `**📌 Puntos clave:**
 
@@ -842,6 +992,19 @@ Fíjate: no traducimos palabra por palabra "hay". En lugar de eso, decimos "*the
         tap('Toca la palabra incorrecta:', ['There', 'is', 'a', 'store', 'and', 'there', 'is', 'many', 'buses.'], 6, 'are'),
         tap('Toca la palabra incorrecta:', ['There', 'are', 'many', 'shops', 'and', 'there', 'is', 'two', 'parks.'], 6, 'are'),
         rebuild('Existe en plural:', 'There are many people here', ['There', 'are', 'many', 'people', 'here', 'is', 'their', 'a', 'one']),
+        mc('Lee: "There is a bus stop on this street. There is a store on this street too. There are many people at the park." — ¿Qué hay en esta calle?', [
+          'Una parada de bus y una tienda.',
+          'Una parada de bus y mucha gente.',
+          'Un parque y una tienda.',
+          'Un parque y mucha gente.'], 0),
+        mc('Lee: "There is a park and there are many shops. There are many people at the park. There is a bus stop on this street." — ¿De qué cosas hay una sola?', [
+          'Del parque y de la parada de bus.',
+          'Del parque y de las tiendas.',
+          'De las tiendas y de la gente.',
+          'De la parada de bus y de la gente.'], 0),
+        writing('Escríbelo en inglés: "Hay mucha gente en el parque."', ['There are many people at the park.', 'There are many people in the park.'],
+          { hint: 'Si son varios, va "there are".',
+            reject: [['There is many people at the park.', 'Con plural va "there are", no "there is".'], ['There have many people at the park.', 'En inglés "hay" no lleva "have": va "there are".']] }),
       ] },
     { id: 'modulo5-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**📍 Preposiciones de lugar**
 
@@ -867,6 +1030,19 @@ Unas preposiciones útiles:
         tap('Toca la palabra incorrecta:', ['There', 'is', 'a', 'book', 'in', 'the', 'table.'], 4, 'on'),
         tap('Toca la palabra incorrecta:', ['The', 'bank', 'is', 'next', 'to', 'the', 'school', 'and', 'the', 'park', 'is', 'under', 'the', 'store.'], 11, 'behind'),
         rebuild('🎧 Ubicación con under:', 'There is a cat under the seat', ['There', 'is', 'a', 'cat', 'under', 'the', 'seat', 'are', 'on', 'in', 'their']),
+        mc('Lee: "The park is next to the school. The bank is next to the school and the park is behind the store. The bus stop is in front of a bakery." — ¿Qué está al lado del colegio?', [
+          'El parque y el banco.',
+          'El parque y la tienda.',
+          'El banco y la panadería.',
+          'La parada de bus y el banco.'], 0),
+        mc('Lee: "There is a book on the table. There is a cat under the seat. The bus stop is in front of a bakery." — ¿Qué ubicación es la correcta?', [
+          'El gato está debajo del asiento.',
+          'El gato está sobre la mesa.',
+          'El libro está debajo del asiento.',
+          'El libro está en frente de la panadería.'], 0),
+        writing('Escríbelo en inglés: "Hay un libro sobre la mesa."', ['There is a book on the table.'],
+          { hint: 'Contacto con una superficie: "on".',
+            reject: [['There is a book in the table.', 'Sobre una superficie va "on", no "in".'], ['There is a book under the table.', '"Under" es debajo; para encima va "on".']] }),
       ] },
     { id: 'modulo5-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🗺️ Combinando existencia y ubicación**
 
@@ -887,6 +1063,19 @@ Como ves, combinando **there is/are** con ubicaciones, puedes dibujar con palabr
         tap('Toca la palabra incorrecta:', ['There', 'is', 'a', 'dog', 'and', 'there', 'is', 'two', 'cats', 'under', 'the', 'seat.'], 6, 'are'),
         tap('Toca la palabra incorrecta:', ['Are', 'there', 'a', 'bus', 'stop', 'in', 'front', 'of', 'the', 'bank?'], 0, 'Is'),
         rebuild('🎧 Pregunta con preposición:', 'Are there any shops next to the park', ['Are', 'there', 'any', 'shops', 'next', 'to', 'the', 'park', 'Is', 'is', 'in', 'their']),
+        mc('Lee: "There is a cat on the bus! It is under a seat. The driver is next to the door. There are 3 people in front of the bus." — ¿Dónde está el gato?', [
+          'En el bus, debajo de un asiento.',
+          'En el bus, al lado de la puerta.',
+          'En frente del bus, con las 3 personas.',
+          'Al lado de la puerta, con el chofer.'], 0),
+        mc('Un turista pregunta: "Is there a park here? Is there a bus stop in front of the bank? Are there any shops next to the park?" — ¿Qué quiere encontrar cerca del banco y del parque?', [
+          'Un paradero frente al banco y tiendas junto al parque.',
+          'Un paradero junto al parque y tiendas frente al banco.',
+          'Un parque frente al banco y tiendas junto al paradero.',
+          'Un banco junto al parque y tiendas frente al paradero.'], 0),
+        writing('Escríbelo en inglés: "¿Hay tiendas cerca?"', ['Are there stores nearby?', 'Are there shops nearby?'],
+          { hint: 'En preguntas, el verbo va antes de "there".',
+            reject: [['Is there stores nearby?', 'Con plural va "Are there", no "Is there".'], ['There are stores nearby?', 'En la pregunta el verbo va primero: "Are there stores nearby?".'], ['Are there a store nearby?', 'Con plural no va "a": "Are there stores nearby?".']] }),
       ] },
     { id: 'modulo5-resumen', type: 'resumen', markdown: `**📌 Puntos clave:**
 
@@ -967,6 +1156,19 @@ Necesitamos a los agentes especiales **Is-abella** (para *to be*) y **Do-ménica
         tap('Toca la palabra incorrecta:', ['Where', 'does', 'you', 'live', 'and', 'what', 'do', 'they', 'do?'], 1, 'do'),
         tap('Toca la palabra incorrecta:', ['What', 'do', 'you', 'study', 'and', 'where', 'do', 'you', 'works?'], 8, 'work?'),
         rebuild('🎧 Una pregunta con verbo de acción:', 'Where do you live', ['Where', 'do', 'you', 'live', 'does', 'were', 'lives', 'leave']),
+        mc('Rosa le escribe a Luis: "Where do you live and where do you work?" Luis responde: "I live in Trujillo. I work downtown every day." — ¿A quién se refiere "you" en las preguntas?', [
+          'A Luis, que responde el mensaje.',
+          'A Rosa, que escribe el mensaje.',
+          'A Rosa y a Luis, a los dos.',
+          'A un grupo de compañeros de trabajo.'], 0),
+        mc('Rosa le escribe a Luis: "Where do you live and where do you work?" Luis responde: "I live in Trujillo. I work downtown every day." — ¿Qué es cierto de Luis?', [
+          'Vive en Trujillo y trabaja en el centro.',
+          'Vive en el centro y trabaja en Trujillo.',
+          'Vive en Trujillo y todavía no trabaja.',
+          'Vive y trabaja en el mismo sitio.'], 0),
+        writing('Escríbelo en inglés: "¿Dónde vives?"', ['Where do you live?'],
+          { hint: 'Con un verbo de acción, la pregunta necesita "do".',
+            reject: [['Where you live?', 'Falta el auxiliar: Where do you live?'], ['Where does you live?', 'Con "you" va "do", no "does".'], ['Where do you lives?', 'Después de "do" el verbo va sin -s: live.']] }),
       ] },
     { id: 'modulo6-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🕵️ Los agentes especiales: Is-abella y Do-ménica**
 
@@ -989,6 +1191,19 @@ Do-ménica se llevó esa **s** como evidencia 🔍.`,
         tap('Toca la palabra incorrecta:', ['Where', 'does', 'she', 'lives', 'and', 'what', 'does', 'he', 'do?'], 3, 'live'),
         tap('Toca la palabra incorrecta:', ['What', 'do', 'you', 'study', 'and', 'where', 'do', 'she', 'work?'], 6, 'does'),
         rebuild('🎧 Una pregunta con he/she:', 'Where does she live', ['Where', 'does', 'she', 'live', 'do', 'lives', 'were', 'leave']),
+        mc('Rosa le escribe a Milagros sobre sus primos Luis y Carmen: "Where does she live? What does he do? And what do you study?" — ¿Por quién pregunta Rosa cuando dice "she"?', [
+          'Por Carmen, la prima.',
+          'Por Luis, el primo.',
+          'Por Milagros, que lee el mensaje.',
+          'Por ella misma, que escribe el mensaje.'], 0),
+        mc('Rosa le escribe a Milagros sobre sus primos Luis y Carmen: "Where does she live? What does he do? And what do you study?" — ¿Qué información pide Rosa sobre Luis?', [
+          'A qué se dedica Luis.',
+          'Dónde vive Luis.',
+          'Qué estudia Luis.',
+          'Con quién vive Luis.'], 0),
+        writing('Escríbelo en inglés: "¿Dónde vive ella?"', ['Where does she live?'],
+          { hint: 'Con "she" el auxiliar es "does", y el verbo principal va sin -s.',
+            reject: [['Where does she lives?', 'Con "does" el verbo pierde la -s: live.'], ['Where do she live?', 'Con "she" va "does", no "do".'], ['Where she lives?', 'Falta el auxiliar: Where does she live?']] }),
       ] },
     { id: 'modulo6-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🎤 Palabras Wh-atsapp comunes:**
 
@@ -1019,6 +1234,18 @@ Do-ménica se llevó esa **s** como evidencia 🔍.`,
         tap('Toca la palabra incorrecta:', ['What', 'is', 'your', 'name', 'and', 'where', 'do', 'you', 'lives?'], 8, 'live?'),
         tap('Toca la palabra incorrecta:', ['Who', 'are', 'that', 'girl', 'and', 'what', 'is', 'her', 'name?'], 1, 'is'),
         rebuild('🎧 Una pregunta con When:', 'When do you arrive', ['When', 'do', 'you', 'arrive', 'does', 'where', 'arrives', 'were']),
+        mc('Luis llega a una fiesta y le escribe a Milagros: "Who is that girl and what is her name? When do you arrive? Where is the bathroom?" — ¿De quién quiere saber Luis la hora de llegada?', [
+          'De Milagros, que lee el mensaje.',
+          'De la chica de la fiesta.',
+          'De él mismo, que ya llegó.',
+          'De todos los invitados a la fiesta.'], 0),
+        mc('Luis llega a una fiesta y le escribe a Milagros: "Who is that girl and what is her name? When do you arrive? Where is the bathroom?" — ¿Qué información pide Luis sobre la chica?', [
+          'Quién es y cómo se llama.',
+          'Dónde vive y cómo se llama.',
+          'Cuándo llega y quién es.',
+          'De dónde es y cómo se llama.'], 0),
+        writing('Escríbelo en inglés: "¿Cuál es tu nombre?"', ['What is your name?'],
+          { reject: [['What do you name?', 'Aquí el verbo es to be: What is your name?'], ['Who is your name?', '"Who" pregunta por una persona; para el nombre va "What".'], ['What are your name?', 'Con "your name" en singular va "is", no "are".']] }),
       ] },
     { id: 'modulo6-teoria-4', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🤔 Más palabras Wh-atsapp:**
 
@@ -1044,6 +1271,19 @@ Do-ménica se llevó esa **s** como evidencia 🔍.`,
         tap('Toca la palabra incorrecta:', ['Why', 'do', 'you', 'study', 'and', 'how', 'does', 'she', 'works?'], 8, 'work?'),
         tap('Toca la palabra incorrecta:', ['How', 'do', 'you', 'go', 'to', 'work', 'and', 'why', 'does', 'you', 'study?'], 8, 'do'),
         rebuild('🎧 Una pregunta con Why:', 'Why do you study English', ['Why', 'do', 'you', 'study', 'English', 'does', 'were', 'studies', 'why']),
+        mc('Milagros le escribe a Luis sobre Carmen, la hermana de él: "Why is she happy and why does she work late? How do you go to work?" — ¿De quién quiere saber Milagros cómo va al trabajo?', [
+          'De Luis, que lee el mensaje.',
+          'De Carmen, la hermana de Luis.',
+          'De ella misma, que escribe el mensaje.',
+          'De Carmen y de Luis, de los dos.'], 0),
+        mc('Milagros le escribe a Luis sobre Carmen, la hermana de él: "Why is she happy and why does she work late? How do you go to work?" — ¿Qué quiere saber Milagros sobre Carmen?', [
+          'Por qué está feliz y por qué trabaja tarde.',
+          'Por qué está feliz y cómo va al trabajo.',
+          'Dónde trabaja y por qué está feliz.',
+          'Cómo va al trabajo y por qué trabaja tarde.'], 0),
+        writing('Escríbelo en inglés: "¿Cuántos hermanos tienes?"', ['How many brothers do you have?'],
+          { hint: 'Para preguntar cantidad de cosas contables se usa "How many" + el sustantivo.',
+            reject: [['How much brothers do you have?', '"How much" es para lo que no se cuenta; aquí va "How many".'], ['How many brothers you have?', 'Falta el auxiliar: How many brothers do you have?'], ['How many brothers does you have?', 'Con "you" va "do", no "does".']] }),
       ] },
     { id: 'modulo6-resumen', type: 'resumen', markdown: `**📌 Resumen de la fórmula:**
 
@@ -1132,6 +1372,19 @@ No se trata de gramática complicada esta vez, sino de saber qué decir en el mo
         tap('Toca la palabra incorrecta:', ['Good', 'night,', 'how', 'are', 'you?'], 1, 'evening,'),
         tap('Toca la palabra incorrecta:', ['Hi!', 'Good', 'night,', 'how', 'are', 'you?'], 2, 'afternoon,'),
         rebuild('Escucha y reconstruye:', 'Good morning', ['Good', 'morning', 'evening', 'night', 'afternoon', 'hello']),
+        mc('Lee: "Rosa: Hi! Good afternoon, how are you? Luis: Good afternoon, Rosa. Milagros: Good evening!" — ¿En qué momento del día llegó Milagros?', [
+          'Más tarde que Rosa y Luis, ya de noche.',
+          'Antes que Rosa y Luis, en la mañana.',
+          'A la misma hora que Rosa y Luis.',
+          'Al día siguiente, muy temprano.'], 0),
+        mc('Lee: "Rosa: Good evening, how are you? Luis: Good evening, Rosa. Milagros: Good night, Rosa. Good night, Luis." — ¿Qué está pasando en la reunión?', [
+          'Rosa y Luis se saludan y Milagros se despide.',
+          'Los tres se están despidiendo a la vez.',
+          'Los tres acaban de llegar a la reunión.',
+          'Milagros saluda y Rosa y Luis se van.'], 0),
+        writing('Escríbelo en inglés: "Buenas noches, ¿cómo estás?" (llegando a una reunión a las 8 p.m.)', ['Good evening, how are you?'],
+          { hint: 'Para SALUDAR de noche va "Good evening".',
+            reject: [['Good night, how are you?', '"Good night" es solo para despedirse: al llegar va "Good evening".'], ['Good afternoon, how are you?', '"Good afternoon" es para la tarde: a las 8 p.m. va "Good evening".']] }),
       ] },
     { id: 'modulo7-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🤝 Presentaciones**
 
@@ -1146,6 +1399,19 @@ No se trata de gramática complicada esta vez, sino de saber qué decir en el mo
         tap('Toca la palabra incorrecta:', ['Nice', 'to', 'meet', 'your.'], 3, 'you.'),
         tap('Toca la palabra incorrecta:', ['Nice', 'to', 'meet', 'you,', 'two.'], 4, 'too.'),
         rebuild('Escucha y reconstruye:', 'Nice to meet you too', ['Nice', 'to', 'meet', 'you', 'too', 'meat', 'two', 'see', 'hello']),
+        mc('Lee: "Rosa: Good evening. Nice to meet you. Milagros: Nice to meet you, too. Luis: Good evening, Rosa." — ¿Quiénes se conocen por primera vez?', [
+          'Rosa y Milagros, que se presentan recién hoy.',
+          'Rosa y Luis, que se presentan recién hoy.',
+          'Luis y Milagros, que se presentan recién hoy.',
+          'Los tres, que ya se conocían de antes.'], 0),
+        mc('Lee: "Rosa: Good evening. Nice to meet you. Milagros: Nice to meet you, too. Luis: Nice to meet you, too." — ¿Qué hacen Milagros y Luis?', [
+          'Le responden a Rosa que para ellos también es un gusto.',
+          'Le dicen a Rosa que ya la conocían de antes.',
+          'Se despiden de Rosa porque ya se van.',
+          'Le presentan a Rosa dos personas más.'], 0),
+        writing('Escríbelo en inglés: "Igualmente." (respondiendo a "Nice to meet you")', ['Nice to meet you, too.'],
+          { hint: 'Para decir "igualmente" se agrega ", too" al final.',
+            reject: [['Nice to meet you, two.', '"Two" es el número 2: aquí va "too" (también).'], ['Nice to meet your, too.', 'Es "you", no "your".']] }),
       ] },
     { id: 'modulo7-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**👋 Despedidas (Farewells)**
 
@@ -1164,6 +1430,18 @@ No se trata de gramática complicada esta vez, sino de saber qué decir en el mo
         tap('Toca la palabra incorrecta:', ['Good', 'night,', 'welcome', 'to', 'the', 'party!'], 1, 'evening,'),
         tap('Toca la palabra incorrecta:', ['See', 'you', 'letter,', 'take', 'care!'], 2, 'later,'),
         rebuild('Escucha y reconstruye:', 'See you later take care', ['See', 'you', 'later', 'take', 'care', 'soon', 'sea', 'letter', 'bye']),
+        mc('Lee: "Rosa: Good evening, welcome to the party! Luis: Good night, Rosa. See you later, take care!" — ¿Quién se va de la fiesta?', [
+          'Luis, que se está despidiendo de Rosa.',
+          'Rosa, que lo recibe en la puerta.',
+          'Los dos, que se van juntos de ahí.',
+          'Ninguno de los dos: recién están llegando.'], 0),
+        mc('Lee: "Rosa: Good morning, Luis. Luis: Good morning! See you later, take care! Rosa: Bye, Luis. See you soon!" — ¿Qué esperan Rosa y Luis?', [
+          'Volver a verse pronto, ese mismo día.',
+          'No volver a verse nunca más.',
+          'Verse recién al día siguiente en la noche.',
+          'Quedarse juntos toda la mañana.'], 0),
+        writing('Escríbelo en inglés: "Nos vemos luego, ¡cuídate!"', ['See you later, take care!'],
+          { reject: [['See you letter, take care!', '"Letter" es carta: para "luego" va "later".'], ['See you late, take care!', 'Es "later" (luego), no "late" (tarde).']] }),
       ] },
     { id: 'modulo7-teoria-4', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🙏 Agradecimientos**
 
@@ -1185,6 +1463,19 @@ No se trata de gramática complicada esta vez, sino de saber qué decir en el mo
         tap('Toca la palabra incorrecta:', ['Your', 'welcome,', 'no', 'problem.'], 0, "You're"),
         tap('Toca la palabra incorrecta:', ['Thank', 'a', 'lot', 'for', 'helping!'], 0, 'Thanks'),
         rebuild('Escucha y reconstruye:', 'Thank you so much', ['Thank', 'you', 'so', 'much', 'a', 'lot', 'welcome', 'please']),
+        mc('Lee: "Rosa: Thanks a lot for helping! Luis: You\'re welcome, no problem. Milagros: Thank you so much! Luis: My pleasure." — ¿Quién ayudó a las otras dos personas?', [
+          'Luis, que responde a los dos agradecimientos.',
+          'Rosa, que es la primera en hablar.',
+          'Milagros, que agradece al final de todo.',
+          'Nadie: los tres le agradecen a otra persona.'], 0),
+        mc('Lee: "Rosa: Thank you. Milagros: Thank you so much! Thanks a lot for helping! Luis: You\'re welcome." — ¿Quién agradece con más énfasis?', [
+          'Milagros, que agradece dos veces y con énfasis.',
+          'Rosa, que agradece con una frase corta.',
+          'Luis, que agradece al final de todo.',
+          'Las tres personas agradecen con el mismo énfasis.'], 0),
+        writing('Escríbelo en inglés: "De nada, no hay problema."', ['You\'re welcome, no problem.'],
+          { hint: 'Ojo con el apóstrofo: "You\'re" es "you are".',
+            reject: [['Your welcome, no problem.', '"Your" es posesivo: aquí va "You\'re" (you are).'], ['You welcome, no problem.', 'Falta el verbo: "You\'re welcome, no problem."']] }),
       ] },
     { id: 'modulo7-teoria-5', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🙋 Por favor y pedir algo**
 
@@ -1202,6 +1493,19 @@ No se trata de gramática complicada esta vez, sino de saber qué decir en el mo
         tap('Toca la palabra incorrecta:', ['Could', 'you', 'passes', 'the', 'salt,', 'please?'], 2, 'pass'),
         tap('Toca la palabra incorrecta:', ['Excuse', 'you,', 'could', 'you', 'help', 'me?'], 1, 'me,'),
         rebuild('Escucha y reconstruye:', 'Could you help me please', ['Could', 'you', 'help', 'me', 'please', 'can', 'do', 'excuse', 'sorry']),
+        mc('Lee: "Rosa: Excuse me, could you help me? Luis: Could you pass the salt, please? Milagros: Open the window." — ¿Quién pidió algo sin ser educada?', [
+          'Milagros, que lo pide como si fuera una orden.',
+          'Rosa, que interrumpe para hablarle a alguien.',
+          'Luis, que pide algo en plena mesa.',
+          'Ninguno: los tres piden con educación.'], 0),
+        mc('Lee: "Rosa: Excuse me, could you help me? Luis: No problem. Rosa: Thanks a lot for helping!" — ¿Qué pasó entre Rosa y Luis?', [
+          'Rosa pidió ayuda con educación y Luis la ayudó.',
+          'Rosa le dio las gracias y Luis le pidió ayuda.',
+          'Rosa se disculpó con Luis por un problema.',
+          'Rosa saludó a Luis y él se despidió.'], 0),
+        writing('Escríbelo en inglés: "¿Podrías abrir la ventana, por favor?"', ['Could you open the window, please?'],
+          { hint: 'La fórmula es: Could you + verbo + ..., please?',
+            reject: [['Could you opens the window, please?', 'Después de "could you" el verbo va sin -s: open.'], ['Open the window, please.', 'Así suena a orden: va "Could you open the window, please?"']] }),
       ] },
     { id: 'modulo7-teoria-6', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**😅 Disculpas**
 
@@ -1218,6 +1522,16 @@ No se trata de gramática complicada esta vez, sino de saber qué decir en el mo
         tap('Toca la palabra incorrecta:', ['Sorry,', 'that', 'was', 'my', 'bat.'], 4, 'bad.'),
         tap('Toca la palabra incorrecta:', ['Excuse', 'me,', "I'm", 'sorry', 'for', 'the', 'noises.'], 6, 'noise.'),
         rebuild('Escucha y reconstruye:', "I'm sorry about that", ["I'm", 'sorry', 'about', 'that', 'my', 'bad', 'excuse', 'please']),
+        mc('Lee: "Rosa: Excuse me, I\'m sorry for the noise. Luis: No problem. Milagros: Sorry, that was my bad." — ¿Quién no se disculpó por nada?', [
+          'Luis, que solo responde que no hay problema.',
+          'Rosa, que se disculpa por el ruido.',
+          'Milagros, que dice que fue su culpa.',
+          'Ninguno: los tres se disculpan por algo.'], 0),
+        mc('Lee: "Rosa: Sorry, that was my bad. Luis: I\'m sorry about that. Milagros: No problem." — ¿Quién se disculpa de la forma más informal?', [
+          'Rosa, que dice que la culpa fue suya.',
+          'Luis, que se disculpa por lo que pasó.',
+          'Milagros, que responde y no se disculpa.',
+          'Los dos se disculpan con la misma formalidad.'], 0),
       ] },
     { id: 'modulo7-teoria-7', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🚍 Frases en el bus o calle**
 
@@ -1238,6 +1552,19 @@ Estas frases te sacarán de apuros en la mayoría de situaciones cotidianas. Fí
         tap('Toca la palabra incorrecta:', ['Can', 'I', 'get', 'on', 'here,', 'please?'], 3, 'off'),
         tap('Toca la palabra incorrecta:', ['How', 'many', 'is', 'the', 'fare?'], 1, 'much'),
         rebuild('Escucha y reconstruye:', 'Can I get off here please?', ['Can', 'I', 'get', 'off', 'here', 'please?', 'on', 'the', 'bus', 'do']),
+        mc('Lee: "Rosa: Excuse me, does this bus go to Miraflores? Luis: How much is the fare? Milagros: Can I get off here, please?" — ¿Quién todavía no sabe si ese bus le sirve?', [
+          'Rosa, que pregunta por la ruta del bus.',
+          'Luis, que pregunta cuánto cuesta el pasaje.',
+          'Milagros, que quiere bajarse en ese punto.',
+          'Los tres ya saben adónde va el bus.'], 0),
+        mc('Lee: "Luis: Does this bus go to Lima? Rosa: I don\'t understand. Could you repeat that, please?" — ¿Por qué Rosa le pide algo a Luis?', [
+          'Porque no entendió su pregunta sobre la ruta.',
+          'Porque no sabe cuánto cuesta el pasaje.',
+          'Porque quiere bajarse del bus en Lima.',
+          'Porque Luis no entendió lo que dijo Rosa.'], 0),
+        writing('Escríbelo en inglés: "¿Este bus va a Miraflores?"', ['Does this bus go to Miraflores?'],
+          { hint: 'La pregunta empieza con "Does" y el verbo se queda igual.',
+            reject: [['Do this bus go to Miraflores?', 'Con "this bus" (uno solo) va "Does", no "Do".'], ['Does this bus goes to Miraflores?', 'Después de "does" el verbo va sin -s: go.']] }),
       ] },
     { id: 'modulo7-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -1319,6 +1646,20 @@ Practica: *"Thank you, Th-th-Thursday, three, thirteen, thirty-three"*.
         tap('Toca la pronunciación INCORRECTA de la palabra:', ['"Thanks"', 'suena', '"tanks".'], 2, '"θanks".'),
         tap('Toca la palabra escrita con el sonido TH MAL imitado:', ['θanks', 'θree', 'fanks', 'θirteen'], 2, 'θanks'),
         rebuild('Escucha y reconstruye:', 'Thanks for three things', ['Thanks', 'for', 'three', 'things', 'tanks', 'tree', 'fanks', 'free']),
+        mc('Lee: "Thanks for three things. Thank you! Thursday, thirteen, thirty-three." — ¿Cuál palabra del texto NO lleva el sonido TH?', [
+          'La palabra "for".',
+          'La palabra "Thursday".',
+          'La palabra "things".',
+          'La palabra "thirteen".'], 0),
+        mc('Lee: "Thanks for three things." — Si alguien lo lee "Tanks for tree things", ¿qué error comete?', [
+          'Pronuncia la th como una T simple.',
+          'Pronuncia la th sacando la lengua.',
+          'Pronuncia la th como una F.',
+          'Cambia las vocales de las palabras.'], 0),
+        writing('Escríbelo en inglés: "Gracias por tres cosas."', ['Thanks for three things.'],
+          { strict: true,
+            hint: 'Ese sonido se escribe con "th", no con "t" ni con "f".',
+            reject: [['Tanks for tree things.', 'La th no es una T: Thanks for three things.'], ['Fanks for free things.', 'La th no es una F: Thanks for three things.']] }),
       ] },
     { id: 'modulo8-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🔤 B vs V – En inglés sí se diferencian**
 
@@ -1336,6 +1677,20 @@ Practica: **Berry** (baya) vs **Very** (muy). **Boat** vs **Vote**. Siente la vi
         tap('Toca la pronunciación INCORRECTA de la palabra:', ['"Very"', 'suena', '"bery".'], 2, '"vvvery" (con vibración).'),
         tap('Toca la palabra que se pronuncia con V (no con B):', ['boat', 'baby', 'vote', 'bus'], 2, 'vote'),
         rebuild('Escucha y reconstruye:', 'Very good video', ['Very', 'good', 'video', 'berry', 'boat', 'vote', 'bad', 'bus']),
+        mc('Lee: "Very good video. Berry and very. Boat and vote." — ¿Cuáles palabras se pronuncian con los dientes sobre el labio inferior?', [
+          'Las que van con v: very, video y vote.',
+          'Las que van con b: berry y boat.',
+          'Todas, porque en inglés b y v suenan igual.',
+          'Solo "very", porque abre el texto.'], 0),
+        mc('Lee: "Very good video." — Si alguien lo dice "Berry good video", ¿qué cambió?', [
+          'Pronunció la v de "very" como una b.',
+          'Pronunció la b de "berry" como una v.',
+          'Cambió la vocal de la primera palabra.',
+          'Sacó la lengua entre los dientes.'], 0),
+        writing('Escríbelo en inglés: "Muy buen video."', ['Very good video.'],
+          { strict: true,
+            hint: 'La vibración de la V se escribe con "v", nunca con "b".',
+            reject: [['Berry good video.', '"Berry" es baya; "muy" es very, con v.'], ['Very good bideo.', 'Ojo: video va con v, igual que very.']] }),
       ] },
     { id: 'modulo8-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🔊 "ED" al final de verbos regulares en pasado**
 
@@ -1355,6 +1710,20 @@ A veces suena /t/, a veces /d/, a veces /ɪd/:
         tap('Toca la pronunciación INCORRECTA de la palabra:', ['"Worked"', 'suena', '"work-ed".'], 2, '"workt" (sonido /t/).'),
         tap('Toca la palabra cuya "-ed" suena /ɪd/ (sílaba extra), distinta de las demás:', ['worked', 'played', 'wanted', 'loved'], 2, 'wanted'),
         rebuild('Escucha y reconstruye:', 'I worked and played yesterday', ['I', 'worked', 'and', 'played', 'yesterday', 'wanted', 'walked', 'today', 'we']),
+        mc('Lee: "I worked and played yesterday. I wanted, too." — ¿Cuál de los tres verbos gana una sílaba al pronunciarse?', [
+          '"Wanted", que suena "wántid".',
+          '"Worked", que suena "work-ed".',
+          '"Played", que suena "pléy-ed".',
+          'Los tres ganan una sílaba.'], 0),
+        mc('Lee: "I worked and played yesterday. I wanted, too." — ¿Qué pasa con la "-ed" de los tres verbos?', [
+          'Se escribe igual, pero suena /t/, /d/ y /ɪd/.',
+          'Se escribe igual y suena igual en los tres.',
+          'Suena /ɪd/ en los tres, con sílaba extra.',
+          'Solo se pronuncia la "-ed" de "played".'], 0),
+        writing('Escríbelo en inglés: "Ayer trabajé y jugué."', ['I worked and played yesterday.'],
+          { strict: true,
+            hint: 'Aunque suene "workt" y "pleid", se escribe "-ed".',
+            reject: [['I workt and pleid yesterday.', 'No se escribe como suena: worked y played llevan "-ed".'], ['I work and play yesterday.', 'Falta el pasado: worked y played.']] }),
       ] },
     { id: 'modulo8-teoria-4', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🍫 CH vs SH – Diferencia sutil**
 
@@ -1372,6 +1741,20 @@ Practica: **cheap** (barato, "ch") vs **sheep** (oveja, "sh"). **Chip** vs **Shi
         tap('Toca la palabra con sonido SH (no CH):', ['chip', 'chocolate', 'cheap', 'ship'], 3, 'ship'),
         tap('Toca la palabra con sonido CH (no SH):', ['she', 'ship', 'cheap', 'sheep'], 2, 'cheap'),
         rebuild('Escucha y reconstruye:', 'She sells cheap ships', ['She', 'sells', 'cheap', 'ships', 'chips', 'sheep', 'beach', 'fish']),
+        mc('Lee: "She sells cheap ships. Chip and ship. Cheap and sheep." — En el texto hay dos pares que solo cambian en el sonido inicial. ¿Cuáles son?', [
+          'Chip con ship, y cheap con sheep.',
+          'Chip con cheap, y ship con sheep.',
+          'She con sheep, y chip con ship.',
+          'Ships con chip, y cheap con she.'], 0),
+        mc('Lee: "She sells cheap ships. Chip and ship. Cheap and sheep." — Al leer, ¿cómo sabes cuáles llevan el golpe de la CH?', [
+          'Porque van escritas con ch: chip y cheap.',
+          'Porque van escritas con sh: ship y sheep.',
+          'Porque son las palabras más cortas del texto.',
+          'No se puede saber leyendo: hay que escucharlas.'], 0),
+        writing('Escríbelo en inglés: "Ella vende barcos baratos."', ['She sells cheap ships.'],
+          { strict: true,
+            hint: 'El sonido continuo "shhh" se escribe "sh": ship, no chip.',
+            reject: [['She sells cheap chips.', 'Barco es "ship", con sh; "chip" va con ch.'], ['She sells cheap sheep.', '"Sheep" es oveja; barco es "ship".']] }),
       ] },
     { id: 'modulo8-teoria-5', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🗣️ R en inglés – No es nuestra R**
 
@@ -1389,6 +1772,16 @@ No es ni nuestra R fuerte ni débil. Es más suave, con la lengua sin vibrar, ca
         tap('Toca la pronunciación INCORRECTA de la frase:', ['La', 'R', 'en', '"red"', 'vibra.'], 4, 'no vibra.'),
         tap('Toca la palabra que NO lleva el sonido de la R inglesa:', ['red', 'run', 'love', 'arrive'], 2, 'love'),
         rebuild('Escucha y reconstruye:', 'Red car runs really fast', ['Red', 'car', 'runs', 'really', 'fast', 'blue', 'walks', 'very', 'slow']),
+        mc('Lee: "Red car runs really fast. Run and arrive." — ¿En cuáles palabras aparece el sonido de la R inglesa?', [
+          'En red, car, runs, really, run y arrive.',
+          'Solo en las que empiezan con r.',
+          'Solo en "red", que abre el texto.',
+          'Solo en "fast" y "car".'], 0),
+        mc('Lee: "Red car runs really fast." y "Thanks for three things." — ¿Qué sonido difícil trabaja cada oración?', [
+          'La R inglesa en la primera; la TH en la segunda.',
+          'La TH en la primera; la R inglesa en la segunda.',
+          'La R inglesa en las dos oraciones.',
+          'La TH en las dos oraciones.'], 0),
       ] },
     { id: 'modulo8-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -1474,6 +1867,18 @@ Recuerda las conjugaciones clave:
         tap('Toca la palabra incorrecta:', ['She', 'is', 'tired', 'and', 'they', 'is', 'happy.'], 5, 'are'),
         tap('Toca la palabra incorrecta:', ['I', 'are', 'a', 'doctor', 'and', 'you', 'are', 'a', 'nurse.'], 1, 'am'),
         rebuild('Escucha y reconstruye:', 'She is at home right now', ['She', 'is', 'at', 'home', 'right', 'now', 'are', 'am', 'he', 'the']),
+        mc('Lee: "Rosa is a doctor and Luis is a teacher. She is 30 years old. He is tired today." — ¿Quién tiene 30 años?', [
+          'Rosa, que es doctora.',
+          'Luis, que es maestro.',
+          'Los dos, Rosa y Luis.',
+          'Quien escribe el texto.'], 0),
+        mc('Lee: "My brother and I are Peruvian. We are at home today. My cousins are teachers and they are in the park." — ¿Quiénes están en casa hoy?', [
+          'Quien escribe y su hermano.',
+          'Los primos, que son maestros.',
+          'Toda la familia junta.',
+          'Quien escribe y sus primos.'], 0),
+        writing('Escríbelo en inglés: "Ella tiene 30 años."', ['She is 30 years old.', 'She is thirty years old.'],
+          { reject: [['She has 30 years old.', 'La edad va con to be: She is 30 years old.'], ['She have 30 years.', 'No se usa "have" para la edad: She is 30 years old.'], ['She are 30 years.', 'Con "she" va "is", y no olvides "old".']] }),
       ] },
     { id: 'modulo9-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**Repaso: Presente Simple**
 
@@ -1490,6 +1895,18 @@ Recuerda las conjugaciones clave:
         tap('Toca la palabra incorrecta:', ['My', 'friends', 'study', 'English', 'and', 'she', 'study', 'too.'], 6, 'studies'),
         tap('Toca la palabra incorrecta:', ['He', 'goes', 'to', 'school', 'but', 'they', 'goes', 'home.'], 6, 'go'),
         rebuild('Escucha y reconstruye:', 'She studies English every day', ['She', 'studies', 'English', 'every', 'day', 'study', 'he', 'studys', 'speaks', 'the']),
+        mc('Lee: "My brother speaks English and I speak Spanish. He goes to work by bus. I study English at night." — ¿Quién va al trabajo en bus?', [
+          'El hermano, que habla inglés.',
+          'Quien escribe, que habla español.',
+          'Los dos van juntos en bus.',
+          'Nadie: los dos estudian inglés.'], 0),
+        mc('Lee: "My cousins live in Trujillo. They play football on Sundays. Rosa studies medicine and she works every day." — ¿Qué hace Rosa?', [
+          'Estudia medicina y trabaja todos los días.',
+          'Estudia medicina y juega fútbol los domingos.',
+          'Vive en Trujillo y trabaja todos los días.',
+          'Vive en Trujillo y juega fútbol los domingos.'], 0),
+        writing('Escríbelo en inglés: "Ella estudia inglés todos los días."', ['She studies English every day.', 'She studies English everyday.'],
+          { reject: [['She study English every day.', 'Con "she" el verbo lleva -es: studies.'], ['She studys English every day.', 'Termina en -y tras consonante: study → studies.']] }),
       ] },
     { id: 'modulo9-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**Repaso: There is / There are**
 
@@ -1506,6 +1923,18 @@ Recuerda las conjugaciones clave:
         tap('Toca la palabra incorrecta:', ['There', 'is', 'a', 'book', 'and', 'there', 'is', 'two', 'pens.'], 6, 'are'),
         tap('Toca la palabra incorrecta:', ['There', 'are', 'three', 'dogs', 'and', 'there', 'are', 'one', 'cat.'], 6, 'is'),
         rebuild('Escucha y reconstruye:', 'There are two books on the table', ['There', 'are', 'two', 'books', 'on', 'the', 'table', 'is', 'a', 'three', 'in']),
+        mc('Lee: "There is a cat on the bus! It is under a seat. The driver is next to the door. There are 3 people in front of the bus." — ¿Qué está debajo de un asiento?', [
+          'El gato que subió al bus.',
+          'El chofer que maneja el bus.',
+          'Las tres personas del bus.',
+          'La puerta que está adelante.'], 0),
+        mc('Lee: "There is a book and there are two pens. There are three chairs in the room. There is no milk in the fridge." — ¿De qué cosas hay más de una?', [
+          'De los lapiceros y las sillas.',
+          'Del libro y los lapiceros.',
+          'De las sillas y la leche.',
+          'Del libro y las sillas.'], 0),
+        writing('Escríbelo en inglés: "Hay dos libros en la mesa."', ['There are two books on the table.'],
+          { reject: [['There is two books on the table.', 'Son varios: en plural va "there are".'], ['There have two books on the table.', 'Para decir "hay" no se usa "have": there are.']] }),
       ] },
     { id: 'modulo9-teoria-4', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**Repaso: Preguntas WH**
 
@@ -1523,6 +1952,18 @@ La fórmula para preguntas:
         tap('Toca la palabra incorrecta:', ['Where', 'does', 'he', 'work', 'and', 'what', 'do', 'he', 'do?'], 6, 'does'),
         tap('Toca la palabra incorrecta:', ['What', 'does', 'she', 'studies', 'at', 'the', 'university?'], 3, 'study'),
         rebuild('Escucha y reconstruye:', 'Where does he work every day', ['Where', 'does', 'he', 'work', 'every', 'day', 'do', 'she', 'works', 'is']),
+        mc('Lee: "Luis is my brother and Rosa is my sister. Where does she live? What does he do?" — ¿De quién quiere saber dónde vive?', [
+          'De Rosa, la hermana.',
+          'De Luis, el hermano.',
+          'De los dos hermanos.',
+          'De quien escribe el texto.'], 0),
+        mc('Una profesora le pregunta a UN alumno nuevo: "What is your name? Where are you from? Where do you live? How old are you?" — ¿Qué NO le pregunta la profesora?', [
+          'Dónde trabaja el alumno.',
+          'Cómo se llama el alumno.',
+          'De dónde es el alumno.',
+          'Cuántos años tiene el alumno.'], 0),
+        writing('Escríbelo en inglés: "¿Dónde trabaja él?"', ['Where does he work?'],
+          { reject: [['Where does he works?', 'Con "does" el verbo va sin -s: work.'], ['Where do he work?', 'Con "he" el auxiliar es "does", no "do".'], ['Where he works?', 'Falta el auxiliar: Where does he work?']] }),
       ] },
     { id: 'modulo9-teoria-5', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**Repaso: Pronunciación y Cortesía**
 
@@ -1540,6 +1981,19 @@ La fórmula para preguntas:
         tap('Toca la palabra incorrecta:', ['We', 'say', 'please', 'and', 'we', 'say', 'tanks', 'too.'], 6, 'thanks'),
         tap('Toca la palabra incorrecta:', ['Could', 'you', 'help', 'me', 'tanks?'], 4, 'please?'),
         rebuild('Escucha y reconstruye:', 'Could you help me please', ['Could', 'you', 'help', 'me', 'please', 'can', 'do', 'sorry', 'excuse', 'thanks']),
+        mc('Lee: "Rosa: Good evening. Nice to meet you. Milagros: Nice to meet you, too. Rosa: Could you help me, please? Milagros: No problem." — ¿Quién pide ayuda?', [
+          'Rosa, la que saluda primero.',
+          'Milagros, la que responde el saludo.',
+          'Las dos se piden ayuda.',
+          'Nadie pide ayuda en el diálogo.'], 0),
+        mc('Un pasajero le dice al conductor del bus: "Excuse me. Can I get off here, please? Thank you so much." — ¿Qué está haciendo el pasajero?', [
+          'Pide bajar del bus con cortesía.',
+          'Pregunta cuánto cuesta el pasaje.',
+          'Se disculpa por empujar al conductor.',
+          'Se despide del conductor hasta mañana.'], 0),
+        writing('Escríbelo en inglés: "Muchísimas gracias."', ['Thank you so much.'],
+          { strict: true,
+            reject: [['Tank you so much.', 'Ojo con el TH: se escribe "thank", no "tank".'], ['Thanks you so much.', 'Es "Thank you so much" o "Thanks a lot", no las dos juntas.']] }),
       ] },
     { id: 'modulo9-resumen', type: 'resumen', markdown: `## **🎯 ¡Estás listo para el simulacro!**
 
@@ -1638,6 +2092,19 @@ Comenzar una conversación es la mitad de la batalla. Aquí tienes algunas frase
         tap('Toca la palabra incorrecta:', ['Is', 'this', 'seat', 'took?'], 3, 'taken?'),
         tap('Toca la opción grosera; debería ser educada:', ['Move,', 'I', 'need', 'this', 'seat.'], 0, 'Is this seat taken?'),
         rebuild('Escucha y reconstruye:', 'Is this seat taken', ['Is', 'this', 'seat', 'taken', 'sit', 'your', 'free', 'place', 'the']),
+        mc('Lee: "Rosa: Is this seat taken? Luis: Actually, I\'m waiting for someone. Milagros: Sure, go ahead." — ¿Junto a quién se puede sentar Rosa?', [
+          'Junto a Milagros, que le dice que se siente.',
+          'Junto a Luis, que la estaba esperando a ella.',
+          'Junto a los dos, porque los dos aceptaron.',
+          'Junto a ninguno: los dos asientos están ocupados.'], 0),
+        mc('Lee: "Rosa: Is this seat taken? Luis: Sure, go ahead. Rosa: Nice jacket! Where\'s it from?" — ¿Qué pasó entre Rosa y Luis?', [
+          'Luis la dejó sentarse y ella lo halagó.',
+          'Luis le dijo que buscara otro asiento libre.',
+          'Rosa le regaló una chaqueta nueva a Luis.',
+          'Rosa se despidió de Luis y se fue.'], 0),
+        writing('Escríbelo en inglés: "¿Está ocupado este asiento?"', ['Is this seat taken?'],
+          { hint: 'Es una pregunta: el verbo "is" va al inicio.',
+            reject: [['Is this seat took?', 'Aquí va el participio "taken", no "took".'], ['This seat is taken?', 'En la pregunta el verbo va primero: Is this seat taken?']] }),
       ] },
     { id: 'modulo10-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🛠️ 2. Preguntas casuales (sin parecer stalker 😅)**
 
@@ -1663,6 +2130,19 @@ Ya rompiste el hielo, ahora ¿de qué hablas? Manténlas ligeras:
         tap('Toca la palabra incorrecta:', ['Where', 'do', 'you', 'from?'], 1, 'are'),
         tap('Toca la palabra incorrecta:', ['What', 'do', 'you', 'do', 'for', 'funs?'], 5, 'fun?'),
         rebuild('Escucha y reconstruye:', 'Where are you from', ['Where', 'are', 'you', 'from', 'do', 'live', 'come', 'here', 'how']),
+        mc('Lee: "Rosa: Where are you from? Luis: Who are you here with? Milagros: What do you do for fun?" — ¿Quién quiere saber si la otra persona vino acompañada?', [
+          'Luis, que pregunta con quién ha venido.',
+          'Rosa, que pregunta de dónde viene.',
+          'Milagros, que pregunta qué hace para divertirse.',
+          'Los tres preguntan exactamente lo mismo.'], 0),
+        mc('Lee: "Rosa: I like the vibe here, mind if I join? Luis: Sure, go ahead. Rosa: What do you do for fun?" — ¿Qué está haciendo Rosa?', [
+          'Se sumó al grupo y ahora le hace preguntas.',
+          'Le pidió a Luis que se fuera del grupo.',
+          'Le contó a Luis lo que ella hace.',
+          'Se despidió de Luis y salió del lugar.'], 0),
+        writing('Escríbelo en inglés: "¿De dónde eres?"', ['Where are you from?'],
+          { hint: 'Lleva el verbo "are", no "do".',
+            reject: [['Where do you from?', 'Falta el verbo "are": Where are you from?'], ['From where are you?', 'El orden natural es: Where are you from?']] }),
       ] },
     { id: 'modulo10-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🛠️ 3. Halagos que no dan cringe**
 
@@ -1688,6 +2168,19 @@ Un cumplido bien dicho puede subir la química, pero debe ser respetuoso y auté
         tap('Toca la palabra incorrecta:', ['You', 'have', 'a', 'great', 'laughs.'], 4, 'laugh.'),
         tap('Toca la palabra que hace este cumplido vulgar; debería destacar la personalidad:', ['You', 'have', 'a', 'great', 'body.'], 4, 'laugh.'),
         rebuild('Escucha y reconstruye:', 'You have a great laugh', ['You', 'have', 'a', 'great', 'laugh', 'are', 'smile', 'good', 'nice', 'really']),
+        mc('Lee: "Rosa: Luis, I love your accent. Luis: Milagros, you have a great laugh. Milagros: You\'re really easy to talk to, Rosa." — ¿A quién le halagaron la risa?', [
+          'A Milagros, que recibe el halago de Luis.',
+          'A Rosa, que recibe el halago de Milagros.',
+          'A Luis, que recibe el halago de Rosa.',
+          'A los tres, que se halagan por lo mismo.'], 0),
+        mc('Lee: "Rosa: You have a great laugh. You\'re really easy to talk to. Luis: I like your vibe, it\'s chill." — ¿Qué le está diciendo Rosa a Luis?', [
+          'Que su risa y su conversación le gustan.',
+          'Que su vibra es relajada y tranquila.',
+          'Que ella se ríe mucho cuando él habla.',
+          'Que él habla demasiado y no la escucha.'], 0),
+        writing('Escríbelo en inglés: "Tienes una risa genial."', ['You have a great laugh.'],
+          { hint: 'Se dice con "have" y "a great laugh" en singular.',
+            reject: [['You have a great laughs.', 'Después de "a" va en singular: a great laugh.'], ['You have a great body.', 'El halago del bloque destaca la risa: You have a great laugh.']] }),
       ] },
     { id: 'modulo10-teoria-4', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🛠️ 4. Coqueteo con memes, música y emojis**
 
@@ -1711,6 +2204,19 @@ Una forma moderna de conectar es a través de referencias culturales:
         tap('Toca la palabra incorrecta:', ['Have', 'you', 'watch', 'that', 'series?'], 2, 'watched'),
         tap('Toca la palabra incorrecta:', ['Do', 'you', 'likes', 'salsa?'], 2, 'like'),
         rebuild('Escucha y reconstruye:', 'Have you watched that new series', ['Have', 'you', 'watched', 'that', 'new', 'series', 'seen', 'the', 'old', 'movie', 'do']),
+        mc('Lee: "Rosa: Do you like salsa? I can teach you some moves. Luis: Have you watched that new series? Milagros: Do you like salsa?" — ¿Quién ofrece enseñar algo?', [
+          'Rosa, que ofrece enseñar unos pasos de baile.',
+          'Luis, que pregunta por una serie nueva.',
+          'Milagros, que también pregunta por la salsa.',
+          'Los tres ofrecen enseñar a bailar salsa.'], 0),
+        mc('Lee: "Luis: Have you watched that new series? Rosa: Do you like salsa? I can teach you some moves." — ¿Qué propone cada uno?', [
+          'Luis, ver una serie; Rosa, bailar salsa.',
+          'Luis, bailar salsa; Rosa, ver una serie.',
+          'Los dos proponen ver la misma serie nueva.',
+          'Los dos proponen enseñar unos pasos de baile.'], 0),
+        writing('Escríbelo en inglés: "¿Has visto esa serie nueva?"', ['Have you watched that new series?', 'Have you seen that new series?'],
+          { hint: 'La fórmula es: Have you + participio (watched)...?',
+            reject: [['Have you watch that new series?', 'Después de "have" va el participio: watched.'], ['Do you watched that new series?', 'La pregunta empieza con "Have", no con "Do".']] }),
       ] },
     { id: 'modulo10-teoria-5', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🛠️ 5. No roche: Cómo invitar, rechazar o salir elegantemente**
 
@@ -1742,6 +2248,19 @@ Una forma moderna de conectar es a través de referencias culturales:
         tap('Toca la palabra incorrecta:', ['Can', 'I', 'get', 'you', 'number?'], 3, 'your'),
         tap('Toca la palabra incorrecta:', ['Wanna', 'grab', 'a', 'coffees', 'sometime?'], 3, 'coffee'),
         rebuild('Escucha y reconstruye:', 'Wanna grab a coffee sometime', ['Wanna', 'grab', 'a', 'coffee', 'sometime', 'want', 'get', 'tea', 'now', 'later', 'drink']),
+        mc('Lee: "Rosa: Wanna grab a coffee sometime? Luis: I\'m flattered, but I\'m seeing someone. Milagros: Can I get your number?" — ¿Quién dijo que no con educación?', [
+          'Luis, que ya está saliendo con alguien.',
+          'Rosa, que propone tomar un café.',
+          'Milagros, que pide el número de teléfono.',
+          'Ninguno: los tres aceptaron la invitación.'], 0),
+        mc('Lee: "Rosa: Wanna grab a coffee sometime? Luis: You\'re very nice, but I have to go. Rosa: Text me later!" — ¿Cómo terminó la conversación?', [
+          'Luis se fue y Rosa le pidió que le escriba.',
+          'Luis aceptó el café y Rosa se fue molesta.',
+          'Rosa se fue y Luis le pidió su número.',
+          'Los dos quedaron en tomar un café hoy.'], 0),
+        writing('Escríbelo en inglés: "¿Me pasas tu número?"', ['Can I get your number?'],
+          { hint: 'Es una pregunta amable: empieza con "Can I...?".',
+            reject: [['Can I get you number?', 'Va el posesivo "your": Can I get your number?'], ['Give me your number.', 'Así suena a orden: va "Can I get your number?"']] }),
       ] },
     { id: 'modulo10-teoria-6', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🎉 6. Mini Simulacro Social: ¿Bricher@ o solo buena onda?**
 
@@ -1762,6 +2281,19 @@ Recuerda lo que aprendiste:
         tap('Situación: querías sentarte. Toca la palabra incorrecta:', ['Is', 'this', 'seat', 'took?'], 3, 'taken?'),
         tap('Toca la palabra incorrecta:', ['Can', 'I', 'gets', 'your', 'number?'], 2, 'get'),
         rebuild('Escucha y reconstruye:', 'It was great meeting you', ['It', 'was', 'great', 'meeting', 'you', 'nice', 'good', 'see', 'is', 'to']),
+        mc('Lee: "Rosa: Hi, I\'m Rosa. Nice to meet you! Luis: Is this seat taken? Milagros: It was great meeting you!" — ¿Quién se está despidiendo?', [
+          'Milagros, que dice que fue genial conocerlos.',
+          'Rosa, que recién se está presentando.',
+          'Luis, que recién pregunta por el asiento.',
+          'Los tres se están despidiendo a la vez.'], 0),
+        mc('Lee: "Rosa: What do you do for fun? Luis: Wanna grab a coffee sometime? Rosa: I\'m flattered, but I\'m seeing someone. It was great meeting you!" — ¿Cómo terminó el encuentro?', [
+          'Rosa rechazó la invitación con educación y se despidió.',
+          'Rosa aceptó la invitación y quedaron para otro día.',
+          'Luis rechazó la invitación de Rosa y se fue.',
+          'Los dos se despidieron sin invitarse a nada.'], 0),
+        writing('Escríbelo en inglés: "¡Fue genial conocerte!"', ['It was great meeting you!'],
+          { hint: 'Va en pasado: "It was..." y después "meeting".',
+            reject: [['It was great meet you!', 'Después de "great" va la forma en -ing: meeting.'], ['It is great meeting you!', 'Al despedirte va en pasado: It was great meeting you!']] }),
       ] },
     { id: 'modulo10-resumen', type: 'resumen', markdown: `## **🎯 Resumen del Bricher@ Bilingüe**
 
@@ -1849,6 +2381,19 @@ Hay dos tiempos que a veces se confunden, pero cumplen funciones distintas:
         tap('Toca la palabra incorrecta:', ['She', 'is', 'cooking', 'and', 'he', 'is', 'eat', 'now.'], 6, 'eating'),
         tap('Toca la palabra incorrecta:', ['They', 'are', 'playing', 'and', 'she', 'walking', 'home.'], 5, 'is walking'),
         rebuild('Escucha y reconstruye:', 'He is working now', ['He', 'is', 'working', 'now', 'works', 'work', 'walking', 'walks']),
+        mc('Lee: "Rosa works every day and Luis works every day too. Right now Rosa is cooking and Luis is eating. My brother is working now. He eats breakfast at 7 every day." — ¿Quién desayuna a las 7 todos los días?', [
+          'El hermano de quien escribe.',
+          'Luis, que está comiendo ahorita.',
+          'Rosa, que está cocinando ahorita.',
+          'Quien escribe, todos los días.'], 0),
+        mc('Lee: "Rosa works every day and Luis works every day too. Right now Rosa is cooking and Luis is eating. My brother is working now. He eats breakfast at 7 every day." — ¿Qué está pasando en este momento?', [
+          'Rosa está cocinando y Luis está comiendo.',
+          'Rosa y Luis están trabajando en este momento.',
+          'El hermano está desayunando a las 7.',
+          'Rosa está trabajando y Luis está cocinando.'], 0),
+        writing('Escríbelo en inglés: "(Ahora) él está trabajando."', ['He is working now.'],
+          { hint: 'El continuo lleva am/are/is + el verbo con -ing.',
+            reject: [['He working now.', 'Falta el to be: He is working now.'], ['He is work now.', 'Falta el -ing: He is working now.'], ['He works now.', 'Eso es rutina; en progreso es: He is working now.']] }),
       ] },
     { id: 'modulo2-1-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Verbos de estado (stative verbs)**
 
@@ -1879,6 +2424,19 @@ Suena raro decir *I am knowing* o *She is needing*. Con estos verbos usamos el *
         mc('¿Cuál es un verbo de estado?', ['run', 'jump', 'believe', 'cook'], 2),
         tap('Toca la palabra incorrecta:', ['I', 'know', 'her', 'and', 'she', 'helping', 'me.'], 5, 'is helping'),
         rebuild('Escucha y reconstruye:', 'She needs help', ['She', 'needs', 'help', 'needing', 'is', 'helps', 'need', 'want']),
+        mc('Lee: "Luis wants a new phone and he works every day. Rosa knows the answer. I know her and she is helping me now. My brother needs help. Right now Luis is eating breakfast." — ¿Quién está ayudando a quien escribe?', [
+          'Rosa, que sabe la respuesta.',
+          'Mi hermano, que necesita ayuda.',
+          'Luis, que está desayunando ahorita.',
+          'Quien escribe, que ayuda a Rosa.'], 0),
+        mc('Lee: "Luis wants a new phone and he works every day. Rosa knows the answer. I know her and she is helping me now. My brother needs help. Right now Luis is eating breakfast." — ¿Qué dos cosas se ven pasando en este momento?', [
+          'Que Rosa está ayudando y Luis está desayunando.',
+          'Que Luis quiere un teléfono y Rosa sabe la respuesta.',
+          'Que el hermano necesita ayuda y Luis trabaja.',
+          'Que Rosa está ayudando y el hermano necesita ayuda.'], 0),
+        writing('Escríbelo en inglés: "Ella necesita ayuda."', ['She needs help.'],
+          { hint: 'Los verbos de estado (need, want, know) van en simple, sin -ing.',
+            reject: [['She is needing help.', 'Los verbos de estado no llevan -ing: She needs help.'], ['She need help.', 'Con "she" el verbo lleva -s: She needs help.'], ['She is need help.', 'Sobra el is: con need va el simple, She needs help.']] }),
       ] },
     { id: 'modulo2-1-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -1901,6 +2459,18 @@ En los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`,
         tap('Toca la palabra incorrecta:', ['I', 'am', 'sleep', 'and', 'you', 'are', 'reading.'], 2, 'sleeping'),
         tap('Toca la palabra incorrecta:', ['My', 'mom', 'is', 'cooking', 'and', 'dad', 'reading.'], 6, 'is reading.'),
         tap('Toca la palabra incorrecta:', ['You', 'are', 'eating', 'and', 'we', 'watches', 'TV.'], 5, 'are watching'),
+        mc('Lee: "My mom is cooking and dad is reading. My sister is studying English now, and she knows the answer. Luis and Rosa are running fast. They work every day." — ¿A quiénes se refiere "They" en la última oración?', [
+          'A Luis y a Rosa, que están corriendo.',
+          'A la mamá y al papá de quien escribe.',
+          'A la hermana y a Rosa.',
+          'A toda la familia de quien escribe.'], 0),
+        mc('Lee: "My mom is cooking and dad is reading. My sister is studying English now, and she knows the answer. Luis and Rosa are running fast. They work every day." — ¿Qué está pasando en este momento?', [
+          'La hermana está estudiando y el papá está leyendo.',
+          'La mamá está leyendo y el papá está cocinando.',
+          'Luis y Rosa están trabajando en este momento.',
+          'La hermana está corriendo y la mamá está estudiando.'], 0),
+        writing('Escríbelo en inglés: "¿Estás viendo TV ahora mismo?"', ['Are you watching TV right now?', 'Are you watching TV now?'],
+          { reject: [['Do you watching TV right now?', 'En preguntas del continuo va Are, no Do: Are you watching TV?'], ['Are you watch TV right now?', 'Falta el -ing: Are you watching TV right now?'], ['You are watching TV right now.', 'Es pregunta: el are va primero, Are you watching TV?']] }),
       ] },
     { id: 'modulo2-1-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -1968,6 +2538,19 @@ const modulo2_2 = {
       tap('Toca la palabra incorrecta:', ['Yesterday', 'I', 'worked', 'and', 'study', 'a', 'lot.'], 4, 'studied'),
       tap('Toca la palabra incorrecta:', ['We', 'play', 'and', 'watched', 'TV', 'last', 'night.'], 1, 'played'),
       rebuild('Escucha y reconstruye:', 'I worked yesterday', ['I', 'worked', 'yesterday', 'work', 'walked', 'works', 'worker']),
+      mc('Lee: "Rosa worked yesterday. She played football last Saturday. Luis waited for the bus yesterday. He studied a lot last night. Rosa and Luis watched TV." — ¿Quién estudió mucho anoche?', [
+        'Luis, la persona que esperó el bus.',
+        'Rosa, la persona que jugó fútbol.',
+        'Rosa y Luis, los dos juntos.',
+        'Nadie: esa noche solo vieron televisión.'], 0),
+      mc('Lee: "Rosa worked yesterday. She played football last Saturday. Luis waited for the bus yesterday. He studied a lot last night. Rosa and Luis watched TV." — ¿Qué hizo Rosa primero?', [
+        'Jugó fútbol: fue el sábado pasado.',
+        'Trabajó: fue el sábado pasado.',
+        'Jugó fútbol: fue ayer.',
+        'Vio televisión: fue anoche.'], 0),
+      writing('Escríbelo en inglés: "Ella jugó fútbol el sábado pasado."', ['She played football last Saturday.'],
+        { hint: 'Verbo regular en pasado: play + -ed.',
+          reject: [['She play football last Saturday.', 'Falta el pasado: play + -ed = played.'], ['She plays football last Saturday.', 'Eso es presente; en pasado es "played".']] }),
     ] },
     { id: 'modulo2-2-teoria-1b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🧠 Afirmativos: Verbos irregulares**\n\n**2️⃣ Verbos irregulares → ¡a memorizar! 🧠**\n\nEstos van por libre, no siguen reglas. Los más comunes:\n\n| Inglés | Pasado | Español |\n|---|---|---|\n| go | **went** | fui |\n| eat | **ate** | comí |\n| see | **saw** | vi |\n| make | **made** | hice |\n| take | **took** | tomé |\n| get | **got** | obtuve |\n| say | **said** | dije |\n| come | **came** | vine |\n| give | **gave** | di |\n| have | **had** | tuve |\n\n> 💡 No hay atajo: estos se aprenden de memoria. ¡Pero son los que más se usan! 💪`, miniQuiz: [
       mc('¿Cuál es el pasado de "go"?', ['went', 'goed', 'gone', 'goes'], 0),
@@ -1978,6 +2561,19 @@ const modulo2_2 = {
       tap('Toca la palabra incorrecta:', ['Yesterday', 'I', 'went', 'home', 'and', 'eat', 'dinner.'], 5, 'ate'),
       tap('Toca la palabra incorrecta:', ['He', 'taked', 'the', 'bus', 'and', 'came', 'late.'], 1, 'took'),
       rebuild('Escucha y reconstruye:', 'I saw a movie', ['I', 'saw', 'a', 'movie', 'see', 'saws', 'sow', 'seen']),
+      mc('Lee: "Yesterday Milagros went home and ate dinner. She made a cake too. Luis took the bus and came late. He saw a movie last night." — ¿Quién vio una película?', [
+        'Luis, el que tomó el bus.',
+        'Milagros, la que hizo el pastel.',
+        'Milagros y Luis, los dos.',
+        'Nadie: los dos solo cenaron en casa.'], 0),
+      mc('Lee: "Yesterday Milagros went home and ate dinner. She made a cake too. Luis took the bus and came late. He saw a movie last night." — ¿Qué hizo Milagros ayer?', [
+        'Fue a casa, cenó e hizo un pastel.',
+        'Fue a casa y tomó el bus.',
+        'Cenó y vio una película anoche.',
+        'Hizo un pastel y llegó tarde.'], 0),
+      writing('Escríbelo en inglés: "Hice un pastel ayer."', ['I made a cake yesterday.'],
+        { hint: 'Verbo irregular: make → made (no lleva -ed).',
+          reject: [['I maked a cake yesterday.', 'El verbo "make" es irregular: su pasado es "made".'], ['I make a cake yesterday.', 'Eso es presente; en pasado es "made".']] }),
     ] },
     { id: 'modulo2-2-teoria-1c', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **⭐ El verbo "to be" en pasado**\n\n**3️⃣ El verbo to be en pasado → was / were**\n\n| Sujeto | to be |\n|---|---|\n| I / he / she / it | **was** |\n| you / we / they | **were** |\n\n- I **was** at home last night. 🏠\n- They **were** happy together. 😊\n\n> 💡 Ojo: el to be es especial, no usa "did". ¡Tiene su propia forma!`, miniQuiz: [
       mc('¿Qué forma de "to be" en pasado usamos con "they"?', ['were', 'was', 'is', 'are'], 0),
@@ -1988,6 +2584,19 @@ const modulo2_2 = {
       tap('Toca la palabra incorrecta:', ['I', 'was', 'happy', 'but', 'they', 'was', 'sad.'], 5, 'were'),
       tap('Toca la palabra incorrecta:', ['We', 'was', 'at', 'home', 'and', 'she', 'was', 'out.'], 1, 'were'),
       rebuild('Escucha y reconstruye:', 'They were at school', ['They', 'were', 'at', 'school', 'was', 'where', 'wear', 'are']),
+      mc('Lee: "Last night Rosa was at home and Milagros was out. Luis and Juan were at school. They were happy together. Rosa was happy but Milagros was sad." — ¿A quiénes se refiere "they"?', [
+        'A Luis y a Juan, que estaban en el colegio.',
+        'A Rosa y a Milagros, que no estaban juntas.',
+        'A las cuatro personas del texto.',
+        'Solo a Rosa, que estaba en casa.'], 0),
+      mc('Lee: "Last night Rosa was at home and Milagros was out. Luis and Juan were at school. They were happy together. Rosa was happy but Milagros was sad." — ¿Quién estaba en casa y contenta anoche?', [
+        'Rosa, que se quedó en su casa.',
+        'Milagros, que estaba fuera de casa.',
+        'Luis y Juan, que estaban en el colegio.',
+        'Las cuatro personas, todas contentas.'], 0),
+      writing('Escríbelo en inglés: "Él estaba en casa anoche."', ['He was at home last night.'],
+        { hint: 'Con he/she/it el pasado del to be es "was".',
+          reject: [['He were at home last night.', 'Con "he" va "was"; "were" es para you/we/they.'], ['He is at home last night.', 'Eso es presente; en pasado va "was".']] }),
     ] },
     { id: 'modulo2-2-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Negativos: Lo que NO pasó**\n\nAquí viene el truco más importante del Pasado Simple. 🎩✨\n\n**Regla de oro:** NO conjugamos el verbo principal. Usamos **didn't + verbo base**.\n\n> El **"did"** ya carga el pasado, así que el verbo principal se queda en su forma base (sin -ed, sin cambios). 🙌\n\n| Afirmativo | Negativo |\n|---|---|\n| I **went** | I **didn't go** |\n| She **studied** | She **didn't study** |\n| We **had** | We **didn't have** |\n\n**Ejemplos:**\n\n- I **didn't go** to the party. 🎉❌\n- She **didn't study** yesterday. 📚❌\n- We **didn't have** time. ⏰❌\n\n**⚠️ Excepción: el to be**\n\nEl verbo to be NO usa "didn't". Tiene su propio negativo:\n\n| Forma | Contracción |\n|---|---|\n| was not | **wasn't** |\n| were not | **weren't** |\n\n- I **wasn't** at work on Monday. 💼❌\n\n> 🚨 Error típico: decir "I didn't went". ¡NO! Es **I didn't go**. El "did" ya tiene el pasado.`, miniQuiz: [
       mc('Para hacer negativo en pasado (verbos normales) usamos...', ['not + verbo', "didn't + verbo en pasado", "didn't + verbo base", 'no + verbo'], 2),
@@ -1998,6 +2607,19 @@ const modulo2_2 = {
       tap('Toca la palabra incorrecta:', ['He', "didn't", 'came', 'to', 'the', 'meeting.'], 2, 'come'),
       tap('Toca la palabra incorrecta:', ['I', "wasn't", 'tired', 'but', 'they', "wasn't", 'happy.'], 5, "weren't"),
       rebuild('Escucha y reconstruye:', "I didn't go", ['I', "didn't", 'go', 'went', 'not', 'do', 'goes', 'no']),
+      mc('Lee: "Yesterday Rosa didn\'t study. She didn\'t go to the party. Luis didn\'t come to the meeting. He wasn\'t at work on Monday. They didn\'t have time." — ¿A quiénes se refiere "they" al final?', [
+        'A Rosa y a Luis, las dos personas del texto.',
+        'Solo a Rosa, que no estudió ayer.',
+        'Solo a Luis, que faltó a la reunión.',
+        'A los compañeros de trabajo de Luis.'], 0),
+      mc('Lee: "Yesterday Rosa didn\'t study. She didn\'t go to the party. Luis didn\'t come to the meeting. He wasn\'t at work on Monday. They didn\'t have time." — ¿Qué es cierto sobre Luis?', [
+        'No fue a la reunión ni estuvo en el trabajo.',
+        'Fue a la reunión y estuvo en el trabajo.',
+        'No estudió ayer y no fue a la fiesta.',
+        'Estuvo en el trabajo pero faltó a la fiesta.'], 0),
+      writing('Escríbelo en inglés: "Ella no estudió ayer."', ['She didn\'t study yesterday.'],
+        { hint: 'El "did" ya lleva el pasado: el verbo se queda en base.',
+          reject: [['She didn\'t studied yesterday.', 'Doble pasado: tras "didn\'t" el verbo va en base (study).'], ['She not studied yesterday.', 'Falta el "didn\'t": She didn\'t study yesterday.']] }),
     ] },
     { id: 'modulo2-2-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **❓ Preguntas: Investigando el pasado**\n\n¡La agente **Do-ménica** entra en acción con su traje "did"! 🕵️‍♀️\n\n**Estructura:** **Did + sujeto + verbo base + ?**\n\n> Igual que en negativos: el "did" lleva el pasado, el verbo se queda **base**. 🎯\n\n- **Did** you **go** to the concert? 🎶\n- **Did** she **study** for the exam? 📖\n- What **did** they **say**? 🗣️\n\n> 🚨 ¡Cuidado! NO se dice "Went you?" ni "Did you went?". Solo **Did you go?**\n\n**✅ Respuestas cortas (short answers):**\n\n| Pregunta | Sí | No |\n|---|---|---|\n| Did you...? | Yes, I **did**. | No, I **didn't**. |\n\n**⚠️ Con el verbo to be → usa was/were (sin "did")**\n\n| Pregunta | Sí | No |\n|---|---|---|\n| **Were** they at home? | Yes, they **were**. | No, they **weren't**. |\n| **Was** he sick? | Yes, he **was**. | No, he **wasn't**. |\n\n> 💡 Resumen: verbos normales → **did**. El to be → **was/were** directamente.`, miniQuiz: [
       mc('¿Cuál es la estructura correcta de pregunta en pasado?', ['Did + sujeto + verbo base?', 'Did + sujeto + verbo en pasado?', 'Sujeto + did + verbo?', 'Verbo en pasado + sujeto?'], 0),
@@ -2008,6 +2630,19 @@ const modulo2_2 = {
       tap('Toca la palabra incorrecta:', ['Did', 'you', 'went', 'to', 'the', 'gym?'], 2, 'go'),
       tap('Toca la palabra incorrecta:', ['Where', 'did', 'you', 'bought', 'that?'], 3, 'buy'),
       rebuild('Escucha y reconstruye:', 'Did you eat lunch', ['Did', 'you', 'eat', 'lunch', 'ate', 'did', 'eaten', 'launch']),
+      mc('Lee: "Rosa: Did you go to the concert? Luis: No, I didn\'t. Rosa: Were Milagros and Juan at home? Luis: Yes, they were. Rosa: Was Juan sick? Luis: Yes, he was." — ¿A quiénes se refiere "they"?', [
+        'A Milagros y a Juan, que estaban en casa.',
+        'A Rosa y a Luis, que están conversando.',
+        'A todos los que fueron al concierto.',
+        'Solo a Juan, que estaba enfermo.'], 0),
+      mc('Lee: "Rosa: Did you go to the concert? Luis: No, I didn\'t. Rosa: Were Milagros and Juan at home? Luis: Yes, they were. Rosa: Was Juan sick? Luis: Yes, he was." — ¿Quién no fue al concierto?', [
+        'Luis, que respondió que no.',
+        'Rosa, que hizo la pregunta.',
+        'Milagros y Juan, que estaban en casa.',
+        'Juan, porque estaba enfermo.'], 0),
+      writing('Escríbelo en inglés: "¿Estudiaste para el examen?"', ['Did you study for the exam?'],
+        { hint: 'Did + sujeto + verbo base.',
+          reject: [['Did you studied for the exam?', 'Tras "did" el verbo va en base: study.'], ['Studied you for the exam?', 'La pregunta en pasado empieza con "Did".'], ['Do you study for the exam?', '"Do" es presente; para el pasado usa "Did".']] }),
     ] },
     { id: 'modulo2-2-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nBoti ha visto estos errores mil veces... ¡no caigas en ellos!🛑\n\n| ❌ Incorrecto | ✅ Correcto | ¿Por qué? |\n|---|---|---|\n| I **no went** to class. | I **didn't go** to class. | El negativo se forma con **didn't + base**. |\n| Did you **went** to the gym? | Did you **go** to the gym? | Tras "did", el verbo va en **base**. |\n| She **not studied**. | She **didn't study**. | Falta el **didn't**; el verbo va en base. |\n| He **didn't went** either. | He **didn't go** either. | Doble pasado: "did" ya lo lleva. |\n| **Was you** at the office? | **Were you** at the office? | Con "you" **were**, no "was". |\n\n**🧠 Dos reglas que lo salvan todo:**\n\n1. 🙅‍♂️ Nada de **"goed"** → es **went** (irregular).\n2. 🙅‍♀️ Nada de **"didn't went"** → es **didn't go** (¡un solo pasado!).\n\n> 👉 En negativos y preguntas, el "did/didn't" carga el pasado. El verbo principal descansa en su forma base. 😴`, miniQuiz: [
       tap('Toca la palabra incorrecta:', ['Yesterday', 'I', 'worked', 'and', 'study', 'a', 'lot.'], 4, 'studied'),
@@ -2018,6 +2653,18 @@ const modulo2_2 = {
       tap('Toca la palabra incorrecta:', ['We', 'goed', 'home', 'and', 'ate', 'dinner.'], 1, 'went'),
       tap('Toca la palabra incorrecta:', ['They', 'was', 'happy', 'and', 'we', 'were', 'tired.'], 1, 'were'),
       tap('Toca la palabra incorrecta:', ['Where', 'did', 'she', 'bought', 'the', 'tickets?'], 3, 'buy'),
+      mc('Lee: "Last Saturday Rosa went home and ate dinner. Yesterday she worked and studied a lot. She didn\'t go to work today. Luis was at the office yesterday. He didn\'t study for the test." — ¿Rosa cenó en casa antes o después de trabajar?', [
+        'Antes: cenó el sábado y trabajó ayer.',
+        'Después: trabajó el sábado y cenó ayer.',
+        'El mismo día: cenó y trabajó ayer.',
+        'Después: cenó hoy, el día que no trabajó.'], 0),
+      mc('Lee: "Last Saturday Rosa went home and ate dinner. Yesterday she worked and studied a lot. She didn\'t go to work today. Luis was at the office yesterday. He didn\'t study for the test." — ¿Quién fue a trabajar hoy?', [
+        'Nadie: Rosa no fue y Luis estuvo ayer.',
+        'Rosa, que trabajó y estudió mucho.',
+        'Luis, que estuvo en la oficina.',
+        'Los dos fueron a la oficina hoy.'], 0),
+      writing('Escríbelo en inglés: "¿Estabas en la oficina ayer?"', ['Were you at the office yesterday?'],
+        { reject: [['Was you at the office yesterday?', 'Con "you" va "were", no "was".'], ['Did you at the office yesterday?', 'El to be no usa "did": Were you at the office?']] }),
     ] },
     { id: 'modulo2-2-resumen', type: 'resumen', markdown: `#### **📝 Resumen Express**\n\n¡Lo dominas, agente del tiempo! ⏳ Recuerda:\n\n- ✅ **Afirmativo:** verbo regular + **ed** (worked) o irregular (go → **went**).\n- 🚫 **Negativo:** **didn't + verbo base** (I didn't go). To be → **wasn't / weren't**.\n- ❓ **Pregunta:** **Did + sujeto + verbo base?** (Did you go?). To be → **Was/Were...?**\n\n| Tipo | Verbos normales | Verbo to be |\n|---|---|---|\n| ✅ | I went | I was |\n| 🚫 | I didn't go | I wasn't |\n| ❓ | Did I go? | Was I? |\n\n> 🔑 La clave: en negativos y preguntas, **el "did" lleva el pasado** y el verbo se queda en **base**. ¡Nunca dos pasados juntos!` },
     { id: 'modulo2-2-cierre', type: 'cierre', markdown: `#### **🏅 ¡Misión Cumplida!**\n\nExcelente trabajo, **agente del tiempo** ⏳. Ya dominas el **Pasado Simple**. 🎉\n\n**🗣️ Práctica para ti:** cuenta **3 cosas que hiciste el finde**:\n\n> I **went** to... 🚶\n> I **saw**... 👀\n> I **ate**... 🍕\n\n**🎯 Misión final:** responde a "**What did you do yesterday?**" con algo como:\n\n> *"Yesterday I **studied**, **cooked** dinner, and **watched** a movie."* 🎬\n\n🏅 **Insignia obtenida:** *Cronista del Ayer* (Maestr@ del Past Simple) ⏱️✨\n\n¡Nos vemos en la siguiente etapa, {{mascot}} ya calienta motores! 🤖⚡` },
@@ -2059,6 +2706,19 @@ const modulo2_3 = {
       tap('Toca la palabra incorrecta:', ['She', 'is', 'going', 'to', 'studies', 'medicine.'], 4, 'study'),
       tap('Toca la palabra incorrecta:', ['I', 'going', 'to', 'visit', 'my', 'family.'], 1, 'am going'),
       rebuild('🎧 Ordena: "Vamos a viajar a Cusco."', 'We are going to travel to Cusco', ['We', 'are', 'going', 'to', 'travel', 'to', 'Cusco', 'will', 'traveling', 'goes']),
+      mc('Lee: "My sister and I are going to travel to Cusco next year. We are going to visit my family there. She is going to learn French and I am going to study medicine. My cousins are going to travel to Lima." — ¿A quiénes incluye "we"?', [
+        'A quien escribe y a su hermana.',
+        'A quien escribe y a sus primos.',
+        'Solo a los primos que viajan a Lima.',
+        'A toda la familia que vive en Cusco.'], 0),
+      mc('Lee: "Rosa is going to learn French next year. Luis is going to study medicine in Lima. Today they are going to visit my family. Look at those clouds! It is going to rain." — ¿Qué va a pasar hoy?', [
+        'Van a visitar a la familia y va a llover.',
+        'Rosa va a aprender francés y va a llover.',
+        'Luis va a estudiar medicina y va a llover.',
+        'Rosa y Luis van a estudiar francés en Lima.'], 0),
+      writing('Escríbelo en inglés: "Voy a visitar a mi familia."', ['I am going to visit my family.'],
+        { hint: 'Con "I" el to be es "am": am going to + verbo base.',
+          reject: [['I going to visit my family.', 'Falta el to be: I am going to visit my family.'], ['I am going visit my family.', 'Después de "going" va "to": going to visit.'], ['I am going to visits my family.', 'Tras "going to" va el verbo base: visit.']] }),
     ] },
     { id: 'modulo2-3-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **⚡ Camino 2: "will"**\n\nEsta es la ruta de lo **espontáneo**: decisiones del momento, promesas y predicciones sin evidencia.\n\n**Estructura:**\n\n> **will** + verbo base\n\n¡Es igual para **todos** los sujetos, **sin "to"**! Se contrae a **'ll** y el negativo *will not* = **won't**. 🤖\n\n| | Ejemplo |\n|---|---|\n| ⚡ Decisión espontánea | *The phone is ringing — I **will** answer it!* |\n| 🤝 Ofrecimiento / promesa | *I **will** help you with your homework.* |\n| 🔮 Predicción sin evidencia | *I think it **will** be a difficult exam.* |\n\n**⚖️ ¿Cuál y cuándo?**\n\n| Situación | Forma |\n|---|---|\n| Ya planeado o hay indicios | **going to** |\n| Lo decides al momento / al vuelo | **will** |\n\nCompara:\n\n- 📅 *I **am going to** start a business.* (ya planeado)\n- ⚡ *OK, I **will** start a business!* (repentino)\n\n> ⚠️ **Recuerda:** *will* **no cambia**, va **sin "to"** (nunca *"will to"*) y con *he/she* **no** agregues *-s* (nada de *"wills"*).\n\n💡 **Extra:** a veces se usa el Presente Continuo para planes con hora y lugar fijos: *I'm meeting my friend tomorrow at 8.* ¡Solo tenlo oído! 👂` , miniQuiz: [
       mc('¿Cuál es la estructura correcta de "will"?', ['will + to + verbo', 'will + verbo base (sin "to")', 'will + verbo + s', 'will + verbo + -ing'], 1),
@@ -2069,6 +2729,19 @@ const modulo2_3 = {
       tap('Toca la palabra incorrecta:', ['I', 'will', 'call', 'you', 'and', 'she', 'will', 'helps', 'too.'], 7, 'help'),
       tap('Toca la palabra incorrecta:', ['We', 'will', 'to', 'win', 'the', 'game.'], 2, '(quítalo)'),
       rebuild('🎧 Ordena: "Te ayudaré con tu tarea."', 'I will help you', ['I', 'will', 'help', 'you', 'helps', 'going', 'to', 'well']),
+      mc('Lee: "Luis: The phone is ringing. I will answer it! Rosa: I will help you with your homework tonight. Luis: I think it will be a difficult exam. Rosa: I am going to study medicine next year." — ¿Quién va a ayudar con la tarea, y cuándo?', [
+        'Rosa, esta misma noche.',
+        'Luis, después de contestar el teléfono.',
+        'Rosa, el próximo año.',
+        'Luis, antes del examen difícil.'], 0),
+      mc('Lee: "Rosa: I am going to start a business next year. I am going to travel to Cusco. Luis: OK, I will start a business too! I will help you tonight." — ¿Quién ya tenía el plan decidido antes de esta conversación?', [
+        'Rosa: ya lo tenía planeado para el próximo año.',
+        'Luis: lo decide justo en ese momento.',
+        'Los dos lo decidieron antes de conversar.',
+        'Ninguno de los dos: solo lo están imaginando.'], 0),
+      writing('Escríbelo en inglés: "Te ayudaré con tu tarea."', ['I will help you with your homework.'],
+        { hint: 'Con "will" el verbo va en forma base y sin "to".',
+          reject: [['I will to help you with your homework.', 'Después de "will" no va "to": will help.'], ['I will helps you with your homework.', 'Tras "will" siempre va el verbo base: help.'], ['I am going to help you with your homework.', 'Eso sería un plan ya decidido; aquí decides al momento: will.']] }),
     ] },
     { id: 'modulo2-3-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nEstos son los tropiezos clásicos del futuro. ¡Detéctalos y esquívalos! 🕵️\n\n| ❌ Incorrecto | ✅ Correcto | Por qué |\n|---|---|---|\n| I will **to** call you later. | I **will call** you later. | *will* va sin "to" |\n| She will **helps** me. | She will **help** me. | tras *will* va verbo base, sin -s |\n| We **don't will** win. | We **won't** win. | el negativo es *won't*, no *don't will* |\n| Are you going to **coming**? | Are you going to **come**? | tras *going to* va verbo base |\n\n> 💡 **Truco:** después de **will** o **going to**, el verbo siempre va en su **forma base**: *call, help, come, win*. ¡Sin adornos! ✨\n\nAhora toca cazar los errores. 🎯` , miniQuiz: [
       tap('Toca la palabra incorrecta:', ['I', 'will', 'to', 'call', 'you', 'later.'], 2, '(quítalo)'),
@@ -2079,6 +2752,18 @@ const modulo2_3 = {
       tap('Toca la palabra incorrecta:', ['I', 'am', 'going', 'visit', 'my', 'aunt.'], 3, 'to visit'),
       tap('Toca la palabra incorrecta:', ['She', 'is', 'going', 'to', 'study', 'and', 'he', 'will', 'helps.'], 8, 'help'),
       tap('Toca la palabra incorrecta:', ['You', 'will', 'to', 'win', 'if', 'you', 'practice.'], 2, '(quítalo)'),
+      mc('Lee: "Rosa is going to visit my aunt tonight. Luis will call you later. She is going to study and he will help. They will arrive at noon." — ¿Qué va a hacer Luis?', [
+        'Llamar más tarde y ayudar a Rosa.',
+        'Estudiar y visitar a la tía.',
+        'Visitar a la tía y llegar al mediodía.',
+        'Llamar más tarde y estudiar.'], 0),
+      mc('Lee: "Luis is going to play football tomorrow. Rosa is going to visit my aunt at noon. She will arrive at noon and Luis will help. He will call you later." — ¿Qué va a pasar al mediodía?', [
+        'Rosa visita a la tía y Luis la ayuda.',
+        'Luis juega fútbol y Rosa lo ayuda.',
+        'Luis llama por teléfono y después juega fútbol.',
+        'Rosa y Luis llegan mañana a jugar fútbol.'], 0),
+      writing('Escríbelo en inglés: "No ganaremos."', ['We won\'t win.', 'We will not win.'],
+        { reject: [['We don\'t will win.', 'El negativo de "will" es "won\'t", no "don\'t will".'], ['We will not to win.', 'Después de "will" nunca va "to": will not win.'], ['We won\'t wins.', 'Tras "won\'t" va el verbo base: win.']] }),
     ] },
     { id: 'modulo2-3-resumen', type: 'resumen', markdown: `#### **📌 Resumen rápido**\n\n| Forma | Úsala para | Ejemplo |\n|---|---|---|\n| 📅 **going to** | planes, intenciones, evidencia visible | *I'm going to travel.* |\n| ⚡ **will** | decisiones del momento, promesas, predicciones | *I'll help you!* |\n\n**Las tres reglas de oro de *will*:** 🥇\n\n1. No cambia con *he/she/it* (nada de *wills*).\n2. Nunca lleva *"to"* (nada de *will to*).\n3. El verbo va en **forma base**.\n\n> 🧭 **Decisión rápida:** ¿Ya lo tenías planeado o ves indicios? → **going to**. ¿Lo decides al vuelo? → **will**.` },
     { id: 'modulo2-3-cierre', type: 'cierre', markdown: `🔮 **¡Ahora dominas el futuro!**\n\nUsa **going to** para tus planes (*I'm going to visit a mis papás este fin*) y **will** para promesas u ocurrencias (*I'll bring you a souvenir!*).\n\n🎯 **Misión cumplida:** responde *"What are you going to do tomorrow?"* con tus planes; y si surge algo de repente, llama al Agente Will: *"I'll handle it!"*.\n\n🏅 **Insignia obtenida:** **Vidente Viajero** — Planificador del Futuro con *going to* y *will*. 🔮🚀` },
@@ -2145,6 +2830,19 @@ En inglés, a veces agregamos **\`+er\`** para decir "más" y **\`+est\`** para 
         tap('Toca la palabra incorrecta:', ['This', 'phone', 'is', 'faster', 'but', 'expensiver', 'than', 'that', 'one.'], 5, 'more expensive'),
         tap('Toca la palabra incorrecta:', ['She', 'is', 'taller', 'and', 'smarter', 'but', 'lazyer', 'than', 'me.'], 6, 'lazier'),
         rebuild('Escucha y reconstruye:', 'He is taller than me', ['He', 'is', 'taller', 'than', 'me', 'tall', 'more', 'then', 'as']),
+        mc('Lee: "My brother is older than me. He is as tall as his father. My sister is taller and smarter but lazier than me. Today she is happier than before." — ¿Quién es más alto que quien escribe?', [
+          'Su hermana, que también es más lista.',
+          'Su hermano, que es el mayor de todos.',
+          'El papá, que mide igual que el hermano.',
+          'Nadie: en el texto todos miden lo mismo.'], 0),
+        mc('Lee: "My car is faster than yours. The bus isn\'t as new as the car. This phone is more expensive than that one. Today Lima is more crowded than Arequipa." — ¿Qué es cierto sobre el bus y el carro?', [
+          'El carro es más nuevo que el bus.',
+          'El bus es más nuevo que el carro.',
+          'El bus y el carro son igual de nuevos.',
+          'El bus es más rápido que el carro.'], 0),
+        writing('Escríbelo en inglés: "Mi carro es más rápido que el tuyo."', ['My car is faster than yours.'],
+          { hint: 'Adjetivo corto: + -er, y "que" en comparaciones es "than".',
+            reject: [['My car is more fast than yours.', 'Ojo: "fast" es corto, lleva -er: faster.'], ['My car is faster that yours.', 'El "que" de las comparaciones es "than", no "that".'], ['My car is fastest than yours.', 'Para comparar dos cosas va el comparativo: faster than.']] }),
       ] },
     { id: 'modulo2-4-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **2️⃣ Superlativos (el más... de todos)**
 
@@ -2176,6 +2874,19 @@ En inglés, a veces agregamos **\`+er\`** para decir "más" y **\`+est\`** para 
         tap('Toca la palabra incorrecta:', ['This', 'is', 'the', 'easyest', 'exercise', 'in', 'the', 'book.'], 3, 'easiest'),
         tap('Toca la palabra incorrecta:', ['Mount', 'Everest', 'is', 'highest', 'mountain', 'here.'], 3, 'the highest'),
         rebuild('Escucha y reconstruye:', 'She is the smartest in the class', ['She', 'is', 'the', 'smartest', 'in', 'the', 'class', 'most', 'smart', 'smarter']),
+        mc('Lee: "This is the most important lesson. This is the easiest exercise in the book. Rosa is the smartest in the class. It was the coldest day of the year." — ¿Qué es lo más importante y qué es lo más fácil?', [
+          'La lección es la más importante y el ejercicio el más fácil.',
+          'El ejercicio es el más importante y la lección la más fácil.',
+          'La lección es la más importante y también la más fácil.',
+          'El ejercicio es el más fácil y Rosa la más importante.'], 0),
+        mc('Lee: "Rosa is smarter than Luis. Milagros is the smartest in the class. This is the easiest exercise in the book. It was the coldest day of the year." — ¿Quién es la más inteligente de todo el salón?', [
+          'Milagros, que supera a todo el salón.',
+          'Rosa, porque es más inteligente que Luis.',
+          'Luis, que estudia con Rosa y Milagros.',
+          'Las tres personas son igual de inteligentes.'], 0),
+        writing('Escríbelo en inglés: "Ella es la más inteligente de la clase."', ['She is the smartest in the class.'],
+          { hint: 'Superlativo corto: the + adjetivo + -est.',
+            reject: [['She is the most smart in the class.', 'Ojo: "smart" es corto, lleva -est: the smartest.'], ['She is smartest in the class.', 'Al superlativo nunca le falta el "the": the smartest.'], ['She is the smartest of the class.', 'Con lugares y grupos va "in", no "of".']] }),
       ] },
     { id: 'modulo2-4-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **3️⃣ Irregulares (los rebeldes 😏)**
 
@@ -2201,6 +2912,19 @@ Algunos adjetivos **no siguen las reglas**. Hay que memorizarlos, ¡pero son poq
         tap('Toca la palabra incorrecta:', ['This', 'pizza', 'is', 'good', 'but', 'ceviche', 'is', 'gooder.'], 7, 'better'),
         tap('Toca la palabra incorrecta:', ['Today', 'was', 'bad', 'but', 'yesterday', 'was', 'worser.'], 6, 'worse'),
         rebuild('Escucha y reconstruye:', 'This is the best ceviche', ['This', 'is', 'the', 'best', 'ceviche', 'goodest', 'better', 'good', 'most']),
+        mc('Lee: "This pizza is good but ceviche is better. This is the best ceviche in Lima. Today was bad but yesterday was worse. It was the worst exam of my life!" — ¿Cuál de los dos días estuvo peor?', [
+          'Ayer, que estuvo peor que hoy.',
+          'Hoy, que estuvo peor que ayer.',
+          'Los dos días estuvieron igual de malos.',
+          'Ninguno de los dos: lo peor fue la pizza.'], 0),
+        mc('Lee: "This pizza is good but ceviche is better. This is the best ceviche in Lima. Today was bad but yesterday was worse. It was the worst exam of my life!" — ¿Qué comida gana según el texto?', [
+          'El ceviche, que además es el mejor de Lima.',
+          'La pizza, que quedó mejor que el ceviche.',
+          'Las dos comidas quedan igual de buenas.',
+          'La pizza de Lima, que es la mejor de todas.'], 0),
+        writing('Escríbelo en inglés: "El ceviche es mejor que la pizza."', ['Ceviche is better than pizza.'],
+          { hint: 'Es irregular: good → better → the best.',
+            reject: [['Ceviche is gooder than pizza.', 'No existe "gooder": good se vuelve better.'], ['Ceviche is more good than pizza.', '"Good" es irregular: va better, nunca "more good".'], ['Ceviche is the best than pizza.', '"The best" es el superlativo; para comparar dos va better than.']] }),
       ] },
     { id: 'modulo2-4-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -2224,6 +2948,18 @@ Estos son los resbalones más típicos. ¡Caza al intruso! 🕵️
         tap('Toca la palabra incorrecta:', ['I', 'think', 'Everest', 'is', 'highest', 'mountain', 'here.'], 4, 'the highest'),
         tap('Toca la palabra incorrecta:', ['Today', 'she', 'is', 'happyer', 'than', 'yesterday.'], 3, 'happier'),
         tap('Toca la palabra incorrecta:', ['This', 'exam', 'was', 'worser', 'than', 'the', 'last', 'one.'], 3, 'worse'),
+        mc('Lee: "He is smarter but she is the smartest. My sister is taller than me. Today she is happier than yesterday. This exam was worse than the last one." — ¿Quién es la más inteligente de todo el grupo?', [
+          'Ella, que gana a todos los demás.',
+          'Él, que es más inteligente que ella.',
+          'La hermana, que es la más alta del grupo.',
+          'Quien escribe, que es más alto que su hermana.'], 0),
+        mc('Lee: "Your new phone is more expensive than mine. This is the easiest exercise here. This exam was worse than the last one. Ceviche is the best food ever." — ¿Cuál de los dos teléfonos es el más barato?', [
+          'El teléfono de quien escribe.',
+          'El teléfono nuevo de la otra persona.',
+          'Los dos teléfonos cuestan lo mismo.',
+          'Ninguno: el texto dice que los dos son nuevos.'], 0),
+        writing('Escríbelo en inglés: "Tu teléfono nuevo es más caro que el mío."', ['Your new phone is more expensive than mine.'],
+          { reject: [['Your new phone is expensiver than mine.', '"Expensive" es largo: va con more, nunca con -er.'], ['Your new phone is the most expensive than mine.', 'Para comparar dos cosas va "more ... than", no el superlativo.'], ['Your new phone is more expensive that mine.', 'El "que" de las comparaciones es "than", no "that".']] }),
       ] },
     { id: 'modulo2-4-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -2317,6 +3053,19 @@ La estructura es siempre: **sujeto + can + verbo base**.
         tap('Toca la palabra incorrecta:', ['She', 'can', 'sing', 'and', 'she', 'can', 'dances.'], 6, 'dance'),
         tap('Toca la palabra incorrecta:', ['He', 'can', 'cook', 'and', 'cans', 'drive.'], 4, 'can'),
         rebuild('Escucha y reconstruye:', 'I can swim well', ['I', 'can', 'swim', 'well', 'cans', 'swims', "can't", 'will']),
+        mc('Lee: "Rosa: I can drive and my sister can speak French. Luis: Mom, can I go out? Rosa: No, you can\'t. Luis: Can I open the window? Rosa: Yes, you can." — ¿Quién está pidiendo permiso?', [
+          'Luis, que quiere salir y abrir la ventana.',
+          'Rosa, que maneja y da los permisos.',
+          'La hermana de Rosa, que habla francés.',
+          'Nadie: los dos solo cuentan qué saben hacer.'], 0),
+        mc('Lee: "Rosa: I can drive and my sister can speak French. Luis: Mom, can I go out? Rosa: No, you can\'t. Luis: Can I open the window? Rosa: Yes, you can." — ¿Qué le respondió Rosa a Luis?', [
+          'No lo dejó salir, pero sí abrir la ventana.',
+          'Lo dejó salir, pero no abrir la ventana.',
+          'Le dio los dos permisos que pidió.',
+          'Le negó los dos permisos que pidió.'], 0),
+        writing('Escríbelo en inglés: "Mi hermana habla francés." (con can)', ['My sister can speak French.'],
+          { hint: 'Después de can el verbo va en base: sin "to" y sin -s. Y can nunca cambia.',
+            reject: [['My sister can speaks French.', 'Después de can el verbo va en base: can speak.'], ['My sister cans speak French.', 'can nunca cambia: no existe "cans".'], ['My sister can to speak French.', 'Después de can no va "to": can speak.']] }),
       ] },
     { id: 'modulo2-5-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Preguntas, negativas y el cortés could**
 
@@ -2355,6 +3104,19 @@ En contextos formales: **Could I…? > Can I…?** 🤝
         tap('Toca la palabra incorrecta:', ['Can', 'you', 'swim', 'and', 'can', 'you', 'drives?'], 6, 'drive'),
         tap('Toca la palabra incorrecta:', ['She', 'can', 'sing', 'but', 'she', "can't", 'dances.'], 6, 'dance'),
         rebuild('Escucha y reconstruye:', "We can't come tomorrow", ['We', "can't", 'come', 'tomorrow', 'cans', 'can', 'comes', 'go']),
+        mc('Lee: "Rosa: Can you play the guitar? Luis: No, I can\'t. Rosa: Can Maria speak Japanese? Luis: No, she can\'t. She can sing but she can\'t dance." — ¿Quién sabe cantar?', [
+          'Maria, la misma que no habla japonés.',
+          'Rosa, la que hace las dos preguntas.',
+          'Luis, que no sabe tocar la guitarra.',
+          'Nadie: en el texto todos contestan que no.'], 0),
+        mc('En la oficina, una de estas dos personas le habla a UN DESCONOCIDO. Rosa: "Could I open the window, please? Could I use your phone?" Luis: "Can I open the window? Can I sit here?" — ¿Quién le habla al desconocido?', [
+          'Rosa, que pide las cosas de forma más cortés.',
+          'Luis, que pide las cosas de forma más cortés.',
+          'Los dos, porque piden con la misma cortesía.',
+          'Ninguno: los dos le hablan a un amigo.'], 0),
+        writing('Escríbelo en inglés: "Ella no puede venir a la fiesta."', ['She can\'t come to the party.', 'She cannot come to the party.'],
+          { hint: 'La negativa es can\'t (= cannot) + verbo base.',
+            reject: [['She can\'t comes to the party.', 'Después de can\'t va el verbo base: can\'t come.'], ['She doesn\'t can come to the party.', 'can se niega solito, sin "do": She can\'t come to the party.'], ['She no can come to the party.', 'No existe "no can": la negativa es can\'t come.']] }),
       ] },
     { id: 'modulo2-5-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -2378,6 +3140,18 @@ En contextos formales: **Could I…? > Can I…?** 🤝
         tap('Toca la palabra incorrecta:', ['She', 'can', 'to', 'play', 'the', 'guitar.'], 2, '(quítalo)'),
         tap('Toca la palabra incorrecta:', ['They', 'can', 'sings', 'and', 'dance', 'well.'], 2, 'sing'),
         tap('Toca la palabra incorrecta:', ['I', 'can', 'help', 'and', 'she', 'cans', 'cook.'], 5, 'can'),
+        mc('Lee: "He can swim but he can\'t dive. She can speak Italian and French. I can help and she can cook. They can sing and dance well." — ¿Quién sabe cocinar?', [
+          'Ella, la misma que habla italiano y francés.',
+          'Él, el que nada pero no sabe bucear.',
+          'Ellos, los que cantan y bailan bien.',
+          'Quien escribe, que ofrece ayudar.'], 0),
+        mc('Lee: "Rosa: Can you drive? Luis: Yes, I can. She can play the guitar and he can sing very well. Rosa: Could I have a pen?" — ¿Cuál de estas frases pide permiso y no cuenta una habilidad?', [
+          'Cuando Rosa pide un lapicero al final.',
+          'Cuando Rosa pregunta si Luis sabe manejar.',
+          'Cuando Luis dice que ella toca la guitarra.',
+          'Cuando Luis dice que él canta muy bien.'], 0),
+        writing('Escríbelo en inglés: "¿Podría tener un lapicero?" (cortés)', ['Could I have a pen?'],
+          { reject: [['Could I to have a pen?', 'Después de could no va "to": Could I have a pen?'], ['Can I have a pen?', 'Para pedir con cortesía va could, no can: Could I have a pen?'], ['Do I could have a pen?', 'Con could nunca se usa "do": Could I have a pen?']] }),
       ] },
     { id: 'modulo2-5-resumen', type: 'resumen', markdown: `**🎩 Resumen mágico de can / can't:**
 
@@ -2468,6 +3242,19 @@ En letreros lo verás muchísimo: **Visitors must present ID** 🪪.`, miniQuiz:
         tap('Toca la palabra incorrecta:', ['You', 'should', 'rest', 'and', 'you', 'should', 'drinks', 'water.'], 6, 'drink'),
         tap('Toca la palabra incorrecta:', ['He', 'must', 'finish', 'and', 'he', 'must', 'to', 'leave.'], 6, '(quítalo)'),
         rebuild('Escucha y reconstruye:', 'He should see a doctor', ['He', 'should', 'see', 'a', 'doctor', 'must', 'sees', 'to', 'shouldnt']),
+        mc('Lee: "Rosa should study harder and she should see a doctor. Luis must finish this report by 5. Passengers must wear a mask. Today Luis should rest and he should drink water." — ¿Quiénes están obligados por una regla, y no solo aconsejados?', [
+          'Luis y los pasajeros.',
+          'Rosa y los pasajeros.',
+          'Rosa y Luis, los dos por igual.',
+          'Solo Rosa, por su salud.'], 0),
+        mc('Lee: "Rosa should study harder and she should see a doctor. Luis must finish this report by 5. Passengers must wear a mask. Today Luis should rest and he should drink water." — ¿Qué tiene que hacer Luis sí o sí, y qué es solo una recomendación?', [
+          'Terminar el reporte es obligación; descansar es solo consejo.',
+          'Descansar es obligación; terminar el reporte es solo consejo.',
+          'Las dos cosas son obligaciones de su trabajo.',
+          'Las dos cosas son solo recomendaciones para hoy.'], 0),
+        writing('Escríbelo en inglés: "Los pasajeros deben usar mascarilla." (regla obligatoria)', ['Passengers must wear a mask.'],
+          { hint: 'Los modales van + verbo base: sin "to" y sin "-s".',
+            reject: [['Passengers must to wear a mask.', 'Los modales van sin "to": must wear.'], ['Passengers musts wear a mask.', 'Los modales no llevan -s: must, nunca "musts".'], ['Passengers should wear a mask.', 'Eso sería un consejo; una regla obligatoria lleva must.']] }),
       ] },
     { id: 'modulo2-6-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Have to y las negaciones clave** 👮⚠️
 
@@ -2497,6 +3284,19 @@ En letreros lo verás muchísimo: **Visitors must present ID** 🪪.`, miniQuiz:
         tap('Toca la palabra incorrecta:', ['She', 'has', 'to', 'work', 'and', 'he', 'have', 'to', 'study.'], 6, 'has'),
         tap('Toca la palabra incorrecta:', ['You', 'must', 'wear', 'a', 'helmet', 'and', 'you', 'mustnt', 'speed.'], 7, "mustn't"),
         rebuild('Escucha y reconstruye:', 'I have to help my mom today', ['I', 'have', 'to', 'help', 'my', 'mom', 'today', 'should', 'must', 'has']),
+        mc('La jefa le dice a Luis en su primer día de trabajo: "You have to wear a uniform. You must wear a helmet and you mustn\'t use the phone while driving. You don\'t have to call me Sir. Rosa has to work today too." — ¿Qué está prohibido y qué es opcional?', [
+          'Usar el celular manejando está prohibido; decirle "Sir" es opcional.',
+          'Decirle "Sir" está prohibido; usar el celular manejando es opcional.',
+          'Usar el celular y decirle "Sir" están los dos prohibidos.',
+          'Usar el celular y decirle "Sir" son los dos opcionales.'], 0),
+        mc('La jefa le dice a Luis en su primer día de trabajo: "You have to wear a uniform. You must wear a helmet and you mustn\'t use the phone while driving. You don\'t have to call me Sir. Rosa has to work today too." — ¿Qué tiene que hacer Luis sí o sí?', [
+          'Usar uniforme y ponerse el casco.',
+          'Usar uniforme y llamarle "Sir" a la jefa.',
+          'Ponerse el casco y llamarle "Sir" a la jefa.',
+          'Llamarle "Sir" a la jefa y usar el celular.'], 0),
+        writing('Escríbelo en inglés: "No debes usar el celular manejando." (está prohibido)', ["You mustn't use the phone while driving.", 'You must not use the phone while driving.'],
+          { hint: 'Prohibido = mustn\'t. "Don\'t have to" es que no es necesario.',
+            reject: [["You don't have to use the phone while driving.", 'Eso significa que no es necesario; prohibido es mustn\'t.'], ["You don't must use the phone while driving.", 'Los modales se niegan con not: mustn\'t, no "don\'t must".'], ["You mustn't to use the phone while driving.", 'Tras mustn\'t va el verbo base: mustn\'t use.']] }),
       ] },
     { id: 'modulo2-6-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -2518,6 +3318,18 @@ Estos son los resbalones clásicos con should y must. ¡Detéctalos antes de que
         tap('Toca la palabra incorrecta:', ['He', 'must', 'study', 'and', 'he', 'musts', 'practice.'], 5, 'must'),
         tap('Toca la palabra incorrecta:', ['We', 'should', 'go', 'and', 'we', 'should', 'to', 'hurry.'], 6, '(quítalo)'),
         tap('Toca la palabra incorrecta:', ['She', 'has', 'to', 'work', 'and', 'he', 'have', 'to', 'help.'], 6, 'has'),
+        mc('Lee: "Luis must study and he must practice. Rosa has to work and Luis has to help. We should go and we should hurry. You shouldn\'t be late, and we mustn\'t forget." — ¿Quiénes están obligados a algo, y qué es solo un consejo?', [
+          'Luis y Rosa están obligados; apurarse es solo consejo.',
+          'Luis y Rosa reciben consejos; apurarse es la obligación.',
+          'Todos están obligados exactamente a lo mismo.',
+          'Solo Rosa está obligada; a Luis solo lo aconsejan.'], 0),
+        mc('Lee: "Luis must study and he must practice. Rosa has to work and Luis has to help. We should go and we should hurry. You shouldn\'t be late, and we mustn\'t forget." — ¿Qué le toca hacer a Luis sí o sí?', [
+          'Estudiar, practicar y ayudar a Rosa.',
+          'Estudiar, practicar y apurarse.',
+          'Trabajar y apurarse con Rosa.',
+          'Ayudar a Rosa y no llegar tarde.'], 0),
+        writing('Escríbelo en inglés: "¿Debo asistir a la reunión?" (obligación)', ['Must I attend the meeting?', 'Do I have to attend the meeting?'],
+          { reject: [['Do I must attend the meeting?', 'Los modales preguntan solos, sin "do": Must I attend the meeting?'], ['Must I to attend the meeting?', 'Tras must va el verbo base: Must I attend the meeting?'], ['I must attend the meeting?', 'En pregunta el modal va primero: Must I attend the meeting?']] }),
       ] },
     { id: 'modulo2-6-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -2604,6 +3416,19 @@ Estos verbos se comportan como **verbos normales** en presente:
         tap('Toca la palabra incorrecta:', ['I', 'like', 'cooking', 'and', 'I', 'love', 'dance.'], 6, 'dancing'),
         tap('Toca la palabra incorrecta:', ['She', 'enjoys', 'reading', 'and', 'hates', 'wait.'], 5, 'waiting'),
         rebuild('🎧 Reconstruye:', 'She loves dancing', ['She', 'loves', 'dancing', 'hates', 'dance', 'loving', 'love', 'dances']),
+        mc('Lee: "Rosa loves dancing and she enjoys reading. Luis likes dancing too, but he hates waiting in line. Milagros doesn\'t like dancing at night. I like cooking." — ¿A quién le gusta MÁS bailar?', [
+          'A Rosa, que ama bailar más que Luis.',
+          'A Luis, que baila pero odia esperar.',
+          'A Milagros, que baila todas las noches.',
+          'A quien escribe, que prefiere cocinar.'], 0),
+        mc('Lee: "Milagros enjoys reading and she loves dancing. I don\'t like cooking, and I hate waiting in line. Luis doesn\'t like driving at night. Do you enjoy reading?" — ¿Qué disfruta Milagros y qué odia quien escribe?', [
+          'Milagros disfruta leyendo; quien escribe odia esperar.',
+          'Milagros disfruta cocinando; quien escribe odia leer.',
+          'Milagros odia esperar; quien escribe disfruta leyendo.',
+          'Milagros disfruta manejando; quien escribe odia bailar.'], 0),
+        writing('Escríbelo en inglés: "Me gusta cocinar."', ['I like cooking.'],
+          { hint: 'Después de like/love/hate/enjoy el verbo va en -ing.',
+            reject: [['I like cook.', 'Tras "like" el verbo va en -ing: I like cooking.'], ['I like to cooking.', 'Nunca van juntos "to" y "-ing": I like cooking.'], ['I like to cook.', 'No está mal, pero aquí practicamos el -ing: I like cooking.']] }),
       ] },
     { id: 'modulo2-7-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **because (porque) + vocabulario de gustos**
 
@@ -2637,6 +3462,19 @@ Más ejemplos: *I love listening to music.* / *My friend **enjoys** going to the
         tap('Toca la palabra incorrecta:', ['He', 'enjoys', 'cooking', 'and', 'she', 'enjoy', 'baking.'], 5, 'enjoys'),
         tap('Toca la palabra incorrecta:', ['I', 'really', 'like', 'tea', 'and', 'I', 'very', 'like', 'coffee.'], 6, 'really'),
         rebuild('🎧 Reconstruye:', 'I love listening to music', ['I', 'love', 'listening', 'to', 'music', 'hate', 'listen', 'loves']),
+        mc('Lee: "Rosa likes learning English because it\'s fun. Luis hates running because it\'s tiring. He doesn\'t like cats because he\'s allergic. I love listening to music." — ¿Quién es alérgico?', [
+          'Luis, que además odia correr.',
+          'Rosa, que aprende inglés porque es divertido.',
+          'Quien escribe, que ama escuchar música.',
+          'Rosa y Luis, los dos por igual.'], 0),
+        mc('Lee: "I really like tea and I really like coffee. My friend enjoys going to the gym. We don\'t like watching horror movies because they scare us. I love listening to music." — ¿Qué le gusta MÁS a quien escribe?', [
+          'La música, que ama; el té solo le gusta mucho.',
+          'El té y el café, más que la música.',
+          'El gimnasio, adonde va su amigo cada día.',
+          'Las películas de terror, que ve encantado.'], 0),
+        writing('Escríbelo en inglés: "No le gustan los gatos porque es alérgico."', ["He doesn't like cats because he's allergic."],
+          { hint: '"because" da la razón; tras doesn\'t el verbo va en forma base.',
+            reject: [["He doesn't likes cats because he's allergic.", 'Tras "doesn\'t" el verbo va en base: doesn\'t like.'], ["He don't like cats because he's allergic.", 'Con "he" va doesn\'t, no don\'t.'], ["He doesn't like cats why he's allergic.", 'El "porque" de la razón es "because", no "why".']] }),
       ] },
     { id: 'modulo2-7-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -2661,6 +3499,18 @@ Recuerda: tras *like/love/hate/enjoy* va **-ing**; en negativo **doesn't** + ver
         tap('Toca la palabra incorrecta:', ['He', "doesn't", 'likes', 'swimming.'], 2, 'like'),
         tap('Toca la palabra incorrecta:', ['She', "doesn't", 'enjoys', 'reading.'], 2, 'enjoy'),
         tap('Toca la palabra incorrecta:', ['They', 'enjoy', 'hiking', 'and', 'she', 'enjoy', 'biking.'], 5, 'enjoys'),
+        mc('Lee: "Luis and Rosa enjoy hiking, and she enjoys biking. Milagros doesn\'t like swimming. We love swimming but hate running. We hate waiting for the bus. I really like sports." — ¿Quién anda en bicicleta?', [
+          'Rosa, que también hace caminatas con Luis.',
+          'Milagros, que no quiere nadar.',
+          'Luis, que hace caminatas con Rosa.',
+          'Quien escribe, a quien le gustan los deportes.'], 0),
+        mc('Lee: "I like cooking and I hate waiting. She enjoys reading and cooking at home. Do you like dancing and singing? He doesn\'t like to swim. I really like tea and really like coffee." — ¿Qué hace ella en casa y qué odia quien escribe?', [
+          'Ella lee y cocina; quien escribe odia esperar.',
+          'Ella cocina y baila; quien escribe odia nadar.',
+          'Ella lee y espera; quien escribe odia cocinar.',
+          'Ella nada y canta; quien escribe odia el té.'], 0),
+        writing('Escríbelo en inglés: "¿Te gusta cantar?"', ['Do you like singing?'],
+          { reject: [['Do you like sing?', 'Tras "like" el verbo va en -ing: Do you like singing?'], ['Are you like singing?', 'Para preguntar con "like" va Do, no Are: Do you like singing?'], ['Do you like to sing?', 'No está mal, pero aquí practicamos el -ing: Do you like singing?']] }),
       ] },
     { id: 'modulo2-7-resumen', type: 'resumen', markdown: `## **🎯 Resumen: Gustos & Disgustos**
 
@@ -2761,6 +3611,19 @@ El secreto: el **auxiliar va ANTES del sujeto**. 🔑 Empecemos por el **present
       tap('Toca la palabra incorrecta:', ['Where', 'do', 'you', 'live', 'and', 'works?'], 5, 'work'),
       tap('Toca la palabra incorrecta:', ['What', 'does', 'she', 'wants?'], 3, 'want'),
       rebuild('🎧 Ordena: "¿Dónde trabajas?"', 'Where do you work', ['Where', 'do', 'you', 'work', 'does', 'works', 'are', 'walk']),
+      mc('Rosa le escribe a Milagros sobre su vecino Juan y sus primos Luis y Carmen: "Where is Juan? Where do they live? When does she work? What do you study? Where do you live and work?" — ¿Por quién pregunta Rosa cuando dice "she"?', [
+        'Por Carmen, la prima de la que hablan.',
+        'Por Milagros, la que lee el mensaje.',
+        'Por Rosa, la que escribe el mensaje.',
+        'Por Luis, el otro primo del grupo.'], 0),
+      mc('Rosa le escribe a Milagros sobre su vecino Juan y sus primos Luis y Carmen: "Where is Juan? Where do they live? When does she work? What do you study? Where do you live and work?" — ¿Qué le pregunta Rosa a Milagros sobre ella misma?', [
+        'Qué estudia y dónde vive y trabaja.',
+        'Dónde está Juan y qué estudia ella.',
+        'Cuándo trabaja Carmen y dónde vive ella.',
+        'Dónde viven Luis y Carmen, sus primos.'], 0),
+      writing('Escríbelo en inglés: "¿Qué quiere ella?"', ['What does she want?'],
+        { hint: 'Wh- + does + sujeto + verbo en forma base.',
+          reject: [['What does she wants?', 'Con "does" el verbo va en base: want.'], ['What do she want?', 'Con "she" el auxiliar es "does", no "do".'], ['What she wants?', 'Falta el auxiliar: What does she want?']] }),
     ] },
     { id: 'modulo2-8-teoria-1b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🧩 La fórmula universal (pasado)**
 
@@ -2794,6 +3657,19 @@ Mismo orden, ahora en **pasado** 🔙:
       tap('Toca la palabra incorrecta:', ['Where', 'did', 'you', 'go', 'and', 'bought', 'food?'], 5, 'buy'),
       tap('Toca la palabra incorrecta:', ['When', 'did', 'she', 'left?'], 3, 'leave'),
       rebuild('🎧 Ordena: "¿Dónde fuiste?"', 'Where did you go', ['Where', 'did', 'you', 'go', 'went', 'do', 'goes', 'gone']),
+      mc('Milagros le pregunta a Luis por sus amigos Rosa y Juan: "Where were you yesterday? What did he say? Why did she leave? Who was at the meeting? How were the exams?" — ¿A quién le pregunta Milagros dónde estuvo ayer?', [
+        'A Luis, que es quien la escucha.',
+        'A Juan, el amigo que dijo algo.',
+        'A Rosa, la amiga que se fue.',
+        'A todos los que estaban en la reunión.'], 0),
+      mc('Milagros le pregunta a Luis por sus amigos Rosa y Juan: "Where were you yesterday? What did he say? Why did she leave? Who was at the meeting? How were the exams?" — ¿Qué quiere saber Milagros sobre Juan y sobre Rosa?', [
+        'De Juan, qué dijo; de Rosa, por qué se fue.',
+        'De Juan, por qué se fue; de Rosa, qué dijo.',
+        'De los dos, dónde estuvieron ayer.',
+        'De Juan, cómo fueron los exámenes; de Rosa, qué dijo.'], 0),
+      writing('Escríbelo en inglés: "¿Dónde fuiste?"', ['Where did you go?'],
+        { hint: 'Con "did" el verbo principal va en forma base.',
+          reject: [['Where did you went?', 'Con "did" el verbo va en base: go.'], ['Where you went?', 'Falta el auxiliar: Where did you go?'], ['Where did you goed?', 'Tras "did" va la base del verbo: go.']] }),
     ] },
     { id: 'modulo2-8-teoria-2a', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🎯 Cuando el Wh- ES el sujeto**
 
@@ -2818,6 +3694,19 @@ Truco para detectarlo 🕵: si puedes responder *"**Maria** wrote it"* (el Wh- o
       tap('Toca la palabra incorrecta:', ['Who', 'did', 'wrote', 'this', 'letter?'], 1, '(quítalo)'),
       tap('Toca la palabra incorrecta:', ['I', 'know', 'who', 'does', 'lives', 'here.'], 3, '(quítalo)'),
       rebuild('🎧 Ordena: "¿Quién escribió esto?"', 'Who wrote this', ['Who', 'wrote', 'this', 'did', 'write', 'writes', 'does', 'rode']),
+      mc('Lee: "Rosa: Who called you? Milagros: Luis called me. Rosa: Who wrote this letter? Milagros: Maria wrote it. Rosa: Who knows the answer? Milagros: He knows it." — ¿A quién se refiere "He" en la última respuesta?', [
+        'A Luis, el que llamó a Milagros.',
+        'A Maria, la que escribió la carta.',
+        'A Rosa, la que hace las preguntas.',
+        'A Milagros, la que responde las preguntas.'], 0),
+      mc('Lee: "Rosa: Who called you? Milagros: Luis called me. Rosa: Who wrote this letter? Milagros: Maria wrote it. Rosa: Who knows the answer? Milagros: He knows it." — ¿Quién hizo cada cosa, según Milagros?', [
+        'Luis llamó y Maria escribió la carta.',
+        'Maria llamó y Luis escribió la carta.',
+        'Luis llamó y también escribió la carta.',
+        'Rosa llamó y Milagros escribió la carta.'], 0),
+      writing('Escríbelo en inglés: "¿Quién te llamó?"', ['Who called you?'],
+        { hint: 'Si el Wh- es el sujeto, la pregunta va sin auxiliar.',
+          reject: [['Who did call you?', 'Aquí "Who" es el sujeto: va sin auxiliar, Who called you?'], ['Who did called you?', 'Sobra el "did" y el verbo ya está en pasado: Who called you?'], ['Who calls you?', 'Eso es presente; en pasado es "called".']] }),
     ] },
     { id: 'modulo2-8-teoria-2b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🔀 Which vs What**
 
@@ -2844,6 +3733,19 @@ Regla rápida 🔑: si puedes señalar las opciones con el dedo, usa **Which**; 
       mc('"___ do you do for work?" (pregunta abierta)', ['Which', 'What', 'How', 'When'], 1),
       mc('Si puedes señalar las opciones con el dedo, usas…', ['What', 'Which', 'How much', 'Who'], 1),
       rebuild('🎧 Ordena: "¿Cuál bus va al museo?"', 'Which bus goes to the museum', ['Which', 'bus', 'goes', 'to', 'the', 'museum', 'What', 'go', 'witch', 'does']),
+      mc('En una tienda: "Rosa: What size do you wear? Which size do you want, S or M? Milagros: Which one do you prefer, the red or the blue? What is your favorite color?" — ¿A quién le preguntan por su color favorito?', [
+        'A Rosa, la que atiende en la tienda.',
+        'A Milagros, la que está comprando.',
+        'A las dos, a Rosa y a Milagros.',
+        'A la persona que eligió la talla S.'], 0),
+      mc('En una tienda: "Rosa: What size do you wear? Which size do you want, S or M? Milagros: Which one do you prefer, the red or the blue? What is your favorite color?" — ¿Qué dos preguntas dejan la respuesta totalmente abierta?', [
+        'La de la talla que usa y la del color favorito.',
+        'La de S o M y la del rojo o el azul.',
+        'La de la talla que usa y la de S o M.',
+        'La del color favorito y la del rojo o el azul.'], 0),
+      writing('Escríbelo en inglés: "¿Cuál talla quieres, S o M?"', ['Which size do you want, S or M?'],
+        { hint: 'Con opciones limitadas y a la vista se usa "Which".',
+          reject: [['What size do you want, S or M?', 'Si las opciones están dadas (S o M) va "Which".'], ['Which size you want, S or M?', 'Falta el auxiliar: Which size do you want?'], ['Which size do you wants, S or M?', 'Tras "do" el verbo va en base: want.']] }),
     ] },
     { id: 'modulo2-8-teoria-2c', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🔢 "How" combinado**
 
@@ -2870,6 +3772,19 @@ Clave para *much* vs *many* 🔑: si lo puedes **contar** uno por uno (apples, b
       mc('"How ___ water do you drink?" (incontable)', ['many', 'much', 'old', 'long'], 1),
       mc('Con cosas contables (books, apples) usas…', ['how much', 'how many', 'how long', 'how old'], 1),
       rebuild('🎧 Ordena: "¿Cuántos hermanos tienes?"', 'How many siblings do you have', ['How', 'many', 'siblings', 'do', 'you', 'have', 'much', 'has', 'old']),
+      mc('Lee: "Milagros: How much is this? How long is the trip? How often does it rain here? Luis: How old are you? How many siblings do you have?" — ¿A quién le preguntan por su edad y sus hermanos?', [
+        'A Milagros, la que pregunta el precio.',
+        'A Luis, que es quien hace esas dos preguntas.',
+        'A Milagros y a Luis, a los dos.',
+        'A alguien que no habla en la conversación.'], 0),
+      mc('Lee: "Milagros: How much is this? How long is the trip? How often does it rain here? Luis: How old are you? How many siblings do you have?" — ¿Qué quiere saber Milagros?', [
+        'El precio, cuánto dura el viaje y si llueve seguido.',
+        'La edad de Luis y cuántos hermanos tiene.',
+        'El precio, la edad de Luis y sus hermanos.',
+        'Cuánto dura el viaje y cuántos hermanos tiene Luis.'], 0),
+      writing('Escríbelo en inglés: "¿Cuánto cuesta esto?"', ['How much is this?'],
+        { hint: 'Para dinero y cosas que no se cuentan va "How much".',
+          reject: [['How many is this?', 'Con dinero va "How much", no "How many".'], ['How much this is?', 'En la pregunta el verbo va antes del sujeto: How much is this?']] }),
     ] },
     { id: 'modulo2-8-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -2893,6 +3808,18 @@ Clave para *much* vs *many* 🔑: si lo puedes **contar** uno por uno (apples, b
       tap('Toca la palabra incorrecta:', ['Where', 'did', 'he', 'bought', 'it?'], 3, 'buy'),
       tap('Toca la palabra incorrecta:', ['Why', 'does', 'she', 'studies', 'English?'], 3, 'study'),
       tap('Toca la palabra incorrecta:', ['Who', 'did', 'wrote', 'the', 'book?'], 1, '(quítalo)'),
+      mc('Rosa le escribe a Luis sobre sus compañeros Juan y Carmen: "Where are you? What does he want? When did she go? Why do you study English? What time does the class start?" — ¿De quién quiere saber Rosa cuándo se fue?', [
+        'De Carmen, la compañera del mensaje.',
+        'De Juan, el compañero del mensaje.',
+        'De Luis, que es quien lee el mensaje.',
+        'De ella misma, que escribe el mensaje.'], 0),
+      mc('Rosa le escribe a Luis sobre sus compañeros Juan y Carmen: "Where are you? What does he want? When did she go? Why do you study English? What time does the class start?" — ¿Cuál de las preguntas es sobre algo que ya pasó?', [
+        'La de cuándo se fue Carmen.',
+        'La de dónde está Luis ahora.',
+        'La de qué quiere Juan.',
+        'La de a qué hora empieza la clase.'], 0),
+      writing('Escríbelo en inglés: "¿Cuántas personas había?"', ['How many people were there?'],
+        { reject: [['How many people was there?', 'Con "people" (plural) va "were", no "was".'], ['How many people did there?', 'El to be no usa "did": How many people were there?'], ['How much people were there?', '"People" se cuenta uno por uno: va "How many".']] }),
     ] },
     { id: 'modulo2-8-resumen', type: 'resumen', markdown: `## **🎯 Resumen: el ABC del detective Wh-**
 
@@ -2981,6 +3908,19 @@ Las tallas suelen ser **S / M / L / XL**.`,
         mc('"Solo estoy mirando, gracias."', ["I just look, thanks.", "I'm looking just, thanks.", "I'm just looking, thanks.", "Just I'm looking, thanks."], 2),
         rebuild('🎧 Reconstruye:', 'Do you have this in size M', ['Do', 'you', 'have', 'this', 'in', 'size', 'M', 'color', 'price', 'has']),
         rebuild('🎧 Reconstruye:', "I'm looking for a black jacket", ["I'm", 'looking', 'for', 'a', 'black', 'jacket', 'look', 'at', 'size']),
+        mc('Lee: "Rosa: Can I help you? Milagros: I\'m just looking, thanks. Luis: I\'m looking for a black jacket. Do you have this in size M? Rosa: What size are you? Luis: I\'m a size 6." — ¿Quién busca algo para comprar?', [
+          'Luis, que pide una casaca negra en talla M.',
+          'Milagros, que responde que solo está mirando.',
+          'Rosa, que atiende a los dos clientes.',
+          'Los dos clientes buscan la misma casaca.'], 0),
+        mc('Lee: "Rosa: Can I help you? Milagros: I\'m just looking, thanks. Luis: I\'m looking for a black jacket. Do you have this in size M? Rosa: What size are you? Luis: I\'m a size 6." — ¿Qué diferencia hay entre lo que dicen Milagros y Luis?', [
+          'Milagros solo mira; Luis busca una casaca negra.',
+          'Milagros busca una casaca; Luis solo está mirando.',
+          'Los dos buscan una casaca negra en talla M.',
+          'Milagros pregunta la talla y Luis solo mira.'], 0),
+        writing('Escríbelo en inglés: "Busco una casaca negra."', ['I\'m looking for a black jacket.'],
+          { hint: 'Para decir qué buscas: I\'m looking for + lo que quieres.',
+            reject: [['I\'m looking a black jacket.', 'Falta "for": I\'m looking for a black jacket.'], ['I\'m looking for a jacket black.', 'En inglés el color va antes: a black jacket.'], ['I look for a black jacket.', 'Aquí va el continuo: I\'m looking for a black jacket.']] }),
       ] },
     { id: 'modulo2-9-teoria-1b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Preguntar precios** 💵
 
@@ -2999,6 +3939,19 @@ Para **preguntar el precio**:
         mc('Para UNA cosa usas "is"; para VARIAS usas...', ['are', 'is', 'has', 'be'], 0),
         tap('Toca la palabra incorrecta:', ['How', 'much', 'cost', 'these', 'shoes?'], 2, 'are'),
         rebuild('🎧 Reconstruye:', 'How much are these', ['How', 'much', 'are', 'these', 'is', 'this', 'many', 'cost']),
+        mc('Lee: "Rosa: Can I help you? Milagros: I\'m looking for a black jacket. How much is this? That\'s a bit expensive. How much are these shoes? Is it on sale?" — ¿Qué le parece caro a Milagros?', [
+          'La casaca negra que está buscando.',
+          'Los zapatos por los que pregunta después.',
+          'Las dos cosas: la casaca y los zapatos.',
+          'Nada: pregunta si hay una oferta.'], 0),
+        mc('Lee: "Rosa: Can I help you? Milagros: I\'m looking for a black jacket. How much is this? That\'s a bit expensive. How much are these shoes? Is it on sale?" — ¿Por cuántas cosas pregunta el precio Milagros?', [
+          'Por dos cosas: la casaca y los zapatos.',
+          'Solo por una cosa: la casaca negra.',
+          'Solo por una cosa: los zapatos.',
+          'Por tres cosas: casaca, zapatos y oferta.'], 0),
+        writing('Escríbelo en inglés: "¿Cuánto cuestan estos?"', ['How much are these?'],
+          { hint: 'Si son varias cosas, el verbo es "are": How much are…?',
+            reject: [['How much is these?', 'Para varias cosas va "are": How much are these?'], ['How much cost these?', 'No lleva "cost": How much are these?'], ['How many are these?', '"How much" pregunta el precio; "how many", la cantidad.']] }),
       ] },
     { id: 'modulo2-9-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Probar, decidir y pagar** 💳
 
@@ -3036,6 +3989,19 @@ A la hora de **pagar** 💰:
         tap('Toca la palabra incorrecta:', ['Can', 'I', 'pay', 'with', 'card?'], 3, 'by'),
         tap('Toca la palabra incorrecta:', ['I', 'take', 'this', 'jacket.'], 1, "I'll take"),
         rebuild('🎧 Reconstruye:', 'How much is it altogether', ['How', 'much', 'is', 'it', 'altogether', 'are', 'these', 'cost']),
+        mc('Lee: "Milagros: Can I try it on? It\'s too tight. Do you have a larger size? Rosa: Here you go. Milagros: It fits well. I\'ll take it." — ¿Qué pasó primero?', [
+          'Se lo probó y le quedó muy ajustado.',
+          'Pidió una talla más grande y luego se lo probó.',
+          'Le quedó bien y después pidió otra talla.',
+          'Rosa le dio otra talla antes de que se lo probara.'], 0),
+        mc('Lee: "Milagros: Can I try it on? It\'s too tight. Do you have a larger size? Rosa: Here you go. Milagros: It fits well. I\'ll take it." — ¿Qué decide Milagros al final?', [
+          'Se lleva la talla más grande, que le queda bien.',
+          'No se lo lleva porque le queda muy ajustado.',
+          'Lo va a pensar y vuelve otro día.',
+          'Pide la misma prenda en otro color.'], 0),
+        writing('Escríbelo en inglés: "Me lo llevo."', ['I\'ll take it.'],
+          { hint: 'Decisión del momento: I\'ll + verbo base.',
+            reject: [['I take it.', 'Para una decisión del momento va I\'ll: I\'ll take it.'], ['I am take it.', 'No lleva "am": la forma es I\'ll take it.'], ['I take will it.', 'El orden correcto es I\'ll take it.']] }),
       ] },
     { id: 'modulo2-9-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -3057,6 +4023,18 @@ Ojito con estos resbalones clásicos de caserit@ novat@ 😅:
         tap('Toca la palabra incorrecta:', ['Can', 'I', 'pay', 'in', 'cash', 'or', 'with', 'card?'], 6, 'by'),
         tap('Toca la palabra incorrecta:', ['Do', 'you', 'have', 'this', 'in', 'size', 'L', 'this?'], 7, '(quítalo)'),
         tap('Toca la palabra incorrecta:', ['How', 'much', 'are', 'this', 'pants?'], 3, 'these'),
+        mc('Lee: "Milagros: Do you have this in size L? How much are these pants? I\'ll take this jacket. Can I pay in cash or by card? Could I have a receipt, please? Rosa: Have a nice day!" — ¿Qué se lleva Milagros?', [
+          'La casaca, aunque preguntó por el pantalón.',
+          'El pantalón, porque preguntó cuánto cuesta.',
+          'La casaca y el pantalón, las dos prendas.',
+          'Nada: solo pidió el recibo y se fue.'], 0),
+        mc('Lee: "Milagros: Do you have this in size L? How much are these pants? I\'ll take this jacket. Can I pay in cash or by card? Could I have a receipt, please? Rosa: Have a nice day!" — ¿Qué dos cosas pide Milagros antes de despedirse?', [
+          'Pagar en efectivo o con tarjeta, y un recibo.',
+          'Una talla L y un descuento en el pantalón.',
+          'El recibo y que le envuelvan la casaca para regalo.',
+          'El precio del pantalón y una talla más grande.'], 0),
+        writing('Escríbelo en inglés: "¿Puedo pagar con tarjeta?"', ['Can I pay by card?'],
+          { reject: [['Can I pay with card?', 'Es "by card", no "with card": Can I pay by card?'], ['Can I to pay by card?', 'Después de "can" va el verbo base: Can I pay by card?'], ['Can I pay card?', 'Falta la preposición: Can I pay by card?']] }),
       ] },
     { id: 'modulo2-9-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -3152,6 +4130,19 @@ Y para el **malestar general**:
         mc('Con "I have a..." NO se dice:', ['I have a fever.', 'I have a headache.', 'I have a dizzy.', 'I have a cough.'], 2),
         tap('Toca la palabra incorrecta:', ['My', 'back', 'hurt', 'and', 'my', 'legs', 'hurt.'], 2, 'hurts'),
         rebuild('🎧 Reconstruye:', 'I have a sore throat', ['I', 'have', 'a', 'sore', 'throat', 'My', 'back', 'hurts', 'fever']),
+        mc('Lee: "Rosa: I have a fever and a cough. Luis: I have a sore throat and my back hurts. Milagros: I don\'t feel well. I feel dizzy today." — ¿Quién tiene fiebre?', [
+          'Rosa, que además tiene tos.',
+          'Luis, a quien le duele la garganta.',
+          'Milagros, que se siente mareada hoy.',
+          'Luis, a quien le duele la espalda.'], 0),
+        mc('Lee: "Rosa: I have a fever and a cough. Luis: I have a sore throat and my back hurts. Milagros: I don\'t feel well. I feel dizzy today." — ¿Qué dice Milagros sobre cómo se siente?', [
+          'Que no se siente bien y está mareada.',
+          'Que le duele la garganta y la espalda.',
+          'Que tiene fiebre y tos desde hoy.',
+          'Que le duele la cabeza y una muela.'], 0),
+        writing('Escríbelo en inglés: "Me duele la espalda."', ['My back hurts.'],
+          { hint: 'Para señalar la parte que duele: My + la parte + hurts.',
+            reject: [['My back hurt.', 'Con "my back" (una sola parte) el verbo lleva -s: My back hurts.'], ['My back hurts me.', 'El "me" del español no se traduce: My back hurts.']] }),
       ] },
     { id: 'modulo2-10-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **El doctor y las recomendaciones 🩺**
 
@@ -3193,6 +4184,19 @@ Otras frases del doctor: *Let me take your temperature* (déjame tomar tu temper
         mc('"¡Llamen a una ambulancia!"', ['Call an ambulance!', 'Call to an ambulance!', 'Call a ambulance!', 'Call the ambulance to!'], 0),
         tap('Toca la palabra incorrecta:', ['You', 'should', 'rest', 'and', 'you', 'must', 'to', 'drink', 'water.'], 6, '(quítalo)'),
         rebuild('🎧 Reconstruye:', 'Call an ambulance', ['Call', 'an', 'ambulance', 'doctor', 'to', 'emergency', 'a']),
+        mc('Lee: "Doctor: What\'s wrong? Luis: I have a cough. Milagros: I have a fever. Doctor: How long have you had this? Luis: Since yesterday. Milagros: For two days." — ¿Quién lleva más tiempo con su molestia?', [
+          'Milagros, que tiene fiebre desde hace dos días.',
+          'Luis, que tiene tos desde hace dos días.',
+          'Milagros, que tiene fiebre desde ayer.',
+          'Luis, que tiene tos desde ayer.'], 0),
+        mc('Lee: "Luis: I have a cough. Doctor: You should rest and you must drink water. Milagros: I have a fever. Doctor: You should take these pills. Take one pill every 8 hours." — ¿Qué le recomienda el doctor a Milagros?', [
+          'Tomar las pastillas, una cada 8 horas.',
+          'Descansar y tomar mucha agua.',
+          'Tomar ocho pastillas cada día.',
+          'Descansar ocho horas y beber agua.'], 0),
+        writing('Escríbelo en inglés: "Debes beber muchos líquidos."', ['You must drink a lot of fluids.'],
+          { hint: 'Después de "must" el verbo va directo, sin "to".',
+            reject: [['You must to drink a lot of fluids.', 'Tras "must" no va "to": You must drink a lot of fluids.'], ['You musts drink a lot of fluids.', '"Must" nunca lleva -s: You must drink a lot of fluids.'], ['You should drink a lot of fluids.', '"Should" es consejo; aquí hay obligación: You must drink a lot of fluids.']] }),
       ] },
     { id: 'modulo2-10-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -3221,6 +4225,18 @@ Toca la palabra incorrecta en cada frase 👇`,
         tap('Toca la palabra incorrecta:', ['You', 'should', 'to', 'rest', 'today.'], 2, '(quítalo)'),
         tap('Toca la palabra incorrecta:', ['He', 'have', 'a', 'fever', 'and', 'a', 'cough.'], 1, 'has'),
         tap('Toca la palabra incorrecta:', ['After', 'lunch', 'I', 'feel', 'myself', 'sick.'], 4, '(quítalo)'),
+        mc('Rosa le cuenta al doctor cómo están sus hermanos Luis y Milagros: "He has a fever and a cough. She feels dizzy and weak. Today my back hurts a lot. I feel bad." — ¿Quién tiene fiebre y tos?', [
+          'Luis, el hermano de Rosa.',
+          'Milagros, la hermana de Rosa.',
+          'Rosa, a quien le duele la espalda.',
+          'Milagros, que se siente mareada.'], 0),
+        mc('Lee: "Rosa: I feel bad. I have a headache and today my back hurts a lot. After lunch I feel sick. Luis: You should rest today. You must take this syrup." — ¿Qué le dice Luis a Rosa que haga?', [
+          'Que descanse hoy y tome este jarabe.',
+          'Que descanse hoy y no tome nada.',
+          'Que tome el jarabe antes del almuerzo.',
+          'Que descanse solo después del almuerzo.'], 0),
+        writing('Escríbelo en inglés: "Me siento mal."', ['I feel bad.', 'I feel sick.'],
+          { reject: [['I feel myself bad.', 'No traduzcas el "me" reflexivo: I feel bad.'], ['I feel me bad.', 'El "me" del español no va en inglés: I feel bad.'], ['I feel myself sick.', 'Igual que arriba, sin "myself": I feel sick.']] }),
       ] },
     { id: 'modulo2-10-resumen', type: 'resumen', markdown: `## **🎯 Resumen: Inglés para la salud 🩹**
 
@@ -3312,6 +4328,19 @@ Tu **boarding pass** (pase de abordar) te dirá la **gate** (puerta): *Your flig
         mc('"¿Tiene algo que declarar?" – No tienes nada:', ['Nothing to declare.', 'No declare nothing.', 'I have nothing declare.', 'Not declare.'], 0),
         rebuild('Escucha y reconstruye:', 'Where is the check-in counter', ['Where', 'is', 'the', 'check-in', 'counter', 'gate', 'baggage', 'my']),
         rebuild('Escucha y reconstruye:', 'My suitcase is missing', ['My', 'suitcase', 'is', 'missing', 'gate', 'window', 'are', 'lost']),
+        mc('Lee: "Milagros: Where is the check-in counter? Luis: I\'d like to check in. Here is my passport. I have one suitcase and one carry-on. Rosa: My suitcase is missing. Where is baggage claim?" — ¿Quién tiene un problema con su equipaje?', [
+          'Rosa, que además pregunta por la entrega de equipaje.',
+          'Luis, que lleva una maleta y un equipaje de mano.',
+          'Milagros, que busca el mostrador de check-in.',
+          'Los tres, que esperan sus maletas del mismo vuelo.'], 0),
+        mc('En inmigración le preguntan a Milagros: "Purpose of your visit? – Tourism. How long will you be staying? – I\'ll be here for two weeks. Do you have anything to declare? – No, nothing to declare." — ¿Qué dice Milagros sobre su viaje?', [
+          'Viene por turismo y se queda dos semanas.',
+          'Viene por trabajo y se queda dos semanas.',
+          'Viene por turismo y trae algo que declarar.',
+          'Se queda dos semanas y trae algo que declarar.'], 0),
+        writing('Escríbelo en inglés: "¿Dónde está el mostrador de check-in?"', ['Where is the check-in counter?'],
+          { hint: 'Pregunta de lugar: Where + is + el lugar.',
+            reject: [['Where the check-in counter is?', 'En la pregunta el verbo va primero: Where is the check-in counter?'], ['Where is check-in counter?', 'Falta el artículo "the": Where is the check-in counter?'], ['Where is the counter check-in?', 'El orden correcto es "check-in counter": Where is the check-in counter?']] }),
       ] },
     { id: 'modulo2-11-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚍 Parada 2: La Ciudad (Transporte y Direcciones)**
 
@@ -3345,6 +4374,19 @@ Direcciones: **north** (norte), **south** (sur), **east** (este), **west** (oest
         tap('Toca la palabra incorrecta:', ['Turn', 'left', 'at', 'the', 'traffic', 'lights.'], 5, 'light.'),
         tap('Toca la palabra incorrecta:', ['How', 'I', 'get', 'to', 'the', 'station?'], 1, 'do I'),
         rebuild('Escucha y reconstruye:', 'Does this train go to the airport', ['Does', 'this', 'train', 'go', 'to', 'the', 'airport', 'bus', 'museum', 'how']),
+        mc('Lee: "Rosa: Excuse me, can you tell me how to get to the train station? Luis: Go straight ahead for two blocks. Then turn left at the traffic light. The museum will be on your right. Rosa: Is it far? Luis: It\'s about a 5-minute walk." — ¿Qué verá Rosa después de doblar en el semáforo?', [
+          'El museo, que estará a su derecha.',
+          'El museo, que estará a su izquierda.',
+          'La estación de tren, que estará a su derecha.',
+          'El semáforo, que estará a dos cuadras.'], 0),
+        mc('Lee: "Rosa: Where is the bus stop? Luis: It\'s two blocks away. It\'s next to the bank. Rosa: How do I get to the museum? Luis: Go straight ahead for two blocks. It\'s across from the park." — ¿Dónde queda cada lugar?', [
+          'La parada junto al banco y el museo frente al parque.',
+          'La parada frente al parque y el museo junto al banco.',
+          'La parada junto al parque y el museo frente al banco.',
+          'El banco frente al parque y la parada junto al museo.'], 0),
+        writing('Escríbelo en inglés: "¿Cómo llego a la estación?"', ['How do I get to the station?'],
+          { hint: 'Para preguntar cómo llegar: How do I get to + el lugar.',
+            reject: [['How I get to the station?', 'Falta el auxiliar "do": How do I get to the station?'], ['How do I arrive to the station?', 'No se dice "arrive to", se dice "get to": How do I get to the station?'], ['How do I get the station?', 'Falta el "to": How do I get to the station?']] }),
       ] },
     { id: 'modulo2-11-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🏨 Parada 3: El Hotel**
 
@@ -3378,6 +4420,19 @@ Tu habitación: *Your room is on the 3rd floor, room 305. Here is your key card.
         mc('El aire no funciona. Dices:', ["The air conditioner doesn't work.", 'The air conditioner no work.', "The air conditioner don't work.", 'The air conditioner not works.'], 0),
         rebuild('Escucha y reconstruye:', 'What time is check-out', ['What', 'time', 'is', 'check-out', 'breakfast', 'the', 'room', 'now']),
         rebuild('Escucha y reconstruye:', 'There is no hot water', ['There', 'is', 'no', 'hot', 'water', 'cold', 'the', 'are']),
+        mc('Lee: "Ana: Hello, I have a reservation. It\'s under Ana. Luis: There is no hot water. The air conditioner doesn\'t work. Could you send someone to fix it? Milagros: Your room is on the 3rd floor, room 305." — ¿Quién tiene problemas en su habitación?', [
+          'Luis, que se quedó sin agua caliente y sin aire.',
+          'Ana, que recién llega con su reserva a su nombre.',
+          'Milagros, que entrega la habitación del tercer piso.',
+          'Los tres, que están alojados en el tercer piso.'], 0),
+        mc('Lee: "Ana: I\'d like to check out, please. Can I pay by credit card? Could I have a receipt, please? Luis: What time is check-out? Milagros: What time is breakfast?" — ¿Qué quiere hacer Ana ahora mismo?', [
+          'Irse del hotel, pagar con tarjeta y pedir recibo.',
+          'Saber a qué hora tiene que dejar la habitación.',
+          'Saber a qué hora sirven el desayuno del hotel.',
+          'Registrarse en el hotel y pedir su tarjeta.'], 0),
+        writing('Escríbelo en inglés: "No hay agua caliente."', ['There is no hot water.', "There's no hot water."],
+          { hint: 'Para "no hay" en inglés: There is no + la cosa.',
+            reject: [['There no hot water.', 'Falta el verbo: There is no hot water.'], ['There have no hot water.', 'En inglés "hay" no lleva "have": There is no hot water.'], ['The water is no hot.', 'Para decir "no hay" se empieza con "There is no": There is no hot water.']] }),
       ] },
     { id: 'modulo2-11-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -3399,6 +4454,18 @@ Ojito con estos tropiezos clásicos del viajero 👀:
         tap('Toca la palabra incorrecta:', ['Call', 'to', 'a', 'taxi', 'now.'], 1, '(quítalo)'),
         tap('Toca la palabra incorrecta:', ['We', 'take', 'on', 'the', 'train', 'here.'], 2, '(quítalo)'),
         tap('Toca la palabra incorrecta:', ['How', 'do', 'I', 'arrive', 'to', 'the', 'airport?'], 3, 'get'),
+        mc('Lee: "Luis: I take the bus, I get on at the station, and I get off downtown. Rosa: I want to take the bus too. How do I get to the museum? Luis: We take the train here." — ¿Quién baja en el centro y en qué se mueve?', [
+          'Luis, que se mueve en bus.',
+          'Rosa, que se mueve en bus.',
+          'Luis, que se mueve en tren.',
+          'Rosa, que se mueve en tren.'], 0),
+        mc('Lee: "Rosa: How do I get to the hotel? Luis: We take the train here. I get off downtown. Rosa: Could you call me a taxi? Luis: I want to take the bus." — ¿Qué le pide Rosa a Luis?', [
+          'Que le llame un taxi.',
+          'Que la lleve al hotel en tren.',
+          'Que tome el bus con ella.',
+          'Que baje con ella en el centro.'], 0),
+        writing('Escríbelo en inglés: "¿Podrías llamarme un taxi?"', ['Could you call me a taxi?'],
+          { reject: [['Could you call to me a taxi?', 'Sobra el "to": Could you call me a taxi?'], ['Call to a taxi.', 'Nada de "call to", y aquí se pide con educación: Could you call me a taxi?'], ['Could you call a taxi to me?', 'El orden es "call me a taxi": Could you call me a taxi?']] }),
       ] },
     { id: 'modulo2-11-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -3489,6 +4556,19 @@ Todo mensaje tiene piezas. Cambian según a **quién** le escribes. 👇
         mc('La firma **formal** lleva...', ['tu nombre completo', 'solo tu nombre de pila', 'un emoji', 'un apodo'], 0),
         rebuild('🎧 Reconstruye (saludo formal):', 'Dear Mr. Smith', ['Dear', 'Mr.', 'Smith', 'Hi', 'Alex', 'Hey', 'Hello']),
         rebuild('🎧 Reconstruye (apertura formal):', 'I am writing to inquire', ['I', 'am', 'writing', 'to', 'inquire', 'inquiry', 'write', 'about']),
+        mc('Rosa escribe DOS mensajes: "1) Hi Alex, How are you? Talk soon! Cheers, Rosa. 2) Dear Mr. Smith, Thank you for your time. I look forward to your reply. Sincerely, Rosa Quispe." — ¿cuál de los dos le escribe a su jefe?', [
+          'El segundo: empieza "Dear Mr. Smith," y cierra "Sincerely,".',
+          'El primero: empieza "Hi Alex," y cierra "Cheers,".',
+          'El primero: dice "Talk soon!", que suena respetuoso.',
+          'Los dos: Rosa firma con su nombre en ambos.'], 0),
+        mc('Rosa escribe DOS mensajes: "1) Hi Alex, How are you? Talk soon! Cheers, Rosa. 2) Dear Mr. Smith, Thank you for your time. I look forward to your reply. Sincerely, Rosa Quispe." — ¿qué le dice Rosa a Alex en su mensaje?', [
+          'Le pregunta cómo está y se despide hasta pronto.',
+          'Le agradece su tiempo y espera su respuesta.',
+          'Le pide que le escriba al señor Smith.',
+          'Le manda su nombre completo y su apellido.'], 0),
+        writing('Escríbelo en inglés — saludo formal para el señor Smith: "Estimado señor Smith,"', ['Dear Mr. Smith,'],
+          { hint: 'El saludo formal es "Dear" + el título (Mr.) + el apellido.',
+            reject: [['Hi Mr. Smith,', 'Con un jefe va "Dear", no "Hi": Dear Mr. Smith,'], ['Hello Mr. Smith,', '"Hello" es para un amigo; el saludo formal es Dear Mr. Smith,'], ['Dear Smith,', 'Falta el título: Dear Mr. Smith,']] }),
       ] },
     { id: 'modulo2-12-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Ejemplos reales y abreviaturas de chat**
 
@@ -3533,6 +4613,19 @@ Todo mensaje tiene piezas. Cambian según a **quién** le escribes. 👇
         mc('"OMG" es una abreviatura de...', ['oh my god', 'on my game', 'over my goal', 'oh my great'], 0),
         tap('Toca la palabra incorrecta:', ['I', 'look', 'forward', 'to', 'hear', 'from', 'you.'], 4, 'hearing'),
         rebuild('🎧 Reconstruye:', 'I look forward to hearing from you', ['I', 'look', 'forward', 'to', 'hearing', 'from', 'you', 'hear', 'hears', 'soon']),
+        mc('Lee: "María: Hi Alex, I finally passed my English exam! Next week I\'m going to Lima. Are you free to hang out? Thanks, María. Ana: Dear Sir or Madam, I am writing to inquire about room availability. I look forward to your reply. Sincerely, Ana González." — ¿cuál de las dos NO conoce a la persona que va a leer su mensaje?', [
+          'Ana: saluda "Dear Sir or Madam," sin ningún nombre.',
+          'María: saluda "Hi Alex," y firma solo "María".',
+          'María: le pregunta a Alex si está libre.',
+          'Las dos: ninguna escribe el nombre de quien recibe.'], 0),
+        mc('Lee: "María: Hi Alex, I finally passed my English exam! Next week I\'m going to Lima. Are you free to hang out? Thanks, María. Ana: Dear Sir or Madam, I am writing to inquire about room availability. I look forward to your reply. Sincerely, Ana González." — ¿qué ya pasó y qué todavía no?', [
+          'Ya aprobó el examen; el viaje a Lima es después.',
+          'Ya viajó a Lima; el examen de inglés es después.',
+          'Ya aprobó el examen y ya viajó a Lima.',
+          'Las dos cosas van a pasar la próxima semana.'], 0),
+        writing('Escríbelo en inglés — cierre formal con "look forward to": "Espero saber de usted."', ['I look forward to hearing from you.'],
+          { hint: 'Después de "look forward to" el verbo lleva -ing.',
+            reject: [['I look forward to hear from you.', 'Tras "look forward to" va el verbo con -ing: hearing.'], ['I look forward hearing from you.', 'No olvides el "to": look forward to hearing.'], ['I look forward to hears from you.', 'No va la -s sino el -ing: look forward to hearing.']] }),
       ] },
     { id: 'modulo2-12-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -3554,6 +4647,18 @@ Toca la palabra incorrecta y corrígela en los ejercicios. 👇`,
         tap('Toca la palabra incorrecta:', ['I', 'look', 'forward', 'to', 'meet', 'you.'], 4, 'meeting'),
         tap('Toca la palabra incorrecta (correo de trabajo):', ['THX', 'for', 'your', 'help,', 'Mr.', 'Lopez.'], 0, 'Thanks'),
         tap('Toca la palabra incorrecta:', ['I', 'am', 'writing', 'to', 'inquire', 'to', 'a', 'room.'], 5, 'about'),
+        mc('Rosa manda DOS mensajes: "1) Hi Alex, how are you? I look forward to meeting you. See you later. Cheers, Rosa. 2) Dear Mr. Lopez, I am writing to inquire about a room. I look forward to hearing from you. Sincerely, Rosa Quispe." — ¿qué espera Rosa de cada uno?', [
+          'Ver a Alex en persona y recibir respuesta del Sr. Lopez.',
+          'Recibir respuesta de Alex y ver en persona al Sr. Lopez.',
+          'Ver en persona a los dos, a Alex y al Sr. Lopez.',
+          'Recibir respuesta de los dos, de Alex y del Sr. Lopez.'], 0),
+        mc('Rosa manda DOS mensajes: "1) Hi Alex, how are you? I look forward to meeting you. See you later. Cheers, Rosa. 2) Dear Mr. Lopez, I am writing to inquire about a room. I look forward to hearing from you. Sincerely, Rosa Quispe." — ¿qué le dice Rosa a Alex?', [
+          'Le pregunta cómo está y quiere verlo en persona.',
+          'Le pregunta por una habitación y espera su respuesta.',
+          'Le agradece su ayuda y le manda su apellido.',
+          'Le pide que le escriba al Sr. Lopez pronto.'], 0),
+        writing('Escríbelo en inglés — saludo a tu amigo Alex: "Hola Alex, ¿cómo estás?"', ['Hi Alex, how are you?', 'Hello Alex, how are you?'],
+          { reject: [['Dear Alex, how are you?', 'A un amigo no va "Dear": Hi Alex, how are you?'], ['Dear friend, how are you?', 'En inglés no se escribe "Dear friend,": usa su nombre, Hi Alex,'], ['Esteemed Alex, how are you?', 'Ese saludo no existe en inglés: a un amigo va Hi Alex,']] }),
       ] },
     { id: 'modulo2-12-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 

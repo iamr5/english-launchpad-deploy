@@ -6,6 +6,11 @@
   const mc = (question, options, correctIndex) => ({ type: 'mc', question, options, correctIndex });
   const rebuild = (question, correctSentence, wordBlocks) => ({ type: 'rebuild', question, correctSentence, wordBlocks });
   const tap = (question, sentenceTokens, errorTokenIndex, correctedToken) => ({ type: 'tap', question, sentenceTokens, errorTokenIndex, correctedToken });
+  // writing(enunciado, aceptadas, extra) — ver el docblock en data.js y
+  // src/content/AUTHORING-reading-writing.md. Redeclarado aquí como los demás
+  // helpers, para no chocar con el const de nivel superior de data.js.
+  const writing = (question, accepted, extra) => Object.assign(
+    { type: 'writing', question, accepted: [].concat(accepted) }, extra || {});
 
   const modulo3_1 = {
     id: 'modulo3-1',
@@ -43,6 +48,19 @@ Usamos el **Pasado Simple** para acciones **completadas en un tiempo específico
           tap('Toca la palabra incorrecta:', ['Last', 'year', 'I', 'visited', 'Berlin', 'and', 'see', 'the', 'wall.'], 6, 'saw'),
           tap('Toca la palabra incorrecta:', ['In', '2010', 'I', 'live', 'in', 'Japan', 'and', 'worked', 'there.'], 3, 'lived'),
           rebuild('Escucha y reconstruye:', 'I visited Berlin last year', ['I', 'visited', 'Berlin', 'last', 'year', 'have', 'visit', 'visits', 'been']),
+          mc('Lee: "My brother lived in Japan for five years. In 2010 he lived in Japan and worked there. Rosa visited Berlin last year and saw the wall. Luis visited Berlin last year too. Rosa lost her keys yesterday. Luis lost his keys in 2010." — ¿Quién perdió las llaves más recientemente?', [
+            'Rosa, que las perdió el día anterior.',
+            'Luis, que las perdió hace varios años.',
+            'El hermano de quien escribe, en Japón.',
+            'Los tres, el mismo día en Berlín.'], 0),
+          mc('Lee: "My brother lived in Japan for five years. In 2010 he lived in Japan and worked there. Rosa visited Berlin last year and saw the wall. Luis visited Berlin last year too. Rosa lost her keys yesterday. Luis lost his keys in 2010." — ¿Qué da a entender el texto sobre el hermano de quien escribe?', [
+            'Que estuvo un tiempo en Japón y ya volvió.',
+            'Que sigue trabajando en Japón desde 2010.',
+            'Que viajó a Berlín con Rosa el año pasado.',
+            'Que perdió sus llaves el mismo día que Rosa.'], 0),
+          writing('Escríbelo en inglés: "Perdí mis llaves ayer."', ['I lost my keys yesterday.'],
+            { hint: 'Si dices cuándo pasó, va Pasado Simple: lose → lost.',
+              reject: [['I lose my keys yesterday.', 'Con "yesterday" el verbo va en pasado: lost.'], ['I have lost my keys yesterday.', 'Si dices cuándo pasó va Pasado Simple: I lost my keys yesterday.'], ['I losed my keys yesterday.', '"Lose" es irregular: su pasado es "lost", no "losed".']] }),
         ] },
       { id: 'modulo3-1-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Presente Perfecto: experiencia y resultado**
 
@@ -72,6 +90,19 @@ El **Presente Perfecto** se usa cuando el **momento exacto no importa** o **no l
           tap('Toca la palabra incorrecta:', ['I', 'have', 'eaten', 'sushi', 'and', 'have', 'drink', 'sake.'], 6, 'drunk'),
           tap('Toca la palabra incorrecta:', ['She', 'have', 'been', 'to', 'Paris', 'twice.'], 1, 'has'),
           rebuild('Escucha y reconstruye:', 'I have been to Spain three times', ['I', 'have', 'been', 'to', 'Spain', 'three', 'times', 'was', 'visited', 'never']),
+          mc('Lee: "Rosa has been to Spain three times. Luis visited Berlin last year and saw the wall. My sister has been to Paris twice. She has lost her keys. Luis lost his keys yesterday. Rosa has broken her glasses. Have you ever traveled by plane?" — ¿De quién sigue sin resolverse la pérdida de las llaves?', [
+            'De la hermana de quien escribe.',
+            'De Luis, que las perdió ayer.',
+            'De Rosa, que rompió sus lentes.',
+            'De nadie: las dos ya aparecieron.'], 0),
+          mc('Lee: "Rosa has been to Spain three times. Luis visited Berlin last year and saw the wall. My sister has been to Paris twice. She has lost her keys. Luis lost his keys yesterday. Rosa has broken her glasses. Have you ever traveled by plane?" — ¿Qué da a entender el texto sobre Rosa y España?', [
+            'Que ya conoce España de visitas anteriores.',
+            'Que fue a España el año pasado.',
+            'Que ahora mismo está viajando a España.',
+            'Que piensa ir a España tres veces.'], 0),
+          writing('Escríbelo en inglés: "¿Alguna vez has viajado?"', ['Have you ever traveled?', 'Have you ever travelled?'],
+            { hint: 'Va have + participio, y el auxiliar abre la pregunta.',
+              reject: [['Did you ever travel?', 'Para una experiencia sin fecha va el Presente Perfecto: Have you ever traveled?'], ['Have you ever travel?', 'Después de "have" va el participio: traveled.'], ['Do you ever travel?', 'Eso sería una rutina; para la experiencia va "Have you ever traveled?"']] }),
         ] },
       { id: 'modulo3-1-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -94,6 +125,18 @@ En los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`,
           tap('Toca la palabra incorrecta:', ['He', 'has', 'wrote', 'a', 'book', 'and', 'has', 'sold', 'it.'], 2, 'written'),
           tap('Toca la palabra incorrecta:', ['I', 'have', 'seen', 'Rome', 'and', 'have', 'go', 'to', 'Paris.'], 6, 'gone'),
           tap('Toca la palabra incorrecta:', ['I', 'have', 'known', 'her', 'since', 'five', 'years.'], 4, 'for'),
+          mc('Lee: "Luis has lived here since 2010. He has written a book and has sold it. I have known Luis for five years. Rosa has seen Rome and has gone to Paris. My sister visited Berlin last year and saw the wall. Rosa broke her glasses yesterday." — ¿Quién sigue viviendo en este lugar?', [
+            'Luis, que llegó en 2010 y sigue aquí.',
+            'Rosa, que ya conoce Roma y París.',
+            'La hermana, que viajó a Berlín.',
+            'Nadie: Luis se mudó en 2010.'], 0),
+          mc('Lee: "Luis has lived here since 2010. He has written a book and has sold it. I have known Luis for five years. Rosa has seen Rome and has gone to Paris. My sister visited Berlin last year and saw the wall. Rosa broke her glasses yesterday." — ¿De qué dos hechos sabemos exactamente cuándo pasaron?', [
+            'Del viaje a Berlín y de los lentes rotos.',
+            'Del libro de Luis y de su venta.',
+            'De los viajes de Rosa a Roma y a París.',
+            'De los cinco años de amistad y del libro.'], 0),
+          writing('Escríbelo en inglés: "He vivido aquí desde 2010."', ['I have lived here since 2010.'],
+            { reject: [['I have lived here for 2010.', 'Con un punto de partida va "since": since 2010.'], ['I lived here since 2010.', 'Si sigue siendo cierto hoy va have + participio: I have lived here since 2010.'], ['I have live here since 2010.', 'Después de "have" va el participio: lived.']] }),
         ] },
       { id: 'modulo3-1-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -178,6 +221,19 @@ Sirve para **hábitos en el pasado que ya no ocurren** (= *"solía"*). También 
           tap('Toca la palabra incorrecta:', ['I', 'used', 'to', 'live', 'here', 'and', 'used', 'play', 'football.'], 7, 'to play'),
           tap('Toca la palabra incorrecta:', ['She', 'use', 'to', 'have', 'long', 'hair.'], 1, 'used'),
           rebuild('🎧 Ordena: "Solía vivir en Londres."', 'I used to live in London', ['I', 'used', 'to', 'live', 'in', 'London', 'use', 'would', 'am']),
+          mc('Lee: "My sister used to live in London and she used to be a vegetarian. Rosa used to live here too, and she used to play football every Sunday. Rosa used to have long hair, but now it\'s short. My sister used to be afraid of the dark. Now they live in Trujillo." — ¿Quién de las dos vivió fuera del Perú?', [
+            'La hermana de quien escribe, que estuvo en Londres.',
+            'Rosa, que ahora vive en Trujillo.',
+            'Las dos, porque hoy viven en el mismo sitio.',
+            'Rosa, que jugaba fútbol los domingos.'], 0),
+          mc('Lee: "My sister used to live in London and she used to be a vegetarian. Rosa used to live here too, and she used to play football every Sunday. Rosa used to have long hair, but now it\'s short. My sister used to be afraid of the dark. Now they live in Trujillo." — ¿Qué dos cosas cambiaron y hoy ya no son así?', [
+            'Que Rosa tenga el pelo largo y que la hermana no coma carne.',
+            'Que Rosa viviera en Londres y que jugara fútbol allá.',
+            'Que la hermana tenga el pelo largo y que Rosa esté en Trujillo.',
+            'Que la hermana juegue fútbol y que Rosa no coma carne.'], 0),
+          writing('Escríbelo en inglés: "Ella solía ser vegetariana."', ['She used to be a vegetarian.'],
+            { hint: 'Hábito o estado del pasado que ya no ocurre: used to + verbo en infinitivo.',
+              reject: [['She use to be a vegetarian.', 'En afirmativo va "used to", con -d: She used to be a vegetarian.'], ['She used be a vegetarian.', 'No te olvides del "to": She used to be a vegetarian.'], ['She used to being a vegetarian.', 'Después de "used to" va el infinitivo: She used to be a vegetarian.']] }),
         ] },
       { id: 'modulo3-2-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🔵 "Would" + infinitivo**
 
@@ -198,6 +254,19 @@ Sirve para **acciones repetidas en el pasado**, PERO solo si **ya sabemos que la
           tap('Toca la palabra incorrecta:', ['When', 'young,', 'I', 'would', 'walk', 'and', 'would', 'played', 'outside.'], 7, 'play'),
           tap('Toca la palabra incorrecta:', ['Every', 'summer', 'we', 'would', 'to', 'travel.'], 4, '(quítalo)'),
           rebuild('🎧 Ordena: "Cada verano íbamos a la playa."', 'Every summer we would travel to the beach', ['Every', 'summer', 'we', 'would', 'travel', 'to', 'the', 'beach', 'used', 'will', 'beech', 'travels']),
+          mc('Lee: "When I was a child, I would walk to school. Every summer we would travel to the beach. My brother would play outside every day. I used to be afraid of the dark. Rosa used to live here too, and she would travel to Lima." — ¿Quién viajaba a Lima y quiénes a la playa?', [
+            'Rosa iba a Lima; quien escribe y los suyos, a la playa.',
+            'Quien escribe iba a Lima; Rosa, a la playa.',
+            'El hermano iba a Lima; Rosa, a la playa.',
+            'Rosa y el hermano iban juntos a la playa.'], 0),
+          mc('Lee: "When I was a child, I would walk to school. Every summer we would travel to the beach. My brother would play outside every day. I used to be afraid of the dark. Rosa used to live here too, and she would travel to Lima." — ¿Cuál de estos datos dice cómo era la persona, y no algo que repetía una y otra vez?', [
+            'Que de niño le daba miedo la oscuridad.',
+            'Que se iba caminando al colegio.',
+            'Que su hermano se quedaba jugando afuera.',
+            'Que cada verano se iban a la playa.'], 0),
+          writing('Escríbelo en inglés (usa "would"): "Cuando era niño, caminaba a la escuela."', ['When I was a child, I would walk to school.'],
+            { hint: 'Repetición en el pasado: would + verbo en infinitivo, sin "to" y sin pasado.',
+              reject: [['When I was a child, I would to walk to school.', 'Después de "would" el verbo va sin "to": would walk.'], ['When I was a child, I would walked to school.', 'Tras "would" el verbo no se pone en pasado: would walk.'], ['When I was a child, I will walk to school.', 'Es un hábito del pasado, no un plan futuro: would walk.']] }),
         ] },
       { id: 'modulo3-2-teoria-2b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🟢 "Be used to" + sustantivo o gerundio**
 
@@ -221,6 +290,19 @@ Sirve para **acciones repetidas en el pasado**, PERO solo si **ya sabemos que la
           tap('Toca la palabra incorrecta:', ['I', 'am', 'used', 'to', 'wake', 'up', 'early.'], 4, 'waking'),
           tap('Toca la palabra incorrecta:', ['She', 'used', 'to', 'spicy', 'food', 'now.'], 1, 'is used'),
           rebuild('🎧 Ordena: "Estoy acostumbrado a levantarme temprano."', 'I am used to waking up early', ['I', 'am', 'used', 'to', 'waking', 'up', 'early', 'wake', 'would', 'use']),
+          mc('Lee: "Maria used to be a vegetarian, but now she is used to spicy food. My brother used to live in London, and he is used to waking up early. They were used to standing for hours on the bus. Rosa used to be afraid of the dark. Now Rosa is used to spicy food too." — ¿A quiénes se refiere "They" cuando dice que aguantaban de pie por horas?', [
+            'A María y al hermano de quien escribe.',
+            'A Rosa y a María, las dos que comen picante.',
+            'Al hermano y a Rosa, que madrugan.',
+            'A toda la familia de quien escribe.'], 0),
+          mc('Lee: "Maria used to be a vegetarian, but now she is used to spicy food. My brother used to live in London, and he is used to waking up early. They were used to standing for hours on the bus. Rosa used to be afraid of the dark. Now Rosa is used to spicy food too." — ¿Qué dejó atrás María y a qué se ha hecho ya?', [
+            'Antes no comía carne; hoy le cae bien el picante.',
+            'Antes vivía en Londres; hoy madruga sin problema.',
+            'Antes le daba miedo la oscuridad; hoy come picante.',
+            'Antes comía picante; hoy no come carne.'], 0),
+          writing('Escríbelo en inglés: "Estoy acostumbrado a levantarme temprano."', ['I am used to waking up early.'],
+            { hint: 'Costumbre actual: am/is/are + used to + verbo en -ing.',
+              reject: [['I am used to wake up early.', 'Tras "be used to" va el gerundio: I am used to waking up early.'], ['I used to wake up early.', 'Eso es un hábito pasado; la costumbre de hoy es: I am used to waking up early.'], ['I am use to waking up early.', 'Es "used to", con -d: I am used to waking up early.']] }),
         ] },
       { id: 'modulo3-2-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -244,6 +326,18 @@ Se vuelve *"didn't use to"* o *"Did you use to...?"*. ❌ *"She didn't used to l
           tap('Toca la palabra incorrecta:', ['I', 'am', 'used', 'to', 'work', 'at', 'night.'], 4, 'working'),
           tap('Toca la palabra incorrecta:', ['Did', 'you', 'used', 'to', 'play', 'soccer?'], 2, 'use'),
           tap('Toca la palabra incorrecta:', ['When', 'I', 'was', 'a', 'kid,', 'I', 'would', 'be', 'shy.'], 6, 'used to'),
+          mc('Lee: "When I was a kid, I used to be shy. I used to play football as a kid, and I used to swim every day. Now I am used to working at night. My brother used to smoke a lot, but he didn\'t use to like chocolate. Every summer we would travel to the beach." — ¿Quién trabaja de noche y quién fumaba mucho?', [
+            'Quien escribe trabaja de noche; su hermano fumaba.',
+            'El hermano trabaja de noche; quien escribe fumaba.',
+            'Los dos trabajan de noche y los dos fumaban.',
+            'Quien escribe fumaba y su hermano nadaba a diario.'], 0),
+          mc('Lee: "When I was a kid, I used to be shy. I used to play football as a kid, and I used to swim every day. Now I am used to working at night. My brother used to smoke a lot, but he didn\'t use to like chocolate. Every summer we would travel to the beach." — ¿Qué lleva bien hoy quien escribe y qué dejó de hacer?', [
+            'Hoy ya se hizo al turno de noche; antes nadaba a diario.',
+            'Hoy nada a diario; antes trabajaba de noche.',
+            'Hoy juega fútbol con su hermano; antes era tímido.',
+            'Hoy es tímido; antes se había hecho al turno de noche.'], 0),
+          writing('Escríbelo en inglés: "A ella no solía gustarle el chocolate."', ["She didn't use to like chocolate."],
+            { reject: [["She didn't used to like chocolate.", 'En negativo, tras "didn\'t" va "use", sin -d: She didn\'t use to like chocolate.'], ["She wasn't used to like chocolate.", '"be used to" es estar acostumbrado; el hábito pasado negativo es: She didn\'t use to like chocolate.'], ["She didn't use to liking chocolate.", 'Tras "use to" va el infinitivo: She didn\'t use to like chocolate.']] }),
         ] },
       { id: 'modulo3-2-resumen', type: 'resumen', markdown: `#### **🧳 Las tres maletas de Ozzy**
 
@@ -318,6 +412,19 @@ Son **verdades universales**: presente simple en **ambas** partes. 🧪`,
           tap('Toca la palabra incorrecta:', ['If', 'you', 'freeze', 'water,', 'it', 'become', 'ice.'], 5, 'becomes'),
           tap('Toca la palabra incorrecta:', ['Plants', 'die', 'if', 'they', "don't", 'gets', 'water.'], 5, 'get'),
           rebuild('🎧 Reconstruye:', 'If you mix red and blue you get purple', ['If', 'you', 'mix', 'red', 'and', 'blue', 'you', 'get', 'purple', 'will', 'gets']),
+          mc('Lee: "Rosa: If you mix red and blue, you get purple. Luis: Water boils if you heat it to 100°C. Milagros: Plants die if they don\'t get enough water. Luis: And if you freeze water, it becomes ice. Rosa: Plants die here in Trujillo too, if they don\'t get water." — ¿En qué coinciden Milagros y Rosa?', [
+            'En que sin agua las plantas no sobreviven.',
+            'En que el agua hierve al llegar a 100°C.',
+            'En que dos colores juntos dan un tercero.',
+            'En que el agua congelada se vuelve hielo.'], 0),
+          mc('Lee: "Rosa: If you mix red and blue, you get purple. Luis: Water boils if you heat it to 100°C. Milagros: Plants die if they don\'t get enough water. Luis: And if you freeze water, it becomes ice. Rosa: Plants die here in Trujillo too, if they don\'t get water." — ¿Qué dan a entender los tres al hablar así?', [
+            'Que eso pasa siempre, en cualquier lugar.',
+            'Que eso pasará mañana si el clima ayuda.',
+            'Que eso pasaría solo en un mundo imaginario.',
+            'Que eso les ocurrió una vez en Trujillo.'], 0),
+          writing('Escríbelo en inglés: "El agua hierve si la calientas."', ['Water boils if you heat it.'],
+            { hint: 'Condicional 0: presente en las dos partes, y con "water" el verbo lleva -s.',
+              reject: [['Water will boil if you heat it.', 'En el condicional 0 no va will: los dos verbos en presente, Water boils if you heat it.'], ['Water boils if you will heat it.', 'Después de "if" nunca va will: Water boils if you heat it.'], ['Water boil if you heat it.', 'Falta la -s de tercera persona: Water boils if you heat it.']] }),
         ] },
       { id: 'modulo3-3-teoria-1b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **First Conditional (Tipo 1)** 1️⃣
 
@@ -340,6 +447,19 @@ Son **verdades universales**: presente simple en **ambas** partes. 🧪`,
           tap('Toca la palabra incorrecta:', ['If', 'it', 'rains,', 'we', 'cancel', 'the', 'picnic.'], 4, 'will cancel'),
           tap('Toca la palabra incorrecta:', ['If', 'you', 'study,', 'you', 'will', 'passes', 'the', 'exam.'], 5, 'pass'),
           rebuild('🎧 Reconstruye:', 'If it rains tomorrow we will cancel the picnic', ['If', 'it', 'rains', 'tomorrow', 'we', 'will', 'cancel', 'the', 'picnic', 'would', 'rained']),
+          mc('Lee: "Rosa: If everyone agrees, we will go to Spain next year. Luis: If it rains tomorrow, we will cancel the picnic. Rosa: If it rains, we might stay home. Milagros: If you study, you will pass the exam. Luis: If it rains tomorrow, we will stay home too." — ¿Qué tendría que pasar para que el grupo viaje a España?', [
+            'Que nadie del grupo se oponga.',
+            'Que no llueva el día del picnic.',
+            'Que Milagros apruebe su examen.',
+            'Que todos se queden en casa mañana.'], 0),
+          mc('Lee: "Rosa: If everyone agrees, we will go to Spain next year. Luis: If it rains tomorrow, we will cancel the picnic. Rosa: If it rains, we might stay home. Milagros: If you study, you will pass the exam. Luis: If it rains tomorrow, we will stay home too." — ¿Quién presenta quedarse en casa como algo solo posible?', [
+            'Rosa, que lo plantea como una opción.',
+            'Luis, que lo da por hecho si llueve.',
+            'Milagros, que habla del examen.',
+            'Los tres, que hablan del mismo plan.'], 0),
+          writing('Escríbelo en inglés: "Si llueve mañana, cancelaremos el picnic."', ['If it rains tomorrow, we will cancel the picnic.', 'If it rains tomorrow, we\'ll cancel the picnic.'],
+            { hint: 'Condicional 1: if + presente, y en el resultado will + verbo.',
+              reject: [['If it will rain tomorrow, we will cancel the picnic.', 'Después de "if" va el presente: If it rains tomorrow, we will cancel the picnic.'], ['If it rains tomorrow, we cancel the picnic.', 'Falta el will en el resultado: If it rains tomorrow, we will cancel the picnic.'], ['If it rained tomorrow, we would cancel the picnic.', 'Eso es una hipótesis; aquí es un plan probable: If it rains tomorrow, we will cancel the picnic.']] }),
         ] },
       { id: 'modulo3-3-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**3.** **Second Conditional (Tipo 2)** 🏰
 
@@ -369,6 +489,19 @@ Sirve para **situaciones hipotéticas o irreales** en presente o futuro: sueños
           tap('Toca la palabra incorrecta:', ['If', 'I', 'would', 'won,', 'I', 'would', 'travel.'], 2, '(quítalo)'),
           tap('Toca la palabra incorrecta:', ['If', 'I', 'was', 'rich,', 'I', 'would', 'buy', 'a', 'car.'], 2, 'were'),
           rebuild('🎧 Reconstruye:', 'If I won the lottery I would buy a house', ['If', 'I', 'won', 'the', 'lottery', 'I', 'would', 'buy', 'a', 'house', 'will', 'win']),
+          mc('Lee: "Rosa: If I won the lottery, I would buy a house. If I were taller, I would play basketball. Luis: If I had wings, I would fly. And if everyone agrees, we will go to Spain next year. Rosa: You would speak Japanese if you lived in Japan." — ¿A quién se dirige Rosa en su última frase?', [
+            'A Luis, que la está escuchando.',
+            'A ella misma, que sueña con la lotería.',
+            'A la gente que ya vive en Japón.',
+            'A todo el grupo que irá a España.'], 0),
+          mc('Lee: "Rosa: If I won the lottery, I would buy a house. If I were taller, I would play basketball. Luis: If I had wings, I would fly. And if everyone agrees, we will go to Spain next year. Rosa: You would speak Japanese if you lived in Japan." — ¿Cuál de todas esas cosas creen que sí va a pasar?', [
+            'El viaje a España, si nadie se opone.',
+            'Que Rosa se compre una casa este año.',
+            'Que Luis cruce el cielo volando.',
+            'Que Rosa aprenda japonés en Japón.'], 0),
+          writing('Escríbelo en inglés: "Si ganara la lotería, compraría una casa."', ['If I won the lottery, I would buy a house.'],
+            { hint: 'Condicional 2: if + pasado simple, y en el resultado would + verbo.',
+              reject: [['If I would win the lottery, I would buy a house.', 'Nunca "would" después de "if": If I won the lottery, I would buy a house.'], ['If I win the lottery, I would buy a house.', 'La hipótesis lleva pasado después de "if": If I won the lottery, I would buy a house.'], ['If I won the lottery, I will buy a house.', 'Con la hipótesis va would, no will: If I won the lottery, I would buy a house.']] }),
         ] },
       { id: 'modulo3-3-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -392,6 +525,18 @@ Sirve para **situaciones hipotéticas o irreales** en presente o futuro: sueños
           tap('Toca la palabra incorrecta:', ['If', 'you', 'heat', 'ice,', 'it', 'melt.'], 5, 'melts'),
           tap('Toca la palabra incorrecta:', ['If', 'I', 'win', 'the', 'lottery,', 'I', 'would', 'travel.'], 2, 'won'),
           tap('Toca la palabra incorrecta:', ['If', 'he', 'studies,', 'he', 'pass', 'the', 'exam.'], 4, 'will pass'),
+          mc('Lee: "If you freeze water, it becomes solid. If you heat ice, it melts. If it rains tomorrow, we will cancel the trip. If Luis studies, he will pass the exam. If I had money, I would help you. If I were rich, I would travel." — ¿Qué deja claro quien escribe sobre su situación de hoy?', [
+            'Que ahora mismo no tiene plata ni es rico.',
+            'Que ya ayudó a la persona con la que habla.',
+            'Que viajará apenas termine el examen.',
+            'Que Luis le prestará plata para el viaje.'], 0),
+          mc('Lee: "If you freeze water, it becomes solid. If you heat ice, it melts. If it rains tomorrow, we will cancel the trip. If Luis studies, he will pass the exam. If I had money, I would help you. If I were rich, I would travel." — ¿Qué dos cosas presenta como posibles de verdad, y no como sueños?', [
+            'Que se cancele el viaje y que Luis apruebe.',
+            'Que se vuelva rico y que salga a viajar.',
+            'Que ayude con plata y que apruebe el examen.',
+            'Que el hielo se derrita y que el agua se endurezca.'], 0),
+          writing('Escríbelo en inglés: "Si fuera rico, viajaría."', ['If I were rich, I would travel.'],
+            { reject: [['If I was rich, I would travel.', 'Para lo irreal va "were", no "was": If I were rich, I would travel.'], ['If I would be rich, I would travel.', 'Nunca "would" después de "if": If I were rich, I would travel.'], ['If I am rich, I would travel.', 'La hipótesis irreal lleva pasado después de "if": If I were rich, I would travel.']] }),
         ] },
       { id: 'modulo3-3-resumen', type: 'resumen', markdown: `## **🎯 Resumen: Los Tres Portales**
 
@@ -481,6 +626,19 @@ Mantén la palabra **wh-** y cambia a **orden afirmativo** (no pongas el verbo a
           tap('Toca la palabra incorrecta:', ['She', 'said', 'she', 'is', 'tired', 'and', 'was', 'hungry.'], 3, 'was'),
           tap('Toca la palabra incorrecta:', ['He', 'asked', 'where', 'I', 'was', 'and', 'who', 'I', 'am.'], 8, 'was.'),
           rebuild('🎧 Reconstruye:', 'She said she was happy', ['She', 'said', 'she', 'was', 'happy', 'is', 'told', 'are']),
+          mc('Lee: "Rosa: I can\'t come. Luis: I will help you. Yesterday at the station Luis said that he would help me. Rosa said she was tired and was hungry. My brother asked if I was coming. He asked where the exit was too." — ¿Quién se ofreció a ayudar a quien escribe?', [
+            'Luis, que prometió echar una mano.',
+            'Rosa, que avisó que no podía ir.',
+            'El hermano, que preguntó por la salida.',
+            'Quien escribe, que fue a ayudar a Rosa.'], 0),
+          mc('Lee: "Rosa: Do you speak English? Milagros: Are you coming today? Luis: Where is the exit? Later at home I told my brother that Rosa asked if I spoke English. Then I said that Luis asked where the exit was too." — ¿Cuál de las tres preguntas se quedó sin contarle al hermano?', [
+            'La de Milagros, que quería saber si iría.',
+            'La de Rosa, sobre el idioma que habla.',
+            'La de Luis, sobre dónde quedaba la salida.',
+            'Ninguna: le contó las tres preguntas.'], 0),
+          writing('Escríbelo en inglés: "Él preguntó dónde estaba la salida."', ['He asked where the exit was.'],
+            { hint: 'En la pregunta indirecta va wh- + sujeto + verbo, y el verbo se atrasa al pasado.',
+              reject: [['He asked where was the exit.', 'En la pregunta indirecta va orden afirmativo: where the exit was.'], ['He asked where the exit is.', 'Hay que atrasar el tiempo: where the exit was.'], ['He said where the exit was.', 'Es una pregunta reportada: va "asked", no "said".']] }),
         ] },
       { id: 'modulo3-4-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Mandatos, órdenes y peticiones**
 
@@ -514,6 +672,19 @@ Usamos **ask for**:
           tap('Toca la palabra incorrecta:', ['He', 'told', 'me', 'stop', 'and', 'asked', 'me', 'to', 'wait.'], 3, 'to stop'),
           tap('Toca la palabra incorrecta:', ['She', 'told', 'me', 'not', 'use', 'it.'], 3, 'not to'),
           rebuild('🎧 Reconstruye:', 'He told me to stop smoking', ['He', 'told', 'me', 'to', 'stop', 'smoking', 'said', 'for', 'not']),
+          mc('Lee: "Downtown a policeman ordered Juan to get out of the car. In class the teacher told us not to use our phones. Then she asked us to sit down. Luis told me to stop and asked me to wait. Milagros asked for an apple." — ¿Qué le dijeron solo a quien escribe y no al grupo?', [
+            'Que se detuviera y esperara un momento.',
+            'Que no usaran los celulares en clase.',
+            'Que se sentaran todos en sus sitios.',
+            'Que se bajara del carro de inmediato.'], 0),
+          mc('Lee: "Milagros: Can I have an apple? Juan: Stop smoking! At school today Milagros asked for an apple. Juan told me to stop smoking. Then the teacher told us not to use our phones. She asked us to sit down too." — ¿Qué se espera que haga el grupo después de lo que dijo la profesora?', [
+            'Sentarse y guardar los celulares.',
+            'Sacar los celulares y quedarse de pie.',
+            'Dejar de fumar, como le pidió Juan.',
+            'Pedir una manzana antes de empezar.'], 0),
+          writing('Escríbelo en inglés: "Él me dijo que dejara de fumar."', ['He told me to stop smoking.'],
+            { hint: 'Las órdenes reportadas van con told/asked + objeto + to + infinitivo.',
+              reject: [['He told me stop smoking.', 'Falta el "to": las órdenes van con told + to + infinitivo.'], ['He said me to stop smoking.', 'Con objeto se dice "told me", nunca "said me".'], ['He told me that I stop smoking.', 'Para reportar una orden va "to" + infinitivo, no "that".']] }),
         ] },
       { id: 'modulo3-4-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -536,6 +707,18 @@ Usamos **ask for**:
           tap('Toca la palabra incorrecta:', ['He', 'said', 'us', 'to', 'wait', 'here.'], 1, 'told'),
           tap('Toca la palabra incorrecta:', ['She', 'told', 'me', 'stop', 'talking.'], 3, 'to stop'),
           tap('Toca la palabra incorrecta:', ['He', 'said', 'he', 'will', 'help', 'me.'], 3, 'would'),
+          mc('Lee: "Yesterday at the station Rosa told me she was coming. She said she was happy. Then Juan told us to wait here. Rosa told me to stop talking. Luis said he would help me. Milagros asked if I was coming." — ¿Cuál de esas cosas se le dijo a todo el grupo y no solo a quien escribe?', [
+            'La de Juan: quedarse esperando ahí mismo.',
+            'La de Rosa: dejar de hablar ya.',
+            'La de Luis: echarle una mano después.',
+            'La de Milagros: saber si iba a ir.'], 0),
+          mc('Lee: "On Sunday Rosa told me she was coming. She said she was happy. This morning she told us she couldn\'t come. Luis said he would help me today. Milagros asked if I was coming. Juan told us to wait here." — ¿Qué se entiende sobre los planes de Rosa?', [
+            'Que primero pensaba ir, pero al final no irá.',
+            'Que sigue con ganas de ir y llegará tarde.',
+            'Que Luis irá en su lugar a ayudar.',
+            'Que le pidió al grupo esperarla en el sitio.'], 0),
+          writing('Escríbelo en inglés: "Ella me dijo que venía."', ['She told me she was coming.'],
+            { reject: [['She said me she was coming.', 'Con objeto se dice "told me", nunca "said me".'], ['She told me she is coming.', 'En estilo indirecto se atrasa el tiempo: she was coming.'], ['She told to me she was coming.', 'Después de "told" va el objeto sin "to": told me.']] }),
         ] },
       { id: 'modulo3-4-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -620,6 +803,19 @@ Empecemos con las palabras del mundo laboral y académico:
           mc('I have a final ___ next week. (examen)', ['exam', 'degree', 'salary', 'career'], 0),
           tap('Toca la palabra incorrecta (falso amigo):', ['I', 'went', 'to', 'an', 'interesting', 'reading', 'at', 'the', 'university.'], 5, 'lecture'),
           rebuild('🎧 Reconstruye:', 'She had a job interview', ['She', 'had', 'a', 'job', 'interview', 'salary', 'degree', 'career']),
+          mc('Lee: "Luis applied for a job in Lima and had an interview last week. He was nervous before the job interview. His sister Rosa earned a university degree in engineering, and her monthly salary is enough to pay rent. Luis has a final exam next week too. He went to an interesting lecture at the university this morning." — ¿Quién de los dos sigue estudiando?', [
+            'Luis, que tiene examen y fue a una clase.',
+            'Rosa, que ya se tituló en ingeniería.',
+            'Rosa, que fue a una clase en la universidad.',
+            'Los dos, porque comparten la universidad.'], 0),
+          mc('Lee: "Luis applied for a job in Lima and had an interview last week. He was nervous before the job interview. His sister Rosa earned a university degree in engineering, and her monthly salary is enough to pay rent. Luis has a final exam next week too. He went to an interesting lecture at the university this morning." — ¿Qué se puede deducir sobre el dinero que entra en esa casa?', [
+            'Por ahora lo aporta Rosa con su sueldo.',
+            'Lo aporta Luis, que ya consiguió el puesto.',
+            'Ninguno de los dos recibe dinero todavía.',
+            'Los dos cobran un sueldo todos los meses.'], 0),
+          writing('Escríbelo en inglés: "Ella solicitó un trabajo y tuvo una entrevista."', ['She applied for a job and had an interview.'],
+            { hint: 'Trabajo (el puesto) = job; entrevista = interview.',
+              reject: [['She applied for a career and had an interview.', '"Career" es toda la carrera profesional; un puesto concreto es "job".'], ['She applied for a job and had a lecture.', '"Lecture" es una clase o conferencia; entrevista es "interview".'], ['She applied for a job and had an exam.', '"Exam" es examen; entrevista es "interview".']] }),
         ] },
       { id: 'modulo3-5-teoria-1b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Cajón 2: Tecnología 💻**
 
@@ -645,6 +841,19 @@ Ahora las palabras de tu vida digital:
           mc('"download" significa…', ['descargar', 'subir', 'borrar', 'guardar'], 0),
           rebuild('🎧 Reconstruye:', 'I need to download the app', ['I', 'need', 'to', 'download', 'the', 'app', 'upload', 'backup', 'email']),
           rebuild('🎧 Reconstruye:', 'I sent the email on my laptop', ['I', 'sent', 'the', 'email', 'on', 'my', 'laptop', 'app', 'download', 'phone']),
+          mc('Lee: "Rosa: I sent you an email this morning. Luis: I work on my laptop at the café every day. Rosa: I installed a new app on my phone yesterday. Luis: I need to download the new app to my phone too. Rosa: I need to backup my files and download the new software." — ¿Quién todavía no tiene la aplicación en su teléfono?', [
+            'Luis, que recién la va a descargar.',
+            'Rosa, que la instaló ayer en su teléfono.',
+            'Rosa, que trabaja en su portátil en el café.',
+            'Los dos, porque recién se enteraron de ella.'], 0),
+          mc('Lee: "Rosa: I sent you an email this morning. Luis: I work on my laptop at the café every day. Rosa: I installed a new app on my phone yesterday. Luis: I need to download the new app to my phone too. Rosa: I need to backup my files and download the new software." — ¿Qué dos cosas planea hacer Rosa al final de la conversación?', [
+            'Guardar una copia de sus archivos y bajar un programa.',
+            'Subir sus archivos y borrar una aplicación vieja.',
+            'Enviar un correo y trabajar desde el café.',
+            'Instalar una aplicación y prestar su portátil.'], 0),
+          writing('Escríbelo en inglés: "Necesito hacer una copia de seguridad de mis archivos y descargar el nuevo software."', ['I need to backup my files and download the new software.'],
+            { hint: 'Copia de seguridad = backup; descargar = download.',
+              reject: [['I need to upload my files and download the new software.', '"Upload" es subir; la copia de seguridad es "backup".'], ['I need to backup my files and upload the new software.', 'Descargar es "download"; "upload" es subir.'], ['I need to download my files and backup the new software.', 'Están cambiados: primero "backup my files", luego "download the new software".']] }),
         ] },
       { id: 'modulo3-5-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**3.** **Cajón 3: Relaciones personales ❤️**
 
@@ -670,6 +879,19 @@ Estas palabras te sirven para hablar de la gente que te rodea:
           mc('"divorced" significa…', ['casado', 'divorciado', 'soltero', 'comprometido'], 1),
           rebuild('🎧 Reconstruye:', 'I trust my colleague', ['I', 'trust', 'my', 'colleague', 'partner', 'friend', 'conflict']),
           rebuild('🎧 Reconstruye:', 'They are married now', ['They', 'are', 'married', 'now', 'divorced', 'partner', 'friends']),
+          mc('Lee: "Rosa is my colleague at work and she helps me with projects. She got married last summer, and she trusts her partner completely. Luis is my friend, but he argues a lot with his partner. There is a lot of conflict, and now he is divorced. I trust Rosa completely; she never lies." — ¿Con cuál de los dos comparte oficina quien escribe?', [
+            'Con Rosa, que lo ayuda con los proyectos.',
+            'Con Luis, que es su amigo desde hace años.',
+            'Con la pareja de Rosa, desde el verano pasado.',
+            'Con ninguno: los dos son solo amigos suyos.'], 0),
+          mc('Lee: "Rosa is my colleague at work and she helps me with projects. She got married last summer, and she trusts her partner completely. Luis is my friend, but he argues a lot with his partner. There is a lot of conflict, and now he is divorced. I trust Rosa completely; she never lies." — ¿Qué da a entender el texto sobre por qué Luis se separó?', [
+            'Que peleaba mucho con su pareja.',
+            'Que su colega dejó de confiar en él.',
+            'Que su pareja se casó el verano pasado.',
+            'Que en su trabajo hay demasiados problemas.'], 0),
+          writing('Escríbelo en inglés: "Mi colega es como un amigo, confío en él."', ['My colleague is like a friend, I trust him.'],
+            { hint: 'Colega del trabajo = colleague; confiar = trust.',
+              reject: [['My friend is like a colleague, I trust him.', 'Está al revés: el del trabajo es "colleague" y el amigo, "friend".'], ['My partner is like a friend, I trust him.', '"Partner" es la pareja; el compañero de trabajo es "colleague".'], ['My colleague is like a friend, I trust in him.', '"Trust" no lleva "in": I trust him.']] }),
         ] },
       { id: 'modulo3-5-teoria-2b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**4.** **Ejemplos paralelos (un cajón abierto por tema) 🗄️**
 
@@ -692,6 +914,18 @@ Mira cómo se combinan las palabras en frases reales:
           mc('En "I trust my colleague", "colleague" es…', ['colega', 'pareja', 'amigo', 'vecino'], 0),
           rebuild('🎧 Reconstruye:', 'She works in a bank', ['She', 'works', 'in', 'a', 'bank', 'salary', 'job', 'work']),
           rebuild('🎧 Reconstruye:', 'He has a degree in engineering', ['He', 'has', 'a', 'degree', 'in', 'engineering', 'lecture', 'exam', 'university']),
+          mc('Lee: "Rosa works in a bank and her salary is high. Her brother Luis has a degree in engineering and goes to a university in Lima. Rosa and her partner are married and live with their family. Luis sent the email on his laptop this morning. Rosa trusts her colleague at the bank." — ¿De quién es el sueldo alto y de dónde sale?', [
+            'De Rosa, que trabaja en un banco.',
+            'De Luis, que estudia en una universidad.',
+            'De la pareja de Rosa, que vive con la familia.',
+            'Del colega de Rosa, que trabaja en el banco.'], 0),
+          mc('Lee: "Rosa works in a bank and her salary is high. Her brother Luis has a degree in engineering and goes to a university in Lima. Rosa and her partner are married and live with their family. Luis sent the email on his laptop this morning. Rosa trusts her colleague at the bank." — ¿Qué es cierto de Luis y no de Rosa?', [
+            'Que estudia una carrera y usa su portátil.',
+            'Que está casado y vive con su familia.',
+            'Que gana un buen sueldo en un banco.',
+            'Que confía en su colega del banco.'], 0),
+          writing('Escríbelo en inglés: "Están casados y viven con su familia."', ['They are married and live with their family.'],
+            { reject: [['They are divorced and live with their family.', '"Divorced" es divorciado; casado es "married".'], ['They are married and live with their friends.', '"Friends" son los amigos; la familia es "family".'], ['They are marry and live with their family.', 'La palabra es "married": They are married.']] }),
         ] },
       { id: 'modulo3-5-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -711,6 +945,18 @@ Practiquemos detectando el error 👇`,
           tap('Toca la palabra incorrecta:', ['My', 'salad', 'increased', 'last', 'month.'], 1, 'salary'),
           tap('Toca la palabra incorrecta:', ['Please', 'make', 'a', 'backup', 'and', 'reading', 'the', 'app.'], 5, 'download'),
           tap('Toca la palabra incorrecta (falso amigo):', ['The', 'professor', 'gave', 'a', 'long', 'reading', 'today.'], 5, 'lecture'),
+          mc('Lee: "Rosa: I attended a lecture on history yesterday, and the professor gave a long lecture today too. Luis: My salary increased last month. Rosa: My salary is very high this year, and I trust my colleague completely. Luis: Please make a backup and download the app on my laptop. Rosa: I will download my new app now." — ¿Qué hizo Rosa ayer?', [
+            'Fue a escuchar una charla de historia.',
+            'Leyó un texto de historia interesante.',
+            'Dictó una clase larga de historia.',
+            'Descargó una aplicación de historia.'], 0),
+          mc('Lee: "Rosa: I attended a lecture on history yesterday, and the professor gave a long lecture today too. Luis: My salary increased last month. Rosa: My salary is very high this year, and I trust my colleague completely. Luis: Please make a backup and download the app on my laptop. Rosa: I will download my new app now." — ¿Qué se entiende sobre los sueldos de los dos?', [
+            'A Luis le subió el suyo; el de Rosa ya es alto.',
+            'A los dos les subió el sueldo el mes pasado.',
+            'Los dos hablan de comida y no de dinero.',
+            'A Rosa le subió el suyo; el de Luis ya es alto.'], 0),
+          writing('Escríbelo en inglés: "Por favor, haz una copia de seguridad y descarga la aplicación."', ['Please make a backup and download the app.'],
+            { reject: [['Please make a backup and reading the app.', 'Ahí va el verbo "download"; "reading" es leer.'], ['Please make a backup and upload the app.', '"Upload" es subir; para bajarla es "download".'], ['Please make a copy and download the app.', 'La copia de seguridad se dice "a backup".']] }),
         ] },
       { id: 'modulo3-5-resumen', type: 'resumen', markdown: `## **🎯 Resumen: Los cuatro cajones 🗄️**
 
@@ -810,6 +1056,19 @@ Otro ejemplo educado y ordenado:
           tap('Toca la palabra incorrecta (en formal no hay contracciones):', ['I', "can't", 'attend', 'the', 'formal', 'meeting.'], 1, 'cannot'),
           tap('Toca la palabra incorrecta (en formal no se abrevia "you"):', ['Thank', 'u', 'for', 'your', 'time.'], 1, 'you'),
           rebuild('🎧 Reconstruye este saludo formal:', 'Dear Sir or Madam', ['Dear', 'Sir', 'or', 'Madam', 'Hi', 'there', 'Hey']),
+          mc('Lee: "Juan: Dear Sir or Madam, I am writing to request information about the course. Thank you for your time. Yours faithfully, Juan Pérez. María: Dear Mr. Johnson, I would like to apply for the position of assistant. I cannot attend the formal meeting. Yours sincerely, María Gómez." — ¿cuál de los dos le escribe a alguien cuyo nombre no conoce?', [
+            'Juan, que empieza con "Dear Sir or Madam," sin apellido.',
+            'María, que empieza con "Dear Mr. Johnson," por su apellido.',
+            'María, porque cierra agradeciendo el tiempo de quien lee.',
+            'Los dos, porque ninguno escribe un apellido en el saludo.'], 0),
+          mc('Lee: "Juan: Dear Sir or Madam, I am writing to request information about the course. Thank you for your time. Yours faithfully, Juan Pérez. María: Dear Mr. Johnson, I would like to apply for the position of assistant. I cannot attend the formal meeting. Yours sincerely, María Gómez." — ¿qué quiere conseguir cada uno con su carta?', [
+            'Juan quiere que le manden datos del curso; María, el puesto.',
+            'María quiere datos del curso; Juan, el puesto de asistente.',
+            'Los dos quieren el mismo puesto de asistente.',
+            'Juan quiere una reunión formal; María, agradecer el tiempo.'], 0),
+          writing('Escríbelo en inglés — carta formal, sin contracciones: "No puedo asistir a la reunión formal."', ['I cannot attend the formal meeting.'],
+            { hint: 'En registro formal la contracción se escribe completa: can\'t → cannot.',
+              reject: [['I can\'t attend the formal meeting.', 'En una carta formal no van contracciones: va "cannot", no "can\'t".'], ['I won\'t attend the formal meeting.', 'Eso es "no asistiré" y además lleva contracción: I cannot attend the formal meeting.'], ['I cannot to attend the formal meeting.', 'Después de "cannot" va el verbo base, sin "to": cannot attend.']] }),
         ] },
       { id: 'modulo3-6-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Correspondencia INFORMAL 👕 (camiseta y jeans)**
 
@@ -852,6 +1111,19 @@ Otro ejemplo relajado y amistoso:
           mc('En la carta informal, la estructura es...', ['libre, sin encabezados formales', 'con dirección y fecha obligatorias', 'siempre con "Dear Sir"', 'sin saludo'], 0),
           rebuild('🎧 Reconstruye este saludo informal:', 'Hi Carlos', ['Hi', 'Carlos', 'Dear', 'Sir', 'Madam']),
           rebuild('🎧 Reconstruye esta despedida informal:', 'See you soon', ['See', 'you', 'soon', 'Yours', 'faithfully', 'sincerely']),
+          mc('Lee: "Mariela: Hi Carlos! Thanks for your invitation. I can\'t wait to see you! See you soon! Ana: Hey Mike! It\'s been ages since we last talked. Let\'s catch up soon. Cheers, Ana. Rosa: Dear Ms. Smith, I am writing to request information about the course. Yours faithfully, Rosa Quispe." — ¿qué esperan que pase pronto Mariela y Ana?', [
+            'Volver a verse en persona con quien le escriben.',
+            'Recibir por escrito información sobre un curso.',
+            'Que Carlos y Mike les manden una invitación.',
+            'Que Rosa les conteste la carta muy pronto.'], 0),
+          mc('Lee: "Mariela: Hi Carlos! Thanks for your invitation. I can\'t wait to see you! See you soon! Ana: Hey Mike! It\'s been ages since we last talked. Let\'s catch up soon. Cheers, Ana. Rosa: Dear Ms. Smith, I am writing to request information about the course. Yours faithfully, Rosa Quispe." — ¿cuál de las tres NO le escribe a alguien de confianza?', [
+            'Rosa: no usa contracciones y cierra con "Yours faithfully,".',
+            'Ana: saluda con "Hey Mike!" y cierra con "Cheers,".',
+            'Mariela: escribe "I can\'t wait" y cierra con "See you soon!".',
+            'Ninguna: las tres usan un tono cercano y relajado.'], 0),
+          writing('Escríbelo en inglés — mensaje a tu amigo Carlos: "¡Hola Carlos! Gracias por tu invitación."', ['Hi Carlos! Thanks for your invitation.', 'Hello Carlos! Thanks for your invitation.'],
+            { hint: 'A un amigo se le saluda con "Hi" + su nombre, nunca con "Dear".',
+              reject: [['Dear Carlos, thanks for your invitation.', 'A un amigo no va "Dear": el saludo informal es Hi Carlos!'], ['Dear Mr. Carlos, thanks for your invitation.', 'Con un amigo no se usa título ni apellido: Hi Carlos!'], ['Hi Carlos! Thanks by your invitation.', 'Se dice "Thanks for", no "Thanks by": Thanks for your invitation.']] }),
         ] },
       { id: 'modulo3-6-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -870,6 +1142,18 @@ Otro ejemplo relajado y amistoso:
           tap('Toca la palabra incorrecta (en formal no hay contracciones):', ['I', "won't", 'be', 'able', 'to', 'come.'], 1, 'will not'),
           tap('Toca la palabra incorrecta (en formal no hay contracciones):', ['Dear', 'Sir,', 'I', "can't", 'attend.'], 3, 'cannot'),
           tap('Toca la palabra incorrecta (en formal no se abrevia "you"):', ['Dear', 'Ms.', 'Lee,', 'I', 'will', 'send', 'u', 'it.'], 6, 'you'),
+          mc('Lee: "Jane: Dear John, I hope all is well. Thank u for the information. Sincerely, Jane. Rosa: Dear Ms. Lee, I am writing to apply. I cannot attend the meeting. I will send you the report. Thank you for the information. Yours faithfully, Rosa Quispe." — ¿cuál de las dos cartas no cumple con el registro formal?', [
+            'La de Jane: abrevia "u" y saluda solo con el nombre.',
+            'La de Rosa: escribe "cannot" en vez de "can\'t".',
+            'La de Rosa: usa el apellido de quien va a leerla.',
+            'Las dos: ninguna de las dos se despide formalmente.'], 0),
+          mc('Lee: "Jane: Dear John, I hope all is well. Thank u for the information. Sincerely, Jane. Rosa: Dear Ms. Lee, I am writing to apply. I cannot attend the meeting. I will send you the report. Thank you for the information. Yours faithfully, Rosa Quispe." — ¿qué quiere que pase Rosa después de mandar su carta?', [
+            'Que la consideren para el puesto, aunque no irá a la reunión.',
+            'Que le manden el informe antes de que empiece la reunión.',
+            'Que Jane le responda con información sobre la reunión.',
+            'Que le cambien la reunión de fecha para poder asistir.'], 0),
+          writing('Escríbelo en inglés — carta formal, sin abreviaturas: "Le enviaré el informe."', ['I will send you the report.'],
+            { reject: [['I will send u the report.', 'En una carta formal no se abrevia: se escribe "you", no "u".'], ['I will to send you the report.', 'Después de "will" va el verbo base, sin "to": will send.'], ['I send you the report.', 'Falta el futuro: I will send you the report.']] }),
         ] },
       { id: 'modulo3-6-resumen', type: 'resumen', markdown: `## **🎯 Resumen: traje elegante vs camiseta y jeans**
 
@@ -963,6 +1247,19 @@ Empecemos con dos tipos de ladrillos.
           mc('"furthermore / moreover" se usan para...', ['añadir información', 'contrastar', 'dar la causa', 'el tiempo'], 0),
           tap('Toca la palabra incorrecta:', ['She', 'is', 'kind', 'but', 'however', 'very', 'smart.'], 4, '(quítalo)'),
           rebuild('🎧 Reconstruye:', 'He is young, but very responsible', ['He', 'is', 'young,', 'but', 'very', 'responsible', 'and', 'however', 'so']),
+          mc('Lee: "Rosa can cook well. In addition, she bakes delicious cakes. Luis is young, but very responsible. He likes coffee, and he also drinks tea. Rosa likes tea. However, she loves coffee more. Luis loves music, yet he never goes to concerts." — ¿En qué se diferencia lo que el texto dice de Rosa y lo que dice de Luis?', [
+            'Luis toma las dos bebidas; Rosa prefiere el café.',
+            'Rosa toma las dos bebidas; Luis prefiere el café.',
+            'Rosa toma las dos bebidas; Luis solo toma té.',
+            'Los dos prefieren el té antes que el café.'], 0),
+          mc('Lee: "Rosa can cook well. In addition, she bakes delicious cakes. Luis is young, but very responsible. He likes coffee, and he also drinks tea. Rosa likes tea. However, she loves coffee more. Luis loves music, yet he never goes to concerts." — Si invitan a Luis a un concierto, ¿qué esperarías que pasara?', [
+            'Que no vaya, aunque le encante la música.',
+            'Que vaya, porque le encanta la música.',
+            'Que vaya solo si Rosa lo acompaña.',
+            'Que no vaya porque no le gusta la música.'], 0),
+          writing('Escríbelo en inglés: "Él es joven, pero muy responsable."', ['He is young, but very responsible.'],
+            { hint: 'Las dos ideas se oponen: va un solo conector de contraste.',
+              reject: [['He is young, but however very responsible.', 'Los dos significan "pero": usa uno u otro, He is young, but very responsible.'], ['He is young, and very responsible.', '"and" suma; aquí hay contraste, va "but".']] }),
         ] },
       { id: 'modulo3-7-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Ladrillos rojos y el orden de la obra 🧱🔴**
 
@@ -994,6 +1291,19 @@ Empecemos con dos tipos de ladrillos.
           tap('Toca la palabra incorrecta:', ['I', 'studied', 'hard,', 'but', 'I', 'passed', 'the', 'exam.'], 3, 'so'),
           tap('Toca la palabra incorrecta:', ['It', 'was', 'raining,', 'and', 'we', 'stayed', 'home.'], 3, 'so'),
           rebuild('🎧 Reconstruye:', 'She was late because she missed the bus', ['She', 'was', 'late', 'because', 'she', 'missed', 'the', 'bus', 'so', 'however']),
+          mc('Lee: "First, Rosa and Luis went shopping downtown. Rosa was late because she missed the bus. The delay was due to the rain. Then, they had lunch. Luis studied hard; therefore, he passed the exam. Finally, they went home at night." — ¿Qué explica que Rosa perdiera el bus?', [
+            'La lluvia, que provocó el retraso.',
+            'El almuerzo, que se alargó demasiado.',
+            'Las compras del centro, que la distrajeron.',
+            'El examen, porque se quedó estudiando.'], 0),
+          mc('Lee: "First, Rosa and Luis went shopping downtown. Rosa was late because she missed the bus. The delay was due to the rain. Then, they had lunch. Luis studied hard; therefore, he passed the exam. Finally, they went home at night." — ¿Qué relación establece el texto entre lo que hizo Luis y su examen?', [
+            'Aprobó como resultado de haber estudiado mucho.',
+            'Estudió mucho porque ya había aprobado el examen.',
+            'Estudió mucho, pero de todas formas no aprobó.',
+            'Aprobó primero y después se puso a estudiar.'], 0),
+          writing('Escríbelo en inglés: "Estudié mucho, así que aprobé el examen."', ['I studied hard, so I passed the exam.'],
+            { hint: 'La consecuencia va con "so"; la causa, con "because".',
+              reject: [['I studied hard, because I passed the exam.', 'Al revés: estudiar es la causa y aprobar la consecuencia, va "so".'], ['I studied hard, and I passed the exam.', '"and" solo suma; para la consecuencia usa "so".'], ['I studied hard, but I passed the exam.', 'No hay contraste: una cosa lleva a la otra, va "so".']] }),
         ] },
       { id: 'modulo3-7-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -1016,6 +1326,18 @@ Hasta los mejores constructores ponen ladrillos de más. 🧱😅 Cuidado con es
           tap('Toca la palabra incorrecta:', ['He', 'is', 'rich,', 'and', 'he', 'is', 'not', 'happy.'], 3, 'but'),
           tap('Toca la palabra incorrecta:', ['She', 'is', 'smart', 'and', 'also', 'kind', 'and', 'moreover', 'funny.'], 7, '(quítalo)'),
           tap('Toca la palabra incorrecta:', ['We', 'were', 'late', 'but', 'we', 'missed', 'the', 'train.'], 3, 'so'),
+          mc('Lee: "First we shopped downtown. Then we had lunch. We were late, so we missed the train. It was cold, so we stayed inside. Rosa is kind and helpful. Luis is rich, but he is not happy. He loves music, yet he never goes to concerts." — Si no hubieran llegado tarde, ¿qué habría cambiado?', [
+            'Habrían alcanzado el tren a tiempo.',
+            'Habrían salido en vez de quedarse adentro.',
+            'Habrían almorzado antes de ir de compras.',
+            'Habría hecho menos frío esa tarde.'], 0),
+          mc('Lee: "First we shopped downtown. Then we had lunch. We were late, so we missed the train. It was cold, so we stayed inside. Rosa is kind and helpful. Luis is rich, but he is not happy. He loves music, yet he never goes to concerts." — ¿Qué da a entender el texto sobre Luis?', [
+            'Que el dinero no le ha traído felicidad.',
+            'Que es feliz gracias al dinero que tiene.',
+            'Que va a muchos conciertos porque ama la música.',
+            'Que es pobre y por eso no está contento.'], 0),
+          writing('Escríbelo en inglés: "Ella es amable y servicial."', ['She is kind and helpful.'],
+            { reject: [['She is kind and also helpful.', 'Sobra un ladrillo: "and" ya suma, no repitas el conector.'], ['She is kind and moreover helpful.', 'Un solo conector por idea: She is kind and helpful.'], ['She is kind but helpful.', 'No hay contraste: las dos ideas suman, va "and".']] }),
         ] },
       { id: 'modulo3-7-resumen', type: 'resumen', markdown: `## **🎯 Resumen: Los ladrillos de colores 🧱**
 
@@ -1105,6 +1427,8 @@ En esta misión veremos **trucos para exámenes**: cómo **leer y escuchar intel
           mc('En Listening del PET, normalmente el audio...', ['solo una vez', 'se escucha dos veces', 'no se escucha', 'se escucha cinco veces'], 1),
           rebuild('🎧 Reconstruye:', 'Read the questions first', ['Read', 'the', 'questions', 'first', 'last', 'answers', 'audio']),
           rebuild('🎧 Reconstruye:', 'Listen for key words', ['Listen', 'for', 'key', 'words', 'read', 'all', 'numbers']),
+          writing('Escríbelo en inglés: "Lee las preguntas primero."', ['Read the questions first.', 'First, read the questions.'],
+            { reject: [['Read first the questions.', 'En inglés el orden es Read the questions first: "first" va al final.'], ['You read the questions first.', 'El imperativo en inglés no lleva sujeto: Read the questions first.']] }),
         ] },
       { id: 'modulo3-8-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Writing: escribe bien y a tiempo ✍️⏱️**
 
@@ -1134,6 +1458,19 @@ En el PET escribes un **correo corto** (carta informal) y otro **texto breve** (
           tap('Toca la palabra incorrecta:', ['Dear', 'Sir', 'or', 'Madam,', 'I', 'are', 'writing', 'to', 'apply.'], 5, 'am'),
           tap('Toca la palabra incorrecta:', ['I', 'looking', 'forward', 'to', 'hearing', 'from', 'you.'], 1, 'am looking'),
           rebuild('🎧 Reconstruye el cierre formal:', 'Yours faithfully', ['Yours', 'faithfully', 'sincerely', 'See', 'soon', 'Cheers']),
+          mc('Milagros manda dos mensajes el mismo día: "1) Hi, Rosa! Long time no see! See you soon, Milagros. 2) Dear Sir or Madam, I am writing to apply. I am really looking forward to hearing from you. Yours faithfully, Milagros." — ¿A quién va dirigido el segundo mensaje?', [
+            'A una empresa u oficina, en tono formal.',
+            'A Rosa, la amiga que no ve hace tiempo.',
+            'A alguien a quien verá muy pronto.',
+            'A un familiar que le escribió antes.'], 0),
+          mc('Milagros manda dos mensajes el mismo día: "1) Hi, Rosa! Long time no see! See you soon, Milagros. 2) Dear Sir or Madam, I am writing to apply. I am really looking forward to hearing from you. Yours faithfully, Milagros." — ¿Qué da a entender Milagros al final del segundo mensaje?', [
+            'Que espera que le contesten desde esa oficina.',
+            'Que piensa pasar a saludar muy pronto.',
+            'Que ya consiguió el puesto que quería.',
+            'Que escribe solo para saludar a Rosa.'], 0),
+          writing('Escríbelo en inglés: "Espero con ganas tener noticias tuyas."', ['I am looking forward to hearing from you.', 'I look forward to hearing from you.'],
+            { hint: 'Tras "looking forward to" el verbo lleva -ing: hearing.',
+              reject: [['I am looking forward to hear from you.', 'Después de "looking forward to" va el verbo en -ing: hearing.'], ['I looking forward to hearing from you.', 'Falta el verbo be: I am looking forward to...']] }),
         ] },
       { id: 'modulo3-8-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -1152,6 +1489,18 @@ En el PET escribes un **correo corto** (carta informal) y otro **texto breve** (
           tap('Hay un error de tiempo verbal. Tócalo:', ['Last', 'week', 'I', 'visit', 'my', 'family.'], 3, 'visited'),
           tap('Toca la palabra incorrecta:', ['Dear', 'Sir,', 'I', 'are', 'writing', 'to', 'apply.'], 3, 'am'),
           tap('Toca la palabra incorrecta:', ['I', 'look', 'forward', 'to', 'hear', 'from', 'you.'], 4, 'hearing'),
+          mc('Lee: "Rosa: Hi, long time no see! Last week I visited my family in Trujillo. Yesterday I went to the cinema with my brother. See you soon! I am really looking forward to it. Milagros: Hi, Rosa! Yesterday I visited my family in Lima. Take care!" — ¿A qué se refiere "it" en el mensaje de Rosa?', [
+            'Al próximo encuentro entre las dos.',
+            'A la película que vio con su hermano.',
+            'A la visita a su familia en Trujillo.',
+            'Al viaje de Milagros a Lima.'], 0),
+          mc('Lee: "Rosa: Hi, long time no see! Last week I visited my family in Trujillo. Yesterday I went to the cinema with my brother. See you soon! I am really looking forward to it. Milagros: Hi, Rosa! Yesterday I visited my family in Lima. Take care!" — ¿Qué muestra el mensaje de Rosa sobre su relación con Milagros?', [
+            'Son cercanas, pero llevan tiempo sin verse.',
+            'Es una relación formal, de trabajo.',
+            'Se ven todos los días en Trujillo.',
+            'Acaban de conocerse ayer en el cine.'], 0),
+          writing('Escríbelo en inglés: "La semana pasada visité a mi familia."', ['Last week I visited my family.', 'I visited my family last week.'],
+            { reject: [['Last week I visit my family.', 'Es pasado: visited, no visit.'], ['Last week I visited to my family.', 'En inglés "visit" no lleva "to": visited my family.']] }),
         ] },
       { id: 'modulo3-8-resumen', type: 'resumen', markdown: `## **🎯 Resumen: la carrera contrarreloj 🏁⏱️**
 

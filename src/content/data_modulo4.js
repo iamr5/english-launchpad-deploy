@@ -6,6 +6,11 @@
   const mc = (question, options, correctIndex) => ({ type: 'mc', question, options, correctIndex });
   const rebuild = (question, correctSentence, wordBlocks) => ({ type: 'rebuild', question, correctSentence, wordBlocks });
   const tap = (question, sentenceTokens, errorTokenIndex, correctedToken) => ({ type: 'tap', question, sentenceTokens, errorTokenIndex, correctedToken });
+  // writing(enunciado, aceptadas, extra) — ver el docblock en data.js y
+  // src/content/AUTHORING-reading-writing.md. Redeclarado aquí como los demás
+  // helpers, para no chocar con el const de nivel superior de data.js.
+  const writing = (question, accepted, extra) => Object.assign(
+    { type: 'writing', question, accepted: [].concat(accepted) }, extra || {});
 
   const modulo4_1 = {
     id: 'modulo4-1',
@@ -27,6 +32,19 @@
         tap('Toca el error: el verbo debe ir a pasado.', ['He', 'said', 'he', 'is', 'very', 'tired.'], 3, 'was'),
         tap('Toca el error: "will" cambia a "would".', ['She', 'said', 'she', 'will', 'travel', 'to', 'Lima.'], 3, 'would'),
         rebuild('🎧 Reporta lo que dijo:', 'They said they would go to Lima.', ['They', 'said', 'they', 'would', 'go', 'to', 'Lima.', 'will', 'said,', 'went']),
+        mc('Lee: "On Sunday at home Rosa said she was watching TV that day. Juan said he was hungry the day before. María said she had a car then, and Luis said he would travel to Lima. They said they would go to Lima too. Juan said he was going to travel to Europe. Milagros said she was very tired that day." — ¿Qué de todo lo que se cuenta NO pasó ese domingo?', [
+          'El hambre de Juan, que fue el día anterior.',
+          'La tele que Rosa veía ese mismo día.',
+          'El carro que María ya tenía por entonces.',
+          'El cansancio que Milagros sentía ese domingo.'], 0),
+        mc('Lee: "On Sunday at home Rosa said she was watching TV that day. Juan said he was hungry the day before. María said she had a car then, and Luis said he would travel to Lima. They said they would go to Lima too. Juan said he was going to travel to Europe. Milagros said she was very tired that day." — ¿Qué se entiende sobre los viajes que se mencionan?', [
+          'Que eran planes pendientes cuando se contaron.',
+          'Que ya se habían hecho antes del domingo.',
+          'Que todos salieron a Lima ese mismo domingo.',
+          'Que Juan acompañaría a Luis hasta Lima.'], 0),
+        writing('Escríbelo en inglés: "Ellos dijeron que irían a Lima."', ['They said they would go to Lima.', 'They said that they would go to Lima.'],
+          { hint: 'Al reportar, "will" retrocede a "would", y después va el verbo en base.',
+            reject: [['They said they will go to Lima.', 'Como "said" ya está en pasado, "will" retrocede a "would": They said they would go to Lima.'], ['They said they would went to Lima.', 'Después de "would" va el verbo base: would go.'], ['They said they go to Lima.', 'Falta el "would": el futuro de la cita se reporta con would go.'], ['They said, "We will go to Lima."', 'En estilo indirecto no se copian las palabras exactas: They said they would go to Lima.']] }),
       ] },
       { id: 'modulo4-1-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `### ❓ Preguntas y mandatos en estilo indirecto\n\n**Preguntas (interrogaciones):** NO usamos comillas y NO invertimos sujeto-verbo. Volvemos al orden normal.\n\n| Directo | Reported Speech |\n| --- | --- |\n| Mónica preguntó: "¿Dónde vives?" | Mónica asked where I **lived**. |\n| Preguntó: "¿Has terminado?" | She asked **if** I had finished. |\n\n> 🔑 Si la pregunta es de **Sí/No**, usamos **if** o **whether**. Si tiene palabra interrogativa (where, when, why...), la conservamos.\n\n**Mandatos y órdenes:** usamos **tell/ask + (no) to + infinitivo**.\n\n| Directo | Reported Speech |\n| --- | --- |\n| La jefa dijo: "Envíame el reporte." | The boss told me **to send** her the report. |\n| El maestro dijo: "No corras." | The teacher told us **not to run**. |\n\n**Estructura general:**\n- Afirmaciones: *he said (that) + sujeto + verbo en pasado*\n- Preguntas Sí/No: *asked + if/whether + ...*\n- Órdenes: *tell/ask + to + infinitivo* 📣`, miniQuiz: [
         mc('She asked: "Did you finish your homework?" She asked ___ I had finished my homework.', ['if', 'where', 'when', 'what'], 0),
@@ -39,6 +57,19 @@
         tap('Toca el error: en una pregunta reportada NO invertimos sujeto-verbo.', ['She', 'asked', 'where', 'do', 'I', 'live.'], 3, '(quítalo)'),
         tap('Toca el error: usamos "to" + infinitivo en las órdenes.', ['The', 'boss', 'told', 'me', 'send', 'the', 'report.'], 4, 'to send'),
         rebuild('🎧 Reporta la pregunta:', 'She asked if I had finished.', ['She', 'asked', 'if', 'I', 'had', 'finished.', 'where', 'have', 'did']),
+        mc('Lee: "Mónica: Where do you live? Have you finished? My father: Call me when you arrive. At work that day the boss told me to send her the report. Then Mónica asked where I lived, and she asked if I had finished. At home that night my father told me to call him. In class the teacher told us not to run." — ¿A quién había que mandarle el reporte?', [
+          'A la jefa, que fue quien lo pidió.',
+          'A Mónica, que preguntó por dos cosas.',
+          'A la profesora que dio la clase.',
+          'Al padre, que pidió una llamada esa noche.'], 0),
+        mc('Lee: "Mónica: Where do you live? Have you finished? My father: Call me when you arrive. At work that day the boss told me to send her the report. Then Mónica asked where I lived, and she asked if I had finished. At home that night my father told me to call him. In class the teacher told us not to run." — ¿En qué se diferencia lo que hizo Mónica de lo que hicieron la jefa y el padre?', [
+          'Mónica quería información; los otros dos pedían acciones.',
+          'Mónica dio órdenes; los otros dos querían saber.',
+          'Los tres pidieron lo mismo al grupo entero.',
+          'Los tres querían saber dónde vive quien escribe.'], 0),
+        writing('Escríbelo en inglés: "Ella preguntó si yo había terminado."', ['She asked if I had finished.', 'She asked whether I had finished.'],
+          { hint: 'Pregunta de sí/no reportada: asked + if (o whether) y el verbo se atrasa a had finished.',
+            reject: [['She asked did I finish.', 'En la pregunta reportada no va el auxiliar "did": She asked if I had finished.'], ['She asked if I have finished.', 'Al reportar se atrasa un paso: had finished, no have finished.'], ['She asked that I had finished.', 'Para una pregunta de sí/no va "if" o "whether", nunca "that".'], ['She said if I had finished.', 'Es una pregunta reportada: se introduce con "asked", no con "said".']] }),
       ] },
       { id: 'modulo4-1-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nBoti ya cayó en estas trampas, ¡aprende de mí! 🤖😅\n\n**1. Olvidar mover el verbo al pasado:**\n- ❌ He said he **is** tired.\n- ✅ He said he **was** tired.\n- 💡 Como *said* está en pasado, *is* tiene que pasar a *was*.\n\n**2. Invertir sujeto-verbo en preguntas reportadas:**\n- ❌ She asked me where **do you** live.\n- ✅ She asked me where **I lived**.\n- 💡 En el reported speech NO hacemos pregunta directa: orden normal.\n\n**3. Repetir el pronombre en una orden:**\n- ❌ They told me to close the door **me**.\n- ✅ They told me to close the door.\n- 💡 El *me* ya está al inicio; no lo repitas al final.\n\n¡Toca tu turno de cazar errores! 🎯`, miniQuiz: [
         tap('Toca el error: "said" está en pasado.', ['He', 'said', 'he', 'is', 'very', 'tired.'], 3, 'was'),
@@ -49,6 +80,18 @@
         tap('Toca el error: las órdenes usan "to" + infinitivo.', ['The', 'teacher', 'told', 'us', 'not', 'run', 'inside.'], 5, 'to run'),
         tap('Toca el error: "will" cambia a "would" al reportar.', ['He', 'said', 'he', 'will', 'help', 'me', 'tomorrow.'], 3, 'would'),
         tap('Toca el error: usamos "if" para preguntas de Sí/No.', ['She', 'asked', 'where', 'I', 'had', 'finished.'], 2, 'if'),
+        mc('Lee: "Yesterday downtown Rosa asked me where I lived. She asked if I had finished. Juan said he was very tired, and Milagros said she had a new car. At home my father told me to call him. Rosa and Juan told me to close the door, and they said they would go to Lima. The teacher told us not to run inside." — ¿Quiénes dijeron que irían a Lima?', [
+          'Rosa y Juan, los mismos de la puerta.',
+          'La profesora junto con toda su clase.',
+          'Milagros, la que tenía un carro nuevo.',
+          'El padre de quien escribe todo esto.'], 0),
+        mc('Lee: "Yesterday downtown Rosa asked me where I lived. She asked if I had finished. Juan said he was very tired, and Milagros said she had a new car. At home my father told me to call him. Rosa and Juan told me to close the door, and they said they would go to Lima. The teacher told us not to run inside." — ¿Qué le queda pendiente por hacer a quien escribe?', [
+          'Llamar a su padre y no correr adentro.',
+          'Terminar lo que Rosa le preguntó ayer.',
+          'Viajar a Lima con Rosa y Juan.',
+          'Comprar un carro nuevo como el de Milagros.'], 0),
+        writing('Escríbelo en inglés: "El maestro nos dijo que no corriéramos adentro."', ['The teacher told us not to run inside.'],
+          { reject: [['The teacher told us not run inside.', 'Falta el "to": la orden negativa va not to + infinitivo.'], ['The teacher told us to not run inside.', 'El orden correcto es "not to" + infinitivo: told us not to run inside.'], ['The teacher said us not to run inside.', 'Con objeto se dice "told us", nunca "said us".'], ["The teacher told us don't run inside.", 'No se copian las palabras exactas de la orden: told us not to run inside.']] }),
       ] },
       { id: 'modulo4-1-resumen', type: 'resumen', markdown: `### 📝 Resumen rápido\n\n| Cambio | De → A |\n| --- | --- |\n| Tiempo verbal | presente → pasado / will → would |\n| Pronombres | I → he/she, my → his/her |\n| Tiempo/lugar | now → then, today → that day, here → there |\n\n**Estructuras clave:**\n- Afirmación: *He said (that) he **was** tired.*\n- Pregunta Sí/No: *She asked **if** I had finished.*\n- Pregunta con wh-: *He asked where I **lived**.*\n- Orden: *They told me **to close** the door.*\n\n> 📞 Todo retrocede un paso al pasado: ¡el teléfono descompuesto con reglas! ⚙️` },
       { id: 'modulo4-1-cierre', type: 'cierre', markdown: `### 🎉 ¡Misión cumplida! 🎯\n\nAhora sabes contar lo que otros dijeron, reportar chismes 🤫 o noticias 📰 con confianza.\n\nInsignia obtenida: **Relator Experto** (¡Maestr@ del estilo indirecto!) 📣✨\n\nNos vemos en la siguiente etapa. ¡Sigue practicando! 🤖⚡` },
@@ -92,6 +135,19 @@
         tap('Toca el error: falta el participio pasado correcto.', ['The', 'letter', 'was', 'write', 'by', 'Juan.'], 3, 'written'),
         tap('Toca el error: falta el auxiliar "to be".', ['The', 'thief', 'caught', 'by', 'the', 'police.'], 2, 'was caught'),
         rebuild('🎧 Pasa a pasiva:', 'The letter was written by Juan.', ['The', 'letter', 'was', 'written', 'by', 'Juan.', 'wrote', 'is', 'write']),
+        mc('Lee: "Rosa cooked the breakfast here in Trujillo yesterday. The breakfast was cooked by Rosa on Sunday too. Juan wrote the letter downtown in Lima on Sunday. The letter was written by Juan. The letter was sent yesterday. The window was broken last night. The Tower of Pisa was built centuries ago. The thief is caught by the police today." — ¿De qué hechos no se dice quién fue el responsable?', [
+          'De la carta enviada, la ventana y la torre.',
+          'Del desayuno, la carta escrita y el ladrón.',
+          'De la carta escrita y del desayuno de Rosa.',
+          'De todo lo que ocurrió aquí en Trujillo.'], 0),
+        mc('Lee: "Rosa cooked the breakfast here in Trujillo yesterday. The breakfast was cooked by Rosa on Sunday too. Juan wrote the letter downtown in Lima on Sunday. The letter was written by Juan. The letter was sent yesterday. The window was broken last night. The Tower of Pisa was built centuries ago. The thief is caught by the police today." — ¿Qué sabemos exactamente sobre quién cocinó el desayuno y quién rompió la ventana?', [
+          'Sabemos quién lo cocinó, pero no quién la rompió.',
+          'Sabemos quién la rompió, pero no quién lo cocinó.',
+          'Sabemos las dos cosas: fueron Rosa y Juan.',
+          'No sabemos ni lo uno ni lo otro.'], 0),
+        writing('Escríbelo en inglés: "Alguien rompió la ventana."', ['The window was broken.'],
+          { hint: 'Si no vas a decir quién fue, va to be + participio y sin "by".',
+            reject: [['Someone broke the window.', 'Eso es la activa; en pasiva y sin agente: The window was broken.'], ['The window was break.', 'Después de "was" va el participio: The window was broken.'], ['The window broke someone.', 'En la pasiva el sujeto RECIBE la acción: The window was broken.']] }),
       ] },
       { id: 'modulo4-2-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **⏳ Pasiva en presente, pasado y futuro**\n\nEl tiempo lo marca el verbo **to be**. ¡El participio NO cambia! 🎯\n\n**Presente** (*is / are* + participio):\n\n| Español | Inglés (pasiva) |\n| --- | --- |\n| Se anuncia una nueva ley. | A new law is announced. |\n| Pintan la casa de azul. | The house is painted blue. |\n\n**Pasado** (*was / were* + participio):\n\n| Español | Inglés (pasiva) |\n| --- | --- |\n| El chef cocinó el desayuno. | The breakfast was cooked. |\n\n**Futuro** (*will be* + participio):\n\n| Español | Inglés (pasiva) |\n| --- | --- |\n| Se inaugurará un museo. | A museum will be inaugurated. |\n| Los exámenes los corregirá la profesora. | The exams will be corrected by the teacher. |\n\n> **Regla de oro:** 🏅 el **sujeto gramatical RECIBE** la acción: *is made, was seen, will be sent.*\n\n🕵️ **Metáfora de la escena del crimen:** el foco está en la víctima (lo que sucede); el autor (agente) puede ser desconocido. ¡Por eso a veces no lo nombramos! 🔍⚙️`, miniQuiz: [
         mc('¿Qué forma de "to be" usamos para la pasiva en futuro?', ['is', 'was', 'will be', 'be'], 2),
@@ -104,6 +160,19 @@
         tap('Toca el error: la pasiva en futuro necesita "be".', ['A', 'museum', 'will', 'inaugurated', 'next', 'year.'], 3, 'be inaugurated'),
         tap('Toca el error: el presente pasivo necesita "is".', ['The', 'house', 'painted', 'blue', 'every', 'year.'], 2, 'is painted'),
         rebuild('🎧 Pasa a pasiva en futuro:', 'A museum will be inaugurated.', ['A', 'museum', 'will', 'be', 'inaugurated.', 'was', 'is', 'inaugurate']),
+        mc('Lee: "A new law is announced here in Lima today. The house is painted blue every year. The thief is caught by the police downtown. The breakfast was cooked by the chef yesterday. The window was broken last night. The exams will be corrected by the teacher. A museum will be inaugurated next year. The letter was sent yesterday too." — ¿Qué dos cosas todavía no han ocurrido?', [
+          'La corrección de los exámenes y la apertura del museo.',
+          'La rotura de la ventana y el envío de la carta.',
+          'La captura del ladrón y el anuncio de la ley.',
+          'El pintado de la casa y la preparación del desayuno.'], 0),
+        mc('Lee: "A new law is announced here in Lima today. The house is painted blue every year. The thief is caught by the police downtown. The breakfast was cooked by the chef yesterday. The window was broken last night. The exams will be corrected by the teacher. A museum will be inaugurated next year. The letter was sent yesterday too." — ¿En cuál de los dos planes futuros sí se dice quién se encargará?', [
+          'En los exámenes, que corregirá la profesora.',
+          'En el museo, que abrirá el año que viene.',
+          'En los dos: la profesora se encarga de ambos.',
+          'En ninguno de los dos se nombra a nadie.'], 0),
+        writing('Escríbelo en inglés: "Se inaugurará un museo."', ['A museum will be inaugurated.'],
+          { hint: 'El tiempo lo marca "to be": en futuro va will be + participio.',
+            reject: [['A museum will inaugurated.', 'Falta el "be": A museum will be inaugurated.'], ['A museum was inaugurated.', 'Eso ya pasó; para el futuro va: A museum will be inaugurated.'], ['A museum will be inaugurate.', 'Después de "be" va el participio: A museum will be inaugurated.']] }),
       ] },
       { id: 'modulo4-2-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\n¡Cuidado, detective! Estos resbalones son muy típicos. 🕵️⚙️\n\n**1. Olvidar el auxiliar "to be":** 🙈\n> ❌ *The cake made by my mom.*\n> ✅ *The cake **was** made by my mom.* 🎂\n\n**2. Fallar la concordancia (singular/plural):** 🔢\n> ❌ *The game **are** won by the team.*\n> ✅ *The game **was** won by the team.* (game = singular → was) 🏆\n\n**3. Confundir activa con pasiva:** 🌀\n> ❌ *She is painted the wall.* (¡no es ni una cosa ni la otra!)\n> ✅ *She **paints** the wall.* (activa) o *The wall **is painted** by her.* (pasiva) 🎨\n\nToca el error en cada oración para corregirlo. ¡A investigar! 🔍`, miniQuiz: [
         tap('Toca el error: falta el auxiliar "to be".', ['The', 'cake', 'made', 'by', 'my', 'mom.'], 2, 'was made'),
@@ -114,6 +183,18 @@
         tap('Toca el error: falta el auxiliar "to be".', ['A', 'new', 'bridge', 'built', 'next', 'year.'], 3, 'will be built'),
         tap('Toca el error: el participio de "break" es irregular.', ['The', 'window', 'was', 'breaked', 'last', 'night.'], 3, 'broken'),
         tap('Toca el error: la pasiva en presente necesita "is".', ['The', 'breakfast', 'cooked', 'every', 'morning.'], 2, 'is cooked'),
+        mc('Lee: "The cake was made by my mom here in Trujillo. The game was won by the team on Sunday. She paints the wall every morning. The wall is painted by her too. The keys were found in the park. The window was broken last night. The letter was sent yesterday. A new bridge will be built next year." — ¿En cuáles de estos hechos el texto se guarda quién fue el responsable?', [
+          'En la aparición de las llaves y en la ventana rota.',
+          'En el queque y en el partido que ganó el equipo.',
+          'En la pared pintada y en el queque de la mamá.',
+          'En el partido ganado y en la pared pintada.'], 0),
+        mc('Lee: "The cake was made by my mom here in Trujillo. The game was won by the team on Sunday. She paints the wall every morning. The wall is painted by her too. The keys were found in the park. The window was broken last night. The letter was sent yesterday. A new bridge will be built next year." — ¿Qué da a entender el texto sobre el puente nuevo?', [
+          'Que todavía no existe y no se dice quién lo hará.',
+          'Que ya está terminado y lo hizo el equipo.',
+          'Que lo están construyendo ahora en el parque.',
+          'Que lo hará la misma señora que pinta la pared.'], 0),
+        writing('Escríbelo en inglés: "Las llaves se encontraron en el parque."', ['The keys were found in the park.'],
+          { reject: [['The keys was found in the park.', '"Keys" es plural, así que va "were": The keys were found in the park.'], ['The keys found in the park.', 'Falta el auxiliar "to be": The keys were found in the park.'], ['The keys were find in the park.', 'Después de "were" va el participio: The keys were found in the park.']] }),
       ] },
       { id: 'modulo4-2-resumen', type: 'resumen', markdown: `#### **📝 Resumen**\n\n- **Voz pasiva = to be + participio pasado.** El objeto pasa a ser sujeto. 🎯\n- El **tiempo** lo marca *to be*: *is painted* (presente), *was painted* (pasado), *will be painted* (futuro). ⏳\n- El **agente** va con **"by"**… ¡y a menudo se omite! 🤫\n- Cuida la **concordancia**: singular → *is/was*; plural → *are/were*. 🔢\n- Úsala para **enfocar la acción** o cuando no sabes quién la hizo. 🕵️⚙️` },
       { id: 'modulo4-2-cierre', type: 'cierre', markdown: `¡Bien hecho! 🏆\n\nAhora cambias el foco usando la **voz pasiva**, sonando más formal o enfatizando lo que de verdad importa. 🔍\n\nInsignia obtenida: **Investigador Pasivo** (¡Maestr@ en la voz pasiva!) 🔎🏅\n\n¡Nos vemos en la próxima misión, detective! ⚡` },
@@ -157,6 +238,19 @@
         tap('Toca el error: tras un modal va el verbo base.', ['She', 'might', 'is', 'at', 'home', 'now.'], 2, 'be'),
         tap('Toca el error: para alta certeza usa "must".', ['He', 'should', 'be', 'the', 'thief;', 'I', 'saw', 'him.'], 1, 'must'),
         rebuild('🎧 Ordena la deducción:', 'He must be tired.', ['He', 'must', 'be', 'tired.', 'is', 'might', 'are']),
+        mc('Lee: "Rosa: Milagros has not called; she must have missed the bus. Juan: She might have missed the bus, or she might be at home now. Rosa: Luis has not called; he must be busy. Juan: He can\'t be busy; I saw him downtown at 3 p.m. Rosa: He has been working all day; he must be tired. Juan: He could have missed the train, and they might arrive late." — ¿Quién descarta por completo una de las explicaciones?', [
+          'Juan, que niega que Luis esté ocupado.',
+          'Rosa, que niega que Milagros perdiera el bus.',
+          'Juan, que niega que Milagros esté en casa.',
+          'Rosa, que niega que Luis esté cansado.'], 0),
+        mc('Lee: "Rosa: Luis must be the thief; I saw him downtown at 3 p.m. Milagros: He might be the thief, but he might be at home now. Juan: It can\'t be true! He has been working all day; he can\'t be downtown. Rosa: He has not called; he must be busy. Milagros: He could have missed the bus. Juan: He must be tired." — ¿Con cuál de estas afirmaciones estaría de acuerdo Milagros?', [
+          'Que podría ser él, aunque no está segura.',
+          'Que es él, y no cabe ninguna duda.',
+          'Que es imposible que haya sido él.',
+          'Que él estuvo trabajando todo el día.'], 0),
+        writing('Escríbelo en inglés (empieza con "It"): "¡No puede ser verdad!"', ['It can\'t be true!', 'It cannot be true!'],
+          { hint: 'Deducción negativa: can\'t + verbo base (también vale "cannot").',
+            reject: [['It must not be true.', 'Para lo imposible va "can\'t", no "must not": It can\'t be true!'], ['It can\'t is true.', 'Tras un modal va el verbo base: It can\'t be true!'], ['It doesn\'t can be true.', '"Can\'t" ya es negativo, no lleva "doesn\'t": It can\'t be true!']] }),
       ] },
       { id: 'modulo4-3-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Conectores lógicos: une tus ideas** 🧱\n\nArmar un argumento es como **construir una torre** 🏗: cada **conector** es un bloque que **une ideas**.\n\n* **However / Nevertheless** (*sin embargo*) → **contraste**.\n* **Therefore / Thus** (*por lo tanto*) → **consecuencia**.\n* **On the other hand** (*por otro lado*) → **otra perspectiva**.\n* **In my opinion / I believe** (*en mi opinión*).\n* **For example / For instance** (*por ejemplo*).\n\n  | Inglés | Español |\n  | --- | --- |\n  | She studied a lot. Therefore, she did well on the exam. | Estudió mucho. Por lo tanto, le fue bien. |\n  | Some say it's good; however, others disagree. | Algunos dicen que es bueno; sin embargo, otros no. |\n  | I believe climate change is real. For example, temperatures are rising. | Creo que el cambio climático es real. Por ejemplo, suben las temperaturas. |\n\n> 💡 **Truco de {{mascot}}:** los **modales de certeza** son los pilares; los **conectores** son los bloques que los unen. ¡Juntos levantan tu argumento! 🏗`, miniQuiz: [
         mc('"Lo intentó varias veces. ___, no tuvo éxito." (contraste)', ['Therefore', 'However', 'For example', 'Thus'], 1),
@@ -169,6 +263,19 @@
         tap('Toca el error: "however" va seguido de coma.', ['I', 'like', 'pizza;', 'however', 'I', 'hate', 'tomatoes.'], 3, 'however,'),
         tap('Toca el error: usa el conector de consecuencia.', ['She', 'studied;', 'however,', 'she', 'passed', 'the', 'exam.'], 2, 'therefore,'),
         rebuild('🎧 Ordena la frase:', 'She studied a lot. Therefore, she passed.', ['She', 'studied', 'a', 'lot.', 'Therefore,', 'she', 'passed.', 'However,', 'because']),
+        mc('Lee: "Rosa: In my opinion, we should vote for a change. I believe climate change is real. For example, temperatures are rising here in Trujillo every year. Luis: Some say it is good; however, others disagree. On the other hand, my brother believes it is not real. Milagros: Rosa studied a lot. Therefore, she did well on the exam. However, she did not vote." — ¿Qué se dice de quien pide el cambio?', [
+          'Que le fue bien en el examen, pero no votó.',
+          'Que le fue mal en el examen y por eso no votó.',
+          'Que su hermano cree que el problema es real.',
+          'Que estudió mucho y al final sí votó.'], 0),
+        mc('Lee: "Luis: Some say it is good; however, others disagree. Milagros: I believe climate change is real. For example, temperatures are rising here in Trujillo every year. Therefore, we should vote for a change. Rosa: On the other hand, my brother believes it is not real. Nevertheless, he studied a lot. Milagros: In my opinion, he might agree with us one day." — ¿Qué papel juega en el debate lo que dice Rosa sobre su hermano?', [
+          'Presenta la postura contraria a la de Milagros.',
+          'Da un ejemplo que apoya a Milagros.',
+          'Saca la consecuencia de lo que dijo Luis.',
+          'Repite con otras palabras la opinión de Luis.'], 0),
+        writing('Escríbelo en inglés (habla de ella): "Estudió mucho. Por lo tanto, le fue bien en el examen."', ['She studied a lot. Therefore, she did well on the exam.'],
+          { hint: 'Consecuencia = Therefore; el contraste (however) es otra cosa.',
+            reject: [['She studied a lot. However, she did well on the exam.', '"However" marca contraste; la consecuencia va con "Therefore".'], ['She studied a lot. For example, she did well on the exam.', '"For example" introduce un ejemplo; aquí va la consecuencia: Therefore.'], ['She studied a lot. On the other hand, she did well on the exam.', '"On the other hand" abre otra perspectiva; la consecuencia va con "Therefore".']] }),
       ] },
       { id: 'modulo4-3-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\n¡Cuidado con estos tropiezos al argumentar! 🛑\n\n* ❌ *He should be the answer.* (sin contexto) → ✅ *He **must** be the answer.* (si estás seguro, usa *must*).\n* ❌ *However, I like pizza. I don't like tomatoes.* → ✅ *I like pizza; **however**, I don't like tomatoes.* (*however* va entre comas o tras punto y coma).\n* ❌ *I think are bad people.* → ✅ *I think **they** are bad people.* (no olvides el **sujeto** *they*).\n\n> 💡 **Truco de {{mascot}}:** *however* **conecta dos ideas**, casi siempre tras **punto y coma** o entre **comas**, no suelto al inicio. Y **nunca** olvides el **sujeto** de la oración.\n\nEn los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`, miniQuiz: [
         tap('Toca el error: para alta certeza usa "must".', ['He', 'should', 'be', 'the', 'answer;', 'I', 'am', 'sure.'], 1, 'must'),
@@ -179,6 +286,18 @@
         tap('Toca el error: usa el conector de consecuencia.', ['She', 'trained', 'hard;', 'however,', 'she', 'won.'], 3, 'therefore,'),
         tap('Toca el error: tras "must" va el verbo base.', ['They', 'must', 'being', 'at', 'work', 'now.'], 2, 'be'),
         tap('Toca el error: para posibilidad usa "might".', ['She', "can't", 'agree', 'with', 'us,', 'who', 'knows.'], 1, 'might'),
+        mc('Lee: "Rosa: He must be the answer; I am sure. Milagros: He might agree with us, who knows. Juan: He can\'t be the answer; they must be at work now. Rosa: He is rich; he can\'t be poor. Milagros: He trained hard; therefore, he won. Juan: He might be tired today; he has been working all day. Rosa: It is cheap; however, it is slow." — ¿Quién descarta por completo que él sea la respuesta?', [
+          'Juan, que lo da por imposible.',
+          'Rosa, que está segura de que sí.',
+          'Milagros, que no se decide.',
+          'Los tres, cada uno a su manera.'], 0),
+        mc('Lee: "Rosa: She trained hard here in Trujillo; therefore, she won. Milagros: It is cheap; however, it is slow. Rosa: I think they are bad people; therefore, I can\'t agree with them. Milagros: She might agree with us, who knows. Rosa: She must be at work now; therefore, she can\'t be at home. Milagros: She has been working all day; she must be tired." — ¿Qué concluye Rosa del hecho de que ella esté en el trabajo?', [
+          'Que es imposible que esté en su casa.',
+          'Que quizá esté ya en su casa.',
+          'Que entrenó duro y por eso ganó.',
+          'Que está de acuerdo con ese grupo.'], 0),
+        writing('Escríbelo en inglés: "Creo que son malas personas."', ['I think they are bad people.'],
+          { reject: [['I think are bad people.', 'Falta el sujeto: I think they are bad people.'], ['I think that are bad people.', 'Aunque metas "that", el sujeto no puede faltar: I think they are bad people.'], ['I think they is bad people.', 'Con "they" va "are": I think they are bad people.']] }),
       ] },
       { id: 'modulo4-3-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**\n\nPara **argumentar con peso** 🏗:\n\n* 🧱 **Modales de certeza** = tus pilares:\n  * **must** → casi seguro (*He must be tired.*)\n  * **might / could** → posible (*She might agree.*)\n  * **can't** → imposible (*It can't be true!*)\n  * **should have** → remordimiento (*You should have studied more.*)\n\n* 🔗 **Conectores lógicos** = los bloques que unen ideas:\n  * **However / Nevertheless** → contraste (entre comas o tras *;*)\n  * **Therefore / Thus** → consecuencia\n  * **On the other hand** → otra perspectiva\n  * **In my opinion / I believe** → tu postura\n  * **For example** → ejemplo\n\n  | Función | Conector / Modal | Ejemplo |\n  | --- | --- | --- |\n  | Contraste | however | I like pizza; however, not tomatoes. |\n  | Consecuencia | therefore | She studied. Therefore, she passed. |\n  | Alta certeza | must | He must be busy. |` },
       { id: 'modulo4-3-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**\n\n¡Felicidades! 🎉 Ahora **argumentas con modales adecuados** y **conectores lógicos**; tu opinión suena **sólida y profesional**.\n\nRecuerda:\n\n* **Modales de certeza** muestran cuán seguro estás: *must, might, could, can't.* 🛡\n* **Conectores** unen tus ideas: *however, therefore, on the other hand.* 🔗\n\n✅ **Misión cumplida:** ya puedes **debatir con peso** y hacer que tu opinión **se sostenga**.\n\n**🏅 Insignia obtenida:** 🎙 *Debate Maestro* (¡Argumentas con fuerza!) ✨` },
@@ -222,6 +341,19 @@
         tap('Toca el error: tras "had" va el participio.', ['If', 'I', 'had', 'knew', 'the', 'truth,', 'I', 'would', 'have', 'helped.'], 3, 'known'),
         tap('Toca el error: el resultado lleva "have".', ['If', 'she', 'had', 'studied,', 'she', 'would', 'passed', 'the', 'test.'], 6, 'have passed'),
         rebuild('🎧 Ordena el Third Conditional:', 'If I had known, I would have helped.', ['If', 'I', 'had', 'known,', 'I', 'would', 'have', 'helped.', 'knew', 'will', 'helping']),
+        mc('Lee: "Rosa: Luis, if you had called me, I would have helped you. Luis: If I had known, I would have helped. Rosa: If Milagros had studied, she would have passed the test. Luis: My cousins would have gone to Trujillo on Sunday if it hadn\'t rained. Rosa: If I had known the truth, I would have told you. Luis: If Milagros had called me, I would have helped her." — ¿A quién le reclama Rosa, y de qué?', [
+          'A Luis, de no haberla llamado.',
+          'A Milagros, de no haber estudiado.',
+          'A Luis, de no haberle dicho la verdad.',
+          'A sus primos, de no haber ido a Trujillo.'], 0),
+        mc('Lee: "Rosa: Luis, if you had called me, I would have helped you. Luis: If I had known, I would have helped. Rosa: If Milagros had studied, she would have passed the test. Luis: My cousins would have gone to Trujillo on Sunday if it hadn\'t rained. Rosa: If I had known the truth, I would have told you. Luis: If Milagros had called me, I would have helped her." — ¿Qué pasó en realidad?', [
+          'Ni Luis ni Milagros llamaron, y Milagros desaprobó.',
+          'Luis llamó a Rosa, pero ella no lo ayudó.',
+          'Milagros estudió mucho y aprobó la prueba.',
+          'Los primos de Luis viajaron a Trujillo el domingo.'], 0),
+        writing('Escríbelo en inglés: "Si me hubieras llamado, te habría ayudado."', ['If you had called me, I would have helped you.', "If you had called me, I would've helped you."],
+          { hint: 'Third Conditional: if + had + participio, y el resultado con would have + participio.',
+            reject: [['If you had called me, I would helped you.', 'Al resultado le falta el "have": I would have helped you.'], ['If you had call me, I would have helped you.', 'Después de "had" va el participio: If you had called me...'], ['If you called me, I would have helped you.', 'Lo que no pasó lleva had + participio: If you had called me...']] }),
       ] },
       { id: 'modulo4-4-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Condicionales Mixtos: pasado que afecta al presente** 🌉\n\nLos **condicionales mixtos** conectan un **pasado imaginario** con una **consecuencia en el presente**.\n\n> **Estructura:** *If + sujeto + **had** + participio, sujeto + **would** + **verbo base** (resultado actual).*\n\n* *If I had studied medicine, I would be a doctor now.* → *Si hubiera estudiado medicina, ahora sería médico.*\n* *If I had studied more, I would have a different job now.* → *Si hubiera estudiado más, ahora tendría otro trabajo.*\n\n  | Español | Inglés (Mixed) |\n  | --- | --- |\n  | Si hubiera estudiado más, ahora tendría otro trabajo. | If I had studied more, I would have a different job now. |\n  | Si hubiera estudiado medicina, ahora sería médico. | If I had studied medicine, I would be a doctor now. |\n\n> 💡 **Mnemotecnia:** dibuja una **línea del tiempo** 🧭. El **Third Conditional** es un puente del **pasado a otro punto del pasado**; el **mixed** conecta el **pasado hipotético con el presente**.`, miniQuiz: [
         mc('"Si hubiera estudiado medicina, ahora sería médico." (mixto)', ['If I study medicine, I would be a doctor now.', 'If I had studied medicine, I would be a doctor now.', 'If I had studied medicine, I would have been a doctor.', 'If I had study medicine, I would be a doctor now.'], 1),
@@ -234,6 +366,19 @@
         tap('Toca el error: el resultado en presente NO lleva "have".', ['If', 'I', 'had', 'slept,', 'I', 'would', 'have', 'be', 'awake', 'now.'], 6, '(quítalo)'),
         tap('Toca el error: tras "had" va el participio.', ['If', 'I', 'had', 'study', 'medicine,', 'I', 'would', 'be', 'a', 'doctor.'], 3, 'studied'),
         rebuild('🎧 Ordena el condicional mixto:', 'If I had studied medicine, I would be a doctor now.', ['If', 'I', 'had', 'studied', 'medicine,', 'I', 'would', 'be', 'a', 'doctor', 'now.', 'have', 'will']),
+        mc('Lee: "Rosa: If I had studied medicine, I would be a doctor now. Luis: If I had studied more, I would have a better job now. Milagros: If Rosa had taken the job, she would be rich now. Luis: And if I had slept on Sunday, I would be awake now. Rosa: If I had known, I would have helped Milagros. Milagros: They would have gone to Trujillo if it hadn\'t rained." — ¿De quién dicen que hoy sería rica, y por qué no lo es?', [
+          'De Rosa, porque no aceptó ese trabajo.',
+          'De Rosa, porque no estudió medicina.',
+          'De Milagros, porque no la ayudaron a tiempo.',
+          'De Luis, porque no durmió el domingo.'], 0),
+        mc('Lee: "Rosa: If I had studied medicine, I would be a doctor now. Luis: If I had studied more, I would have a better job now. Milagros: If Rosa had taken the job, she would be rich now. Luis: And if I had slept on Sunday, I would be awake now. Rosa: If I had known, I would have helped Milagros. Milagros: They would have gone to Trujillo if it hadn\'t rained." — ¿Qué es cierto hoy, según el texto?', [
+          'Rosa no es médica y Luis anda con sueño.',
+          'Rosa ya trabaja de médica y Luis descansó.',
+          'Milagros se hizo rica con ese trabajo.',
+          'Luis consiguió por fin un trabajo mejor.'], 0),
+        writing('Escríbelo en inglés: "Si hubiera estudiado medicina, ahora sería médico."', ['If I had studied medicine, I would be a doctor now.'],
+          { hint: 'Mixto: if + had + participio, y el resultado de HOY va con would + verbo base, sin "have".',
+            reject: [['If I had studied medicine, I would have been a doctor now.', 'El resultado es de hoy: would + verbo base, sin "have": I would be a doctor now.'], ['If I had study medicine, I would be a doctor now.', 'Después de "had" va el participio: If I had studied medicine...'], ['If I studied medicine, I would be a doctor now.', 'El pasado imaginario lleva had + participio: If I had studied medicine...']] }),
       ] },
       { id: 'modulo4-4-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nEstos son los tropiezos clásicos con los condicionales imposibles. ¡Cázalos antes de que te cacen a ti!\n\n* ❌ *If I had **went** to the party, I would have seen Maria.* → ✅ *If I had **gone** to the party, I would have seen Maria.* (después de *had* va el **participio**: *gone*, no *went*).\n* ❌ *If he had studied, he would **passed** the exam.* → ✅ *If he had studied, he would **have** passed the exam.* (siempre *would **have** + participio*).\n* ❌ *If I had a car, I would drive to work **yesterday**.* → ✅ *If I **had had** a car, I would **have driven** to work yesterday.* (hecho irreal del pasado = **todo en pasado**).\n\n> 💡 **Truco de {{mascot}}:** tras *had* va **participio**, y el resultado pasado lleva *would **have** + participio*. ¡No te comas el *have*!\n\nEn los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`, miniQuiz: [
         tap('Toca el error: tras "had" va el participio.', ['If', 'I', 'had', 'went', 'to', 'the', 'party,', 'I', 'would', 'have', 'seen', 'Maria.'], 3, 'gone'),
@@ -244,6 +389,18 @@
         tap('Toca el error: el resultado lleva "would have".', ['If', 'I', 'had', 'left', 'early,', 'I', 'would', 'caught', 'the', 'train.'], 7, 'have caught'),
         tap('Toca el error: tras "had" va el participio.', ['If', 'she', 'had', 'wrote', 'the', 'email,', 'I', 'would', 'have', 'replied.'], 3, 'written'),
         tap('Toca el error: el resultado en presente NO lleva "have".', ['If', 'I', 'had', 'saved', 'money,', 'I', 'would', 'have', 'be', 'rich', 'now.'], 7, '(quítalo)'),
+        mc('Lee: "If I had left early, I would have caught the train. If I had owned a car, I would have driven to work yesterday. If I had gone to the party, I would have seen Maria. If she had written the email, I would have replied. If we had seen the sign, we would have stopped. If they had known about it, they would have come. If I had saved money, I would be rich now." — ¿Quién no escribió el correo, y qué pasó por eso?', [
+          'Ella no lo escribió, y quien narra no respondió.',
+          'Quien narra no lo escribió, y ella no respondió.',
+          'Ellos no lo escribieron, y por eso no vinieron.',
+          'Nosotros no lo escribimos, y no nos detuvimos.'], 0),
+        mc('Lee: "If I had left early, I would have caught the train. If I had owned a car, I would have driven to work yesterday. If I had gone to the party, I would have seen Maria. If she had written the email, I would have replied. If we had seen the sign, we would have stopped. If they had known about it, they would have come. If I had saved money, I would be rich now." — ¿Qué pasó en realidad con el tren y con la fiesta?', [
+          'Perdió el tren y no fue a la fiesta.',
+          'Alcanzó el tren, pero no fue a la fiesta.',
+          'Perdió el tren, pero igual vio a Maria.',
+          'Salió temprano y llegó a la fiesta en carro.'], 0),
+        writing('Escríbelo en inglés: "Ellos habrían ido si no hubiera llovido."', ["They would have gone if it hadn't rained.", 'They would have gone if it had not rained.', "They would've gone if it hadn't rained.", "They would've gone if it had not rained."],
+          { reject: [["They would have went if it hadn't rained.", 'El participio de "go" es "gone", no "went".'], ["They would gone if it hadn't rained.", 'Falta el "have": They would have gone...'], ["They would have gone if it didn't rain.", 'Lo que no pasó lleva had + participio: if it hadn\'t rained.']] }),
       ] },
       { id: 'modulo4-4-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**\n\nImagina una **línea del tiempo** 🧭:\n\n* ⏪ **Third Conditional** = algo que **NO pasó** + su resultado **también en el pasado**:\n  *If + had + participio, would have + participio.*\n  *If I had known, I would have helped.*\n\n* 🌉 **Mixed Conditional** = **pasado hipotético** con consecuencia **en el presente**:\n  *If + had + participio, would + verbo base.*\n  *If I had studied medicine, I would be a doctor now.*\n\n* ✅ Tras **had** siempre va el **participio** (*gone*, no *went*).\n\n* ✅ El resultado pasado lleva **would have + participio**. ¡No olvides el **have**!\n\n  | Tipo | Estructura | Ejemplo |\n  | --- | --- | --- |\n  | Third Conditional | If + had + part., would have + part. | If I had known, I would have helped. |\n  | Mixed Conditional | If + had + part., would + verbo base | If I had studied, I would be a doctor now. |` },
       { id: 'modulo4-4-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**\n\n¡Bien jugado! 🎉 Ahora **manejas lo hipotético**: hablas de **oportunidades perdidas** y **fantasías** del pasado. *"Si hubiera..."* ya no es ningún misterio para ti.\n\nRecuerda:\n\n* ⏪ **Third Conditional** → *If I had studied, I would have passed.*\n* 🌉 **Mixed** → *If I had studied medicine, I would be a doctor now.*\n\n**🏅 Insignia obtenida:** 🌠 *Soñador del Pasado* (¡Experto en condicionales imposibles!) 🕰` },
@@ -286,6 +443,19 @@
         tap('Corrige la introducción de un correo formal.', ['I', 'am', 'write', 'to', 'request', 'information.'], 2, 'writing'),
         tap('Falta un conector de conclusión. Corrige el inicio.', ['So', 'yeah,', 'I', 'recommend', 'this', 'plan.'], 0, 'Therefore,'),
         rebuild('🎧 Ordena la frase de una carta formal:', 'I am writing to request information.', ['I', 'am', 'writing', 'to', 'request', 'information.', 'write', 'gonna', 'wanna']),
+        mc('Lee: "Rosa: I am writing to recommend this plan. Firstly, it must be considered that the budget is limited. Therefore, I recommend this plan. In conclusion, this plan must be considered. Luis: I am writing to request information about this plan. Firstly, it must be considered that the budget is limited. Milagros: Hey, what is up? Gonna ask you something. Let\'s talk." — ¿cuál de los tres textos llega hasta el final de su estructura?', [
+          'El de Rosa: cierra recapitulando lo que propuso al inicio.',
+          'El de Luis: empieza igual y habla del mismo presupuesto.',
+          'El de Milagros: es el más corto y va directo al punto.',
+          'Los tres: los tres terminan con una conclusión clara.'], 0),
+        mc('Lee: "Rosa: I am writing to recommend this plan. Firstly, it must be considered that the budget is limited. Therefore, I recommend this plan. In conclusion, this plan must be considered. Luis: I am writing to request information about this plan. Firstly, it must be considered that the budget is limited. Milagros: Hey, what is up? Gonna ask you something. Let\'s talk." — ¿por qué recomienda Rosa ese plan?', [
+          'Porque el presupuesto es limitado: su plan responde a eso.',
+          'Aunque el presupuesto es limitado, ella prefiere no explicarlo.',
+          'Porque Luis le pidió información sobre ese mismo plan.',
+          'Porque Milagros la invitó a conversarlo antes de escribir.'], 0),
+        writing('Escríbelo en inglés — apertura de un correo formal: "Le escribo para solicitar información."', ['I am writing to request information.'],
+          { hint: 'La apertura formal es "I am writing to..." + el verbo del propósito.',
+            reject: [['I write to request information.', 'La apertura formal va en continuo: I am writing to request information.'], ['I am write to request information.', 'Después de "am" el verbo lleva -ing: I am writing to request information.'], ['I am writing for request information.', 'El propósito se marca con "to", no con "for": I am writing to request information.']] }),
       ] },
       { id: 'modulo4-5-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**🎩 El tono formal y el vocabulario**\n\nLa **formalidad** es el buen acabado de tu casa 🏠✨:\n\n* **Evita contracciones:** escribe *do not* en vez de *don't*.\n* Usa *"please"* y saludos formales: *Dear Sir/Madam, Sincerely.*\n* **Sin jerga/slang.** Palabras académicas: *children* (no *kids*), *difficult* (no *hard*).\n\nVocabulario por contexto 📚:\n\n* **Temas sociales:** *climate change, economy, opportunity.*\n* **Laboral:** *deadline, project, proposal, team.*\n\n| Español | Inglés formal |\n| --- | --- |\n| Correo formal | *Dear Dr. García, I am writing regarding your invitation...* |\n| Carta de solicitud | *I would like to request a copy of the report...* |\n| Ensayo académico | *Firstly, it must be considered that…* |\n| Informe breve | *The experiment demonstrates an improvement.* |`, miniQuiz: [
         mc('En un texto formal, "don\'t" se escribe como...', ["do n't", 'do not', 'dont', 'not do'], 1),
@@ -297,6 +467,19 @@
         tap('Haz esta frase más formal (evita la jerga).', ['I', 'love', 'these', 'kids', 'at', 'school.'], 3, 'children'),
         tap('Evita la contracción en este texto formal.', ['We', "don't", 'accept', 'late', 'work.'], 1, 'do not'),
         rebuild('🎧 Ordena la frase formal:', 'I would like to request a copy.', ['I', 'would', 'like', 'to', 'request', 'a', 'copy.', 'wanna', 'gimme', 'kids']),
+        mc('Lee: "Ana: Dear Sir or Madam, I am writing regarding your invitation. I would like to request a copy of the report. This project is very difficult, and the deadline is next week. Sincerely, Ana Quispe. Diego: Hey there, I wanna ask for help. Gimme a hand with this project, it is very hard. Can ya help me with the report? Later!" — ¿cuál de los dos le escribe a alguien que no conoce?', [
+          'Ana: saluda con "Dear Sir or Madam," sin ningún nombre.',
+          'Diego: saluda con "Hey there," sin decir a quién le escribe.',
+          'Ana: firma con su nombre y su apellido completo.',
+          'Los dos: ninguno escribe el nombre de quien va a leerlo.'], 0),
+        mc('Lee: "Ana: Dear Sir or Madam, I am writing regarding your invitation. I would like to request a copy of the report. This project is very difficult, and the deadline is next week. Sincerely, Ana Quispe. Diego: Hey there, I wanna ask for help. Gimme a hand with this project, it is very hard. Can ya help me with the report? Later!" — ¿qué pide cada uno?', [
+          'Los dos piden ayuda con el mismo proyecto difícil.',
+          'Ana pide una invitación; Diego, que le manden el informe.',
+          'Diego pide una copia del informe; Ana, que le den una mano.',
+          'Los dos avisan que el plazo del proyecto ya venció.'], 0),
+        writing('Escríbelo en inglés — carta de solicitud formal: "Quisiera solicitar una copia del informe."', ['I would like to request a copy of the report.'],
+          { hint: 'En registro formal se pide con "I would like to" + el verbo.',
+            reject: [['I wanna request a copy of the report.', 'Eso es jerga: en un texto formal va "I would like to request...".'], ['I want a copy of the report.', 'Suena brusco; la fórmula formal es "I would like to request a copy of the report."'], ['I would like request a copy of the report.', 'Falta el "to": I would like to request a copy of the report.']] }),
       ] },
       { id: 'modulo4-5-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nMucho cuidado con la informalidad que se cuela 🕵️:\n\n* ❌ *I'm gonna start the project.*\n  ✅ *I am going to start the project.* (sin jerga ni contracción)\n* ❌ *Hey John, can you send report?*\n  ✅ *Dear John, could you please send the report?* (saludo formal + artículo *the*)\n* ❌ *Firstly, I feel like…*\n  ✅ *Firstly, I believe…* (más formal: *I believe*)\n\n> 🚏 **Recuerda:** *please*, saludos correctos y artículos en su lugar marcan la diferencia entre un texto amateur y uno **profesional**. 📄\n\nEn los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`, miniQuiz: [
         tap('Corrige la jerga en este texto formal.', ['I', 'am', 'gonna', 'finish', 'the', 'project.'], 2, 'going to'),
@@ -307,6 +490,18 @@
         tap('Hazlo más formal: evita "gonna".', ['We', 'are', 'gonna', 'review', 'your', 'request.'], 2, 'going to'),
         tap('Usa una palabra más formal que "hard".', ['This', 'task', 'is', 'very', 'hard', 'for', 'students.'], 4, 'difficult'),
         tap('Corrige el saludo informal de la carta.', ['Hey', 'John,', 'could', 'you', 'send', 'the', 'report?'], 0, 'Dear'),
+        mc('Lee: "Rosa: Dear John, could you please send the report? I am going to finish the project before the deadline. Firstly, I believe this plan works. We are going to review your request this week. Sincerely, Rosa Quispe. Luis: Hey John, can you send report? I am gonna finish the project. Firstly, I feel this plan works. We won\'t tolerate late work." — ¿cuál de los dos le escribe a John como se le escribe a un jefe?', [
+          'El de Rosa: lo saluda con "Dear John," y le pide con "please".',
+          'El de Luis: lo saluda con "Hey John," y le pide lo mismo.',
+          'Los dos: los dos escriben el nombre de John al inicio.',
+          'Ninguno: los dos hablan del mismo proyecto y del mismo plan.'], 0),
+        mc('Lee: "Rosa: Dear John, could you please send the report? I am going to finish the project before the deadline. Firstly, I believe this plan works. We are going to review your request this week. Sincerely, Rosa Quispe. Luis: Hey John, can you send report? I am gonna finish the project. Firstly, I feel this plan works. We won\'t tolerate late work." — ¿quién se compromete con una fecha y quién no?', [
+          'Rosa: terminará antes del plazo y revisará esta semana.',
+          'Luis: va a terminar el proyecto y no tolerará el atraso.',
+          'Los dos: los dos nombran el plazo del proyecto.',
+          'Ninguno: los dos hablan solo del informe y del plan.'], 0),
+        writing('Escríbelo en inglés — pedido formal a John: "Estimado John, ¿podría enviar el informe, por favor?"', ['Dear John, could you please send the report?'],
+          { reject: [['Hey John, can you send report?', 'Ese es el registro informal y además le falta el artículo: Dear John, could you please send the report?'], ['Dear John, could you send report?', 'Falta el artículo "the": could you please send the report?'], ['Dear John, can you send the report?', 'El pedido cortés va con "could" y "please": Dear John, could you please send the report?']] }),
       ] },
       { id: 'modulo4-5-resumen', type: 'resumen', markdown: `**📌 Resumen rápido**\n\n* **Estructura:** título, introducción, cuerpo (con *connectors*) y conclusión.\n* **Introducción:** *"I am writing to..."* / plantea tu tesis.\n* **Conclusión:** *In conclusion, to sum up, therefore...*\n* **Tono formal:** sin contracciones (*do not*), sin jerga, con *please* y saludos (*Dear..., Sincerely*).\n* **Vocabulario académico:** *children* (no *kids*), *difficult* (no *hard*).\n\n> 🏛 Buenos cimientos + muros con evidencia + techo fuerte = un texto profesional.` },
       { id: 'modulo4-5-cierre', type: 'cierre', markdown: `¡Excelente! 🎓 Ahora **escribes con estilo profesional y ordenado**: cartas, emails y ensayos claros y formales.\n\nInsignia obtenida: **Escritor Profesional** (¡Tus textos brillan!) 📄🏅\n\nNos vemos en la siguiente etapa. ⚡` },
@@ -349,6 +544,9 @@
         mc('El orden recomendado al escuchar es...', ['detalles primero, luego la idea', 'idea general primero, luego detalles', 'solo detalles', 'solo el final'], 1),
         mc('"Primero el bosque, luego los árboles" significa que...', ['debes ver cada hoja', 'captas el panorama antes que los detalles', 'el orden no importa', 'debes traducir el bosque'], 1),
         rebuild('Escucha y reconstruye:', 'We had to cancel the concert.', ['We', 'had', 'to', 'cancel', 'the', 'concert.', 'planned', 'sunny', 'show']),
+        writing('Escríbelo en inglés: "Tuvimos que cancelar el concierto al aire libre porque el clima empeoró."', ['We had to cancel the outdoor concert because the weather turned bad.'],
+          { hint: 'Pasado de "tener que": we had to + verbo en base (cancel), y une las dos partes con because.',
+            reject: [['We have to cancel the outdoor concert because the weather turned bad.', 'Es pasado: "tuvimos que" se dice had to, no have to.'], ['We had to cancelled the outdoor concert because the weather turned bad.', 'Después de "had to" el verbo va en base: had to cancel.']] }),
       ] },
       { id: 'modulo4-6-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Palabras clave + inferir + acentos** 🗝️\n\nNo todo pesa igual. Enfócate en **palabras clave**: **verbos**, **nombres** y **conectores de discurso** (*however, well, actually*) que te dan **pistas** de hacia dónde va la idea.\n\n**Inferir significado:** deduce por **contexto** lo que no entiendas.\n\n* *I didn't take the medicine, so I'm feeling worse.* → *medicine* = algo de **salud** 💊, y por eso se siente **peor**.\n\n**Practica con acentos:** británico, americano, australiano. ¡Las palabras cambian! En **UK** a veces dicen **"lorry"** en vez de **"truck"** (camión) 🚚.\n\n  | Conector | Te avisa que… |\n  | --- | --- |\n  | however | viene un **contraste** |\n  | actually | viene una **corrección / aclaración** |\n  | well | el hablante va a **opinar / dudar** |\n\n> 💡 **Truco:** si no sabes una palabra, **no te frenes**. Sigue escuchando y **dedúcela** por el contexto. 🧩`, miniQuiz: [
         mc('🇬🇧 En inglés británico, "lorry" significa:', ['Tienda', 'Camión (truck)', 'Carretera', 'Tren'], 1),
@@ -360,6 +558,19 @@
         mc('El conector "actually" suele introducir...', ['una corrección o aclaración', 'una despedida', 'un número', 'una pregunta de Sí/No'], 0),
         mc('Practicar con acentos británico, americano y australiano sirve para...', ['memorizar reglas', 'acostumbrar el oído al inglés real', 'aprender a escribir', 'evitar escuchar'], 1),
         rebuild('Escucha y reconstruye:', 'I am feeling worse today.', ['I', 'am', 'feeling', 'worse', 'today.', 'better', 'medicine', 'was']),
+        mc('Lee: "Rosa: We had to cancel the concert in Lima. Milagros: Actually, we had to cancel the outdoor concert because the weather turned bad. Luis: Well, I am feeling worse today. Rosa: I didn\'t take the medicine, so I\'m feeling worse. Milagros: Well, I am feeling worse today, too. Luis: Actually, I didn\'t take the medicine, and I am feeling worse today." — ¿De cuántos conciertos hablan Rosa y Milagros?', [
+          'De uno solo: el que se iba a hacer al aire libre en Lima.',
+          'De dos distintos: uno en Lima y otro bajo techo.',
+          'De uno que todavía no han llegado a cancelar.',
+          'De uno que Luis canceló por sentirse mal.'], 0),
+        mc('Lee: "Rosa: We had to cancel the concert in Lima. Milagros: Actually, we had to cancel the outdoor concert because the weather turned bad. Luis: Well, I am feeling worse today. Rosa: I didn\'t take the medicine, so I\'m feeling worse. Milagros: Well, I am feeling worse today, too. Luis: Actually, I didn\'t take the medicine, and I am feeling worse today." — ¿Qué da a entender Milagros al arrancar con "Actually"?', [
+          'Que lo dicho por Rosa quedó incompleto y ella lo precisa.',
+          'Que duda y todavía no quiere opinar del tema.',
+          'Que está en contra de que cancelen el concierto.',
+          'Que se siente peor y prefiere no hablar de eso.'], 0),
+        writing('Escríbelo en inglés: "No tomé el medicamento, así que me siento peor."', ['I didn\'t take the medicine, so I\'m feeling worse.', 'I didn\'t take the medicine, so I feel worse.'],
+          { hint: 'Pasado negativo: didn\'t + verbo en base (take), y "así que" se dice so.',
+            reject: [['I didn\'t took the medicine, so I\'m feeling worse.', 'Con didn\'t el verbo va en base: didn\'t take.'], ['I don\'t take the medicine, so I\'m feeling worse.', 'Es pasado, no presente: didn\'t take the medicine.']] }),
       ] },
       { id: 'modulo4-6-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nEstos hábitos te hacen perder el hilo. ¡Cázalos! 🎯\n\n* ❌ Fijarte en **cada palabra suelta**. → ✅ Enfócate en la **idea principal**.\n* ❌ **Pensar en español** antes de entender. → ✅ Intenta **pensar en inglés** 🧠.\n* ❌ **No practicar** con diferentes acentos. → ✅ Escucha a **británicos, americanos, australianos**, etc.\n\nY si de plano no captaste algo, **pide aclarar** con educación:\n\n> 🗣️ *"I'm sorry, could you say that again?"* → *"Perdona, ¿podrías repetirlo?"*\n\n**Consejo de {{mascot}}:** usa tus **ojos** 👀 (gestos, contexto visual, tus notas) y repite con **fuentes variadas**: películas 🎬, podcasts 🎧 y noticieros 📺.\n\nEn los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`, miniQuiz: [
         mc('Si de plano no captaste algo, ¿cómo pides aclarar con educación?', ['Say it now!', 'I no understand.', 'Could you say that again, please?', 'Repeat!'], 2),
@@ -370,6 +581,18 @@
         tap('Toca la palabra que sobra:', ['I', 'got', 'soaked', 'walking', 'to', 'the', 'work.'], 5, '(quítalo)'),
         tap('Toca la palabra mal escrita:', ['Could', 'you', 'say', 'that', 'again', 'pleased?'], 5, 'please?'),
         tap('Toca la palabra incorrecta:', ['He', "didn't", 'understood', 'the', 'accent.'], 2, 'understand'),
+        mc('Lee: "Rosa: I got soaked walking to work, and we had to cancel the outdoor concert because the weather turned bad. Luis: I\'m sorry, could you say that again? Milagros: He didn\'t understand the accent. Rosa: We had to cancel the concert. Luis: Could you say that again, please? Milagros: She didn\'t take the medicine, so she\'s feeling worse. Rosa: I am feeling worse today, too." — ¿De quién dice Milagros que se siente peor?', [
+          'De Rosa, que se lo confirma en la última línea.',
+          'De Luis, que pide dos veces que le repitan.',
+          'De ella misma, que se mojó camino al trabajo.',
+          'Del grupo entero, que canceló el concierto.'], 0),
+        mc('Lee: "Rosa: I got soaked walking to work, and we had to cancel the outdoor concert because the weather turned bad. Luis: I\'m sorry, could you say that again? Milagros: He didn\'t understand the accent. Rosa: We had to cancel the concert. Luis: Could you say that again, please? Milagros: She didn\'t take the medicine, so she\'s feeling worse. Rosa: I am feeling worse today, too." — ¿Qué implica que Luis pida dos veces que le repitan?', [
+          'Que le cuesta seguir a Rosa cuando habla de corrido.',
+          'Que no está de acuerdo con cancelar el concierto.',
+          'Que Rosa se negó a contarle lo que pasó.',
+          'Que él también dejó de tomar el medicamento.'], 0),
+        writing('Escríbelo en inglés: "Perdona, ¿podrías repetirlo?"', ['I\'m sorry, could you say that again?', 'Sorry, could you say that again?'],
+          { reject: [['I\'m sorry, could you said that again?', 'Después de could el verbo va en base: could you say that again?'], ['I\'m sorry, could you to say that again?', 'Tras un modal como could no va "to": could you say that again?']] }),
       ] },
       { id: 'modulo4-6-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**\n\nPara entender el **inglés real** 🌍, recuerda:\n\n* 🌳 **Idea global primero**, detalles después. No traduzcas palabra por palabra.\n* 🗝️ Caza **palabras clave**: verbos, nombres y conectores (*however, well, actually*).\n* 🧩 **Infiere** por contexto lo que no entiendas: *"I didn't take the medicine, so I'm feeling worse."* → tema de **salud**.\n* 🗣️ Practica **distintos acentos** (UK *lorry* = US *truck* 🚚) con películas, podcasts y noticias.\n* ✍️ Toma **notas rápidas** (palabras clave, no todo) y **pide aclarar**: *"Could you say that again, please?"*\n\n  | Estrategia | Para qué sirve |\n  | --- | --- |\n  | Escucha global | Captar el tema sin perderte |\n  | Palabras clave | Seguir el hilo de la idea |\n  | Inferir por contexto | Entender sin conocer cada palabra |\n  | Variar acentos | Acostumbrar el oído al inglés real |` },
       { id: 'modulo4-6-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**\n\n¡Muy bien! 🏆 Con **práctica y paciencia** tu oído captará cada vez **más** 🎧.\n\nYa tienes las **herramientas** para entender el **inglés real**: escucha la **idea global**, caza las **palabras clave**, **infiere** por contexto y acostumbra tu oído a **muchos acentos**.\n\n🎧 **¡Sigue escuchando!** Cada conversación, podcast y peli es un viaje que te acerca al dominio total.\n\n**🏅 Insignia obtenida:** 🎖 *Audición Global* (¡Oído agudo y multicultural!) 🌍🎧` },
@@ -412,6 +635,19 @@
         tap('Toca la palabra incorrecta:', ['Can', 'I', 'add', 'nothing?'], 3, 'something?'),
         tap('Toca la palabra incorrecta:', ['On', 'one', 'foot,', 'I', 'agree', 'with', 'you.'], 2, 'hand,'),
         rebuild('Escucha y reconstruye:', 'Firstly, I will explain my plan.', ['Firstly,', 'I', 'will', 'explain', 'my', 'plan.', 'and', 'however', 'secondly']),
+        mc('Lee: "Rosa: Firstly, I will explain my plan. We can meet downtown on Sunday at 3 p.m. Luis: Can I add something? On one hand, I agree with you. On the other hand, the buses are very slow on Sunday. Milagros: In my view, Luis is right about the buses. Rosa: Secondly, I will explain the cost. Finally, we can vote." — ¿A quién le da la razón Milagros, y sobre qué?', [
+          'A Luis, por lo que dijo del transporte.',
+          'A Rosa, por la hora de la reunión.',
+          'A Rosa, por el costo del plan.',
+          'A Luis, por el lugar de la cita.'], 0),
+        mc('Lee: "Rosa: Firstly, I will explain my plan. We can meet downtown on Sunday at 3 p.m. Luis: Can I add something? On one hand, I agree with you. On the other hand, the buses are very slow on Sunday. Milagros: In my view, Luis is right about the buses. Rosa: Secondly, I will explain the cost. Finally, we can vote." — Cuando Luis dice "On one hand... On the other hand...", ¿qué está haciendo?', [
+          'Acepta una parte y objeta otra.',
+          'Repite el mismo punto con otras palabras.',
+          'Cierra el tema y pasa a la votación.',
+          'Le pide un ejemplo concreto a Rosa.'], 0),
+        writing('Escríbelo en inglés: "¿Puedo añadir algo?"', ['Can I add something?'],
+          { hint: 'Fórmula fija para pedir la palabra: Can + I + verbo base + something.',
+            reject: [['Can I add anything?', 'En esta fórmula para pedir la palabra va "something", no "anything": Can I add something?'], ['Can I add nothing?', '"Nothing" es "nada"; lo que pides es añadir algo: Can I add something?'], ['I can add something?', 'Es una pregunta, así que el verbo va primero: Can I add something?']] }),
       ] },
       { id: 'modulo4-7-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **🛠 ¿Cómo hablar con fluidez? (rellenos, parafraseo y claridad)**\n\n### ⏳ Rellenos útiles\n\nPara **ganar tiempo** sin muletillas vacías ("um, ah"):\n\n* "Let me see..." 🤔\n* "Actually..."\n* "That's a good question."\n\n### 🔄 Parafrasear\n\nSi **no recuerdas una palabra**, descríbela: *"It's like a small car, called a scooter."* 🛵\n\n### ✅ Clarificación\n\nConfirma que te siguen o resume tu idea:\n\n* "Do you know what I mean?"\n* "So basically, what I'm saying is..."\n\n### 🗂️ Tabla situación → frase útil\n\n| Situación | Frase útil |\n| --- | --- |\n| Empezar una idea importante | "Well, the point is..." |\n| Enumerar pasos/razones | "Firstly,... Secondly,... Finally..." |\n| Cambiar de tema/perspectiva | "However, we must also consider..." |\n| No recuerdas una palabra | "It's the thing people wear on feet – shoes, yes?" |\n| Finalizar tu opinión | "In conclusion, I think…" |\n\n🎭 **Metáfora:** hablar es como **bailar tango** 💃🕺 — **ritmo** (fluidez), **pasos** (conectores) y **sincronizar** con la otra persona (turnos).`, miniQuiz: [
         mc('¿Cuál es un relleno ÚTIL para ganar tiempo (no una muletilla vacía)?', ['Um, ah, um...', 'Let me see...', 'Eeeh...', '...'], 1),
@@ -423,6 +659,19 @@
         tap('Toca la palabra mal escrita:', ['Let', 'me', 'sea...', 'I', 'think', 'so.'], 2, 'see...'),
         tap('Toca la palabra incorrecta:', ['In', 'conclusion,', 'I', 'thinking', 'it', 'is', 'true.'], 3, 'think'),
         rebuild('Escucha y reconstruye:', 'So basically, what I mean is this.', ['So', 'basically,', 'what', 'I', 'mean', 'is', 'this.', 'um', 'that', 'saying']),
+        mc('Lee: "Milagros: Do you know what I mean? Luis: Let me see... I think so. That\'s a good question. Actually, it\'s like a small car, called a scooter. Rosa: It\'s the thing people wear on feet – shoes, yes? Luis: No, Rosa. So basically, what I mean is this. Milagros: However, we must also consider the buses. Luis: In conclusion, I think a scooter is better for downtown." — ¿Quién entendió mal lo que Luis describía?', [
+          'Rosa, que pensó en unos zapatos.',
+          'Milagros, que pensó en los buses.',
+          'Luis, que olvidó su propia palabra.',
+          'Rosa, que pensó en un carro pequeño.'], 0),
+        mc('Lee: "Milagros: Do you know what I mean? Luis: Let me see... I think so. That\'s a good question. Actually, it\'s like a small car, called a scooter. Rosa: It\'s the thing people wear on feet – shoes, yes? Luis: No, Rosa. So basically, what I mean is this. Milagros: However, we must also consider the buses. Luis: In conclusion, I think a scooter is better for downtown." — Cuando Milagros dice "However, we must also consider the buses", ¿qué hace?', [
+          'Mete un punto en contra del scooter.',
+          'Confirma que el scooter es lo mejor.',
+          'Repite con otras palabras lo de Luis.',
+          'Pide que le expliquen qué es eso.'], 0),
+        writing('Escríbelo en inglés: "En conclusión, creo que es verdad."', ['In conclusion, I think it is true.'],
+          { hint: 'Fórmula fija de cierre: "In conclusion," + tu opinión con "I think" en presente simple.',
+            reject: [['In conclusion, I thinking it is true.', 'Tras "I" va el presente simple: In conclusion, I think it is true.'], ['In conclusion, I am thinking it is true.', 'Para dar una opinión se usa "I think", no el continuo: In conclusion, I think it is true.'], ['In the conclusion, I think it is true.', 'La fórmula fija no lleva artículo: In conclusion, I think it is true.']] }),
       ] },
       { id: 'modulo4-7-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**\n\nHasta los mejores bailarines pisan mal de vez en cuando. 💃😅 Cuidado con esto:\n\n* **Solo "um, ah" sin sentido:** ❌ rellenas con sonidos vacíos.\n  * ✅ Usa **rellenos útiles** como *"Let me see…"*.\n* **Respuestas "Yes/No" muy cortas:** ❌ cortas la conversación de golpe.\n  * ✅ Da **ejemplos**: *"Yes, I agree because…"*.\n* **Hablar demasiado rápido o muy bajo:** ❌ nadie te sigue.\n  * ✅ Mantén **ritmo natural** y **volumen claro**. 🔊\n\n¡Toca los errores y conviértete en director de orquesta! 🎼🔍`, miniQuiz: [
         mc('En vez de responder solo "Yes/No", deberías...', ['cortar la conversación', 'dar ejemplos con "...because..."', 'hablar más bajo', 'cambiar de tema'], 1),
@@ -433,6 +682,18 @@
         tap('Toca la palabra incorrecta:', ['Please', 'speak', 'slowly', 'and', 'quietly.'], 4, 'clearly.'),
         tap('Toca la palabra incorrecta:', ['Can', 'I', 'add', 'anything', 'here?'], 3, 'something'),
         tap('Toca la palabra incorrecta:', ['On', 'one', 'side,', 'I', 'agree', 'with', 'you.'], 2, 'hand,'),
+        mc('Lee: "Luis: Firstly, I will explain my plan. On one hand, it is cheap. Rosa: Can I add something here? Yes, I agree because it is cheap. However, we must also consider the buses. Milagros: Let me see, I think so. Please speak slowly and clearly. Luis: So basically, what I mean is this. In conclusion, I think it is true." — ¿Qué hace Rosa después de pedir la palabra?', [
+          'Le da la razón y luego pone un pero.',
+          'Rechaza el plan de Luis de entrada.',
+          'Repite el plan de Luis con otras palabras.',
+          'Le pide a Luis que hable más despacio.'], 0),
+        mc('Lee: "Luis: Firstly, I will explain my plan. On one hand, it is cheap. Rosa: Can I add something here? Yes, I agree because it is cheap. However, we must also consider the buses. Milagros: Let me see, I think so. Please speak slowly and clearly. Luis: So basically, what I mean is this. In conclusion, I think it is true." — Cuando Luis cierra con "In conclusion, I think it is true.", ¿qué anuncia esa fórmula?', [
+          'Que ahí va su postura final.',
+          'Que ahora viene un dato nuevo.',
+          'Que le pide la palabra a Rosa.',
+          'Que todavía lo está pensando.'], 0),
+        writing('Escríbelo en inglés: "Sí, estoy de acuerdo porque es barato."', ['Yes, I agree because it is cheap.'],
+          { reject: [['Yes, I agree although it is cheap.', '"Although" mete una objeción; el motivo va con because: Yes, I agree because it is cheap.'], ['Yes, I am agree because it is cheap.', '"Agree" ya es el verbo, no lleva "am": Yes, I agree because it is cheap.'], ['Yes, I agree because it cheap.', 'Falta el verbo "is": Yes, I agree because it is cheap.']] }),
       ] },
       { id: 'modulo4-7-resumen', type: 'resumen', markdown: `## **🎯 Resumen: el tango de la conversación 💃🕺**\n\nHablar con estrategia tiene **tres pasos**:\n\n| Paso del tango | En la conversación | Frases |\n| --- | --- | --- |\n| 🎵 Ritmo | Fluidez (rellenos útiles) | "Let me see...", "Actually..." |\n| 👣 Pasos | Conectores que ordenan | "Firstly,... Secondly,... Finally..." |\n| 🤝 Sincronizar | Turnos y claridad | "Can I add something?", "Do you know what I mean?" |\n\n**Lo más importante:**\n* Si no recuerdas una palabra, **parafrasea** 🔄: *"It's like a small car..."*.\n* No respondas solo *"Yes/No"*: **da ejemplos** con *"...because..."*.\n* Mantén **ritmo y volumen** claros. 🔊` },
       { id: 'modulo4-7-cierre', type: 'cierre', markdown: `#### **🌟 Cierre**\n\n¡Gran desempeño! 🎉 Ahora **hablas con fluidez y confianza**, guiando la conversación y **conectando ideas**. 🌉\n\nYa dominas el **tango de la conversación**: ritmo 🎵, pasos 👣 y sincronía 🤝. Nadie volverá a perderse en tus explicaciones. 🗣️✨\n\n¡Sigue practicando, {{audience}}! ⚡\n\n**🏅 Insignia obtenida:** *Conversador Estratégico* — ¡Fluidez y claridad en cada palabra! 🚀🗣️` },
@@ -476,6 +737,18 @@
         tap('Toca la palabra incorrecta:', ['If', 'I', 'had', 'more', 'time,', 'I', 'will', 'learn', 'Chinese.'], 6, 'would'),
         tap('Toca la palabra incorrecta (posesivo):', ['The', 'Louvre', 'is', 'famous', 'for', "it's", 'art.'], 5, 'its'),
         rebuild('Escucha y reconstruye:', 'If I won the lottery, I would travel.', ['If', 'I', 'won', 'the', 'lottery,', 'I', 'would', 'travel.', 'win', 'will', 'donate']),
+        mc('Lee: "Last summer millions of people visited the Louvre Museum in Paris. It is famous for the Mona Lisa and its art collection. Rosa and Luis have seen the museum too. Rosa said that if she had more time, she would learn Chinese. Luis told me that if he had a car, he would drive to work. He also said that if he won the lottery, he would travel the world and donate to charities." — ¿De quién dice el texto que le habló directamente a quien escribe?', [
+          'De Luis, que le contó lo del carro.',
+          'De Rosa, que le contó lo del chino.',
+          'De los millones de visitantes del museo.',
+          'De los dos, que le hablaron en París.'], 0),
+        mc('Lee: "Last summer millions of people visited the Louvre Museum in Paris. It is famous for the Mona Lisa and its art collection. Rosa and Luis have seen the museum too. Rosa said that if she had more time, she would learn Chinese. Luis told me that if he had a car, he would drive to work. He also said that if he won the lottery, he would travel the world and donate to charities." — ¿Qué se entiende sobre la situación de Luis hoy?', [
+          'Que hoy no tiene carro ni ha ganado la lotería.',
+          'Que maneja a su trabajo todos los días.',
+          'Que ya viajó por el mundo el verano pasado.',
+          'Que donó su premio a obras de caridad.'], 0),
+        writing('Escríbelo en inglés: "Si tuviera más tiempo, aprendería chino."', ['If I had more time, I would learn Chinese.'],
+          { reject: [['If I have more time, I would learn Chinese.', 'La hipótesis lleva pasado después de "if": If I had more time, I would learn Chinese.'], ['If I had more time, I will learn Chinese.', 'El resultado va con would, no con will: If I had more time, I would learn Chinese.'], ['If I would have more time, I would learn Chinese.', 'Nunca "would" después de "if": If I had more time, I would learn Chinese.']] }),
       ] },
       { id: 'modulo4-8-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🛠 Ejercicios de práctica**\n\nAhora toca **Listening** y **Speaking**. ¡Afina el oído y suelta la lengua! 👂🗣️\n\n**👂 Listening**\n\nEscuchas a una mujer decir:\n\n> *I'm sorry, I forgot to lock the door.*\n\n* **Pregunta:** ¿Qué olvidó?\n* **Respuesta:** *Cerrar la puerta con llave.* 🔑🚪\n\n**🗣️ Speaking**\n\n* **Tarea:** *What is your opinion on social media?*\n* **Responde con una frase de opinión:** *In my opinion, social media has both benefits and drawbacks.* 📱\n\n  | Habilidad | Frase útil |\n  | --- | --- |\n  | Opinión | *In my opinion, …* |\n  | Disculpa | *I'm sorry, I forgot to …* |\n\n> 💡 **Truco de {{mascot}}:** para *speaking* de nivel B2, abre con una **frase de opinión** (*In my opinion…*, *I believe…*) y menciona **dos lados** (*benefits and drawbacks*). ¡Suena más maduro! 😎`, miniQuiz: [
         mc('👂 "I am sorry, I forgot to lock the door." ¿Qué olvidó hacer?', ['Abrir la ventana', 'Cerrar la puerta con llave', 'Pagar la cuenta', 'Apagar la luz'], 1),
@@ -487,6 +760,18 @@
         tap('Toca la palabra incorrecta:', ['She', 'forgot', 'lock', 'the', 'door.'], 2, 'to lock'),
         tap('Toca el error de concordancia:', ['In', 'my', 'opinion,', 'social', 'media', 'have', 'benefits', 'and', 'drawbacks.'], 5, 'has'),
         rebuild('Escucha y reconstruye:', 'In my opinion, it has benefits and drawbacks.', ['In', 'my', 'opinion,', 'it', 'has', 'benefits', 'and', 'drawbacks.', 'have', 'opinions', 'because']),
+        mc('Lee: "Rosa: In my opinion, social media has both benefits and drawbacks. Luis: Some say it is good; however, others disagree. Milagros: I believe it can\'t be true; social media has many benefits. I am sorry, I forgot to lock the door, so I have to go home now. Rosa: Milagros might agree with us tomorrow. Luis: She must be very busy today." — ¿Quién de los tres se pone claramente del lado de las redes sociales?', [
+          'Milagros, que solo les ve beneficios.',
+          'Rosa, que les ve dos lados a la vez.',
+          'Luis, que solo repite lo que dicen otros.',
+          'Los tres, porque ninguno las critica.'], 0),
+        mc('Lee: "Rosa: In my opinion, social media has both benefits and drawbacks. Luis: Some say it is good; however, others disagree. Milagros: I believe it can\'t be true; social media has many benefits. I am sorry, I forgot to lock the door, so I have to go home now. Rosa: Milagros might agree with us tomorrow. Luis: She must be very busy today." — ¿Qué presentan como una simple posibilidad y no como algo seguro?', [
+          'Que Milagros les dé la razón mañana.',
+          'Que Milagros esté muy ocupada hoy.',
+          'Que Milagros tenga que irse a su casa.',
+          'Que Rosa vea dos lados en el tema.'], 0),
+        writing('Escríbelo en inglés: "En mi opinión, las redes sociales tienen tanto beneficios como desventajas."', ['In my opinion, social media has both benefits and drawbacks.'],
+          { reject: [['In my opinion, social media have both benefits and drawbacks.', '"Social media" lleva el verbo en singular: social media has.'], ['On my opinion, social media has both benefits and drawbacks.', 'La frase de opinión es "in my opinion", no "on my opinion".'], ['In my opinion, the social media has both benefits and drawbacks.', 'Va sin artículo: In my opinion, social media has both benefits and drawbacks.']] }),
       ] },
       { id: 'modulo4-8-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Consejos del simulacro (Errores Comunes)**\n\nEstos son los tropiezos clásicos en el examen. ¡Cázalos antes de que te cacen a ti! 🎯\n\n* **🔤 Errores de gramática:** revisa los **tiempos verbales**. Ej.: ❌ *I have went* → ✅ *I have **gone**.* (usa el **participio pasado**).\n* **📖 Comprensión lectora:** **lee todas las opciones** antes de responder. No te lances con la primera. 🧐\n* **✍️ Expresión escrita:** cuida la **ortografía** y la **estructura**; usa **conectores sencillos** (*because, however, also*).\n* **👂 Audición:** no te quedes con la **primera palabra**; **escucha todo el contexto** antes de decidir. 🎧\n\n> 💡 **Truco de {{mascot}}:** lee y escucha **completo** antes de responder. En *writing*, una frase clara con buen conector vale más que una larga y enredada.\n\nEn los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`, miniQuiz: [
         tap('Toca el error: usa el participio pasado.', ['I', 'have', 'went', 'to', 'Paris.'], 2, 'gone'),
@@ -497,6 +782,18 @@
         tap('Toca el error de concordancia:', ['Social', 'media', 'have', 'many', 'benefits.'], 2, 'has'),
         tap('Toca el error: second conditional usa pasado.', ['If', 'I', 'have', 'a', 'car,', 'I', 'would', 'drive.'], 2, 'had'),
         tap('Toca el error: usa el participio pasado.', ['We', 'have', 'did', 'the', 'exam.'], 2, 'done'),
+        mc('Lee: "Rosa has gone to Paris, and Luis and Milagros have seen the museum too. Rosa said that the Louvre was famous for its art collection. Luis has not gone to Paris; he told me that if he had saved money, he would have gone with her. Milagros and Luis have done the exam; however, Rosa has not. She must be very busy this week. She said she would take the exam in Lima next month. The exams will be corrected by the teacher." — ¿Quién estuvo en París y todavía no ha dado el examen?', [
+          'Rosa, que ya estuvo en París.',
+          'Luis, que no logró ahorrar dinero.',
+          'Milagros, que ya vio el museo.',
+          'La profesora, que corregirá los exámenes.'], 0),
+        mc('Lee: "Rosa has gone to Paris, and Luis and Milagros have seen the museum too. Rosa said that the Louvre was famous for its art collection. Luis has not gone to Paris; he told me that if he had saved money, he would have gone with her. Milagros and Luis have done the exam; however, Rosa has not. She must be very busy this week. She said she would take the exam in Lima next month. The exams will be corrected by the teacher." — ¿Qué da a entender el texto sobre por qué Luis no viajó?', [
+          'Que en su momento no ahorró el dinero.',
+          'Que se quedó estudiando para el examen.',
+          'Que Rosa viajó sin avisarle a nadie.',
+          'Que todavía piensa viajar el próximo mes.'], 0),
+        writing('Escríbelo en inglés: "He ido a París."', ['I have gone to Paris.'],
+          { reject: [['I have went to Paris.', 'Tras "have" va el participio pasado: I have gone to Paris.'], ['I have go to Paris.', 'Tras "have" no va el verbo base: I have gone to Paris.'], ['I went to Paris.', 'Aquí falta el presente perfecto: I have gone to Paris.']] }),
       ] },
       { id: 'modulo4-8-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**\n\nPara brillar en el **estilo FCE** 🏅:\n\n* 📖 **Reading:** lee **todas** las opciones y busca la respuesta en el texto, no en tu memoria. (*The Louvre is famous for the Mona Lisa and its art collection.*)\n\n* ✍️ **Writing:** frase clara + conector sencillo. (*If I won the lottery, I would travel the world.*)\n\n* 🔤 **Use of English:** domina el **condicional**: *If I **had** more time, I **would learn** Chinese.*\n\n* 👂 **Listening:** escucha **todo el contexto**, no solo la primera palabra. (*I forgot to lock the door.* → olvidó **cerrar con llave**.)\n\n* 🗣️ **Speaking:** abre con opinión y da **dos lados**. (*In my opinion, social media has both benefits and drawbacks.*)\n\n  | Habilidad | Clave |\n  | --- | --- |\n  | Reading | Lee todas las opciones |\n  | Writing | Conectores + ortografía |\n  | Use of English | Condicional (had → would) |\n  | Listening | Escucha el contexto completo |\n  | Speaking | Opinión + dos puntos de vista |` },
       { id: 'modulo4-8-cierre', type: 'cierre', markdown: `#### **🌟 Cierre del Módulo B2**\n\n**¡Felicidades!** 🏆 Has completado **todo el nivel B2**. 🎉\n\nA lo largo del módulo dominaste:\n\n* 🔁 **Reportar ideas** (*reported speech*).\n* 🔄 **La voz pasiva**.\n* 🎲 **Condicionales avanzados**.\n* 🤔 **Modales de certeza** (*must / can't / might*).\n* ✍️ **Escritura formal**.\n* 🗣️ **Habilidades reales de comunicación**.\n\n✅ **Misión cumplida:** ya puedes enfrentar tareas de examen y conversaciones de nivel **avanzado** con confianza.\n\n**🏅 Insignia obtenida:** 📜 *Certificado AprendoEnglish – Nivel B2* 🎉\n\n¡Estás **preparado para los retos avanzados**! Sigue adelante, que el viaje continúa. ⚡` },

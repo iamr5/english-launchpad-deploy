@@ -6,6 +6,11 @@
   const mc = (question, options, correctIndex) => ({ type: 'mc', question, options, correctIndex });
   const rebuild = (question, correctSentence, wordBlocks) => ({ type: 'rebuild', question, correctSentence, wordBlocks });
   const tap = (question, sentenceTokens, errorTokenIndex, correctedToken) => ({ type: 'tap', question, sentenceTokens, errorTokenIndex, correctedToken });
+  // writing(enunciado, aceptadas, extra) — ver el docblock en data.js y
+  // src/content/AUTHORING-reading-writing.md. Redeclarado aquí como los demás
+  // helpers, para no chocar con el const de nivel superior de data.js.
+  const writing = (question, accepted, extra) => Object.assign(
+    { type: 'writing', question, accepted: [].concat(accepted) }, extra || {});
 
   const modulo5_1 = {
     id: 'modulo5-1',
@@ -42,6 +47,19 @@ No necesitas leer cada palabra. Usa estas estrategias:
           mc('¿Cuál de estas es una "palabra clave" típica que buscarías al escanear un texto académico?', ['the, of, and', 'research, trend, outcome', 'hello, please, thanks', 'maybe, perhaps, somehow'], 1),
           rebuild('Ordena este consejo de lectura.', 'Scan the text for key words.', ['Scan', 'the', 'text', 'for', 'key', 'words.', 'slowly', 'every', 'word', 'skim']),
           rebuild('Ordena esta frase sobre la idea global.', 'Skim the article to get the main idea.', ['Skim', 'the', 'article', 'to', 'get', 'the', 'main', 'idea.', 'scan', 'detail', 'number']),
+          mc('Lee: "Rosa skims the article first to get the main idea. Then she scans the text for key words: research, trend and outcome. Luis scans the text for key words every day, but he does not skim the article first. Rosa gets the main idea and the key words too. Luis gets the key words, but he does not get the main idea. Milagros skims the article on Sunday and gets the main idea." — ¿quiénes terminan con la visión de conjunto del artículo?', [
+            'Rosa y Milagros, que sí hacen la lectura global.',
+            'Solo Luis, que revisa el texto todos los días.',
+            'Los tres, cada uno por su propio camino.',
+            'Solo Milagros, que lee los domingos.'], 0),
+          mc('Lee: "Rosa skims the article first to get the main idea. Then she scans the text for key words: research, trend and outcome. Luis scans the text for key words every day, but he does not skim the article first. Rosa gets the main idea and the key words too. Luis gets the key words, but he does not get the main idea. Milagros skims the article on Sunday and gets the main idea." — ¿qué da a entender el texto sobre la rutina diaria de Luis?', [
+            'Que repetirla no le da la visión de conjunto.',
+            'Que le basta para resumir el artículo completo.',
+            'Que le da la idea global más rápido que a Rosa.',
+            'Que encuentra menos palabras clave que las otras dos.'], 0),
+          writing('Escríbelo en inglés: "Escanea el texto en busca de palabras clave."', ['Scan the text for key words.'],
+            { hint: 'Buscar datos sueltos = scan; captar la idea global = skim.',
+              reject: [['Skim the text for key words.', 'Para datos concretos va "scan"; "skim" es para la idea global.'], ['Scan the text for every word.', 'Escanear es lo contrario de leer cada palabra: for key words.'], ['Scan the text for key word.', 'Van varias, así que en plural: for key words.']] }),
         ] },
       { id: 'modulo5-1-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **📑 Del texto a la estrategia**
 
@@ -62,6 +80,19 @@ Mira cómo aplicar las estrategias a ejemplos reales:
           mc('"To illustrate, she cites examples from rural schools." ¿Qué función cumplen las escuelas rurales?', ['Son la tesis principal', 'Son ejemplos que respaldan la tesis', 'Contradicen al autor', 'Son la fuente del estudio'], 1),
           tap('Corrige el conector mal escrito.', ['To', 'ilustrate', ',', 'the', 'author', 'cites', 'two', 'studies.'], 1, 'illustrate'),
           rebuild('Ordena esta frase sobre deducir por contexto.', 'Try to guess the meaning from context first.', ['Try', 'to', 'guess', 'the', 'meaning', 'from', 'context', 'first.', 'dictionary', 'word', 'always']),
+          mc('Lee: "The author argues that education is key to development. To illustrate, she cites examples from rural schools in Trujillo. To illustrate, she also cites two studies from Lima. In recent years, climate research has intensified. A 2018 study in Nature found that sea levels are rising faster than predicted. She cites the rural schools twice, but she cites that 2018 study only once." — ¿cuál es la afirmación central y qué está ahí solo para respaldarla?', [
+            'Central: la educación; respaldo: las escuelas rurales.',
+            'Central: las escuelas rurales; respaldo: la educación.',
+            'Central: el estudio del mar; respaldo: la educación.',
+            'Central: la investigación climática; respaldo: los estudios de Lima.'], 0),
+          mc('Lee: "The author argues that education is key to development. To illustrate, she cites examples from rural schools in Trujillo. To illustrate, she also cites two studies from Lima. In recent years, climate research has intensified. A 2018 study in Nature found that sea levels are rising faster than predicted. She cites the rural schools twice, but she cites that 2018 study only once." — ¿qué postura de quien escribe sugiere que el estudio del mar aparezca una sola vez?', [
+            'Que el clima no es su tema de fondo.',
+            'Que el clima es su prueba más importante.',
+            'Que desconfía de lo que publicó Nature.',
+            'Que las escuelas rurales le interesan poco.'], 0),
+          writing('Escríbelo en inglés: "Intenta deducir el significado por el contexto primero."', ['Try to guess the meaning from context first.', 'Try to guess the meaning from the context first.'],
+            { hint: 'Primero el contexto y solo después el diccionario.',
+              reject: [['Use the dictionary first.', 'El consejo C1 es al revés: Try to guess the meaning from context first.'], ['Try to guessing the meaning from context first.', 'Tras "to" va el verbo base: Try to guess the meaning from context first.'], ['Try to guess the meaning from context.', 'Te falta "first": el orden importa, primero el contexto.']] }),
         ] },
       { id: 'modulo5-1-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -80,6 +111,18 @@ Mira cómo aplicar las estrategias a ejemplos reales:
           tap('Corrige el error en esta frase de escaneo.', ['Scan', 'the', 'report', 'for', 'specifics', 'dates', 'and', 'names.'], 4, 'specific'),
           tap('Corrige el verbo en esta frase sobre resumir.', ['After', 'each', 'paragraph,', 'paraphrasing', 'the', 'idea.'], 3, 'paraphrase'),
           tap('Corrige el error en esta frase sobre la fuente.', ['The', 'study', 'was', 'finded', 'in', 'a', '2020', 'journal.'], 3, 'found'),
+          mc('Lee: "Paragraph 1: In recent years, climate research has intensified. The 2018 study was published in Nature. The 2020 study was published in Trujillo, and it cites examples from rural schools. Paragraph 2: The Nature study found that sea levels are rising faster than predicted. To illustrate, it cites two studies from Lima. The Trujillo study was found in a 2020 journal too." — ¿de cuál de los dos estudios no llegamos a saber qué encontró?', [
+            'Del de Trujillo: solo sabemos dónde salió.',
+            'Del de Nature: solo sabemos el año.',
+            'De los dos: el texto solo da fechas.',
+            'De ninguno: el texto da los dos hallazgos.'], 0),
+          mc('Lee: "In recent years, climate research has intensified. A 2018 study in Nature found that sea levels are rising faster than predicted. This trend was found in a 2020 journal too. To illustrate, the author cites two studies from Lima and Trujillo. The 2018 study was published in Nature, and the 2020 study was published in Lima. It also cites examples from rural schools." — ¿a qué se refiere "this trend" según el contexto?', [
+            'A que el mar sube más rápido de lo previsto.',
+            'A que la investigación climática ha aumentado.',
+            'A que el estudio salió en dos revistas distintas.',
+            'A que quien escribe cita dos estudios de Lima.'], 0),
+          writing('Escríbelo en inglés: "Deberíamos conectar las ideas entre párrafos."', ['We should connect ideas between paragraphs.', 'We should connect the ideas between the paragraphs.'],
+            { reject: [['We should connecting ideas between paragraphs.', 'Tras "should" va el verbo base: We should connect ideas between paragraphs.'], ['We should to connect ideas between paragraphs.', 'Tras un modal no va "to": We should connect ideas between paragraphs.'], ['We should connect ideas between paragraph.', 'Son varios los que conectas, así que en plural: between paragraphs.']] }),
         ] },
       { id: 'modulo5-1-resumen', type: 'resumen', markdown: `#### **📝 Resumen**
 
@@ -152,6 +195,19 @@ En el desarrollo, usa **referencias** para respaldar tus ideas:
           mc('Según la metáfora, los conectores en tu ensayo son como...', ['los ladrillos', 'el cemento que une los argumentos', 'el techo final', 'la decoración'], 1),
           rebuild('Reconstruye esta cita académica.', 'According to Smith (2020), the data reveal a clear trend.', ['According', 'to', 'Smith', '(2020),', 'the', 'data', 'reveal', 'a', 'clear', 'trend.', 'someone', 'said', 'maybe']),
           rebuild('Ordena esta frase sobre la estructura.', 'A good essay has an introduction, body and conclusion.', ['A', 'good', 'essay', 'has', 'an', 'introduction,', 'body', 'and', 'conclusion.', 'title', 'opinion', 'only']),
+          mc('Lee: "Rosa: A good essay has an introduction, body and conclusion. According to Smith (2020), the data reveal a clear trend. Luis: Everybody knows that the data reveal a clear trend. Someone said that a good essay has an introduction, body and conclusion. Milagros: I read somewhere that the data reveal a clear trend. According to Smith (2020), a good essay has an introduction, body and conclusion." — ¿quién respalda con una fuente el dato sobre la tendencia?', [
+            'Rosa: para ese dato nombra al autor y el año.',
+            'Milagros: ella también nombra a Smith y el 2020.',
+            'Luis: para él ese dato ya lo sabe todo el mundo.',
+            'Los tres: los tres mencionan la misma tendencia.'], 0),
+          mc('Lee: "Rosa: A good essay has an introduction, body and conclusion. According to Smith (2020), the data reveal a clear trend. Luis: Everybody knows that the data reveal a clear trend. Someone said that a good essay has an introduction, body and conclusion. Milagros: I read somewhere that the data reveal a clear trend. According to Smith (2020), a good essay has an introduction, body and conclusion." — ¿qué es lo que Milagros respalda con la cita de Smith?', [
+            'Cómo se organiza un ensayo, no la tendencia.',
+            'La tendencia clara que muestran los datos.',
+            'Lo que Luis dice que todo el mundo ya sabe.',
+            'Lo mismo que Rosa respalda con esa cita.'], 0),
+          writing('Escríbelo en inglés — con la cita bien puesta: "Según Smith (2020), los datos revelan una tendencia clara."', ['According to Smith (2020), the data reveal a clear trend.'],
+            { hint: 'La cita académica va "According to" + autor + año entre paréntesis.',
+              reject: [['Someone said that the data reveal a clear trend.', 'Una cita necesita autor y año: According to Smith (2020), the data reveal a clear trend.'], ['I read somewhere that the data reveal a clear trend.', 'Eso no es una fuente: nombra al autor y el año, According to Smith (2020), ...'], ['According to Smith (2020), the data reveals a clear trend.', 'En registro académico "data" es plural: the data reveal, no reveals.']] }),
         ] },
       { id: 'modulo5-2-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🎩 Lenguaje formal y conectores avanzados**
 
@@ -181,6 +237,19 @@ El tono académico es **objetivo** e **impersonal**. Evita expresiones personale
           mc('"Consequently" se usa para introducir...', ['un ejemplo', 'una consecuencia o resultado', 'una adición', 'una contradicción'], 1),
           tap('Corrige el conector para que suene académico.', ['The', 'sample', 'was', 'small;', 'furthermor,', 'it', 'was', 'biased.'], 4, 'furthermore,'),
           rebuild('Reconstruye esta oración académica.', 'The research yields contradictory findings.', ['The', 'research', 'yields', 'contradictory', 'findings.', 'stuff', 'kids', 'awesome', 'things']),
+          mc('Lee: "According to Smith (2020), the data reveal a clear trend. It can be argued that the results are positive. Nevertheless, the research yields contradictory findings. The sample was small; furthermore, it was biased. Researchers suggest that notable limitations must be considered. It is believed that the outcomes are not significant. Consequently, the hypothesis must be considered. Whereas the data reveal a clear trend, the evidence is contradictory." — ¿con cuál de estas afirmaciones estaría de acuerdo quien escribe?', [
+            'Que la tendencia existe, pero aún no está bien probada.',
+            'Que la tendencia existe y los datos ya la prueban.',
+            'Que no hay ninguna tendencia y que Smith se equivoca.',
+            'Que la muestra fue amplia y por eso el dato vale.'], 0),
+          mc('Lee: "According to Smith (2020), the data reveal a clear trend. It can be argued that the results are positive. Nevertheless, the research yields contradictory findings. The sample was small; furthermore, it was biased. Researchers suggest that notable limitations must be considered. It is believed that the outcomes are not significant. Consequently, the hypothesis must be considered. Whereas the data reveal a clear trend, the evidence is contradictory." — ¿qué concede el autor y qué sostiene en realidad?', [
+            'Concede que el resultado parece positivo; sostiene que hay limitaciones.',
+            'Concede que hay limitaciones; sostiene que el resultado es positivo.',
+            'Concede que la muestra fue sesgada; sostiene que eso no importa.',
+            'Concede que Smith acierta; sostiene que no existe tal tendencia.'], 0),
+          writing('Escríbelo en inglés — registro académico: "La investigación muestra resultados contradictorios. Además, deben considerarse limitaciones notables."', ['The research yields contradictory findings. Furthermore, notable limitations must be considered.'],
+            { hint: 'El verbo académico es "yields" (no "shows") y la adición va con "Furthermore,".',
+              reject: [['The research shows contradictory findings. And there are notable limitations.', 'Registro académico: "yields" en vez de "shows" y "Furthermore," en vez de "and".'], ['The research yields contradictory findings. And notable limitations must be considered.', 'La adición académica se marca con "Furthermore,", no con "and".'], ['I think the research yields contradictory findings. Furthermore, notable limitations must be considered.', 'El tono académico es impersonal: fuera el "I think".']] }),
         ] },
       { id: 'modulo5-2-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -203,6 +272,18 @@ Vamos a pulir esos detalles que delatan a un escritor poco formal. ✍️
           tap('Corrige la palabra informal por una académica.', ['The', 'researchers', 'got', 'considerable', 'evidence.'], 2, 'obtained'),
           tap('Corrige el conector informal por uno formal.', ['The', 'theory', 'is', 'old;', 'so,', 'it', 'has', 'been', 'revised.'], 4, 'consequently,'),
           tap('Corrige el verbo para un tono impersonal/formal.', ['It', 'is', 'belief', 'that', 'the', 'method', 'is', 'flawed.'], 2, 'believed'),
+          mc('Lee: "Luis: Kids in rural areas got no money. A study somewhere demonstrates this finding. The evidence is limited; plus the sample is small. Rosa: Children in rural areas do not receive sufficient funding. A study by Johnson (2019) demonstrates this finding. The evidence is limited; furthermore, the sample is small. The data shows a significant change in behaviour. It is believed that the method is flawed." — ¿con cuál de estas afirmaciones estaría de acuerdo Rosa?', [
+            'Que el hallazgo importa, aunque la prueba todavía es débil.',
+            'Que la prueba es sólida y el método está bien planteado.',
+            'Que no hubo ningún cambio en el comportamiento estudiado.',
+            'Que las zonas rurales sí reciben fondos suficientes.'], 0),
+          mc('Lee: "Luis: Kids in rural areas got no money. A study somewhere demonstrates this finding. The evidence is limited; plus the sample is small. Rosa: Children in rural areas do not receive sufficient funding. A study by Johnson (2019) demonstrates this finding. The evidence is limited; furthermore, the sample is small. The data shows a significant change in behaviour. It is believed that the method is flawed." — ¿en qué se diferencian de verdad los dos textos?', [
+            'Afirman lo mismo, pero solo uno dice de dónde sale.',
+            'Afirman lo contrario: uno dice que sí hay fondos.',
+            'Los dos citan el mismo estudio de Johnson de 2019.',
+            'Solo el primero admite que la evidencia es limitada.'], 0),
+          writing('Escríbelo en inglés — registro de informe: "Los niños de zonas rurales no reciben fondos suficientes."', ['Children in rural areas do not receive sufficient funding.'],
+            { reject: [['Kids in rural areas got no funding.', 'Ese es el registro de la calle: en un informe va "Children in rural areas do not receive sufficient funding."'], ['Kids in rural areas do not receive sufficient funding.', '"Kids" es coloquial; el término académico es "children".'], ['Children in rural areas got no funding.', '"Got no" es coloquial; en registro formal: do not receive sufficient funding.']] }),
         ] },
       { id: 'modulo5-2-resumen', type: 'resumen', markdown: `#### **📌 Resumen**
 
@@ -265,6 +346,19 @@ Necesitamos **escuchar con atención** y **leer entre líneas**. Hoy practicarem
           mc('Si conoces el tema (ciencia, historia, tecnología) antes de escuchar, podrás...', ['hablar más rápido', 'anticipar el vocabulario probable', 'evitar tomar apuntes', 'ignorar al hablante'], 1),
           rebuild('🎧 Reconstruye este consejo de inferencia.', 'Try to read between the lines.', ['Try', 'to', 'read', 'between', 'the', 'lines.', 'word', 'every', 'literal', 'fast']),
           rebuild('🎧 Reconstruye esta frase sobre el tono.', 'Listen for the speaker\'s tone and attitude.', ['Listen', 'for', 'the', "speaker's", 'tone', 'and', 'attitude.', 'speed', 'volume', 'name']),
+          mc('Lee: "Rosa: You\'re going to love this lecture, it\'s fascinating! Luis: Actually, it\'s getting a bit chilly in here. Milagros: However, you\'re going to love this lecture too. Luis: Basically, it\'s getting a bit chilly in here today. Rosa: Try to read between the lines. Milagros: Listen for the speaker\'s tone and attitude. Rosa: You\'re going to love this lecture, it\'s fascinating! Milagros: Basically, listen for the speaker\'s tone and attitude." — ¿Quién está pidiendo algo sin llegar a pedirlo?', [
+            'Luis, que insiste dos veces en el frío que hace.',
+            'Rosa, que repite dos veces lo fascinante de la charla.',
+            'Milagros, que aconseja fijarse en el tono del ponente.',
+            'Los tres, que se turnan para quejarse del frío.'], 0),
+          mc('Lee: "Rosa: You\'re going to love this lecture, it\'s fascinating! Luis: Actually, it\'s getting a bit chilly in here. Milagros: However, you\'re going to love this lecture too. Luis: Basically, it\'s getting a bit chilly in here today. Rosa: Try to read between the lines. Milagros: Listen for the speaker\'s tone and attitude. Rosa: You\'re going to love this lecture, it\'s fascinating! Milagros: Basically, listen for the speaker\'s tone and attitude." — ¿Qué da a entender Milagros al arrancar con "However"?', [
+            'Que mantiene el entusiasmo por la charla pese al reparo de Luis.',
+            'Que le da la razón a Luis: ella también siente frío ahí.',
+            'Que corrige a Rosa, que había exagerado sobre la charla.',
+            'Que anuncia que ella se fijará solo en el tono del ponente.'], 0),
+          writing('Escríbelo en inglés: "Intenta leer entre líneas."', ['Try to read between the lines.'],
+            { hint: 'Consejo en imperativo: Try to + verbo en base (read).',
+              reject: [['Try read between the lines.', 'Tras "try" va el infinitivo con to: Try to read between the lines.'], ['Try to reading between the lines.', 'Después de "to" el verbo va en base: Try to read between the lines.'], ['Try to read every literal word.', 'Leer entre líneas no es cazar cada palabra literal: Try to read between the lines.']] }),
         ] },
       { id: 'modulo5-3-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🛠 Apuntes y acentos**
 
@@ -285,6 +379,9 @@ Necesitamos **escuchar con atención** y **leer entre líneas**. Hoy practicarem
           mc('¿Cuál sería una buena abreviatura para tomar apuntes rápido?', ['escribir "government" entero', 'usar "govt" en lugar de "government"', 'no escribir consonantes', 'escribir en mayúsculas todo'], 1),
           tap('Corrige la palabra clave de toma de apuntes.', ['Write', 'down', 'the', 'key', 'word', 'and', 'dates.'], 4, 'words'),
           rebuild('🎧 Reconstruye este consejo sobre apuntes.', 'Note down only the essential facts.', ['Note', 'down', 'only', 'the', 'essential', 'facts.', 'every', 'word', 'whole', 'sentence']),
+          writing('Escríbelo en inglés (empieza con "Note"): "Anota solo los datos esenciales."', ['Note down only the essential facts.'],
+            { hint: 'Imperativo: Note down + only + the essential facts, en plural.',
+              reject: [['Note down only the essential fact.', 'Los datos son varios: en plural va facts.'], ['Note down all the essential facts.', 'La idea es justo no anotarlo todo: only the essential facts.'], ['Note down every word.', 'No se escribe todo lo que oyes: Note down only the essential facts.']] }),
         ] },
       { id: 'modulo5-3-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -301,6 +398,18 @@ Necesitamos **escuchar con atención** y **leer entre líneas**. Hoy practicarem
           tap('Corrige el error sobre los acentos.', ['The', 'word', 'schedule', 'sounds', 'difference', 'in', 'British', 'English.'], 4, 'different'),
           tap('Corrige el verbo de este consejo.', ['Keep', 'go', 'when', 'a', 'word', 'is', 'unknown.'], 1, 'going'),
           tap('Corrige esta frase sobre captar el mensaje.', ['Catch', 'the', 'message', 'and', 'the', 'speaker', 'intention.'], 5, "speaker's"),
+          mc('Lee: "Luis: The word schedule sounds different in British English. Rosa: Don\'t stop everything when you hear an unknown word. Keep going and the context will help you. Milagros: Focus on the meaning, not every word. Understand the general ideas and attitudes. Rosa: Always infer the speaker\'s intention. Luis: Keep going when a word is unknown. Milagros: Catch the message and the speaker\'s intention. Rosa: Don\'t stop everything when you hear an unknown word." — ¿A qué situación responde el consejo que Rosa da justo después de hablar Luis?', [
+            'A que una palabra le sonó rara por venir en otro acento.',
+            'A que Luis no logra anotar los datos de la charla.',
+            'A que Luis se adelantó a juzgar la intención del ponente.',
+            'A que Milagros insiste en entender cada palabra exacta.'], 0),
+          mc('Lee: "Luis: The word schedule sounds different in British English. Rosa: Don\'t stop everything when you hear an unknown word. Keep going and the context will help you. Milagros: Focus on the meaning, not every word. Understand the general ideas and attitudes. Rosa: Always infer the speaker\'s intention. Luis: Keep going when a word is unknown. Milagros: Catch the message and the speaker\'s intention. Rosa: Don\'t stop everything when you hear an unknown word." — ¿Qué muestra la segunda intervención de Luis?', [
+            'Que ya hizo suyo el consejo que Rosa acababa de darle.',
+            'Que sigue trabado con la palabra que le sonó distinta.',
+            'Que prefiere anotar cada palabra antes de seguir oyendo.',
+            'Que pone en duda lo que Milagros dice del ponente.'], 0),
+          writing('Escríbelo en inglés: "Sigue adelante y el contexto te ayudará."', ['Keep going and the context will help you.'],
+            { reject: [['Keep go and the context will help you.', 'Después de "keep" el verbo va en -ing: keep going.'], ['Keep going and the context helps you.', 'Es una promesa a futuro: the context will help you.'], ['Stop and the context will help you.', 'El consejo es justo no detenerte: Keep going and the context will help you.']] }),
         ] },
       { id: 'modulo5-3-resumen', type: 'resumen', markdown: `#### **📋 Resumen**
 
@@ -365,6 +474,19 @@ Piensa en ti mismo como un **profesor presentando un descubrimiento**: explica *
           mc('"On the contrary" es un conector para...', ['añadir información', 'mostrar contraste', 'concluir', 'saludar'], 1),
           rebuild('🎤 Reconstruye el inicio de una presentación.', 'Good afternoon, everyone. Today I will present.', ['Good', 'afternoon,', 'everyone.', 'Today', 'I', 'will', 'present.', 'conclusion', 'question', 'goodbye']),
           rebuild('🎤 Reconstruye esta opinión académica.', 'This evidence suggests a clear trend.', ['This', 'evidence', 'suggests', 'a', 'clear', 'trend.', 'maybe', 'dunno', 'whatever', 'thing']),
+          mc('Lee: "Rosa: Good afternoon, everyone. Today I will present. Let\'s begin with the data. According to the World Bank, this evidence suggests a clear trend. Milagros: Moreover, it is widely accepted that the data is clear. Luis: On the contrary, I firmly believe that the trend is not clear. Rosa: That\'s an interesting question. Based on the data, I would say the trend is clear. In conclusion, these findings indicate a clear pattern." — ¿Quién no está convencido de que la tendencia sea clara?', [
+            'Luis, que sostiene justo lo contrario.',
+            'Milagros, que apela a lo que todos aceptan.',
+            'Rosa, que abre y cierra la exposición.',
+            'El Banco Mundial, que aporta la evidencia.'], 0),
+          mc('Lee: "Rosa: Good afternoon, everyone. Today I will present. Let\'s begin with the data. According to the World Bank, this evidence suggests a clear trend. Milagros: Moreover, it is widely accepted that the data is clear. Luis: On the contrary, I firmly believe that the trend is not clear. Rosa: That\'s an interesting question. Based on the data, I would say the trend is clear. In conclusion, these findings indicate a clear pattern." — ¿Cuál de estas ideas se presenta como algo que ya se da por sentado, y no como convicción de quien la dice?', [
+            'Que los datos son claros, según todos.',
+            'Que la tendencia no es clara, según Luis.',
+            'Que la tendencia es clara, según los datos.',
+            'Que estos hallazgos indican un patrón claro.'], 0),
+          writing('Escríbelo en inglés: "Buenas tardes a todos. Hoy presentaré."', ['Good afternoon, everyone. Today I will present.'],
+            { hint: 'Fórmula fija de apertura: saludo + "everyone", y después "Today I will" + verbo base.',
+              reject: [['Good afternoon, everyone. Today I present.', 'La fórmula de apertura anuncia lo que viene, así que lleva "will": Today I will present.'], ['Good afternoon, everyone. Today I will to present.', 'Después de "will" el verbo va sin "to": Today I will present.'], ['Good afternoon, everyone. Today I will presentation.', 'Después de "will" va el verbo "present", no el sustantivo "presentation".']] }),
         ] },
       { id: 'modulo5-4-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Frases útiles según el propósito 🎯**
 
@@ -391,6 +513,19 @@ Como un profesor que explica un hallazgo 🔬, ten lista la frase exacta para ca
           mc('¿Cuál es la frase más adecuada para un acuerdo PARCIAL (no total)?', ['"I completely agree with everything you said."', '"I agree to some extent, however, there are exceptions."', '"You are absolutely wrong."', '"I don\'t care about that."'], 1),
           rebuild('🎤 Reconstruye la frase para dar contexto.', 'Let me start by giving some background.', ['Let', 'me', 'start', 'by', 'giving', 'some', 'background.', 'conclusion', 'question', 'goodbye', 'thank']),
           rebuild('🎤 Reconstruye la frase para concluir.', 'In conclusion, these findings indicate a clear pattern.', ['In', 'conclusion,', 'these', 'findings', 'indicate', 'a', 'clear', 'pattern.', 'start', 'question', 'morning', 'hello']),
+          mc('Lee: "Milagros: Good morning. Let me start by giving some background on the topic. The pattern is clear in Lima. Rosa: I agree with Milagros to some extent, however, there are exceptions. Milagros: Thank you for the question, Rosa. As I mentioned earlier, the pattern is clear. Luis: I agree with Rosa to some extent, however, the background is clear. Milagros: In conclusion, these findings indicate a clear pattern. That\'s the end of my talk." — ¿Quién le concede algo a Rosa sin renunciar a su propio punto?', [
+            'Luis, que igual sostiene que el contexto está claro.',
+            'Milagros, que acepta las excepciones que Rosa señala.',
+            'Luis, que le da la razón a Rosa sin reservas.',
+            'Milagros, que le cede a Rosa el cierre de la charla.'], 0),
+          mc('Lee: "Milagros: Good morning. Let me start by giving some background on the topic. The pattern is clear in Lima. Rosa: I agree with Milagros to some extent, however, there are exceptions. Milagros: Thank you for the question, Rosa. As I mentioned earlier, the pattern is clear. Luis: I agree with Rosa to some extent, however, the background is clear. Milagros: In conclusion, these findings indicate a clear pattern. That\'s the end of my talk." — ¿Cuál de estas dos lecturas sostiene el texto sobre Rosa y Luis?', [
+            'Cada uno concede una parte y objeta otra.',
+            'Cada uno acepta sin reservas lo que oyó.',
+            'Cada uno rechaza de plano lo que oyó.',
+            'Cada uno pide que le repitan el dato.'], 0),
+          writing('Escríbelo en inglés: "En conclusión, estos hallazgos indican un patrón claro."', ['In conclusion, these findings indicate a clear pattern.'],
+            { hint: 'Fórmula fija de cierre: "In conclusion," + sujeto plural + verbo sin -s.',
+              reject: [['In the conclusion, these findings indicate a clear pattern.', 'La fórmula fija de cierre no lleva artículo: In conclusion, …'], ['In conclusion, these findings indicates a clear pattern.', 'El sujeto "findings" es plural, así que el verbo no lleva -s: indicate.'], ['In conclude, these findings indicate a clear pattern.', 'Va el sustantivo "conclusion", no el verbo "conclude": In conclusion, …']] }),
         ] },
       { id: 'modulo5-4-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -410,6 +545,18 @@ Como un profesor que explica un hallazgo 🔬, ten lista la frase exacta para ca
           tap('Corrige la preposición de esta cita.', ['According', 'at', 'the', 'World', 'Bank,', 'poverty', 'fell.'], 1, 'to'),
           tap('Corrige el verbo de esta frase para responder.', ['Based', 'on', 'the', 'data,', 'I', 'would', 'says', 'yes.'], 6, 'say'),
           tap('Corrige la respuesta formal y respetuosa.', ['I', 'was', 'not', 'awere', 'of', 'that', 'study.'], 3, 'aware'),
+          mc('Lee: "Rosa: Good afternoon, everyone. So, today I will present my research in Lima. According to the World Bank, poverty fell in Trujillo last year. Luis: Oh, I didn\'t know that. Milagros: I\'m sorry, I wasn\'t aware of that study. Rosa: That\'s a great point, Milagros. Let me see. Based on the data, I would say yes. In conclusion, these findings are clear." — ¿Quién admite el mismo vacío que Luis, pero de forma más formal?', [
+            'Milagros, que se disculpa por no conocer el estudio.',
+            'Rosa, que se disculpa por no tener datos de Trujillo.',
+            'Milagros, que corrige el dato del Banco Mundial.',
+            'Rosa, que agradece el aporte y cambia de tema.'], 0),
+          mc('Lee: "Rosa: Good afternoon, everyone. So, today I will present my research in Lima. According to the World Bank, poverty fell in Trujillo last year. Luis: Oh, I didn\'t know that. Milagros: I\'m sorry, I wasn\'t aware of that study. Rosa: That\'s a great point, Milagros. Let me see. Based on the data, I would say yes. In conclusion, these findings are clear." — ¿Cuál de estas dos lecturas sostiene el texto sobre el "sí" de Rosa?', [
+            'Afirma que sí, pero anclándolo a los datos.',
+            'Afirma que sí por convicción propia, sin datos.',
+            'Deja la pregunta sin responder por falta de datos.',
+            'Corrige a Milagros y descarta el estudio citado.'], 0),
+          writing('Escríbelo en inglés: "Según el Banco Mundial, la pobreza cayó."', ['According to the World Bank, poverty fell.'],
+            { reject: [['According at the World Bank, poverty fell.', 'La fórmula para citar una fuente lleva "to": According to the World Bank, …'], ['According with the World Bank, poverty fell.', 'No es "with": la fórmula fija es "according to".'], ['According to the World Bank, poverty fall.', 'Falta el pasado: "cayó" es fell, no fall.']] }),
         ] },
       { id: 'modulo5-4-resumen', type: 'resumen', markdown: `## **🎯 Resumen: el profesor con un descubrimiento 🔬🎓**
 
@@ -485,6 +632,8 @@ En las tareas integradas, el **orden** lo es todo:
           mc('Después de leer el texto rápido, ¿qué haces?', ['Escribir la respuesta ya', 'Escuchar el audio y anotar puntos clave', 'Volver a leer cinco veces', 'Borrar tus apuntes'], 1),
           rebuild('Reconstruye este consejo de apuntes.', 'Use arrows and abbreviations, not full sentences.', ['Use', 'arrows', 'and', 'abbreviations,', 'not', 'full', 'sentences.', 'every', 'word', 'copy', 'whole']),
           rebuild('Reconstruye esta frase sobre el orden.', 'Read the text first and then listen.', ['Read', 'the', 'text', 'first', 'and', 'then', 'listen.', 'write', 'speak', 'last', 'before']),
+          writing('Escríbelo en inglés: "Lee el texto primero y luego escucha."', ['Read the text first and then listen.'],
+            { reject: [['Read first the text and then listen.', 'En inglés "first" va después del objeto: Read the text first and then listen.'], ['You read the text first and then listen.', 'El imperativo en inglés no lleva sujeto: Read the text first and then listen.']] }),
         ] },
       { id: 'modulo5-5-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **🛠 Estructurar tu respuesta (speaking y writing)** 🗣️✍️
 
@@ -510,6 +659,9 @@ Una respuesta integrada bien armada **conecta** lectura y audio:
           mc('Según la mnemotecnia, tu respuesta es un "puente" entre:', ['dos exámenes distintos', 'el texto leído y la charla escuchada', 'el inglés y el español', 'el examinador y tú'], 1),
           rebuild('Reconstruye la frase modelo para integrar fuentes.', 'The reading states X; however, the lecture challenges this.', ['The', 'reading', 'states', 'X;', 'however,', 'the', 'lecture', 'challenges', 'this.', 'agrees', 'because', 'although']),
           rebuild('Reconstruye esta frase de contraste.', 'On the one hand, it helps; on the other, it distracts.', ['On', 'the', 'one', 'hand,', 'it', 'helps;', 'on', 'the', 'other,', 'it', 'distracts.', 'foot,', 'side,', 'because']),
+          writing('Escríbelo en inglés (sujeto "it"): "Por un lado ayuda; por el otro, distrae."', ['On the one hand, it helps; on the other, it distracts.', 'On one hand, it helps; on the other, it distracts.', 'On the one hand, it helps; on the other hand, it distracts.'],
+            { hint: 'La fórmula del contraste es "On the one hand…; on the other…", con "hand".',
+              reject: [['On the one foot, it helps; on the other, it distracts.', 'La expresión lleva "hand", no "foot": On the one hand, it helps; on the other, it distracts.'], ['In the one hand, it helps; on the other, it distracts.', 'La preposición es "on": On the one hand, it helps; on the other, it distracts.']] }),
         ] },
       { id: 'modulo5-5-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -530,6 +682,18 @@ En los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`,
           tap('Toca la palabra incorrecta:', ['The', 'professor', 'mention', 'two', 'key', 'points.'], 2, 'mentions'),
           tap('Toca la palabra incorrecta:', ['Take', 'note', 'in', 'separate', 'columns', 'for', 'each', 'source.'], 1, 'notes'),
           tap('Toca la palabra incorrecta:', ['On', 'the', 'other', 'foot,', 'the', 'lecture', 'disagrees.'], 3, 'hand,'),
+          mc('Dos estudiantes entregan su respuesta integrada sobre el mismo texto y la misma charla: "Milagros: The reading states that climate is a concern. However, the lecture challenges this idea. The professor mentions two key points. On the one hand, the author agrees. On the other hand, the lecture disagrees. Rosa: The professor mentions two key points. However, the lecture challenges this idea. On the other hand, the lecture disagrees." — ¿A qué se refiere "this idea" en la respuesta de Milagros?', [
+            'A lo que sostiene el texto leído sobre el clima.',
+            'A los dos puntos clave que expone el profesor.',
+            'A la postura que defiende la charla del profesor.',
+            'A lo que Rosa escribió en su propia respuesta.'], 0),
+          mc('Dos estudiantes entregan su respuesta integrada sobre el mismo texto y la misma charla: "Milagros: The reading states that climate is a concern. However, the lecture challenges this idea. The professor mentions two key points. On the one hand, the author agrees. On the other hand, the lecture disagrees. Rosa: The professor mentions two key points. However, the lecture challenges this idea. On the other hand, the lecture disagrees." — ¿Cuál de las dos respuestas deja fuera una de las dos fuentes?', [
+            'La de Rosa: solo habla de la charla del profesor.',
+            'La de Milagros: solo habla del texto y del autor.',
+            'Ninguna: las dos nombran el texto y la charla.',
+            'Las dos: ninguna llega a nombrar al profesor.'], 0),
+          writing('Escríbelo en inglés (usa "lecture"): "Sin embargo, la charla cuestiona esta idea."', ['However, the lecture challenges this idea.'],
+            { reject: [['However, the lecture challenge this idea.', 'Con "the lecture" el verbo lleva -s: challenges.'], ['However, the lectures challenges this idea.', 'Es una sola charla: the lecture challenges, en singular.']] }),
         ] },
       { id: 'modulo5-5-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -619,6 +783,19 @@ En la sección de **escritura** tienes **dos tareas**. ¡Cada una con su estrate
           mc('La conclusión de tu ensayo (Task 2) debe...', ['introducir una idea nueva', 'reafirmar tu opinión', 'copiar la introducción', 'incluir el saludo'], 1),
           rebuild('Reconstruye el cierre formal de una carta.', 'I look forward to your reply.', ['I', 'look', 'forward', 'to', 'your', 'reply.', 'bye', 'see', 'later', 'soon']),
           rebuild('Reconstruye esta frase sobre el ensayo.', 'Develop two or three ideas with examples.', ['Develop', 'two', 'or', 'three', 'ideas', 'with', 'examples.', 'one', 'opinion', 'only', 'none']),
+          mc('Milagros revisa tres mensajes del mismo día: "1) Dear Sir/Madam, I look forward to your reply on Monday. Yours sincerely, Milagros. 2) Hi Rosa, I look forward to your reply too. Best regards, Milagros. 3) Hi Milagros, Develop two or three ideas with examples. Best regards, Luis." — ¿Cuál de los tres va dirigido a alguien a quien no conoce?', [
+            'El primero, que no nombra a nadie al saludar.',
+            'El segundo, el que va dirigido a Rosa.',
+            'El tercero, el que Luis le escribe a ella.',
+            'Ninguno: los tres saludan a alguien por su nombre.'], 0),
+          mc('Milagros revisa tres mensajes del mismo día: "1) Dear Sir/Madam, I look forward to your reply on Monday. Yours sincerely, Milagros. 2) Hi Rosa, I look forward to your reply too. Best regards, Milagros. 3) Hi Milagros, Develop two or three ideas with examples. Best regards, Luis." — ¿Qué pide de verdad cada mensaje?', [
+            'Milagros insinúa que espera respuesta; Luis encarga una tarea.',
+            'Milagros encarga una tarea; Luis insinúa que espera respuesta.',
+            'Los tres encargan directamente una tarea a quien lee.',
+            'Los tres se limitan a saludar y a despedirse.'], 0),
+          writing('Escríbelo en inglés: "Quedo a la espera de su respuesta."', ['I look forward to your reply.', 'I am looking forward to your reply.'],
+            { hint: 'Es el cierre fijo de la carta: look forward TO + sustantivo (your reply).',
+              reject: [['I look forward your reply.', 'Falta el "to": look forward TO your reply.'], ['I look forward to receive your reply.', 'Tras "look forward to" no va un infinitivo: I look forward to your reply.'], ['I wait your reply.', 'La fórmula fija de la carta es "look forward to": I look forward to your reply.']] }),
         ] },
       { id: 'modulo5-6-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Speaking: las tres partes** 🎤
 
@@ -652,6 +829,19 @@ La prueba oral tiene **tres partes**. ¡Cada una pide un estilo distinto!
           mc('¿Cómo conviene estructurar el monólogo de Part 2?', ['sin orden, saltando ideas', 'introduce → añade detalles → concluye', 'solo la conclusión', 'repitiendo la pregunta'], 1),
           mc('Los "fillers" (well, you know) deberían usarse:', ['en cada frase', 'con moderación', 'nunca jamás', 'solo al inicio y final'], 1),
           rebuild('Reconstruye esta opinión avanzada de Part 3.', 'From my perspective, this raises an important issue.', ['From', 'my', 'perspective,', 'this', 'raises', 'an', 'important', 'issue.', 'rises', 'like', 'yes', 'maybe']),
+          mc('En un simulacro del speaking, Milagros y Rosa se turnan: "Milagros: Well, I usually spend my weekends reading or hiking. Rosa: Could you repeat that, please? Well, you know, I usually spend my weekends reading. Milagros: In conclusion, I usually spend my weekends hiking here in Lima. Rosa: Well, you know, from my perspective, this raises an important issue. Milagros: From my perspective, this raises an important issue too." — ¿Cuál de las dos deja ver que no entendió lo que le preguntaron?', [
+            'Rosa, que necesitó oír la pregunta otra vez.',
+            'Milagros, que repitió su respuesta más de una vez.',
+            'Las dos, porque usaron las mismas frases hechas.',
+            'Ninguna: las dos contestaron a la primera.'], 0),
+          mc('En un simulacro del speaking, Milagros y Rosa se turnan: "Milagros: Well, I usually spend my weekends reading or hiking. Rosa: Could you repeat that, please? Well, you know, I usually spend my weekends reading. Milagros: In conclusion, I usually spend my weekends hiking here in Lima. Rosa: Well, you know, from my perspective, this raises an important issue. Milagros: From my perspective, this raises an important issue too." — ¿Cuál abusa más de las muletillas que conviene dosificar?', [
+            'Rosa, que las mete en dos intervenciones seguidas.',
+            'Milagros, que arranca su primera respuesta con "Well".',
+            'Las dos por igual, en todas y cada una de sus frases.',
+            'Ninguna: las dos hablan sin ninguna muletilla.'], 0),
+          writing('Escríbelo en inglés: "Desde mi perspectiva, esto plantea un tema importante."', ['From my perspective, this raises an important issue.'],
+            { hint: 'Fórmula fija de opinión avanzada: From my perspective, + this raises (con -s).',
+              reject: [['From my perspective, this rises an important issue.', 'Plantear un tema es "raises", no "rises": From my perspective, this raises an important issue.'], ['From my perspective, this raise an important issue.', 'Con "this" el verbo lleva -s: this raises an important issue.'], ['In my perspective, this raises an important issue.', 'La fórmula empieza con "From": From my perspective, this raises an important issue.']] }),
         ] },
       { id: 'modulo5-6-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -674,6 +864,18 @@ En los ejercicios de abajo, **toca la palabra incorrecta** y arréglala 👇.`,
           tap('Toca la palabra incorrecta (conector de orden):', ['Firstly,', 'I', 'will', 'discuss', 'the', 'causes;', 'additional,', 'the', 'effects.'], 6, 'additionally,'),
           tap('Toca la palabra incorrecta (cierre formal):', ['Yours', 'sincerely', 'Ozzy', 'Turuta'], 1, 'sincerely,'),
           tap('Toca la palabra incorrecta (pedir aclaración):', ['Could', 'you', 'repeats', 'that', 'question,', 'please?'], 2, 'repeat'),
+          mc('Milagros repasa dos cartas suyas y una respuesta oral: "1) Dear Sir or Madam, I am writing to apply. Firstly, I will discuss the causes; additionally, the effects. Best regards, and thank you for your time. 2) Dear Sir or Madam, I am writing to request more information. From my perspective, this raises the issue of cost. Yours sincerely, Milagros. 3) Could you repeat that question, please? In conclusion, I fully agree with this view." — ¿Qué distingue el propósito de la primera carta del de la segunda?', [
+            'La primera se ofrece; la segunda pide que le informen.',
+            'La primera pide datos; la segunda se ofrece para el puesto.',
+            'Las dos se postulan exactamente al mismo puesto.',
+            'Las dos piden que les manden más información.'], 0),
+          mc('Milagros repasa dos cartas suyas y una respuesta oral: "1) Dear Sir or Madam, I am writing to apply. Firstly, I will discuss the causes; additionally, the effects. Best regards, and thank you for your time. 2) Dear Sir or Madam, I am writing to request more information. From my perspective, this raises the issue of cost. Yours sincerely, Milagros. 3) Could you repeat that question, please? In conclusion, I fully agree with this view." — ¿Qué deja entrever la segunda carta que la primera no menciona?', [
+            'Que el precio le preocupa antes de decidirse.',
+            'Que ya se decidió y solo le falta pagar.',
+            'Que quiere exponer causas y después efectos.',
+            'Que agradece de antemano el tiempo que le dieron.'], 0),
+          writing('Escríbelo en inglés: "Escribo para solicitar más información."', ['I am writing to request more information.'],
+            { reject: [['I are writing to request more information.', 'Con "I" el verbo be es "am": I am writing to request more information.'], ['I writing to request more information.', 'Falta el verbo be: I am writing to request more information.'], ['I am writing for request more information.', 'El propósito va con "to" + verbo: to request more information.'], ['I am writing to request more informations.', '"Information" es incontable y no lleva -s: more information.']] }),
         ] },
       { id: 'modulo5-6-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -773,6 +975,18 @@ Escribe **4-5 líneas** discutiendo una postura. Estructura: **idea central → 
           mc('Una buena respuesta escrita, además de tomar postura, debe…', ['dejarla sin justificar.', 'justificarla y cerrarla.', 'cambiar de opinión al final.', 'copiar el enunciado.'], 1),
           rebuild('Reconstruye esta frase de Reading.', 'Bees are declining due to pesticide use.', ['Bees', 'are', 'declining', 'due', 'to', 'pesticide', 'use.', 'because', 'of', 'honey', 'cold']),
           rebuild('Reconstruye esta postura de Writing.', 'Governments should invest more in public transportation.', ['Governments', 'should', 'invest', 'more', 'in', 'public', 'transportation.', 'invests', 'less', 'cars', 'maybe']),
+          mc('Lee: "Scientific studies indicate a decline in bee populations worldwide due to pesticide use. According to Smith (2020), the data reveal a clear trend. Nevertheless, the research yields contradictory findings. Furthermore, notable limitations must be considered. It is believed that governments should invest more in public transportation. This reduces traffic and pollution. For example, in cities like Tokyo, efficient transit has lowered car usage. A 2018 study in Nature found that sea levels are rising faster than predicted. It can be argued that the evidence is limited." — ¿Con cuál de estas afirmaciones estaría de acuerdo quien escribe?', [
+            'Que la tendencia es clara, pero la evidencia todavía no cierra.',
+            'Que los estudios ya zanjaron el caso de las abejas.',
+            'Que los hallazgos contradictorios descartan el efecto de los pesticidas.',
+            'Que el transporte público es la única causa de la contaminación.'], 0),
+          mc('Lee: "Scientific studies indicate a decline in bee populations worldwide due to pesticide use. According to Smith (2020), the data reveal a clear trend. Nevertheless, the research yields contradictory findings. Furthermore, notable limitations must be considered. It is believed that governments should invest more in public transportation. This reduces traffic and pollution. For example, in cities like Tokyo, efficient transit has lowered car usage. A 2018 study in Nature found that sea levels are rising faster than predicted. It can be argued that the evidence is limited." — ¿Qué papel cumple en el texto lo que se cuenta sobre Tokio?', [
+            'Es el ejemplo que respalda la propuesta de transporte.',
+            'Es la tesis principal que defiende todo el texto.',
+            'Es la objeción que debilita la propuesta de transporte.',
+            'Es la fuente citada para el dato de las abejas.'], 0),
+          writing('Escríbelo en inglés: "Las abejas están disminuyendo debido al uso de pesticidas."', ['Bees are declining due to pesticide use.', 'Bees are declining because of pesticide use.'],
+            { reject: [['Bees are declining because to pesticide use.', 'La causa va con "due to" o "because of": Bees are declining due to pesticide use.'], ['Bees are declining due of pesticide use.', 'Se dice "due to", nunca "due of": Bees are declining due to pesticide use.'], ['Bees is declining due to pesticide use.', 'El sujeto es plural y pide "are": Bees are declining due to pesticide use.']] }),
         ] },
       { id: 'modulo5-7-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Simulador oral: Listening + Speaking 🎧🗣️**
 
@@ -802,6 +1016,18 @@ Responde con una **opinión estructurada**: presenta ambos lados y concluye.
           mc('Al escuchar un audio con datos, ¿qué conviene capturar?', ['solo el tono del hablante.', 'números y hechos clave.', 'el saludo inicial.', 'tu opinión personal.'], 1),
           rebuild('🎧 Reconstruye los puntos clave del audio.', 'The economy grew 3% and inflation remained low.', ['The', 'economy', 'grew', '3%', 'and', 'inflation', 'remained', 'low.', 'fell', 'high', 'rose']),
           rebuild('🎧 Reconstruye esta opinión estructurada.', 'On one hand it helps; on the other, it distracts.', ['On', 'one', 'hand', 'it', 'helps;', 'on', 'the', 'other,', 'it', 'distracts.', 'foot', 'side', 'because']),
+          mc('Lee: "Rosa: According to the World Bank, the economy grew 3% and inflation remained low. Luis: Based on the data, I would say this evidence suggests a clear trend. Milagros: I agree with Luis to some extent, however, the evidence is limited. Rosa: Do you think social media affects learning? Luis: In my view, social media can both help and hinder learning. On one hand, it provides access to educational resources. On the other, it can be distracting. Milagros: Therefore, moderation is key. Rosa: It\'s getting a bit chilly in here." — ¿Quién respalda lo dicho solo en parte?', [
+            'Milagros, que acepta el punto pero le pone reparos.',
+            'Luis, que se apoya en los datos para sostenerlo.',
+            'Rosa, que cita la fuente de las cifras.',
+            'Los tres, que coinciden sin ninguna reserva.'], 0),
+          mc('Lee: "Rosa: According to the World Bank, the economy grew 3% and inflation remained low. Luis: Based on the data, I would say this evidence suggests a clear trend. Milagros: I agree with Luis to some extent, however, the evidence is limited. Rosa: Do you think social media affects learning? Luis: In my view, social media can both help and hinder learning. On one hand, it provides access to educational resources. On the other, it can be distracting. Milagros: Therefore, moderation is key. Rosa: It\'s getting a bit chilly in here." — ¿Con cuál de estas afirmaciones estaría de acuerdo Luis?', [
+            'Que las redes ayudan y estorban el aprendizaje a la vez.',
+            'Que las redes solo distraen a quien estudia.',
+            'Que las redes no tienen ningún efecto en el aprendizaje.',
+            'Que las redes reemplazan a los recursos educativos.'], 0),
+          writing('Escríbelo en inglés: "Las redes sociales pueden tanto ayudar como estorbar el aprendizaje."', ['Social media can both help and hinder learning.'],
+            { reject: [['Social media can both help and hinder learn.', 'Tras "hinder" va el sustantivo verbal: hinder learning.'], ['Social media can both to help and to hinder learning.', 'Después de "can" va el verbo base sin "to": can both help and hinder learning.'], ['Social media can both helps and hinders learning.', 'Después de "can" el verbo no lleva -s: can both help and hinder learning.']] }),
         ] },
       { id: 'modulo5-7-errores', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `#### **🚫 Errores Comunes**
 
@@ -821,6 +1047,18 @@ En un simulacro C1, los tropiezos suelen ser de **estrategia**, no de inglés. C
           tap('Toca la palabra incorrecta:', ['Social', 'media', 'can', 'both', 'help', 'and', 'hinder', 'learn.'], 7, 'learning.'),
           tap('Toca la palabra incorrecta:', ['Therefore,', 'moderation', 'are', 'the', 'key', 'point.'], 2, 'is'),
           tap('Toca la palabra incorrecta:', ['Inflation', 'remain', 'low', 'during', 'the', 'year.'], 1, 'remained'),
+          mc('Lee: "Rosa: In my view, governments should invest more in public transportation. This reduces traffic and pollution. For example, in cities like Tokyo, efficient transit has lowered car usage. In conclusion, these findings indicate a clear pattern. Luis: Governments should invest more in public transportation. I firmly believe that this is true. Milagros: The reading states this; however, the lecture challenges this by saying the evidence is limited." — ¿Cuál de las tres respuestas llega hasta el cierre de su estructura?', [
+            'La de Rosa, que da postura, ejemplo y conclusión.',
+            'La de Luis, que repite su postura sin sustentarla.',
+            'La de Milagros, que contrasta dos fuentes sin cerrar.',
+            'Las tres, porque todas hablan del transporte público.'], 0),
+          mc('Lee: "Rosa: In my view, governments should invest more in public transportation. This reduces traffic and pollution. For example, in cities like Tokyo, efficient transit has lowered car usage. In conclusion, these findings indicate a clear pattern. Luis: Governments should invest more in public transportation. I firmly believe that this is true. Milagros: The reading states this; however, the lecture challenges this by saying the evidence is limited." — ¿Con cuál de estas afirmaciones estaría de acuerdo Milagros?', [
+            'Que lo leído y lo escuchado no coinciden del todo.',
+            'Que la charla confirma punto por punto lo leído.',
+            'Que la evidencia del texto ya basta para decidir.',
+            'Que Rosa cerró mal su respuesta sobre el transporte.'], 0),
+          writing('Escríbelo en inglés: "Por lo tanto, la moderación es la clave."', ['Therefore, moderation is key.'],
+            { reject: [['Therefore, moderation are key.', '"Moderation" es singular: Therefore, moderation is key.'], ['Therefore, the moderation is the key.', 'La fórmula va sin artículos: Therefore, moderation is key.'], ['Therefore, moderation is the key.', 'Va sin artículo delante de "key": Therefore, moderation is key.'], ['However, moderation is key.', '"Por lo tanto" marca consecuencia: va "Therefore", no "However".']] }),
         ] },
       { id: 'modulo5-7-resumen', type: 'resumen', markdown: `## **🎯 Resumen: tu simulacro de las 4 habilidades 🏁**
 
