@@ -217,9 +217,17 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
       {logo ? (
         <img src={logo} alt="" style={{ height: 24, maxWidth: 150, objectFit: "contain" }} />
       ) : headerText ? (
-        <span style={{ fontWeight: 700, fontSize: 18, color: headerInk || undefined }}>
+        <span
+          style={{
+            fontWeight: 700,
+            fontSize: 18,
+            color: headerInk || undefined,
+            fontFamily: fontStack(headerFont, "ui") || undefined,
+          }}
+        >
           {headerText}
         </span>
+
       ) : (
         <span style={{ fontWeight: 700, fontSize: 18 }}>
           <span style={{ color: headerInk || "#000" }}>Aprendo</span>
