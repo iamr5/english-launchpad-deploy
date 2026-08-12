@@ -1,7 +1,7 @@
 import template from "../assets/demo-app.html?raw";
 import dashboardTemplate from "../assets/demo-dashboard.html?raw";
 import { BUILT_IN_PACKS, MASCOTS_DIR, type MascotPack } from "./mascot-packs";
-import { type DemoConfig, shadeHex } from "./demo-config";
+import { type DemoConfig, fontStack, fontsHref, shadeHex } from "./demo-config";
 import { issueCourseToken } from "./course-token";
 
 // Punto único donde se arma la página de un demo: coge la plantilla común y le
