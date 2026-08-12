@@ -185,9 +185,13 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
   // demo-page.ts, para que lo que se ve aquí sea lo que verá el visitante.
   const uiFont = g("type.uiFont");
   const bodyFont = g("type.bodyFont");
-  useDemoFonts([uiFont, bodyFont]);
+  const headerFont = g("brand.headerFont");
+  const spTitleFont = g("splash.titleFont");
+  const spPhraseFont = g("splash.phraseFont");
+  useDemoFonts([uiFont, bodyFont, headerFont, spTitleFont, spPhraseFont]);
   const ink = g("colors.ink") || "#1A1A1A";
   const headerInk = g("colors.header");
+
 
   const frame: React.CSSProperties = {
     fontFamily: fontStack(uiFont, "ui") || "ui-rounded, 'Segoe UI', system-ui, sans-serif",
@@ -213,9 +217,17 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
       {logo ? (
         <img src={logo} alt="" style={{ height: 24, maxWidth: 150, objectFit: "contain" }} />
       ) : headerText ? (
-        <span style={{ fontWeight: 700, fontSize: 18, color: headerInk || undefined }}>
+        <span
+          style={{
+            fontWeight: 700,
+            fontSize: 18,
+            color: headerInk || undefined,
+            fontFamily: fontStack(headerFont, "ui") || undefined,
+          }}
+        >
           {headerText}
         </span>
+
       ) : (
         <span style={{ fontWeight: 700, fontSize: 18 }}>
           <span style={{ color: headerInk || "#000" }}>Aprendo</span>
@@ -303,8 +315,17 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
                 "--sp-from": from,
                 "--sp-to": to,
                 "--sp-glow": glow,
+                ...(fontStack(spTitleFont, "ui")
+                  ? { "--sp-word-font": fontStack(spTitleFont, "ui") }
+                  : {}),
+                ...(g("splash.titleColor") ? { "--sp-word-ink": g("splash.titleColor") } : {}),
+                ...(fontStack(spPhraseFont, "ui")
+                  ? { "--sp-phrase-font": fontStack(spPhraseFont, "ui") }
+                  : {}),
+                ...(g("splash.phraseColor") ? { "--sp-phrase-ink": g("splash.phraseColor") } : {}),
               } as React.CSSProperties
             }
+
           >
             <div className="sp-deco" />
             <div className="sp-mark">
@@ -1053,6 +1074,22 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={get(cfg, "brand.headerText")}
                 onChange={upd("brand.headerText")}
               />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <FontField
+                  label="Fuente del rótulo"
+                  hint="Solo el texto de la cabecera. Vacío = la fuente de interfaz."
+                  value={g2("brand.headerFont")}
+                  onChange={upd("brand.headerFont")}
+                />
+                <ColorField
+                  label="Color del rótulo"
+                  hint="El mismo de «Texto de la cabecera» en Colores."
+                  fallback="#1A1A1A"
+                  value={get(cfg, "colors.header")}
+                  onChange={upd("colors.header")}
+                />
+              </div>
+
               <FileField
                 label="Logo"
                 fallbackLabel="logotipo AprendoEnglish"
@@ -1305,6 +1342,23 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     onChange={upd("splash.logo")}
                   />
 
+                  <div className="rounded-lg border p-3 space-y-3">
+                    <Label className="text-xs font-medium">Rótulo (sin logo)</Label>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <FontField
+                        label="Fuente"
+                        value={g2("splash.titleFont")}
+                        onChange={upd("splash.titleFont")}
+                      />
+                      <ColorField
+                        label="Color"
+                        fallback="#FFFFFF"
+                        value={get(cfg, "splash.titleColor")}
+                        onChange={upd("splash.titleColor")}
+                      />
+                    </div>
+                  </div>
+
                   <Field
                     label="Frase"
                     hint="Una línea. Si la dejas vacía sale solo la marca."
@@ -1312,6 +1366,21 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     value={get(cfg, "splash.phrase")}
                     onChange={upd("splash.phrase")}
                   />
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <FontField
+                      label="Fuente de la frase"
+                      value={g2("splash.phraseFont")}
+                      onChange={upd("splash.phraseFont")}
+                    />
+                    <ColorField
+                      label="Color de la frase"
+                      fallback="#FFFFFF"
+                      value={get(cfg, "splash.phraseColor")}
+                      onChange={upd("splash.phraseColor")}
+                    />
+                  </div>
+
 
                   <div className="rounded-lg border p-3 space-y-3">
                     <div>

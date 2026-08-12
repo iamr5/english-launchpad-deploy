@@ -78,7 +78,7 @@
   .appbar > .brand, .appbar-row > .brand { color: var(--brand-ink, inherit); }
   /* "AprendoEnglish.com" wordmark — rounded typeface (ui-rounded → SF Pro Rounded on Apple;
      rounded fallbacks elsewhere, no web fetch so it stays offline-safe). Per-word colors. */
-  .brand { font-family: var(--font-round); font-weight: 700; letter-spacing: .01em; font-size: 1.2em; } /* scales the whole wordmark up; .com stays proportional (em-based) */
+  .brand { font-family: var(--brand-font, var(--font-round)); font-weight: 700; letter-spacing: .01em; font-size: 1.2em; } /* scales the whole wordmark up; .com stays proportional (em-based) */
   /* --brand-ink: color propio del rótulo de la cabecera. Sin definir, cada
      palabra conserva su color de siempre. */
   .brand .b-aprendo { color: var(--brand-ink, #000); }

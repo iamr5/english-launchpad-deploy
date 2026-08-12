@@ -137,7 +137,25 @@ function themeCSS(cfg: DemoConfig) {
   if (c.muted) vars.push(`--muted:${c.muted}`, `--muted2:${c.muted}`);
   if (c.header) vars.push(`--brand-ink:${c.header}`);
 
-  const href = fontsHref(cfg.type?.uiFont, cfg.type?.bodyFont);
+  // Los textos de marca: rótulo de cabecera y los de la bienvenida.
+  const s = cfg.splash ?? {};
+  const headerFont = fontStack(cfg.brand.headerFont, "ui");
+  const titleFont = fontStack(s.titleFont, "ui");
+  const phraseFont = fontStack(s.phraseFont, "ui");
+  if (headerFont) vars.push(`--brand-font:${headerFont}`);
+  if (titleFont) vars.push(`--sp-word-font:${titleFont}`);
+  if (s.titleColor) vars.push(`--sp-word-ink:${s.titleColor}`);
+  if (phraseFont) vars.push(`--sp-phrase-font:${phraseFont}`);
+  if (s.phraseColor) vars.push(`--sp-phrase-ink:${s.phraseColor}`);
+
+  const href = fontsHref(
+    cfg.type?.uiFont,
+    cfg.type?.bodyFont,
+    cfg.brand.headerFont,
+    s.titleFont,
+    s.phraseFont,
+  );
+
   const link = href
     ? `<link rel="preconnect" href="https://fonts.googleapis.com">` +
       `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>` +
