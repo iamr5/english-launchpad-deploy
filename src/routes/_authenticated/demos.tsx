@@ -181,11 +181,20 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
   const logo = g("brand.logo");
   const appbarIcon = g("brand.appbarIcon") || pack.head;
 
+  // Tipografía y color de letra: el previo usa exactamente lo mismo que sirve
+  // demo-page.ts, para que lo que se ve aquí sea lo que verá el visitante.
+  const uiFont = g("type.uiFont");
+  const bodyFont = g("type.bodyFont");
+  useDemoFonts([uiFont, bodyFont]);
+  const ink = g("colors.ink") || "#1A1A1A";
+  const headerInk = g("colors.header");
+
   const frame: React.CSSProperties = {
-    fontFamily: "ui-rounded, 'Segoe UI', system-ui, sans-serif",
+    fontFamily: fontStack(uiFont, "ui") || "ui-rounded, 'Segoe UI', system-ui, sans-serif",
     background: "#F4F4F6",
     borderRadius: 14,
     padding: 14,
+    color: ink,
   };
 
   const AppBar = (
