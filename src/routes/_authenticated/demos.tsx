@@ -2950,7 +2950,58 @@ function ColorField({
   );
 }
 
+/**
+ * Elige una de las tipografías de la lista curada. Cada opción se pinta con su
+ * propia letra, así se decide viendo y no leyendo nombres. Vacío = la del
+ * sistema, que es como se ven hoy los demos.
+ */
+function FontField({
+  label,
+  hint,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  // Cargar las familias en el propio panel: sin esto el desplegable enseñaría
+  // todas las opciones con la misma letra.
+  useDemoFonts(DEMO_FONTS.map((f) => f.id));
+  return (
+    <div className="space-y-1.5">
+      <Label>{label}</Label>
+      <select
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-9 w-full rounded-md border bg-background px-3 text-sm"
+        style={{ fontFamily: fontStack(value, "ui") || undefined }}
+      >
+        {DEMO_FONTS.map((f) => (
+          <option key={f.id} value={f.id} style={{ fontFamily: f.stack || undefined }}>
+            {f.name}
+          </option>
+        ))}
+      </select>
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
 
+/** Mete en el <head> del panel el <link> de Google Fonts que haga falta. */
+function useDemoFonts(ids: (string | undefined)[]) {
+  const href = fontsHref(...ids);
+  useEffect(() => {
+    if (!href) return;
+    if (document.querySelector(`link[data-demo-fonts][href="${href}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.dataset.demoFonts = "1";
+    document.head.appendChild(link);
+  }, [href]);
+}
 
 function FileField({
   label,
