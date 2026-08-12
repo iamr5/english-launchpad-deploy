@@ -1,10 +1,25 @@
 // COURSE_DATA — ported 1:1 from lib/elearning/data/module1_microlection*_data.dart
-// Quiz types: 'mc' (multiple choice), 'rebuild' (rebuild what you heard), 'tap' (tap to highlight / error spotting)
+// Quiz types: 'mc' (multiple choice), 'rebuild' (rebuild what you heard), 'tap' (tap to highlight / error spotting),
+//             'writing' (el alumno escribe la respuesta en una caja de texto)
 // This file is the single source of lesson content for the web port of the Inglés feature.
 
 const mc = (question, options, correctIndex) => ({ type: 'mc', question, options, correctIndex });
 const rebuild = (question, correctSentence, wordBlocks) => ({ type: 'rebuild', question, correctSentence, wordBlocks });
 const tap = (question, sentenceTokens, errorTokenIndex, correctedToken) => ({ type: 'tap', question, sentenceTokens, errorTokenIndex, correctedToken });
+// writing(enunciado, aceptadas, extra)
+//   aceptadas — string o array. La PRIMERA es la canónica: es la que se le
+//               muestra al alumno cuando falla, así que escríbela completa y
+//               bien puntuada aunque el corrector ignore mayúsculas y signos.
+//   extra     — { hint, reject, strict } (todo opcional)
+//       hint   texto de ayuda bajo la caja mientras escribe.
+//       reject [[respuesta, motivo], …] — errores previsibles que se marcan mal
+//              con una explicación concreta en vez del genérico "Casi —".
+//       strict true apaga la tolerancia a dedazos (para cuando la ortografía ES
+//              lo evaluado).
+// El corrector ignora mayúsculas, tildes, signos y espacios de más, y expande
+// contracciones ("I'm" = "I am"). Ver gradeWriting() en la app.
+const writing = (question, accepted, extra) => Object.assign(
+  { type: 'writing', question, accepted: [].concat(accepted) }, extra || {});
 
 const microlection1 = {
   id: 'modulo1-1',
@@ -48,9 +63,22 @@ O sea Yo + Verbo = I + Verb
         mc('Traduce: "Yo trabajo todos los días."', ['I works every day.', 'I work every day.', 'I working every day.', 'I am work every day.'], 1),
         mc('Con "I" (yo), el verbo va en...', ['forma base, sin cambios', 'con -s al final', 'con -ing', 'con -ed'], 0),
         mc('¿Cuál es correcta?', ['I plays football.', 'I play football.', 'I playing football.', 'I to play football.'], 1),
+        mc('Lee: "I study English. I work every day and I play football on Sundays." — ¿De quién habla el texto?', [
+          'De quien escribe: cuenta su propia rutina.',
+          'De un amigo que no está presente.',
+          'De un grupo de compañeros.',
+          'De la persona a la que le escribe.'], 0),
+        mc('Lee: "I work every day. I study English at night." — ¿Qué quiere decir con eso?', [
+          'Que son cosas que hace normalmente, su rutina.',
+          'Que son cosas que hizo el año pasado.',
+          'Que son planes para el próximo mes.',
+          'Que son cosas que nunca hace.'], 0),
         tap('Toca la palabra incorrecta:', ['I', 'work', 'hard', 'and', 'studies', 'English.'], 4, 'study'),
         tap('Toca la palabra incorrecta:', ['I', 'play', 'football', 'and', 'watches', 'TV.'], 4, 'watch'),
         rebuild('🎧 Ordena: "Yo estudio inglés."', 'I study English', ['I', 'study', 'English', 'studies', 'studied', 'steady']),
+        writing('Escríbelo en inglés: "Yo trabajo todos los días."', ['I work every day.', 'I work everyday.'],
+          { hint: 'Con "I" el verbo va tal cual, sin cambios.',
+            reject: [['I works every day.', 'Ojo: la -s es sólo para he/she/it.']] }),
       ] },
     { id: 'modulo1-1-teoria-1b', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**1b.** **Hablar de ti (I) – Emociones y estados**
 
@@ -72,12 +100,25 @@ O sea: Yo + soy/estoy = I + am
       miniQuiz: [
         mc('"Yo estoy feliz."', ['I happy.', 'I am happy.', 'I happy am.', 'I is happy.'], 1),
         mc('Para decir cómo te sientes, usas...', ['I + verbo de acción', 'I + am + emoción/estado', 'I + verbo + -ing', 'I + have + emoción'], 1),
+        mc('Lee: "I am tired. I work ten hours and I study at night." — ¿Qué parte dice cómo SE SIENTE y cuál dice lo que HACE?', [
+          '"I am tired" dice cómo se siente; "I work" y "I study" dicen lo que hace.',
+          '"I am tired" dice lo que hace; las otras dos dicen cómo se siente.',
+          'Las tres dicen cómo se siente.',
+          'Las tres dicen lo que hace.'], 0),
         mc('"I ___ angry." (Yo estoy enojado)', ['am', 'is', 'are', 'be'], 0),
         mc('¿Cuál es correcta?', ['I hungry.', 'I have hungry.', 'I am hungry.', 'I is hungry.'], 2),
+        mc('Lee: "I am hungry. I work all morning and I eat at 3 p.m." — ¿Por qué tiene hambre?', [
+          'Porque trabaja toda la mañana y recién come a las 3.',
+          'Porque come temprano en la mañana.',
+          'Porque hoy no trabaja.',
+          'Porque está cansado y duerme mucho.'], 0),
         tap('Toca la palabra incorrecta:', ['I', 'is', 'happy', 'and', 'work', 'hard.'], 1, 'am'),
         tap('Toca la palabra incorrecta:', ['I', 'am', 'tired', 'and', 'studies', 'a', 'lot.'], 4, 'study'),
         rebuild('Escucha y reconstruye:', 'I am tired', ['I', 'am', 'tired', 'tied', 'hired', 'fired']),
         rebuild('🎧 Ordena: "Yo estoy bien."', 'I am fine', ['I', 'am', 'fine', 'five', 'find', 'wine']),
+        writing('Escríbelo en inglés: "Yo estoy cansado."', ['I am tired.', "I'm tired."],
+          { hint: 'Para un estado no uses verbo de acción.',
+            reject: [['I tired.', 'Falta el "am": I am tired.'], ['I have tired.', 'No es "have": los estados van con am.']] }),
       ] },
     { id: 'modulo1-1-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Hablar de tu grupo (we)**
 
@@ -94,10 +135,22 @@ Hablar de **nosotros** (**we**) es igual de sencillo que con "I". Tú y tu grupo
         mc('We ___ early.', ['eats', 'eat', 'eating', 'to eat'], 1),
         mc('Con "we" (nosotros), el verbo...', ['lleva -s', 'no cambia (forma base)', 'lleva -ing', 'lleva -ed'], 1),
         mc('¿Cuál es correcta?', ['We studies English.', 'We study English.', 'We studying English.', 'We to study English.'], 1),
+        mc('Lee: "My brother and I live in Lima. We eat early and we work downtown." — ¿A quiénes incluye "we"?', [
+          'A quien escribe y a su hermano.',
+          'Solo al hermano.',
+          'Solo a quien escribe.',
+          'A un grupo ajeno, del que solo está hablando.'], 0),
+        mc('Lee: "I work in the morning. We study English at night." — ¿Qué diferencia hay entre las dos oraciones?', [
+          'La primera habla solo de quien escribe; la segunda, de él y su grupo.',
+          'La primera habla del grupo; la segunda, de una sola persona.',
+          'Las dos hablan exactamente de las mismas personas.',
+          'Las dos hablan de otras personas ausentes.'], 0),
         mc('"Nosotros comemos temprano."', ['We eats early.', 'We are eat early.', 'We eat early.', 'We eating early.'], 2),
         tap('Toca la palabra incorrecta:', ['We', 'live', 'in', 'Lima', 'and', 'works', 'downtown.'], 5, 'work'),
         tap('Toca la palabra incorrecta:', ['We', 'study', 'English', 'and', 'plays', 'football.'], 4, 'play'),
         rebuild('🎧 Ordena: "Nosotros trabajamos juntos."', 'We work together', ['We', 'work', 'together', 'walk', 'word', 'works', 'he']),
+        writing('Escríbelo en inglés: "Nosotros vivimos en Lima."', ['We live in Lima.'],
+          { reject: [['We lives in Lima.', 'Con "we" el verbo no cambia: live.']] }),
       ] },
     { id: 'modulo1-1-teoria-3', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**3.** **Hablar directamente con alguien (you)**
 
@@ -115,6 +168,16 @@ En inglés **"you"** sirve tanto para **tú** *como* **ustedes** 😮. Es decir,
         mc('En inglés, "you" sirve para...', ['solo "tú"', 'solo "ustedes"', 'tanto "tú" como "ustedes"', 'solo para animales'], 2),
         mc('Con "you", el verbo...', ['no cambia', 'lleva -s', 'lleva -ing', 'lleva -ed'], 0),
         mc('¿Cuál es correcta?', ['You plays football.', 'You play football.', 'You playing football.', 'You to play football.'], 1),
+        mc('Un aviso para TODO el equipo del hospital dice: "You work here on weekends. You start at 8." — ¿A quién se dirige?', [
+          'A todos ellos: aquí "you" significa "ustedes".',
+          'A una sola persona, porque "you" solo significa "tú".',
+          'A quien escribió el aviso.',
+          'A un grupo del que se habla, pero que no lee el aviso.'], 0),
+        mc('Un profesor le dice a UN alumno: "You study medicine and you work here on Saturdays." — ¿Qué significa "you" aquí?', [
+          '"Tú": una sola persona, el alumno.',
+          '"Ustedes": todo el salón.',
+          '"Nosotros": el profesor y el alumno.',
+          '"Ellos": otros alumnos que no están.'], 0),
         tap('Toca la palabra incorrecta:', ['You', 'work', 'here', 'and', 'studies', 'medicine.'], 4, 'study'),
         tap('Toca la palabra incorrecta:', ['You', 'play', 'well', 'and', 'sings', 'nicely.'], 4, 'sing'),
         rebuild('🎧 Ordena: "Ustedes trabajan aquí."', 'You work here', ['You', 'work', 'here', 'walk', 'word', 'works', 'hair']),
@@ -135,9 +198,21 @@ Eso sí, como puedes haber notado en inglés no importa el género del grupo aje
         mc('Para un grupo (ellos o ellas), en inglés usas...', ['he', 'she', 'they', 'it'], 2),
         mc('Con "they", el verbo...', ['lleva -s', 'no cambia (forma base)', 'lleva -ing', 'lleva -ed'], 1),
         mc('¿Cuál es correcta?', ['They sings nicely.', 'They are sing nicely.', 'They sing nicely.', 'They singing nicely.'], 2),
+        mc('Lee: "My cousins live in Trujillo. They sing nicely and they play football." — ¿De quiénes habla el texto?', [
+          'De un grupo ajeno a quien escribe: sus primos.',
+          'Del grupo al que pertenece quien escribe.',
+          'De la persona que está leyendo el texto.',
+          'De una sola persona que no está presente.'], 0),
+        mc('Lee: "Rosa and Carmen sing nicely. They play football on Sundays." — ¿Por qué se usa "they" y no otra palabra?', [
+          'Porque "they" vale para cualquier grupo, sean hombres o mujeres.',
+          'Porque son mujeres y "they" es solo femenino.',
+          'Porque están presentes en la conversación.',
+          'Porque son exactamente dos personas.'], 0),
         tap('Toca la palabra incorrecta:', ['They', 'sing', 'nicely', 'and', 'plays', 'football.'], 4, 'play'),
         tap('Toca la palabra incorrecta:', ['They', 'work', 'late', 'and', 'studies', 'at', 'night.'], 4, 'study'),
         rebuild('🎧 Ordena: "Ellas juegan fútbol."', 'They play football', ['They', 'play', 'football', 'pray', 'plays', 'place', 'day']),
+        writing('Escríbelo en inglés: "Ellos cantan bonito."', ['They sing nicely.'],
+          { reject: [['They sings nicely.', 'Con "they" el verbo va en forma base: sing.']] }),
       ] },
     { id: 'modulo1-1-teoria-5', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**5.** **Chismear sobre otros (he, she, it)**
 
@@ -164,8 +239,17 @@ Ahora, nos falta aclarar **"it"**. **It** significa "eso/esta/o" y se usa para c
   > 💡 **Ojito:** Puede ser confuso pero ¿Me creerías que esto es así para distinguir a los perritos 🐶 de aquellos hombres que son bien perros 👹? (¡Bromita! jeje Pero si quieres no es broma... es truco de memoria 😜): *los animales son tan especiales que tienen su propio pronombre*.`,
       miniQuiz: [
         mc('Con "he", "she" o "it" (tercera persona), al verbo le agregas...', ['nada, va igual', '-s o -es al final', '-ing al final', '-ed al final'], 1),
-        mc('"Ella come pizza."', ['She eat pizza.', 'She eats pizza.', 'She eating pizza.', 'She to eat pizza.'], 1),
         mc('He ___ to work by bus.', ['go', 'goes', 'going', 'to go'], 1),
+        mc('Lee: "In my house, my sister cooks and my brothers wash the dishes." — ¿Por qué "cooks" lleva -s y "wash" no?', [
+          'Porque "my sister" es una sola persona y "my brothers" son varios.',
+          'Porque cocinar es una tarea más importante que lavar.',
+          'Porque "cooks" habla del pasado y "wash" del presente.',
+          'Porque "wash" es irregular y nunca acepta -s.'], 0),
+        mc('Lee: "My sister buys a new phone. It is red and it works very well." — Según el texto, ¿qué es rojo?', [
+          'El teléfono: "it" se usa para cosas, no para personas.',
+          'La hermana, porque es lo primero que se menciona.',
+          'Los dos: la hermana y el teléfono.',
+          'No se puede saber con este texto.'], 0),
         tap('Toca la palabra incorrecta:', ['She', 'works', 'hard', 'and', 'study', 'English.'], 4, 'studies'),
         tap('Toca la palabra incorrecta:', ['He', 'goes', 'home', 'early', 'and', 'watch', 'TV.'], 5, 'watches'),
         tap('Toca la palabra incorrecta:', ['We', 'study', 'English', 'and', 'he', 'play', 'football.'], 5, 'plays'),
@@ -174,6 +258,12 @@ Ahora, nos falta aclarar **"it"**. **It** significa "eso/esta/o" y se usa para c
         tap('Toca la palabra incorrecta:', ['The', 'phone', 'are', 'red', 'and', 'it', 'works', 'well.'], 2, 'is'),
         tap('Toca la palabra incorrecta:', ['He', 'watch', 'movies', 'and', 'she', 'reads', 'books.'], 1, 'watches'),
         rebuild('🎧 Ordena: "Él estudia inglés."', 'He studies English', ['He', 'studies', 'English', 'study', 'studied', 'She', 'eats']),
+        writing('Escríbelo en inglés: "Ella estudia inglés."', ['She studies English.'],
+          { hint: 'Tercera persona: al verbo le toca -s o -es.',
+            reject: [['She study English.', 'Con "she" el verbo lleva -es: studies.'], ['She studys English.', 'Termina en -y tras consonante: study → studies.']] }),
+        writing('Escríbelo en inglés: "Él va al trabajo en bus."', ['He goes to work by bus.'],
+          { hint: 'go es de los que llevan -ES.',
+            reject: [['He go to work by bus.', 'Falta la -es: go → goes.']] }),
       ] },
     { id: 'modulo1-1-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 

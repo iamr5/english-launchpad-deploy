@@ -492,6 +492,17 @@
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
   }
   .opt:disabled { cursor: default; }
+  /* WRITING — caja de texto libre. Hereda el look de .opt para que el quiz se vea de una pieza. */
+  .w-input {
+    width: 100%; border: 2px solid var(--line); background: #fff; border-radius: 16px; color: var(--ink);
+    padding: 16px 18px; font-size: 17px; font-weight: 700; font-family: inherit; outline: none;
+  }
+  .w-input::placeholder { color: var(--muted); font-weight: 700; }
+  .w-input:focus { border-color: var(--blue); }
+  .w-input:disabled { opacity: 1; }
+  .w-input.correct { background: rgba(63,170,36,.12); border-color: var(--green); color: var(--greenDark); }
+  .w-input.wrong { background: rgba(244,67,54,.08); border-color: var(--red); color: #B3261E; }
+  .w-hint { font-size: 14px; font-weight: 700; color: var(--muted); margin: 10px 2px 0; }
   /* Always reserve the icon slot (fixed size) so showing the check/x never re-flows the card */
   .opt .opt-ic { flex: 0 0 22px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
   .opt.sel { background: rgba(28,176,246,.10); border-color: var(--blue); color: var(--blue); }
@@ -1460,13 +1471,20 @@ function fmtMinutes(min) {
 function moduleBadgeColor(idx) { return MODULE_COLORS[idx] || MODULE_COLORS[MODULE_COLORS.length - 1]; }
 function lessonBadgeColor(i, total) { const t = total > 1 ? i / (total - 1) : 0; return `hsl(${Math.round(120 - 108 * t)} 70% 46%)`; }
 
+// La barra fija del pie (rótulo, título y botón) va con el color de ACCIÓN —el
+// mismo del acierto en los quizzes y del resto de CTA— y no con el del módulo:
+// así el botón principal es siempre del mismo color en toda la app.
+// El demo mantiene el color del módulo por defecto y puede pedir éste con
+// colors.footerColor:"action" (ver demo-app.html).
+function footColors() { return { col: 'var(--green)', cold: 'var(--greenDark)' }; }
+
 function courseHero() {
   const na = nextActiveLesson();
   if (!na) {
     return `<div class="foot-done">${icon('emoji_events', 22, '#E0A800')}<span>¡Completaste el curso! Pronto habrá más.</span></div>`;
   }
   const started = getScroll(na.lesson.id) > 0.02 || isReadingCompleted(na.lesson.id);
-  const col = modAccent(course.modules.indexOf(na.mod)), cold = shadeHex(col, -0.24);
+  const { col, cold } = footColors(course.modules.indexOf(na.mod));
   const isFirst = na.lesson.id === allLessons[0].id;
   const kicker = isFirst ? 'Tu primera lección' : `Tu próxima lección · ${escapeHtml(moduleName(na.mod))}`;
   return `<div class="foot-kicker" style="color:${col}">${kicker}</div>
@@ -2311,9 +2329,157 @@ function renderTap(host, q, onCorrect, onIncorrect) {
   draw();
 }
 
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// WRITING — corrector de respuesta libre
+//
+// Modelo tomado de Duolingo:
+//   1. No hay UNA respuesta correcta: hay un conjunto de aceptadas.
+//   2. Antes de comparar se normaliza: fuera mayúsculas, tildes y signos.
+//   3. Se tolera UN dedazo (distancia de edición 1) siempre que lo escrito no
+//      sea, a su vez, una palabra real — por eso Duolingo acepta "te" por "the"
+//      pero no "he".
+//
+// A eso le sumamos un candado que Duolingo no necesita y este curso sí: la
+// tolerancia NUNCA puede tapar una diferencia gramatical. "work" está a un solo
+// carácter de "works", así que sin W_INFLEX el alumno aprobaría "He work" como
+// si fuera un dedazo — y la -S es justamente lo que enseña la lección.
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+// Se expanden ANTES de borrar apóstrofes, para que "I'm happy" e "I am happy"
+// terminen siendo la misma cadena de tokens.
+const W_CONTR = [
+  [/\bi'?m\b/g, 'i am'], [/\bit'?s\b/g, 'it is'], [/\bhe'?s\b/g, 'he is'],
+  [/\bshe'?s\b/g, 'she is'], [/\bthat'?s\b/g, 'that is'], [/\bwhat'?s\b/g, 'what is'],
+  [/\bwe'?re\b/g, 'we are'], [/\bthey'?re\b/g, 'they are'], [/\byou'?re\b/g, 'you are'],
+  [/\bdon'?t\b/g, 'do not'], [/\bdoesn'?t\b/g, 'does not'], [/\bdidn'?t\b/g, 'did not'],
+  [/\bisn'?t\b/g, 'is not'], [/\baren'?t\b/g, 'are not'], [/\bcan'?t\b/g, 'can not'],
+  [/\bi'?ve\b/g, 'i have'], [/\bi'?ll\b/g, 'i will'], [/\bi'?d\b/g, 'i would'],
+];
+function wNorm(s) {
+  let t = String(s == null ? '' : s);
+  t = t.replace(/[\u2018\u2019\u02BC\u0060\u00B4]/g, "'").replace(/[\u201C\u201D]/g, '"');
+  t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');   // fuera tildes / diéresis
+  t = t.toLowerCase();
+  for (var i = 0; i < W_CONTR.length; i++) t = t.replace(W_CONTR[i][0], W_CONTR[i][1]);
+  t = t.replace(/[^a-z0-9\s]/g, ' ');                        // fuera signos (. , ! ? ¿ ¡ ' " -)
+  return t.replace(/\s+/g, ' ').trim();
+}
+function wLev(a, b) {
+  if (a === b) return 0;
+  const m = a.length, n = b.length;
+  if (Math.abs(m - n) > 1) return 2;            // sólo importa saber si es <= 1
+  let prev = []; for (let j = 0; j <= n; j++) prev[j] = j;
+  for (let i = 1; i <= m; i++) {
+    const cur = [i];
+    for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[n];
+}
+// Terminaciones que en inglés CARGAN gramática: si la única diferencia es una de
+// éstas, no es un dedazo, es el error que la lección quiere cazar.
+const W_INFLEX = ['s', 'es', 'd', 'ed', 'ing', 'ies'];
+function wIsInflection(u, r) {
+  const short = u.length < r.length ? u : r, long = u.length < r.length ? r : u;
+  if (!long.startsWith(short)) return /y$/.test(short) && long === short.slice(0, -1) + 'ies';
+  return W_INFLEX.indexOf(long.slice(short.length)) !== -1;
+}
+// Lexicón del curso: toda palabra inglesa que aparezca en el material. Da la
+// regla "si lo que escribiste es una palabra real, no es dedazo". Se arma una vez.
+let _wLex = null;
+function wLexicon() {
+  if (_wLex) return _wLex;
+  _wLex = new Set();
+  const c = (typeof COURSE_DATA !== 'undefined' && COURSE_DATA) || (typeof course !== 'undefined' && course) || null;
+  const eat = (s) => { const p = wNorm(s).split(' '); for (let i = 0; i < p.length; i++) if (p[i]) _wLex.add(p[i]); };
+  const eatQ = (q) => {
+    if (!q) return;
+    if (q.options) q.options.forEach(eat);
+    if (q.correctSentence) eat(q.correctSentence);
+    if (q.wordBlocks) q.wordBlocks.forEach(eat);
+    if (q.sentenceTokens) q.sentenceTokens.forEach(eat);
+    if (q.correctedToken) eat(q.correctedToken);
+    if (q.accepted) q.accepted.forEach(eat);
+  };
+  try {
+    (c && c.modules || []).forEach((m) => (m.lessons || []).forEach((l) => {
+      (l.quizQuestions || []).forEach(eatQ);
+      (l.contentBlocks || []).forEach((b) => (b.miniQuiz || []).forEach(eatQ));
+    }));
+  } catch (e) { /* lexicón parcial: sólo perdemos indulgencia, nunca corrección */ }
+  return _wLex;
+}
+function wTypoOk(u, r, lex) {
+  if (u === r) return true;
+  if (r.length <= 3) return false;         // "the"/"he": demasiado corto para arriesgar
+  if (wIsInflection(u, r)) return false;   // la -s es la lección, no un dedazo
+  if (wLev(u, r) > 1) return false;
+  if (lex && lex.has(u)) return false;     // regla Duolingo: es una palabra real
+  return true;
+}
+// -> { ok, typo, canonical, reason }
+function gradeWriting(input, q) {
+  const canonical = (q.accepted && q.accepted[0]) || '';
+  const user = wNorm(input);
+  const out = { ok: false, typo: false, canonical: canonical, reason: null };
+  if (!user) return out;
+  const accepted = (q.accepted || []).map(wNorm);
+  if (accepted.indexOf(user) !== -1) { out.ok = true; return out; }
+  // trampas declaradas: se marcan mal, pero con una explicación concreta
+  const rej = q.reject || [];
+  for (let i = 0; i < rej.length; i++) if (wNorm(rej[i][0]) === user) { out.reason = rej[i][1]; return out; }
+  if (!q.strict) {
+    const lex = wLexicon();
+    for (let a = 0; a < accepted.length; a++) {
+      const U = user.split(' '), R = accepted[a].split(' ');
+      if (U.length !== R.length) continue;
+      let typos = 0, fail = false;
+      for (let i = 0; i < R.length; i++) {
+        if (U[i] === R[i]) continue;
+        if (typos === 0 && wTypoOk(U[i], R[i], lex)) typos++;
+        else { fail = true; break; }
+      }
+      if (!fail && typos === 1) { out.ok = true; out.typo = true; return out; }
+    }
+  }
+  return out;
+}
+
+function renderWriting(host, q, onCorrect, onIncorrect) {
+  let showing = false, res = null, val = '';
+  function submit() {
+    if (showing || !val.trim()) return;
+    res = gradeWriting(val, q); showing = true; draw();
+  }
+  function draw() {
+    let fb = '';
+    if (showing) {
+      if (res.ok && res.typo) fb = '<div class="fb-line ok">¡Bien hecho! Ojo con el dedazo: "' + escapeHtml(res.canonical) + '"</div>';
+      else if (res.ok) fb = '<div class="fb-line ok">¡Bien hecho!</div>';
+      else fb = '<div class="fb-line no">' + (res.reason ? escapeHtml(res.reason) + ' ' : 'Casi — ') + 'La respuesta es "' + escapeHtml(res.canonical) + '"</div>';
+    }
+    const state = showing ? (res.ok ? ' correct' : ' wrong') : '';
+    host.innerHTML = '<div class="q-kicker">Escríbelo en inglés</div><div class="q-question">' + escapeHtml(q.question) + '</div>' +
+      '<input class="w-input' + state + '" id="w-in" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Escribe tu respuesta…" value="' + escapeHtml(val) + '"' + (showing ? ' disabled' : '') + '>' +
+      (q.hint && !showing ? '<div class="w-hint">' + escapeHtml(q.hint) + '</div>' : '') +
+      '<div class="fb-slot">' + fb + '</div>' +
+      '<button class="btn blue" id="q-next"' + ((!showing && !val.trim()) ? ' disabled' : '') + '>' + (showing ? 'Siguiente' : 'Confirmar') + '</button>';
+    const inp = host.querySelector('#w-in'), nb = host.querySelector('#q-next');
+    if (!showing) {
+      // Sin redibujar en cada tecla: perdería el foco y el cursor.
+      inp.oninput = () => { val = inp.value; nb.disabled = !val.trim(); };
+      inp.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); val = inp.value; submit(); } };
+      inp.focus();
+    }
+    nb.onclick = () => { if (!showing) submit(); else (res.ok ? onCorrect : onIncorrect)(); };
+  }
+  draw();
+}
+
 function renderQuiz(host, q, onCorrect, onIncorrect) {
   if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
   else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
+  else if (q.type === 'writing') renderWriting(host, q, onCorrect, onIncorrect);
   else renderTap(host, q, onCorrect, onIncorrect);
 }
 // Segmented progress bar (one segment per question) + an "n/total" counter.
@@ -2919,7 +3085,7 @@ function obRender() {
       `<div class="ob-chip lvl"><span class="em">🏁</span><span class="lb">Nivel ${OB_LEVELS[mIdx]}</span><div class="sb">Empiezas aquí</div></div>` +
       `<div class="ob-chip goal"><span class="em">🎯</span><span class="lb">${OB.goal || 10} min</span><div class="sb">Meta diaria</div></div>`;
     const mod = course.modules[mIdx], fl = mod.lessons[0];
-    const col = modAccent(mIdx), cold = shadeHex(col, -0.24);
+    const { col, cold } = footColors(mIdx);
     const kicker = mIdx > 0 ? 'Tu punto de partida' : 'Tu primera lección';
     const title = mIdx > 0 ? ('Nivel ' + OB_LEVELS[mIdx] + ' · ' + escapeHtml(moduleName(mod))) : escapeHtml(lessonName(fl));
     const label = mIdx > 0 ? 'Ver mi ruta' : 'Empezar';

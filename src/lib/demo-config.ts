@@ -180,6 +180,16 @@ export type DemoConfig = {
      */
     highlight?: string;
     highlightDark?: string;
+    /**
+     * De qué color va la barra fija del pie del curso («Tu próxima lección»):
+     * el rótulo, el título y el botón.
+     *   "module" (por defecto) — el color del módulo al que pertenece la
+     *      lección pendiente, así que cambia de tono según avanzas.
+     *   "action" — el color de acción, el mismo del acierto en los quizzes y
+     *      del resto de botones. Es como se comporta el producto real; aquí se
+     *      deja opcional para no cambiarle el aspecto a los demos ya hechos.
+     */
+    footerColor?: "module" | "action";
   };
 
   mascot: {

@@ -1377,6 +1377,21 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={get(cfg, "colors.action", "#3FAA24")}
                 onChange={upd("colors.action")}
               />
+              <label className="flex items-start gap-3 cursor-pointer rounded-lg border p-3">
+                <Switch
+                  className="mt-0.5"
+                  checked={(get(cfg, "colors.footerColor", "module") as string) === "action"}
+                  onCheckedChange={(v) => upd("colors.footerColor")(v ? "action" : "module")}
+                />
+                <span className="leading-tight">
+                  <span className="text-sm">Usarlo también en la barra del pie</span>
+                  <span className="block text-xs text-muted-foreground">
+                    La barra fija de «Tu próxima lección» va del color de cada módulo y
+                    cambia de tono según avanzas. Actívalo para que use el color de acción
+                    y el botón sea siempre el mismo, como en el producto real.
+                  </span>
+                </span>
+              </label>
               <ColorField
                 label="Resaltado"
                 hint="La opción que eliges en un quiz, y los pasos del onboarding."
