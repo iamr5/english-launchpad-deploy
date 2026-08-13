@@ -463,7 +463,13 @@
     font-family:"Inter"; font-weight:600; font-size:11.5px; padding:0 14px; border-radius:999px;
     cursor:pointer; transition:.15s}
   .metas-btn[hidden]{display:none}
-  .metas-btn::before{content:'⚙'; font-size:11px; opacity:.8}
+  /* El engranaje, en su propia caja y centrado dentro de ella. Dejandolo como
+     texto suelto lo coloca la linea base, y este glifo no la comparte con las
+     letras de al lado —en Windows lo pinta la fuente de emoji, con su propio
+     alto y su propio descendente—, asi que quedaba bajo. Con alto fijo y
+     place-items da igual como venga la fuente. */
+  .metas-btn::before{content:'⚙'; font-size:15px; line-height:1; height:15px;
+    display:grid; place-items:center; opacity:.8}
   .metas-btn:hover{background:rgba(255,255,255,.24)}
   .metas-btn:focus-visible{outline:2px solid #fff; outline-offset:2px}
   /* Con la ficha abierta el velo tapa la pagina: sobraria por encima. */
@@ -509,7 +515,7 @@
       height:42px; padding:0 16px; font-size:12.5px;
       border-color:var(--line); background:var(--surface); color:var(--ink);
       box-shadow:0 10px 24px -10px rgba(32,26,75,.55)}
-    .metas-btn::before{opacity:.6}
+    .metas-btn::before{font-size:16px; height:16px; opacity:.6}
     .metas-btn:hover{background:#faf9ff}
     /* Por encima del boton: mide 42 y arranca a 26, asi que su borde superior
        queda en 68; el desplegable apoya justo encima. */
