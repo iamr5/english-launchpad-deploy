@@ -2,11 +2,12 @@
 
 Dos problemas en `/silabo-autonoma`, ambos en `src/assets/silabo-autonoma.html`.
 
-## 1. Los demos salen recortados
+## 1. Los demos de desktop salen recortados como si tuviera el ancho de mobile y además todos los demos son muy cortos
 
 La maqueta antigua del previsualizador sigue viva: más abajo en la hoja de estilos hay una regla que convierte `.demo-screen` en una rejilla de dos columnas (`190px 1fr`), pensada para el mockup dibujado a mano. Como esa regla va después de la que se añadió para los demos reales, gana: el iframe queda metido en la columna de 190 px y el resto del ancho se ve como fondo gris vacío. Lo mismo le pasa al panel del profesor.
 
 Arreglo: mover el bloque de estilos de los demos embebidos después de las reglas del mockup (y anular ahí la rejilla y el `min-height` heredados), de modo que cada iframe ocupe el 100 % del ancho de su marco. Se ajustan también las alturas para que la app quepa sin cortes:
+
 - web del alumno y panel del profesor: iframe a ancho completo, altura acorde al marco;
 - móvil: iframe a ancho completo del bezel.
 
