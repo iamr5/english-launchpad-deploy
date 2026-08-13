@@ -419,10 +419,15 @@
      necesita es que la cabecera sea el ancla, y position:relative sin
      desplazamientos no mueve nada de sitio. */
   .r-head{position:relative}
-  .metas-btn{position:absolute; right:26px; bottom:18px;
+  /* `bottom` = el relleno de la cabecera, y la misma altura que el selector de
+     semana (28px de sus botones + 2x4 de su relleno = 36). Asi los dos apoyan
+     en la misma linea y ademas miden lo mismo, que es lo que los deja alineados
+     de verdad y no «casi»: cuadrarlo a ojo con un bottom cualquiera depende de
+     como mida la letra, y se desalinea al cambiar de tipografia. */
+  .metas-btn{position:absolute; right:26px; bottom:22px; height:36px;
     display:inline-flex; align-items:center; gap:5px;
     border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.14); color:#fff;
-    font-family:"Inter"; font-weight:600; font-size:11.5px; padding:6px 11px; border-radius:999px;
+    font-family:"Inter"; font-weight:600; font-size:11.5px; padding:0 14px; border-radius:999px;
     cursor:pointer; transition:.15s}
   .metas-btn[hidden]{display:none}
   .metas-btn::before{content:'⚙'; font-size:11px; opacity:.8}
