@@ -35,6 +35,15 @@ Un detalle de la data, por si alguien compara: la manga aparece dos veces, en
 las dos —la del brazo se mueve, la del polo tapa— y el port hace lo mismo para no
 cambiar el aspecto. Los `svg/*.svg` sueltos, que no se animan, sólo traen una.
 
+## El cuycito
+
+El cuycito llegó como dibujo entero y **no usa el cuerpo común**: trae su propio torso,
+brazos y patas, y va sin ropa. En la data eso es `sinUniforme: true` más un bloque
+`propio` con `back`, `armL` y `armR`; el motor lo dibuja en lugar del cuerpo compartido
+y se salta el polo y la ranura del logo, y el panel esconde esos controles. Se encajó
+escalando su dibujo a la altura y la línea de piso del resto (×0,6903), y los lentes son
+los del set reducidos a la separación de sus ojos. No tiene cola.
+
 ## El torito
 
 El torito llegó después, como dibujo entero y en su propio lienzo. De él sólo se

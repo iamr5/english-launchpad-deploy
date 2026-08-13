@@ -10,10 +10,10 @@ eligiendo otro pack, sin tocar código.
 | [`boti/`](boti/README.md) | Boti 🤖 | script (`boti.js`) | No |
 | [`gallito/`](gallito/README.md) | Gallito el Tumi ✨ | capas SVG + CSS | Sí, igual que ozito |
 
-[`escribimos/`](escribimos/README.md) no es un pack: es la data de nueve personajes
-—conejito, gatito, llamita, mapachito, monito, osito, perrito, torito y zorrito— y el
+[`escribimos/`](escribimos/README.md) no es un pack: es la data de diez personajes
+—conejito, cuycito, gatito, llamita, mapachito, monito, osito, perrito, torito y zorrito— y el
 constructor que los arma. No sale en la lista de mascotas incorporadas porque no hay
-una mascota que elegir, sino nueve que colorear; el pack se genera al usarla.
+una mascota que elegir, sino diez que colorear; el pack se genera al usarla.
 
 `mascot-runtime.js` es el cargador común: lee un manifiesto y arma el DOM de la
 mascota. Para packs de capas construye el stack; para packs de script carga el
@@ -23,7 +23,7 @@ mascota. Para packs de capas construye el stack; para packs de script carga el
 
 Desde **`/demos` → pestaña Mascota**, sin dibujar nada:
 
-**Diseñar una mascota** — nueve personajes ya dibujados a los que se les elige el
+**Diseñar una mascota** — diez personajes ya dibujados a los que se les elige el
 pelaje, el uniforme y el logo del polo. *Usar esta mascota* arma el pack y lo guarda
 como mascota propia del demo. Es el camino corto, y para la mayoría de instituciones
 es suficiente. Los personajes y el porqué del cálculo de color, en
