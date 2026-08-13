@@ -403,6 +403,24 @@
   /* ===== TEACHER REPORT ===== */
   .report{background:var(--surface); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); overflow:hidden; max-width:920px; margin:0 auto}
   .r-head{padding:22px 26px; background:linear-gradient(135deg,var(--bar-1,var(--ink)),var(--bar-2,var(--accent-d,#3a2f7e))); color:#fff; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:wrap}
+  /* El logo primero, y el titulo a su lado. Centrado contra el bloque de
+     titulo, no arriba: un logotipo apoyado en la linea del <h2> parece una
+     viñeta del texto en vez de la marca de quien firma el reporte. */
+  .r-left{display:flex; align-items:center; gap:18px; min-width:0}
+  /* Sobre una placa clara. Los logos que suben las instituciones estan hechos
+     para fondo blanco —es donde se usan en el resto del producto—, y esta
+     cabecera es oscura: puesto a pelo, uno de tinta oscura desaparece. La placa
+     lo hace previsible sea cual sea el archivo, y de paso lo destaca. */
+  .r-logo{flex:none; background:#fff; border-radius:14px; padding:10px 14px;
+    display:grid; place-items:center; box-shadow:0 8px 20px -12px rgba(0,0,0,.55)}
+  .r-logo[hidden]{display:none}
+  .r-logo img{display:block; height:54px; width:auto; max-width:190px; object-fit:contain}
+  @media (max-width:640px){
+    .r-left{gap:13px}
+    .r-logo{padding:8px 11px; border-radius:12px}
+    .r-logo img{height:38px; max-width:130px}
+  }
+
   .r-head .capa{font-family:"DM Mono"; font-size:11px; letter-spacing:.14em; text-transform:uppercase; background:rgba(255,255,255,.14); padding:5px 11px; border-radius:999px; display:inline-block; margin-bottom:12px}
   .r-head h2{font-family:"Bricolage Grotesque"; font-weight:800; font-size:24px; margin:0 0 4px; letter-spacing:-.02em}
   .r-head p{margin:0; font-size:13px; opacity:.85}
@@ -949,13 +967,21 @@
   <section class="view" id="teacher">
     <div class="report">
       <div class="r-head">
-        <div>
-          <h2>Reporte semanal del aula</h2>
-          <p id="dash-group">Inglés · Ciclo III</p>
-          <div class="wksel" id="wksel">
-            <button id="wk-prev" aria-label="Semana anterior">‹</button>
-            <span class="wklabel" id="wk-label">7 – 13 jul 2026</span>
-            <button id="wk-next" aria-label="Semana siguiente">›</button>
+        <!-- El logo abre la cabecera. Hasta ahora sólo salía en la barra del
+             demo, que en /<slug>/dashboard va oculta, así que el panel —la
+             página que de verdad se manda a la institución— no llevaba ni una
+             marca suya. Arranca oculto: lo enseña brandDashboard() si el demo
+             tiene logo, y un demo sin logo no deja un hueco en blanco. -->
+        <div class="r-left">
+          <div class="r-logo" id="r-logo" hidden><img id="r-logo-img" alt=""></div>
+          <div>
+            <h2>Reporte semanal del aula</h2>
+            <p id="dash-group">Inglés · Ciclo III</p>
+            <div class="wksel" id="wksel">
+              <button id="wk-prev" aria-label="Semana anterior">‹</button>
+              <span class="wklabel" id="wk-label">7 – 13 jul 2026</span>
+              <button id="wk-next" aria-label="Semana siguiente">›</button>
+            </div>
           </div>
         </div>
         <!-- Enfrente del selector de semana. Solo aparece con sesión iniciada:
@@ -1218,6 +1244,14 @@
     if (inst && D.institution) inst.textContent = D.institution;
     var logo = document.getElementById('dash-logo');
     if (logo && D.brand && D.brand.logo) { logo.src = D.brand.logo; logo.alt = D.institution || ''; }
+    // El mismo logo, abriendo la cabecera del reporte. Sin logo se queda oculto:
+    // mejor una cabecera como la de siempre que una placa blanca vacia.
+    var rl = document.getElementById('r-logo'), ri = document.getElementById('r-logo-img');
+    if (rl && ri && D.brand && D.brand.logo) {
+      ri.src = D.brand.logo;
+      ri.alt = D.institution || '';
+      rl.hidden = false;
+    }
     // El grupo del que habla el reporte. Un colegio numera secciones, una
     // universidad habla de ciclos y una empresa de areas: por eso es texto
     // libre en la config y no una lista cerrada.
