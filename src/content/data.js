@@ -3,7 +3,12 @@
 //             'writing' (el alumno escribe la respuesta en una caja de texto)
 // This file is the single source of lesson content for the web port of the Inglés feature.
 
-const mc = (question, options, correctIndex) => ({ type: 'mc', question, options, correctIndex });
+const mc = (question, options, correctIndex, skill) => ({ type: 'mc', question, options, correctIndex,
+  // 'reading' = trae pasaje en inglés y hay que leerlo; 'teoria' = pregunta de
+  // una línea sobre la regla. Se puede forzar con el 4º argumento; si no, se
+  // deduce del enunciado, que en los ítems de lectura siempre abre con 'Lee:'.
+  // Los ítems nuevos deberían pasarlo explícito (ver AUTHORING-reading-writing.md).
+  skill: skill || (/^Lee\b/.test(question) ? 'reading' : 'teoria') });
 const rebuild = (question, correctSentence, wordBlocks) => ({ type: 'rebuild', question, correctSentence, wordBlocks });
 const tap = (question, sentenceTokens, errorTokenIndex, correctedToken) => ({ type: 'tap', question, sentenceTokens, errorTokenIndex, correctedToken });
 // writing(enunciado, aceptadas, extra)
@@ -211,8 +216,8 @@ Eso sí, como puedes haber notado en inglés no importa el género del grupo aje
         tap('Toca la palabra incorrecta:', ['They', 'sing', 'nicely', 'and', 'plays', 'football.'], 4, 'play'),
         tap('Toca la palabra incorrecta:', ['They', 'work', 'late', 'and', 'studies', 'at', 'night.'], 4, 'study'),
         rebuild('🎧 Ordena: "Ellas juegan fútbol."', 'They play football', ['They', 'play', 'football', 'pray', 'plays', 'place', 'day']),
-        writing('Escríbelo en inglés: "Ellos cantan bonito."', ['They sing nicely.'],
-          { reject: [['They sings nicely.', 'Con "they" el verbo va en forma base: sing.']] }),
+        writing('Escríbelo en inglés: "Ellos cantan en la fiesta."', ['They sing at the party.'],
+          { reject: [['They sings at the party.', 'Con "they" el verbo va en forma base: sing.']] }),
       ] },
     { id: 'modulo1-1-teoria-5', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**5.** **Chismear sobre otros (he, she, it)**
 
@@ -258,12 +263,12 @@ Ahora, nos falta aclarar **"it"**. **It** significa "eso/esta/o" y se usa para c
         tap('Toca la palabra incorrecta:', ['The', 'phone', 'are', 'red', 'and', 'it', 'works', 'well.'], 2, 'is'),
         tap('Toca la palabra incorrecta:', ['He', 'watch', 'movies', 'and', 'she', 'reads', 'books.'], 1, 'watches'),
         rebuild('🎧 Ordena: "Él estudia inglés."', 'He studies English', ['He', 'studies', 'English', 'study', 'studied', 'She', 'eats']),
-        writing('Escríbelo en inglés: "Ella estudia inglés."', ['She studies English.'],
-          { hint: 'Tercera persona: al verbo le toca -s o -es.',
-            reject: [['She study English.', 'Con "she" el verbo lleva -es: studies.'], ['She studys English.', 'Termina en -y tras consonante: study → studies.']] }),
-        writing('Escríbelo en inglés: "Él va al trabajo en bus."', ['He goes to work by bus.'],
+        writing('Escríbelo en inglés: "Ella trabaja en Lima."', ['She works in Lima.'],
+          { hint: 'Tercera persona: al verbo le toca una -s.',
+            reject: [['She work in Lima.', 'Con "she" el verbo lleva -s: works.']] }),
+        writing('Escríbelo en inglés: "Él va al trabajo."', ['He goes to work.'],
           { hint: 'go es de los que llevan -ES.',
-            reject: [['He go to work by bus.', 'Falta la -es: go → goes.']] }),
+            reject: [['He go to work.', 'Falta la -es: go → goes.']] }),
       ] },
     { id: 'modulo1-1-resumen', type: 'resumen', markdown: `## **🎯 Resumen práctico que debes recordar**
 
@@ -365,9 +370,9 @@ Usamos **I am** para varias cosas:
           'Que tiene 25 años.',
           'Que se llama Juan.',
           'Que viaja en bus.'], 0),
-        writing('Escríbelo en inglés: "Yo estoy en el bus."', ['I am on the bus.'],
+        writing('Escríbelo en inglés: "Yo estoy en Lima."', ['I am in Lima.'],
           { hint: 'Con "I" el to be siempre es "am".',
-            reject: [['I on the bus.', 'Falta el verbo: I am on the bus.'], ['I is on the bus.', 'Con "I" va "am", no "is".'], ['I are on the bus.', 'Con "I" va "am", no "are".']] }),
+            reject: [['I in Lima.', 'Falta el verbo: I am in Lima.'], ['I is in Lima.', 'Con "I" va "am", no "is".'], ['I are in Lima.', 'Con "I" va "am", no "are".']] }),
       ] },
     { id: 'modulo2-teoria-2', type: 'teoria', requiresQuizToUnlockNext: true, markdown: `**2.** **Hablar de tu grupo – We are…**
 

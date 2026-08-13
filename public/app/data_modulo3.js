@@ -3,7 +3,12 @@
 // lessons to data.js. Helpers are redeclared locally inside the IIFE so they
 // don't collide with data.js's top-level `const mc/rebuild/tap`.
 (function () {
-  const mc = (question, options, correctIndex) => ({ type: 'mc', question, options, correctIndex });
+  const mc = (question, options, correctIndex, skill) => ({ type: 'mc', question, options, correctIndex,
+  // 'reading' = trae pasaje en inglés y hay que leerlo; 'teoria' = pregunta de
+  // una línea sobre la regla. Se puede forzar con el 4º argumento; si no, se
+  // deduce del enunciado, que en los ítems de lectura siempre abre con 'Lee:'.
+  // Los ítems nuevos deberían pasarlo explícito (ver AUTHORING-reading-writing.md).
+  skill: skill || (/^Lee\b/.test(question) ? 'reading' : 'teoria') });
   const rebuild = (question, correctSentence, wordBlocks) => ({ type: 'rebuild', question, correctSentence, wordBlocks });
   const tap = (question, sentenceTokens, errorTokenIndex, correctedToken) => ({ type: 'tap', question, sentenceTokens, errorTokenIndex, correctedToken });
   // writing(enunciado, aceptadas, extra) — ver el docblock en data.js y

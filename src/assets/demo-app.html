@@ -2416,9 +2416,22 @@ function fmtXp(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 // across the CURRENT module ONLY — so the score naturally resets each module.
 // Score = 100% at zero errors, sliding down to 25% when every question was missed.
 // Entirely independent of XP (which comes from completion, not correctness).
-function qSkill(type) { return type === 'rebuild' ? 'listening' : type === 'mc' ? 'reading' : 'writing'; }
+// La destreza la declara el ítem cuando puede: los `mc` traen skill 'reading'
+// (pasaje en inglés que hay que leer) o 'teoria' (pregunta sobre la regla),
+// porque el `type` no distingue esos dos y mandarlos juntos a reading dejaba
+// esa barra con un 80% de ítems que no tienen nada que leer. El resto de tipos
+// se sigue deduciendo del type. Acepta el ítem entero o, por compatibilidad,
+// un type suelto.
+function qSkill(q) {
+  if (q && q.skill) return q.skill;
+  const type = (q && q.type) || q;
+  return type === 'rebuild' ? 'listening' : type === 'mc' ? 'reading' : 'writing';
+}
 function moduleSkill(mod) {
-  const agg = { listening: { t: 0, e: 0 }, reading: { t: 0, e: 0 }, writing: { t: 0, e: 0 } };
+  // 'teoria' se acumula pero no se devuelve como destreza: no es una de las tres
+  // barras que ve el alumno. Queda en `agg` para poder medirla sin tocar la UI.
+  const agg = { listening: { t: 0, e: 0 }, reading: { t: 0, e: 0 }, writing: { t: 0, e: 0 },
+    teoria: { t: 0, e: 0 } };
   mod.lessons.forEach(l => {
     const se = PROGRESS[l.id] && PROGRESS[l.id].skillErr; if (!se) return;
     for (const k in agg) if (se[k]) { agg[k].t += se[k].t; agg[k].e += se[k].e; }
@@ -3907,9 +3920,9 @@ function openFinalQuiz(lesson, mod) {
   let round, redo, idx, correct, results, failedQs, skillAgg;
   // Skill tally captures the FIRST full pass through the quiz (redo rounds and
   // clean-slate retries don't stack): reset it whenever a non-redo round starts.
-  function recSkill(q, ok) { const s = skillAgg[qSkill(q.type)]; s.t++; if (!ok) s.e++; }
+  function recSkill(q, ok) { const s = skillAgg[qSkill(q)]; s.t++; if (!ok) s.e++; }
   function startRound(qs, isRedo) {
-    if (!isRedo) skillAgg = { listening: { t: 0, e: 0 }, reading: { t: 0, e: 0 }, writing: { t: 0, e: 0 } };
+    if (!isRedo) skillAgg = { listening: { t: 0, e: 0 }, reading: { t: 0, e: 0 }, writing: { t: 0, e: 0 }, teoria: { t: 0, e: 0 } };
     round = qs; redo = isRedo; idx = 0; correct = 0; results = []; failedQs = []; step();
   }
   function step() {
