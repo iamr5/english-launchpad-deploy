@@ -291,7 +291,7 @@ export function MascotConstructor({
     if (!data || !S) return null;
     // Si el logo aún no está —se está reponiendo, o falló— más vale parar que
     // generar la mascota sin él y que nadie lo note hasta verla publicada.
-    if (S.logo === "img" && !S.logoImg) {
+    if (S.logo === "img" && !S.logoImg && !data.chars[S.char].sinUniforme) {
       toast.error("Falta la imagen del logo. Súbela, o elige «sin logo», antes de guardar.");
       return null;
     }
