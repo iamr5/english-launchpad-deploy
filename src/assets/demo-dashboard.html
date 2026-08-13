@@ -410,21 +410,23 @@
   .r-head .who b{display:block; font-size:14px; font-family:"Bricolage Grotesque"}
 
   /* ----- Metas -----
-     En la cabecera, abajo a la derecha: justo enfrente del selector de semana.
-     Los dos mandos del reporte, uno en cada esquina de su barra.
-     La cabecera se estira y .who se reparte en columna para que el boton caiga
-     al fondo, a la altura del selector, en vez de pegado al nombre. Y pasa a
-     position:relative para que el desplegable se cuelgue de ella. */
-  .r-head{position:relative; align-items:stretch}
-  .r-head .who{display:flex; flex-direction:column; align-items:flex-end;
-    justify-content:space-between; gap:11px}
-  .metas-btn{display:inline-flex; align-items:center; gap:6px;
-    border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.12); color:#fff;
-    font-family:"Inter"; font-weight:600; font-size:12.5px; padding:7px 13px; border-radius:999px;
+     Un boton pequeño anclado abajo a la izquierda, y nada mas. No toca la
+     maqueta de ningun otro elemento: va fijo, fuera del flujo, y en la esquina
+     que esta libre —la de la derecha la ocupa la mascota flotante—. */
+  /* Absoluto DENTRO de la cabecera, no un elemento mas de su fila. Es lo que lo
+     deja abajo a la derecha sin tocar la maqueta: al salir del flujo, .who no
+     se reparte, la cabecera no se estira y nada cambia de tamaño. Lo unico que
+     necesita es que la cabecera sea el ancla, y position:relative sin
+     desplazamientos no mueve nada de sitio. */
+  .r-head{position:relative}
+  .metas-btn{position:absolute; right:26px; bottom:18px;
+    display:inline-flex; align-items:center; gap:5px;
+    border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.14); color:#fff;
+    font-family:"Inter"; font-weight:600; font-size:11.5px; padding:6px 11px; border-radius:999px;
     cursor:pointer; transition:.15s}
   .metas-btn[hidden]{display:none}
-  .metas-btn::before{content:'⚙'; font-size:12px; opacity:.85}
-  .metas-btn:hover{background:rgba(255,255,255,.2)}
+  .metas-btn::before{content:'⚙'; font-size:11px; opacity:.8}
+  .metas-btn:hover{background:rgba(255,255,255,.24)}
   .metas-btn:focus-visible{outline:2px solid #fff; outline-offset:2px}
   /* Con la ficha abierta el velo tapa la pagina: sobraria por encima. */
   body.detail .metas-btn, body.detail .metas-pop{display:none}
@@ -452,10 +454,10 @@
   .metas-msg{margin:9px 0 0; font-size:11.5px; min-height:1em}
   .metas-msg.mal{color:var(--risk)}
   .metas-msg.bien{color:var(--ok)}
-  /* Estrecho: la cabecera se apila, asi que .who deja de alinear a la derecha y
-     el desplegable pasa a ocupar el ancho disponible. */
+  /* Estrecho: la cabecera se apila y ya no hay esquina donde colgarlo, asi que
+     el boton vuelve al flujo y el desplegable ocupa el ancho disponible. */
   @media (max-width:520px){
-    .r-head .who{align-items:flex-start}
+    .metas-btn{position:static; margin-top:10px}
     .metas-pop{right:16px; left:16px; width:auto}
   }
 
@@ -949,15 +951,12 @@
              lo monta y lo enseña el bloque `metas()` del final. Quien recibe el
              enlace del panel no lo ve. -->
         <div class="who">
-          <div class="who-txt">
           Colegio de Ingenieros del Perú<br>
           <!-- La hora la escribe el JS al cargar: un reporte "automatico" con
                fecha fija se delata solo en cuanto alguien lo mira dos dias
                seguidos. El texto de aqui es solo el respaldo si el JS no corre. -->
           <span id="r-sent" style="font-family:'DM Mono';font-size:11px;opacity:.8">Enviado: —</span>
-          </div>
         </div>
-
   <!-- Metas: anclado abajo a la derecha, fuera de cualquier vista para que no lo
        esconda el cambio de pestana. Solo aparece con sesion iniciada; lo enseña el
        bloque `metas()` del final del script. -->
@@ -991,6 +990,7 @@
     </div>
     <p class="metas-msg" id="meta-msg" role="status"></p>
   </div>
+
       </div>
 
       <div class="kpis" id="kpis">
