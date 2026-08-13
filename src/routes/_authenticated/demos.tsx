@@ -1432,6 +1432,11 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     d: "Lección completada y veredicto del test: máxima atención.",
                   },
                   {
+                    k: "modules",
+                    t: "Pantalla de módulo",
+                    d: "Flotando abajo a la derecha, con sombra. Si el demo no tiene logo, usa el icono de la barra superior.",
+                  },
+                  {
                     k: "watermark",
                     t: "Marca de agua",
                     d: "Esquina inferior, translúcido, durante todo el demo.",

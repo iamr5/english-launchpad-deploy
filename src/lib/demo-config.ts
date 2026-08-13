@@ -162,6 +162,12 @@ export type DemoConfig = {
       onboarding?: boolean;
       /** Lección completada y veredicto del test: máxima atención. */
       celebrations?: boolean;
+      /**
+       * Pantalla de módulo: flotando abajo a la derecha, opaco y con sombra.
+       * A diferencia del resto, éste se conforma con el icono de la barra
+       * superior cuando el demo no tiene logo de cabecera.
+       */
+      modules?: boolean;
       /** Esquina inferior, translúcido, durante todo el demo. */
       watermark?: boolean;
     };
@@ -413,7 +419,7 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
   },
   // La marca acompaña todo el recorrido. La marca de agua va aparte porque es
   // la única que se ve siempre y puede estorbar: se enciende a mano.
-  brand: { logoSpots: { onboarding: true, celebrations: true, watermark: false } },
+  brand: { logoSpots: { onboarding: true, celebrations: true, modules: true, watermark: false } },
   splash: { enabled: true, style: "aurora", phrase: "", colors: {}, duration: 2600 },
   colors: {
     accent: "#7C1C56",
