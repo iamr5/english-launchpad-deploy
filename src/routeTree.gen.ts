@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SilaboAutonomaRouteImport } from './routes/silabo-autonoma'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
 import { Route as PresentacionNuamRouteImport } from './routes/presentacion-nuam'
@@ -38,6 +39,11 @@ import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
+const SilaboAutonomaRoute = SilaboAutonomaRouteImport.update({
+  id: '/silabo-autonoma',
+  path: '/silabo-autonoma',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PresentationRoute = PresentationRouteImport.update({
   id: '/presentation',
   path: '/presentation',
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
+  '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
   '/app': typeof AuthenticatedAppRoute
@@ -226,6 +233,7 @@ export interface FileRoutesByTo {
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
+  '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
   '/app': typeof AuthenticatedAppRoute
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
+  '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/$slug_/dashboard': typeof SlugDashboardRoute
   '/$slug_/padres': typeof SlugPadresRoute
   '/_authenticated/app': typeof AuthenticatedAppRoute
@@ -288,6 +297,7 @@ export interface FileRouteTypes {
     | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentation'
+    | '/silabo-autonoma'
     | '/$slug/dashboard'
     | '/$slug/padres'
     | '/app'
@@ -317,6 +327,7 @@ export interface FileRouteTypes {
     | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentation'
+    | '/silabo-autonoma'
     | '/$slug/dashboard'
     | '/$slug/padres'
     | '/app'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentation'
+    | '/silabo-autonoma'
     | '/$slug_/dashboard'
     | '/$slug_/padres'
     | '/_authenticated/app'
@@ -378,6 +390,7 @@ export interface RootRouteChildren {
   PresentacionNuamRoute: typeof PresentacionNuamRoute
   PresentacionRepsolRoute: typeof PresentacionRepsolRoute
   PresentationRoute: typeof PresentationRoute
+  SilaboAutonomaRoute: typeof SilaboAutonomaRoute
   SlugDashboardRoute: typeof SlugDashboardRoute
   SlugPadresRoute: typeof SlugPadresRoute
   ApiBrandSplatRoute: typeof ApiBrandSplatRoute
@@ -389,6 +402,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/silabo-autonoma': {
+      id: '/silabo-autonoma'
+      path: '/silabo-autonoma'
+      fullPath: '/silabo-autonoma'
+      preLoaderRoute: typeof SilaboAutonomaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/presentation': {
       id: '/presentation'
       path: '/presentation'
@@ -622,6 +642,7 @@ const rootRouteChildren: RootRouteChildren = {
   PresentacionNuamRoute: PresentacionNuamRoute,
   PresentacionRepsolRoute: PresentacionRepsolRoute,
   PresentationRoute: PresentationRoute,
+  SilaboAutonomaRoute: SilaboAutonomaRoute,
   SlugDashboardRoute: SlugDashboardRoute,
   SlugPadresRoute: SlugPadresRoute,
   ApiBrandSplatRoute: ApiBrandSplatRoute,
