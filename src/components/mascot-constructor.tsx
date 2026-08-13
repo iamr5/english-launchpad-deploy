@@ -433,7 +433,7 @@ export function MascotConstructor({
 
       {/* Cuerpo: cambia dónde va el rostro y el hueco del logo en el polo.
           Vale para los ocho personajes porque comparten el mismo arte. */}
-      {Object.keys(data.cuerpos ?? {}).length > 1 && (
+      {!data.chars[S.char].sinUniforme && Object.keys(data.cuerpos ?? {}).length > 1 && (
         <div className="space-y-1.5">
           <Label>Polo</Label>
           <div className="grid gap-2 sm:grid-cols-2">
