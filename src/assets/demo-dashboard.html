@@ -11,6 +11,10 @@
   :root{
     --ink:#201a4b; --violet:#5b4be6; --violet2:#8175f4; --violet-soft:#efedfd;
     --amber:#f4a51e; --amber-soft:#fff2d8;
+    /* Azul informativo. FIJO, no --blue: esa variable la reengancha themeCSS al
+       resalte de cada institución, y este aviso no es marca — es la lectura de
+       lo que le pasó al alumno, y tiene que verse igual en todos los demos. */
+    --info:#1cb0f6; --info-soft:#f1faff; --info-ink:#1b5570;
     --teal:#12b0a0; --teal-soft:#dcf6f2;
     --pink:#ec5b8b; --pink-soft:#fde3ec;
     --bg:#f3f2fb; --surface:#ffffff; --line:#e7e4f5; --muted:#6b6790;
@@ -318,7 +322,15 @@
   .wksel button{border:0; background:transparent; color:#fff; width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:17px; font-weight:700; display:grid; place-items:center; line-height:1}
   .wksel button:hover{background:rgba(255,255,255,.18)}
   .wksel button:disabled{opacity:.35; cursor:default}
-  .wksel .wklabel{font-family:"DM Mono"; font-size:12px; font-weight:500; color:#fff; padding:0 8px; white-space:nowrap}
+  /* El ancho lo fija el JS a la fecha mas larga de la lista y ya no se mueve.
+     Con el ancho al contenido, pasar de "2 – 8 jun 2026" a "26 may – 1 jun 2026"
+     ensancha la pildora y empuja lo que tenga al lado: la interfaz se recolocaba
+     sola cada vez que cambiabas de semana. Centrado, para que las fechas cortas
+     no queden pegadas a la flecha izquierda.
+     El respaldo monoespaciado importa: el ancho se calcula en `ch`, y si la
+     fuente no llega y cae en una proporcional, la medida deja de valer. */
+  .wksel .wklabel{font-family:"DM Mono",ui-monospace,monospace; font-size:12px; font-weight:500;
+    color:#fff; padding:0 8px; white-space:nowrap; text-align:center}
 
   /* ring hero */
   .ring-card{margin:14px 14px 0; background:var(--surface); border-radius:22px; padding:18px; box-shadow:var(--shadow-sm);
@@ -360,7 +372,11 @@
   /* Mismo tratamiento que el aviso del reporte —filete de 4px a la izquierda y
      fondo crema— para que se lean como lo que son: lo accionable de la ficha.
      Con borde fino y fondo blanco pasaban por simple lista. */
-  .tips{display:flex; align-items:flex-start; gap:10px}
+  .tips{display:flex; align-items:center; gap:10px}
+  /* Los margenes negativos que trae .botimini le dejan desbordar su hueco, pero
+     tambien encogen la caja que se usa para centrarla, asi que quedaba unos
+     pixeles por debajo del centro. Donde va centrada, se anulan. */
+  .callout .botimini, .tips .botimini{margin:0}
   .tips-list{flex:1; min-width:0}
   .mission{display:flex; align-items:center; gap:11px; padding:12px 13px; border:1px solid var(--line);
     border-left:4px solid var(--amber); border-radius:12px; margin-bottom:9px; background:#fffdf6}
@@ -495,12 +511,15 @@
   .lvl{font-family:"DM Mono"; font-weight:500; padding:3px 9px; border-radius:8px; font-size:12px; background:#efedfd; color:#5b4be6}
   .lvl.b2{background:var(--amber-soft); color:#8a5a00}
   .avg{font-family:"DM Mono"; font-weight:500}
-  .flag{font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px}
+  /* En una linea siempre. Partido en dos ("Hace 55 / dias") la pildora deja de
+     leerse como una etiqueta de estado y parece que se rompio algo; la tabla ya
+     se desplaza en horizontal, asi que hay sitio de sobra para pedirlo. */
+  .flag{font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; white-space:nowrap}
   .flag.ok{background:var(--teal-soft); color:#0b6b60}
   .flag.watch{background:var(--amber-soft); color:#8a5a00}
   .flag.risk{background:var(--pink-soft); color:#a8264b}
 
-  .callout{margin-top:18px; border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:12px; padding:14px 16px; background:#fffdf6; display:flex; gap:12px}
+  .callout{margin-top:18px; border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:12px; padding:14px 16px; background:#fffdf6; display:flex; align-items:center; gap:12px}
   .callout .i{font-size:18px}
   .callout p{margin:0; font-size:12.5px; color:#5a4a2a}
   .callout b{color:var(--ink)}
@@ -668,10 +687,15 @@
   .hm-c{height:15px; border-radius:3px}
   /* Las tres celdas del promedio, con su cifra al lado: el color solo situa, y
      el numero es el que se puede citar en una reunion. */
-  .hm-med{display:flex; gap:10px}
+  .hm-med{display:flex; gap:14px; flex-wrap:wrap}
   .hm-med span{display:flex; align-items:center; gap:5px}
-  .hm-med i{width:15px; height:15px; border-radius:3px; display:block}
+  .hm-med i{width:15px; height:15px; border-radius:3px; display:block; flex:none}
+  .hm-med b{font-size:12px; line-height:1}
+  .hm-med u{font-size:11px; text-decoration:none; color:var(--muted); font-weight:600}
   .hm-med em{font-family:"DM Mono"; font-style:normal; font-size:12px; font-weight:500}
+  /* Estrecho: el nombre se cae y quedan el icono y la cifra, que juntos ya
+     bastan para saber de que destreza se habla. */
+  @media (max-width:560px){ .hm-med u{display:none} }
 
   /* La fila de "ningun alumno coincide" no es un alumno: ni cursor de mano ni
      resaltado al pasar, o promete que se puede abrir. */
@@ -687,9 +711,13 @@
   .evo figcaption{font-size:10px; color:var(--muted); font-weight:700; line-height:1.25; margin-bottom:3px}
   .evo figcaption b{display:block; font-family:"DM Mono"; font-weight:500; font-size:14px; color:var(--ink); margin-top:1px}
   .evo svg{display:block; width:100%; height:auto}
-  /* La frase que nombra la caida. Solo sale cuando hay una de verdad. */
-  .evo-nota{margin:9px 0 0; font-size:11.5px; color:#5a4a2a; background:#fffdf6;
-    border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:10px; padding:9px 11px}
+  /* La frase que nombra la caida. Solo sale cuando hay una de verdad.
+     En azul y no en ambar: el ambar de esta pagina marca lo accionable —las
+     sugerencias, el analisis de la semana—, y esto no pide hacer nada, cuenta
+     lo que paso. Dos avisos del mismo color a dos dedos uno de otro se leian
+     como la misma clase de cosa. */
+  .evo-nota{margin:9px 0 0; font-size:11.5px; color:var(--info-ink); background:var(--info-soft);
+    border:1px solid var(--line); border-left:4px solid var(--info); border-radius:10px; padding:9px 11px}
   .evo-nota b{color:var(--ink)}
 
   /* Las barras de destreza animan su ancho al cambiar de semana o de alumno. Sin
@@ -1573,21 +1601,21 @@
             ['1100001',1,'B1',5,81,'ok','Al día',54,88,76,67,1116],
             ['0110100',0,'A2',5,58,'ok','Al día',54,63,53,45,2910],
             ['1010101',1,'B1',7,77,'ok','Al día',68,84,73,65,1383],
-            ['1000000',0,'A2',2,55,'risk','Sin ingresar 6 d',17,60,51,43,3234],
+            ['1000000',0,'A2',2,55,'risk','Hace 6 días',17,60,51,43,3234],
             ['1110010',0,'B1',7,77,'ok','Al día',68,85,74,66,1383],
-            ['0000000',0,'A2',0,52,'risk','Sin ingresar 7 d',0,57,49,40,3513],
+            ['0000000',0,'A2',0,52,'risk','Hace 7 días',0,57,49,40,3513],
             ['1011111',5,'B1',10,74,'ok','Al día',96,82,72,59,1527],
-            ['1000000',0,'B1',2,82,'risk','Sin ingresar 6 d',16,88,75,68,1128],
+            ['1000000',0,'B1',2,82,'risk','Hace 6 días',16,88,75,68,1128],
             ['0010111',3,'A2',7,69,'ok','Al día',64,78,63,55,2007],
             ['1111110',0,'B1',11,81,'ok','Al día',90,87,75,68,981],
             ['1110000',0,'A2',5,69,'watch','Bajó ritmo',45,78,64,57,2052],
             ['1011011',2,'B1',9,76,'ok','Al día',75,83,71,65,1416],
-            ['0000000',0,'A2',0,53,'risk','Sin ingresar 7 d',0,57,49,43,3435],
-            ['0000000',0,'B1',0,74,'risk','Sin ingresar 7 d',0,81,70,58,1797],
+            ['0000000',0,'A2',0,53,'risk','Hace 7 días',0,57,49,43,3435],
+            ['0000000',0,'B1',0,74,'risk','Hace 7 días',0,81,70,58,1797],
             ['1101011',2,'A2',8,62,'ok','Al día',120,67,59,47,2508],
             ['1011100',0,'A2',7,72,'ok','Al día',96,79,69,58,1773],
             ['1111111',7,'B1',13,84,'ok','Al día',161,89,81,71,702],
-            ['0000000',0,'A2',0,52,'risk','Sin ingresar 7 d',0,60,50,40,3513],
+            ['0000000',0,'A2',0,52,'risk','Hace 7 días',0,60,50,40,3513],
             ['0101000',0,'B1',4,77,'watch','Bajó ritmo',46,82,70,66,1473],
             ['1111111',7,'A2',12,69,'ok','Al día',154,77,63,58,1872],
             ['1011101',1,'B1',9,75,'ok','Al día',110,81,69,59,1494],
@@ -1607,9 +1635,9 @@
             ['0110001',1,'B1',6,85,'ok','Al día',69,92,81,71,804],
             ['1100111',3,'A2',8,58,'ok','Al día',110,63,54,44,2820],
             ['0010110',0,'B1',5,81,'ok','Al día',66,88,78,68,1116],
-            ['0000000',0,'A2',0,57,'risk','Sin ingresar 13 d',0,62,54,45,3123],
+            ['0000000',0,'A2',0,57,'risk','Hace 13 días',0,62,54,45,3123],
             ['1101111',4,'B1',11,78,'ok','Al día',126,86,75,67,1215],
-            ['0000000',0,'A2',0,55,'risk','Sin ingresar 14 d',0,60,53,45,3279],
+            ['0000000',0,'A2',0,55,'risk','Hace 14 días',0,60,53,45,3279],
             ['1111101',1,'B1',11,78,'ok','Al día',126,86,71,63,1215],
             ['0011010',0,'B1',5,83,'ok','Al día',63,89,77,68,960],
             ['1000100',0,'A2',3,72,'watch','Bajó ritmo',40,80,66,58,1863],
@@ -1621,7 +1649,7 @@
             ['0111011',2,'A2',8,65,'ok','Al día',95,70,62,50,2274],
             ['0001111',4,'B1',7,75,'ok','Al día',72,82,73,61,1539],
             ['1111101',1,'B1',11,82,'ok','Al día',108,87,75,69,903],
-            ['0000000',0,'A2',0,54,'risk','Sin ingresar 14 d',0,62,48,41,3357],
+            ['0000000',0,'A2',0,54,'risk','Hace 14 días',0,62,48,41,3357],
             ['1111000',0,'B1',7,81,'watch','Bajó ritmo',68,86,75,69,1071],
             ['0111111',6,'A2',10,68,'ok','Al día',102,76,62,57,1995],
             ['0001111',4,'B1',7,79,'ok','Al día',68,85,74,69,1227],
@@ -1641,9 +1669,9 @@
             ['1110011',2,'B1',9,86,'ok','Al día',85,93,82,71,636],
             ['0110100',0,'A2',5,61,'ok','Al día',51,66,58,47,2676],
             ['1110110',0,'B1',9,86,'ok','Al día',85,93,83,73,636],
-            ['0000000',0,'A2',0,56,'risk','Sin ingresar 20 d',0,61,54,44,3201],
+            ['0000000',0,'A2',0,56,'risk','Hace 20 días',0,61,54,44,3201],
             ['1111101',1,'B1',11,82,'ok','Al día',96,90,75,71,903],
-            ['1000000',0,'A2',2,58,'risk','Sin ingresar 6 d',16,63,52,47,3000],
+            ['1000000',0,'A2',2,58,'risk','Hace 6 días',16,63,52,47,3000],
             ['1111111',8,'B1',12,79,'ok','Al día',112,87,73,63,1092],
             ['1011011',2,'B1',9,88,'ok','Al día',75,94,83,73,480],
             ['0010100',0,'B1',3,76,'watch','Bajó ritmo',30,84,71,62,1551],
@@ -1675,7 +1703,7 @@
             ['1110010',0,'B1',8,90,'ok','Al día',88,97,87,75,369],
             ['1100100',0,'A2',5,64,'ok','Al día',66,68,61,50,2442],
             ['1101101',1,'B1',9,86,'ok','Al día',105,93,84,73,636],
-            ['0000000',0,'A2',0,58,'risk','Sin ingresar 27 d',0,63,51,45,3045],
+            ['0000000',0,'A2',0,58,'risk','Hace 27 días',0,63,51,45,3045],
             ['0111111',6,'B1',11,86,'ok','Al día',126,94,80,74,591],
             ['0010011',2,'A2',5,58,'ok','Al día',63,63,52,47,2910],
             ['1111111',15,'B1',13,82,'ok','Al día',140,90,77,72,858],
@@ -1689,7 +1717,7 @@
             ['1111110',0,'A2',10,68,'ok','Al día',108,72,61,52,1995],
             ['1111101',1,'B1',11,78,'ok','Al día',108,85,72,63,1215],
             ['1101111',4,'B1',11,85,'ok','Al día',102,90,79,71,669],
-            ['0000000',0,'A2',0,55,'risk','Sin ingresar 8 d',0,62,50,42,3279],
+            ['0000000',0,'A2',0,55,'risk','Hace 8 días',0,62,50,42,3279],
             ['1101011',2,'B1',9,84,'ok','Al día',85,89,79,71,792],
             ['1111111',7,'A2',12,70,'ok','Al día',119,78,66,58,1794],
             ['1001100',0,'B1',6,85,'ok','Al día',48,91,81,74,804],
@@ -1697,7 +1725,7 @@
             ['1111111',7,'B1',13,83,'ok','Al día',112,89,80,68,780],
             ['1110110',0,'B1',10,92,'ok','Al día',75,99,90,77,168],
             ['1110111',3,'B1',11,82,'ok','Al día',90,88,75,68,903],
-            ['1000000',0,'B1',2,85,'risk','Sin ingresar 6 d',15,89,79,72,894],
+            ['1000000',0,'B1',2,85,'risk','Hace 6 días',15,89,79,72,894],
             ['1111111',11,'B1',12,78,'ok','Al día',105,85,72,66,1170],
             ['1100111',3,'B1',9,87,'ok','Al día',70,91,81,76,558],
             ['1111111',19,'A2',12,73,'ok','Al día',98,80,68,62,1560],
@@ -1709,21 +1737,21 @@
             ['0111101',1,'B1',10,91,'ok','Al día',85,98,88,76,246],
             ['0100110',0,'A2',5,63,'ok','Al día',48,67,61,48,2520],
             ['1111111',8,'B1',13,92,'ok','Al día',112,99,85,78,78],
-            ['0000000',0,'A2',0,57,'risk','Sin ingresar 34 d',0,62,51,44,3123],
+            ['0000000',0,'A2',0,57,'risk','Hace 34 días',0,62,51,44,3123],
             ['1111111',13,'B1',13,87,'ok','Al día',112,94,81,75,468],
-            ['0000000',0,'A2',0,60,'risk','Sin ingresar 7 d',0,65,55,49,2889],
+            ['0000000',0,'A2',0,60,'risk','Hace 7 días',0,65,55,49,2889],
             ['1111111',22,'B1',13,82,'ok','Al día',105,90,77,71,858],
             ['1111011',2,'B1',12,92,'ok','Al día',90,98,88,76,123],
             ['0001111',4,'B1',7,80,'ok','Al día',56,88,76,65,1149],
             ['1111111',15,'B1',13,88,'ok','Al día',98,94,85,74,390],
             ['0101001',1,'B1',5,75,'ok','Al día',72,84,72,62,1584],
             ['1111111',16,'B1',13,87,'ok','Al día',168,93,85,74,468],
-            ['1000000',0,'A2',2,57,'risk','Sin ingresar 6 d',23,66,50,45,3078],
+            ['1000000',0,'A2',2,57,'risk','Hace 6 días',23,66,50,45,3078],
             ['0111101',1,'B1',9,82,'ok','Al día',115,89,76,71,948],
             ['1111111',7,'A2',12,72,'ok','Al día',161,76,66,62,1638],
             ['0101100',0,'B1',5,76,'ok','Al día',66,83,70,61,1506],
             ['1111111',11,'B1',13,88,'ok','Al día',154,93,83,73,390],
-            ['0000000',0,'A2',0,58,'risk','Sin ingresar 15 d',0,65,53,44,3045],
+            ['0000000',0,'A2',0,58,'risk','Hace 15 días',0,65,53,44,3045],
             ['0111000',0,'B1',5,82,'watch','Bajó ritmo',66,87,78,69,1038],
             ['1111111',14,'A2',12,73,'ok','Al día',147,81,69,61,1560],
             ['0111101',1,'B1',10,91,'ok','Al día',105,96,88,80,246],
@@ -1743,7 +1771,7 @@
             ['1111111',8,'B2',14,97,'ok','Al día',147,99,90,81,60],
             ['1010111',3,'A2',8,67,'ok','Al día',105,71,61,52,2118],
             ['1111111',15,'B1',13,92,'ok','Al día',147,99,86,78,78],
-            ['0000000',0,'A2',0,60,'risk','Sin ingresar 41 d',0,65,55,47,2889],
+            ['0000000',0,'A2',0,60,'risk','Hace 41 días',0,65,55,47,2889],
             ['1111111',20,'B1',13,91,'ok','Al día',140,98,86,78,156],
             ['0010000',0,'A2',2,59,'watch','Bajó ritmo',20,64,54,47,2922],
             ['0111101',1,'B1',9,85,'ok','Al día',100,93,81,74,714],
@@ -1757,7 +1785,7 @@
             ['1111111',14,'A2',12,71,'ok','Al día',119,75,66,60,1716],
             ['1111111',7,'B1',13,81,'ok','Al día',119,88,76,65,936],
             ['1111111',18,'B1',13,91,'ok','Al día',119,96,87,76,156],
-            ['0000000',0,'A2',0,57,'risk','Sin ingresar 22 d',0,64,53,43,3123],
+            ['0000000',0,'A2',0,57,'risk','Hace 22 días',0,64,53,43,3123],
             ['1111111',7,'B1',13,87,'ok','Al día',112,92,83,74,468],
             ['1111111',21,'B1',12,76,'ok','Al día',112,84,73,64,1326],
             ['1111111',8,'B2',14,93,'ok','Al día',112,98,90,81,60],
@@ -1777,7 +1805,7 @@
             ['1111111',15,'B2',14,98,'ok','Al día',112,99,92,88,60],
             ['1000101',1,'A2',5,65,'ok','Al día',48,69,59,50,2364],
             ['1111110',0,'B2',12,96,'ok','Al día',96,99,91,81,60],
-            ['0000000',0,'A2',0,62,'risk','Sin ingresar 48 d',0,67,57,48,2733],
+            ['0000000',0,'A2',0,62,'risk','Hace 48 días',0,67,57,48,2733],
             ['1111101',1,'B1',11,91,'ok','Al día',90,98,87,78,201],
             ['0000010',0,'A2',2,62,'watch','Bajó ritmo',15,67,58,50,2688],
             ['1111111',8,'B1',13,90,'ok','Al día',105,98,87,79,234],
@@ -1791,7 +1819,7 @@
             ['1111111',21,'B1',12,74,'ok','Al día',154,78,69,63,1482],
             ['1101111',4,'B1',11,84,'ok','Al día',132,91,80,74,747],
             ['1111111',25,'B1',13,90,'ok','Al día',154,95,86,75,234],
-            ['0000000',0,'A2',0,60,'risk','Sin ingresar 29 d',0,67,57,46,2889],
+            ['0000000',0,'A2',0,60,'risk','Hace 29 días',0,67,57,46,2889],
             ['1111111',14,'B1',13,90,'ok','Al día',147,95,87,76,234],
             ['1111111',28,'B1',12,75,'ok','Al día',147,83,73,62,1404],
             ['0110111',3,'B2',10,97,'ok','Al día',105,99,90,85,60],
@@ -1811,7 +1839,7 @@
             ['1111111',22,'B2',14,98,'ok','Al día',147,99,92,88,60],
             ['0010110',0,'A2',5,69,'ok','Al día',63,73,64,53,2052],
             ['1111111',7,'B2',14,98,'ok','Al día',140,99,93,83,60],
-            ['0000000',0,'A2',0,61,'risk','Sin ingresar 55 d',0,66,57,47,2811],
+            ['0000000',0,'A2',0,61,'risk','Hace 55 días',0,66,57,47,2811],
             ['1111111',8,'B2',14,95,'ok','Al día',140,99,91,82,60],
             ['1000011',2,'A2',5,66,'ok','Al día',60,71,63,54,2286],
             ['1111111',15,'B1',13,90,'ok','Al día',133,98,87,78,234],
@@ -1825,7 +1853,7 @@
             ['1111111',28,'B1',12,78,'ok','Al día',119,82,74,67,1170],
             ['1111101',1,'B1',11,83,'ok','Al día',102,90,79,73,825],
             ['1111111',32,'B2',14,94,'ok','Al día',112,98,91,78,60],
-            ['0000000',0,'A2',0,63,'risk','Sin ingresar 36 d',0,70,60,48,2655],
+            ['0000000',0,'A2',0,63,'risk','Hace 36 días',0,70,60,48,2655],
             ['1111111',21,'B1',13,88,'ok','Al día',112,93,86,74,390],
             ['1101111',4,'B1',11,77,'ok','Al día',96,85,70,64,1293],
             ['1110101',1,'B2',10,98,'ok','Al día',75,99,92,86,60],
@@ -2042,6 +2070,36 @@
     var mes = (fin.match(/[a-záéíóú]+/i) || [''])[0];
     return (ini + ' ' + mes).trim();
   });
+
+  // La fecha en que ARRANCA cada semana, ya como Date. Hace falta para poder
+  // nombrar un dia suelto y no solo la semana entera: el patron ('1000000') dice
+  // que dias entro, pero un indice del 0 al 6 no es una fecha hasta que se suma
+  // al lunes que le corresponde.
+  var MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  var WK_DESDE = WEEKS.map(function(w){
+    var p = w.split('–');
+    var ini = (p[0] || '').trim(), fin = (p[1] || '').trim();
+    var dia = parseInt(ini, 10);
+    var mesIni = (ini.match(/[a-záéíóú]+/i) || [])[0];
+    var mesFin = (fin.match(/[a-záéíóú]+/i) || [])[0];
+    var anio = parseInt((fin.match(/\d{4}/) || [])[0], 10);
+    var mi = MESES.indexOf(String(mesIni || mesFin || '').toLowerCase().slice(0, 3));
+    var mf = MESES.indexOf(String(mesFin || '').toLowerCase().slice(0, 3));
+    // El año lo lleva el final del rango. Una semana a caballo entre diciembre y
+    // enero empieza en el año anterior al que ahi figura.
+    if (mi >= 0 && mf >= 0 && mi > mf) anio -= 1;
+    return (isFinite(dia) && mi >= 0 && isFinite(anio)) ? new Date(anio, mi, dia) : null;
+  });
+
+  /** El dia numero `off` (0 = lunes) de la semana `wk`, escrito "26 may". */
+  function fechaDia(wk, off){
+    var base = WK_DESDE[wk];
+    // Si la fecha no se pudo leer se nombra la semana, que es lo que se hacia
+    // antes: peor, pero nunca en blanco.
+    if (!base) return WK_CORTA[wk];
+    var d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + off);
+    return d.getDate() + ' ' + MESES[d.getMonth()];
+  }
 
   var contarUnos = function(p){ return (String(p).match(/1/g) || []).length; };
   // Los diacriticos combinantes se nombran por codigo (U+0300–U+036F) en vez de
@@ -2546,9 +2604,13 @@
           ? 'Las tres destrezas van parejas.'
           : HM_SK[floja].n + ' es la más floja: ' + med[floja] + '% frente a ' + med[mejor] + '% de ' + HM_SK[mejor].n) +
         '</small></div>' +
+      // Cada cifra dice de que destreza es. Iban las tres sueltas —"92% 83% 74%"—
+      // y para saber cual era cual habia que deducir el orden de las columnas de
+      // la parrilla, que ademas queda lejos. El color de la muestra sigue siendo
+      // el de la escala, asi que la cifra y el tono se leen juntos.
       '<div class="hm-med">' + HM_SK.map(function(sk, i){
-        return '<span title="' + sk.n + ' ' + med[i] + '%"><i style="background:' + tono(med[i]) + '"></i>' +
-          '<em>' + med[i] + '%</em></span>';
+        return '<span><i style="background:' + tono(med[i]) + '"></i>' +
+          '<b>' + sk.i + '</b><u>' + sk.n + '</u><em>' + med[i] + '%</em></span>';
       }).join('') + '</div>';
 
     var columna = function(items){
@@ -2578,7 +2640,10 @@
     return {
       dias: TWEEK.map(function(w){ return contarUnos(w.rows[i][0]); }),
       min:  TWEEK.map(function(w){ return w.rows[i][7]; }),
-      prom: TWEEK.map(function(w){ return w.rows[i][4]; })
+      prom: TWEEK.map(function(w){ return w.rows[i][4]; }),
+      // El patron entero, no solo el recuento: es lo unico que sabe QUE dia de
+      // la semana entro, y sin eso no se puede dar una fecha.
+      pat:  TWEEK.map(function(w){ return w.rows[i][0]; })
     };
   }
 
@@ -2595,7 +2660,8 @@
     return {
       dias: PWEEK.map(function(d){ return contarUnos(d.pat); }),
       min:  PWEEK.map(function(d){ return minutos(d.tiempo); }),
-      prom: PWEEK.map(function(d){ return d.prom; })
+      prom: PWEEK.map(function(d){ return d.prom; }),
+      pat:  PWEEK.map(function(d){ return d.pat; })
     };
   }
 
@@ -2628,10 +2694,17 @@
       // tamaño del agujero, no el borde por el que se cayo.
       var visto = -1;
       for (var j = n - 1; j >= 0; j--){ if (d[j] > 0){ visto = j; break; } }
-      texto = visto < 0
-        ? 'No ha entrado ninguna de las ocho semanas.'
-        : 'La última semana que entró fue la del <b>' + WK_CORTA[visto] + '</b>, con <b>' +
-          d[visto] + ' día' + (d[visto] === 1 ? '' : 's') + '</b>.';
+      if (visto < 0){
+        texto = 'No ha entrado ninguna de las ocho semanas.';
+      } else {
+        // El DIA, no la semana. "La semana del 26 may" deja al profesor
+        // calculando un rango de siete dias para saber de cuando habla; el
+        // patron sabe exactamente cual fue el ultimo, asi que se dice.
+        var patron = (serie.pat && serie.pat[visto]) || '';
+        var off = patron.lastIndexOf('1');
+        texto = 'El último día que entró fue el <b>' +
+          (off >= 0 ? fechaDia(visto, off) : WK_CORTA[visto]) + '</b>.';
+      }
     } else {
       var peor = 0, cuando = -1;
       for (var i = 1; i < n; i++){
@@ -2695,6 +2768,28 @@
   montarFiltros();
 
   const WK_SELS=[{l:'wk-label',p:'wk-prev',n:'wk-next'},{l:'wk-label-p',p:'wk-prev-p',n:'wk-next-p'}];
+  // Se reserva el ancho de la fecha mas larga que puede salir, midiendola: se
+  // escribe en el rotulo, se mide y se fija.
+  // Pedirlo en `ch` contando caracteres NO vale, y se comprobo midiendo: `ch` es
+  // el ancho de un cero, y ni el guion largo ni los espacios miden lo mismo; y
+  // con box-sizing:border-box el relleno lateral va dentro del min-width, asi
+  // que la cuenta se queda corta y el rotulo seguia saltando 16px.
+  const WK_LARGO = WEEKS.reduce(function(a, b){ return b.length > a.length ? b : a; }, '');
+  function medirSemana(){
+    WK_SELS.forEach(function(s){
+      const l = document.getElementById(s.l);
+      if (!l) return;
+      const previo = l.textContent;
+      l.style.minWidth = '0';          // sin esto, cada medida se apila sobre la anterior
+      l.textContent = WK_LARGO;
+      l.style.minWidth = Math.ceil(l.getBoundingClientRect().width) + 'px';
+      l.textContent = previo;
+    });
+  }
+  medirSemana();
+  // Las tipografias llegan por red. Midiendo antes de que llegue DM Mono se
+  // reservaria el ancho de la de respaldo, que es otra: se remide al tenerlas.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(medirSemana);
   function wkRender(){
     WK_SELS.forEach(s=>{ const l=document.getElementById(s.l); if(!l) return;
       l.textContent=WEEKS[wkIdx]; document.getElementById(s.p).disabled=wkIdx===0; document.getElementById(s.n).disabled=wkIdx===WEEKS.length-1; });
