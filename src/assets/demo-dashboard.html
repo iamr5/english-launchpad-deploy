@@ -447,10 +447,10 @@
      en la misma linea y ademas miden lo mismo, que es lo que los deja alineados
      de verdad y no «casi»: cuadrarlo a ojo con un bottom cualquiera depende de
      como mida la letra, y se desalinea al cambiar de tipografia. */
-  /* El hueco de abajo, igual al de los lados (26). Estaba en 22 —cuadrado a la
-     linea del selector de semana cuando la cabecera tenia otro relleno— y con
-     el aire de los costados a 26 el boton parecia colgado del borde. */
-  .metas-btn{position:absolute; right:26px; bottom:26px; height:36px;
+  /* El hueco de abajo, al doble que el de los lados. Igualarlos no bastaba: el
+     boton tiene la cabecera encima y el cuerpo del reporte debajo, asi que el
+     mismo margen que a los costados lo sigue dejando pegado al canto. */
+  .metas-btn{position:absolute; right:26px; bottom:52px; height:36px;
     display:inline-flex; align-items:center; gap:5px;
     border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.14); color:#fff;
     font-family:"Inter"; font-weight:600; font-size:11.5px; padding:0 14px; border-radius:999px;
@@ -492,13 +492,15 @@
      con `bottom`/`top` y, sin anularlo, el desplegable seguiria descolgado de
      la cabecera aunque el boton ya este abajo. */
   @media (max-width:520px){
-    .metas-btn{position:fixed; right:18px; bottom:18px; top:auto; z-index:45;
+    .metas-btn{position:fixed; right:18px; bottom:36px; top:auto; z-index:45;
       height:42px; padding:0 16px; font-size:12.5px;
       border-color:var(--line); background:var(--surface); color:var(--ink);
       box-shadow:0 10px 24px -10px rgba(32,26,75,.55)}
     .metas-btn::before{opacity:.6}
     .metas-btn:hover{background:#faf9ff}
-    .metas-pop{position:fixed; right:14px; left:14px; bottom:64px; top:auto; width:auto}
+    /* Por encima del boton: este mide 42 y arranca a 36, asi que su borde
+       superior queda en 78. A 64 el desplegable le caia encima. */
+    .metas-pop{position:fixed; right:18px; left:18px; bottom:86px; top:auto; width:auto}
   }
 
   .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line)}
