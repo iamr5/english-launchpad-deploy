@@ -409,6 +409,48 @@
   .r-head .who{text-align:left; font-size:12.5px; opacity:.9}
   .r-head .who b{display:block; font-size:14px; font-family:"Bricolage Grotesque"}
 
+  /* ----- Metas, desde la propia cabecera -----
+     El liston se decide mirando la tabla, no en un formulario de otra pantalla.
+     La cabecera pasa a position:relative para que el desplegable se cuelgue de
+     ella; sin eso se resolveria contra la pagina y saldria en otro sitio. */
+  .r-head{position:relative}
+  .metas-btn{display:inline-flex; align-items:center; gap:6px; margin-top:11px;
+    border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.12); color:#fff;
+    font-family:"Inter"; font-weight:600; font-size:12px; padding:6px 11px; border-radius:999px;
+    cursor:pointer; transition:.15s}
+  .metas-btn[hidden]{display:none}
+  .metas-btn::before{content:'⚙'; font-size:12px; opacity:.9}
+  .metas-btn:hover{background:rgba(255,255,255,.2)}
+  .metas-btn:focus-visible{outline:2px solid #fff; outline-offset:2px}
+
+  .metas-pop{position:absolute; right:26px; top:calc(100% - 12px); z-index:70; width:290px;
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    box-shadow:0 24px 50px -22px rgba(32,26,75,.6); padding:15px 16px 14px; color:var(--ink)}
+  .metas-pop[hidden]{display:none}
+  .metas-pop h4{margin:0 0 3px; font-family:"Bricolage Grotesque"; font-size:14px}
+  .metas-pop .sub{margin:0 0 12px; font-size:11.5px; color:var(--muted); line-height:1.45}
+  .metas-f{display:flex; align-items:center; gap:9px; margin-bottom:9px}
+  .metas-f label{flex:1; font-size:12px; font-weight:600}
+  .metas-f label small{display:block; font-weight:500; color:var(--muted); font-size:10.5px}
+  .metas-f input, .metas-f select{width:76px; flex:none; font-family:"DM Mono",ui-monospace,monospace;
+    font-size:12.5px; padding:6px 8px; border:1px solid var(--line); border-radius:9px;
+    background:var(--surface); color:var(--ink)}
+  .metas-f input:focus, .metas-f select:focus{outline:0; border-color:var(--d-dot);
+    box-shadow:0 0 0 3px rgba(91,75,230,.13)}
+  .metas-acc{display:flex; gap:8px; margin-top:13px}
+  .metas-acc button{flex:1; font-family:"Inter"; font-weight:700; font-size:12.5px;
+    padding:8px 10px; border-radius:10px; cursor:pointer; border:1px solid var(--line);
+    background:var(--surface); color:var(--ink)}
+  .metas-acc .ok{background:var(--d-dot); border-color:var(--d-dot); color:#fff}
+  .metas-acc button:disabled{opacity:.55; cursor:default}
+  .metas-msg{margin:9px 0 0; font-size:11.5px; min-height:1em}
+  .metas-msg.mal{color:var(--risk)}
+  .metas-msg.bien{color:var(--ok)}
+  /* Estrecho: la cabecera se apila y el desplegable pasa a ocupar el ancho. */
+  @media (max-width:520px){
+    .metas-pop{right:16px; left:16px; width:auto}
+  }
+
   .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line)}
   /* Las cuatro celdas ya se igualan solas: son de una misma fila de grid, asi
      que la mas alta manda. El sobrante era aire propio —relleno generoso y el
@@ -640,6 +682,11 @@
     border:1px solid var(--line); background:var(--surface); color:var(--ink);
     font-family:"Inter"; font-weight:600; font-size:12px; padding:6px 11px;
     border-radius:999px; cursor:pointer; transition:.15s}
+  /* El JS lo esconde con el atributo `hidden` cuando no hay ningun filtro
+     puesto, y `hidden` no es mas que un `display:none` de la hoja del navegador:
+     al darle aqui un display propio se lo pisaba y el boton salia siempre, aun
+     sin nada que limpiar. Se le devuelve la prioridad. */
+  .fx-clear[hidden]{display:none}
   .fx-clear::before{content:'✕'; font-size:10px; opacity:.55}
   .fx-clear:hover{background:#f2f4f8; border-color:#d9d4ee}
   .fx-clear:focus-visible{outline:2px solid var(--d-dot); outline-offset:2px}
@@ -890,12 +937,51 @@
             <button id="wk-next" aria-label="Semana siguiente">›</button>
           </div>
         </div>
+        <!-- Enfrente del selector de semana. Solo aparece con sesión iniciada:
+             lo monta y lo enseña el bloque `metas()` del final. Quien recibe el
+             enlace del panel no lo ve. -->
         <div class="who">
           Colegio de Ingenieros del Perú<br>
           <!-- La hora la escribe el JS al cargar: un reporte "automatico" con
                fecha fija se delata solo en cuanto alguien lo mira dos dias
                seguidos. El texto de aqui es solo el respaldo si el JS no corre. -->
           <span id="r-sent" style="font-family:'DM Mono';font-size:11px;opacity:.8">Enviado: —</span>
+          <!-- Debajo del sello, que lo deja a la misma altura que el selector de
+               semana y en el lado contrario: los dos mandos de la cabecera, uno
+               en cada esquina. Solo aparece con sesión iniciada. -->
+          <button type="button" class="metas-btn" id="metas-btn" hidden
+                  aria-expanded="false" aria-controls="metas-pop">Metas del aula</button>
+        </div>
+
+        <!-- El desplegable de metas. Vive dentro de .r-head porque se cuelga de
+             ella, y arranca oculto: lo abre el boton de arriba. -->
+        <div class="metas-pop" id="metas-pop" hidden role="dialog" aria-label="Metas del aula">
+          <h4>Metas del aula</h4>
+          <p class="sub">La vara contra la que se lee cada número de arriba. Vacío = el valor de siempre.</p>
+          <div class="metas-f">
+            <label for="meta-act">Alumnos activos<small>por defecto 80%</small></label>
+            <input id="meta-act" type="number" min="0" max="100" inputmode="numeric" placeholder="80">
+          </div>
+          <div class="metas-f">
+            <label for="meta-niv">Nivel promedio<small>por defecto B1</small></label>
+            <select id="meta-niv">
+              <option value="">B1</option>
+              <option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option>
+            </select>
+          </div>
+          <div class="metas-f">
+            <label for="meta-lec">Lecciones<small>por defecto 300</small></label>
+            <input id="meta-lec" type="number" min="0" inputmode="numeric" placeholder="300">
+          </div>
+          <div class="metas-f">
+            <label for="meta-rie">Sin ingresar<small>máximo tolerado, por defecto 2</small></label>
+            <input id="meta-rie" type="number" min="0" inputmode="numeric" placeholder="2">
+          </div>
+          <div class="metas-acc">
+            <button type="button" id="meta-cancel">Cancelar</button>
+            <button type="button" class="ok" id="meta-save">Guardar</button>
+          </div>
+          <p class="metas-msg" id="meta-msg" role="status"></p>
         </div>
       </div>
 
@@ -2139,21 +2225,28 @@
     var n = parseFloat(v);
     return isFinite(n) ? n : porDefecto;
   };
-  // El nivel se guarda como etiqueta ('B1') porque es como se piensa y como se
-  // enseña, pero se compara contra el promedio numerico de los 32 alumnos.
-  var META_NIV = CFG_META.nivel && NIVEL[CFG_META.nivel] ? CFG_META.nivel : 'B1';
-  var META = [
-    { s:'act', v:num(CFG_META.activos, 80),   suf:'%', mejor:'alto' },
-    { s:'niv', v:NIVEL[META_NIV],             suf:'',  mejor:'alto', rotulo:META_NIV },
-    { s:'lec', v:num(CFG_META.lecciones, 300), suf:'', mejor:'alto' },
-    { s:'rie', v:num(CFG_META.riesgo, 2),     suf:'',  mejor:'bajo' }
-  ];
-  // El texto del chip sale del propio valor: escrito aparte, cambiar la meta y
-  // olvidarse del rotulo dejaria el panel diciendo "meta 300" con la linea
-  // dibujada en otro sitio, que es peor que no tener meta.
-  META.forEach(function(m){
-    m.txt = (m.mejor === 'bajo' ? 'máx. ' : 'meta ') + (m.rotulo != null ? m.rotulo : m.v + m.suf);
-  });
+  // Se arma en una funcion y no de una vez porque se puede cambiar en caliente
+  // desde la cabecera: al guardar se vuelve a armar y se repinta sin recargar.
+  var META = [];
+  function construirMetas(){
+    var c = CFG_META || {};
+    // El nivel se guarda como etiqueta ('B1') porque es como se piensa y como se
+    // enseña, pero se compara contra el promedio numerico de los 32 alumnos.
+    var niv = c.nivel && NIVEL[c.nivel] ? c.nivel : 'B1';
+    META = [
+      { s:'act', v:num(c.activos, 80),    suf:'%', mejor:'alto' },
+      { s:'niv', v:NIVEL[niv],            suf:'',  mejor:'alto', rotulo:niv },
+      { s:'lec', v:num(c.lecciones, 300), suf:'',  mejor:'alto' },
+      { s:'rie', v:num(c.riesgo, 2),      suf:'',  mejor:'bajo' }
+    ];
+    // El texto del chip sale del propio valor: escrito aparte, cambiar la meta y
+    // olvidarse del rotulo dejaria el panel diciendo "meta 300" con la linea
+    // dibujada en otro sitio, que es peor que no tener meta.
+    META.forEach(function(m){
+      m.txt = (m.mejor === 'bajo' ? 'máx. ' : 'meta ') + (m.rotulo != null ? m.rotulo : m.v + m.suf);
+    });
+  }
+  construirMetas();
 
   // ----- Utilidades de dibujo -----
 
@@ -2761,6 +2854,111 @@
       tr.addEventListener('transitionend', fin);
     });
   }
+
+  // ===== Metas, desde la cabecera =====
+  // El liston se decide mirando la tabla, no en un formulario de otra pantalla.
+  (function metas(){
+    var btn = document.getElementById('metas-btn');
+    var pop = document.getElementById('metas-pop');
+    if (!btn || !pop) return;
+
+    // La sesion la deja supabase-js en localStorage, bajo una clave que depende
+    // del proyecto ('sb-<ref>-auth-token'). Se busca por patron en vez de
+    // escribirla: cambiar de proyecto no deberia romper esto.
+    function token(){
+      try {
+        for (var i = 0; i < localStorage.length; i++){
+          var k = localStorage.key(i);
+          if (!/^sb-.+-auth-token$/.test(k)) continue;
+          var v = JSON.parse(localStorage.getItem(k) || 'null');
+          var t = v && (v.access_token || (v.currentSession && v.currentSession.access_token));
+          if (t) return t;
+        }
+      } catch (e) { /* localStorage bloqueado: se sigue como si no hubiera sesion */ }
+      return '';
+    }
+
+    // Sin sesion, ni se enseña. El panel es publico: a quien recibe el enlace no
+    // se le pone delante un boton que el servidor le va a rechazar.
+    if (!token()) return;
+    btn.hidden = false;
+
+    var CAMPOS = { activos:'meta-act', nivel:'meta-niv', lecciones:'meta-lec', riesgo:'meta-rie' };
+    var el = function(id){ return document.getElementById(id); };
+    var msg = el('meta-msg'), guardar = el('meta-save');
+
+    function abrir(v){
+      pop.hidden = !v;
+      btn.setAttribute('aria-expanded', String(v));
+      if (!v) return;
+      // Se rellena al abrir, no al cargar: si se guardo desde otro sitio, lo que
+      // se ve aqui es lo ultimo que hay, no lo que habia al entrar.
+      Object.keys(CAMPOS).forEach(function(k){
+        var c = el(CAMPOS[k]);
+        if (c) c.value = CFG_META && CFG_META[k] != null ? CFG_META[k] : '';
+      });
+      msg.textContent = '';
+      msg.className = 'metas-msg';
+      var p = el('meta-act');
+      if (p) p.focus();
+    }
+
+    btn.addEventListener('click', function(){ abrir(pop.hidden); });
+    el('meta-cancel').addEventListener('click', function(){ abrir(false); });
+    // Fuera y Escape cierran, como cualquier desplegable.
+    document.addEventListener('click', function(e){
+      if (pop.hidden || pop.contains(e.target) || btn.contains(e.target)) return;
+      abrir(false);
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && !pop.hidden) abrir(false);
+    });
+
+    guardar.addEventListener('click', function(){
+      var cuerpo = {};
+      Object.keys(CAMPOS).forEach(function(k){
+        var v = (el(CAMPOS[k]).value || '').trim();
+        if (v !== '') cuerpo[k] = k === 'nivel' ? v : Number(v);
+      });
+      guardar.disabled = true;
+      msg.className = 'metas-msg';
+      msg.textContent = 'Guardando…';
+
+      fetch('/api/demos/metas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token() },
+        body: JSON.stringify({ slug: (window.DEMO && window.DEMO.slug) || '', metas: cuerpo })
+      })
+        .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+        .then(function(res){
+          guardar.disabled = false;
+          if (!res.ok || !res.j || !res.j.ok){
+            var razon = res.j && res.j.reason;
+            msg.className = 'metas-msg mal';
+            msg.textContent =
+              razon === 'sin_permiso' ? 'Tu cuenta no puede editar este demo.'
+              : razon === 'sin_sesion' ? 'Se cerró la sesión. Vuelve a entrar.'
+              : razon === 'no_encontrado' ? 'Este demo ya no existe.'
+              : 'No se pudo guardar.';
+            return;
+          }
+          // Se repinta con lo que CONFIRMO el servidor, no con lo que se
+          // escribio: si algo se descarto por no ser un valor valido, se ve aqui
+          // en vez de quedarse la pantalla diciendo una meta que no se guardo.
+          CFG_META = res.j.metas || {};
+          construirMetas();
+          wkRender();
+          msg.className = 'metas-msg bien';
+          msg.textContent = 'Guardado.';
+          setTimeout(function(){ abrir(false); }, 800);
+        })
+        .catch(function(){
+          guardar.disabled = false;
+          msg.className = 'metas-msg mal';
+          msg.textContent = 'No se pudo conectar.';
+        });
+    });
+  })();
 
   montarKPIs();
   cablearKPIs();
