@@ -2856,42 +2856,32 @@
     // cuando y si volvio. Sale del propio recorrido, no de una plantilla.
     var nota = document.getElementById('ev-nota');
     if (!nota) return;
-    // Se lee siempre contra la ULTIMA semana, que es hasta donde llega el
-    // grafico: midiendolo contra la semana elegida, el texto podria decir "no ha
-    // vuelto" con la recuperacion dibujada justo al lado.
-    var d = serie.dias, n = d.length, ultimo = d[n - 1], texto = '';
+    var d = serie.dias, n = d.length;
 
-    if (ultimo === 0){
-      // Ya no entra. Aqui la pregunta no es cuanto ha bajado —bajo a cero— sino
-      // desde cuando, y eso el chip de "sin ingresar 55 d" no lo dice: dice el
-      // tamaño del agujero, no el borde por el que se cayo.
-      var visto = -1;
-      for (var j = n - 1; j >= 0; j--){ if (d[j] > 0){ visto = j; break; } }
-      if (visto < 0){
-        texto = 'No ha entrado ninguna de las ocho semanas.';
-      } else {
-        // El DIA, no la semana. "La semana del 26 may" deja al profesor
-        // calculando un rango de siete dias para saber de cuando habla; el
-        // patron sabe exactamente cual fue el ultimo, asi que se dice.
-        var patron = (serie.pat && serie.pat[visto]) || '';
-        var off = patron.lastIndexOf('1');
-        texto = 'El último día que entró fue el <b>' +
-          (off >= 0 ? fechaDia(visto, off) : WK_CORTA[visto]) + '</b>.';
-      }
+    // Solo se dice algo cuando hay algo que decir: desde cuando no entra.
+    //
+    // Aqui habia ademas un aviso para el alumno que SI entra —"paso de 3 a 0
+    // dias en la semana del 23 jun, ya volvio al ritmo que llevaba"—. Se quito:
+    // contaba una caida de hace cinco semanas, ya superada, como si fuera
+    // noticia, y la segunda frase desmentia a la primera en el mismo renglon.
+    // Habia que leerlo dos veces y no cambiaba nada de lo que el profesor fuera
+    // a hacer. Quien entra con normalidad no necesita ningun aviso: para eso
+    // estan los tres graficos justo encima.
+    if (d[n - 1] > 0){ nota.hidden = true; return; }
+
+    var visto = -1;
+    for (var j = n - 1; j >= 0; j--){ if (d[j] > 0){ visto = j; break; } }
+    if (visto < 0){
+      nota.innerHTML = 'No ha entrado ninguna de las ocho semanas.';
     } else {
-      var peor = 0, cuando = -1;
-      for (var i = 1; i < n; i++){
-        var baja = d[i - 1] - d[i];
-        if (baja > peor){ peor = baja; cuando = i; }
-      }
-      // Menos de dos dias de diferencia es la variacion normal de una semana a
-      // otra, no una caida: nombrarla seria inventar un suceso.
-      if (peor < 2 || cuando < 0){ nota.hidden = true; return; }
-      texto = 'Pasó de <b>' + d[cuando - 1] + '</b> a <b>' + d[cuando] + ' días</b> en la semana del <b>' +
-        WK_CORTA[cuando] + '</b>. ' +
-        (ultimo >= d[cuando - 1] - 1 ? 'Ya volvió al ritmo que llevaba.' : 'Todavía no ha vuelto a ese ritmo.');
+      // El DIA, no la semana. "La semana del 26 may" deja al profesor
+      // calculando un rango de siete dias para saber de cuando habla; el patron
+      // sabe exactamente cual fue el ultimo, asi que se dice.
+      var patron = (serie.pat && serie.pat[visto]) || '';
+      var off = patron.lastIndexOf('1');
+      nota.innerHTML = 'El último día que entró fue el <b>' +
+        (off >= 0 ? fechaDia(visto, off) : WK_CORTA[visto]) + '</b>.';
     }
-    nota.innerHTML = texto;
     nota.hidden = false;
   }
 
