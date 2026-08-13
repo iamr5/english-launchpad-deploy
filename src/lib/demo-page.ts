@@ -239,7 +239,7 @@ function resolveMascot(cfg: DemoConfig) {
       headIcon: pack?.headIcon ? dir + pack.headIcon : "",
       // El recoloreado necesita esta misma cadena para cazar por CSS todos los
       // <img> de la cabeza, así que viaja al lado de ella.
-      tint: cfg.mascot.tint,
+      tints: cfg.mascot.tints,
     },
   };
 }

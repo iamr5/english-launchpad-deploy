@@ -896,9 +896,30 @@
     background: conic-gradient(#1CB0F6 var(--gp, 0%), rgba(0,0,0,.10) 0); }
   .goal-chip .gc-ring::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: #fff; }
   .goal-chip .gc-t { position: relative; font-size: 13px; font-weight: 800; color: #5C5159; white-space: nowrap; }
+  /* Las agujas, dentro del anillo. Van en un <svg> y no en pseudoelementos
+     porque ::after ya es el disco blanco que abre el anillo por dentro, y hacen
+     falta dos trazos. Posicionado y con z-index: ::after está posicionado, así
+     que se pinta por encima del contenido normal y taparía el icono.
+     El viewBox mide 22 como el anillo, así que sus unidades SON píxeles: el
+     centro cae en 11,11 y la aguja larga llega a 4,4 — casi arriba del todo,
+     sin meterse en la banda de color, que ocupa los 3 de fuera. */
+  .goal-chip .gc-ico { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
+    fill: none; stroke: #5C5159; stroke-width: 1.8; stroke-linecap: round; }
+  /* La aguja que corre. Gira sobre el centro del anillo —transform-box: view-box
+     hace que 11px 11px se lea en unidades del viewBox y no de la caja— y da la
+     vuelta despacio: es un indicador de que el tiempo pasa, no un cronómetro,
+     así que no debe robar la vista en la barra superior. */
+  .goal-chip .gc-sweep { transform-box: view-box; transform-origin: 11px 11px;
+    animation: gcSweep 20s linear infinite; }
+  @keyframes gcSweep { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    html:not([data-motion="full"]) .goal-chip .gc-sweep { animation: none !important; }
+  }
   .goal-chip.done { border-color: #BFE6B2; background: #F1FBEC; }
   .goal-chip.done .gc-ring { background: conic-gradient(#3FAA24 100%, #3FAA24 0); }
   .goal-chip.done .gc-t { color: #2E7D1A; }
+  /* Cumplida: las agujas acompañan al texto, como ya hace todo lo demás. */
+  .goal-chip.done .gc-ico { stroke: #2E7D1A; }
   .appbar.appbar-module .goal-chip { border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.92); }
 
   /* Compartir progreso con un observador */
@@ -1347,8 +1368,14 @@
   @keyframes sortFlash {
     0% { opacity: 0 } 15% { opacity: .68 } 38% { opacity: .26 } 66% { opacity: .09 } 100% { opacity: 0 } }
   /* Boti reacciona: sobresalto y luego alegría que se calma */
+  /* El brillo va en --own-filter, no directo en `filter`: esta es la cabeza de
+     la mascota, y si el demo la recolorea (mascot-tint.js) la regla del teñido
+     manda sobre este elemento y le devuelve el brillo leyendo esta variable.
+     Escrito como filter: drop-shadow(...) se perdía el teñido justo aquí, en
+     la pantalla del veredicto. */
   .sort .s-boti.cheer { animation: sortCheer 1.9s cubic-bezier(.28,1.1,.35,1) both, sortHover 2.4s ease-in-out 1.9s infinite;
-    filter: drop-shadow(0 0 18px rgba(255,216,107,.85)); }
+    --own-filter: drop-shadow(0 0 18px rgba(255,216,107,.85));
+    filter: var(--own-filter); }
   @keyframes sortCheer {
     0% { transform: translateY(4px) scale(.86) rotate(0deg) }
     12% { transform: translateY(-2px) scale(1.12) rotate(-8deg) }
@@ -1618,7 +1645,7 @@
          y la cambiaba applyIcons() al arrancar, asi que se le veia un instante
          en demos cuya mascota es otra. -->
     <div class="appbar"><img class="appbar-en" alt=""><div class="title" id="course-title"></div>
-      <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0 min</span></button>
+      <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"><svg class="gc-ico" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 11V4.4"/><path class="gc-sweep" d="M11 11l3.8 3.8"/></svg></span><span class="gc-t">0 min</span></button>
       <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()"><span class="sc-em">🔥</span><b id="streak-n">0</b></button>
     </div>
     <div class="scroll"><div class="pad" id="course-body"></div></div>
@@ -1638,7 +1665,7 @@
     <div class="appbar appbar-col appbar-module">
       <div class="appbar-row"><button class="back" data-nav="course" aria-label="Atrás"></button>
         <div class="mod-head"><div class="mod-kicker" id="module-kicker"></div><div class="title" id="module-title"></div></div>
-        <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0 min</span></button>
+        <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"><svg class="gc-ico" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 11V4.4"/><path class="gc-sweep" d="M11 11l3.8 3.8"/></svg></span><span class="gc-t">0 min</span></button>
       </div>
     </div>
     <div class="scroll"><div class="pad" id="module-body"></div></div>
@@ -1647,7 +1674,7 @@
   <!-- LESSON -->
   <section id="screen-lesson" class="screen">
     <div class="appbar appbar-col">
-      <div class="appbar-row"><button class="back" data-nav="module" aria-label="Atrás"></button><div class="title" id="lesson-title"></div><button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"></span><span class="gc-t">0 min</span></button></div>
+      <div class="appbar-row"><button class="back" data-nav="module" aria-label="Atrás"></button><div class="title" id="lesson-title"></div><button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"><svg class="gc-ico" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 11V4.4"/><path class="gc-sweep" d="M11 11l3.8 3.8"/></svg></span><span class="gc-t">0 min</span></button></div>
       <div class="appbar-progress"><div class="secsegs" id="lesson-secsegs"></div><div class="pbar"><div class="fill" id="lesson-bar-fill"></div><div class="pct" id="lesson-bar-pct"></div></div></div>
     </div>
     <div class="scroll" id="lesson-scroll"><div class="pad" id="lesson-body"></div></div>

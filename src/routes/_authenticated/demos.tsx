@@ -1257,6 +1257,11 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
 
   const upd = (path: string) => (v: unknown) => setCfg((c) => set(c, path, v));
   const g2 = (p: string, f: unknown = "") => get(cfg, p, f) as string;
+  // Las capas de recoloreado. Siempre hay una en pantalla, aunque el demo no
+  // tenga ninguna guardada: es el punto de partida para tocar los mandos.
+  const tints = ((get(cfg, "mascot.tints", null) as MascotTint[] | null) ?? []).length
+    ? (get(cfg, "mascot.tints", []) as MascotTint[])
+    : [{ ...TINT_DEF }];
   // Lo que trae la mascota elegida, para enseñarlo como marca de agua.
   const mascotHead = (() => {
     const id = g2("mascot.pack", "ozito");
@@ -1887,13 +1892,10 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 packId={g2("mascot.pack", "ozito")}
                 manifest={get(cfg, "mascot.manifest", null) as MascotManifest | null}
                 baseUrl={g2("mascot.baseUrl")}
-                tint={(get(cfg, "mascot.tint", null) as MascotTint | null) ?? undefined}
+                tints={tints}
                 headIcon={mascotHead}
               />
-              <TintFields
-                tint={(get(cfg, "mascot.tint", null) as MascotTint | null) ?? {}}
-                onChange={(k, v) => upd(`mascot.tint.${k}`)(v)}
-              />
+              <TintLayers tints={tints} onChange={(next) => upd("mascot.tints")(next)} />
               <div className="space-y-1.5">
                 <Label>Personaje</Label>
                 <div className="grid gap-2 sm:grid-cols-2">
@@ -2526,13 +2528,13 @@ function MascotStage({
   packId,
   manifest,
   baseUrl,
-  tint,
+  tints,
   headIcon,
 }: {
   packId: string;
   manifest: MascotManifest | null;
   baseUrl: string;
-  tint?: MascotTint;
+  tints?: MascotTint[];
   headIcon?: string;
 }) {
   const box = useRef<HTMLDivElement | null>(null);
@@ -2596,9 +2598,9 @@ function MascotStage({
   // Es el MISMO motor que corre en el demo, así que lo que se ve aquí es lo que
   // habrá allí, sin una segunda implementación que mantener a juego.
   //
-  // La dependencia va por valor y no por identidad: el objeto se rehace en cada
+  // La dependencia va por valor y no por identidad: la lista se rehace en cada
   // render del panel, y como tal relanzaría el efecto en cada tecla.
-  const tintKey = JSON.stringify(tint ?? {});
+  const tintKey = JSON.stringify(tints ?? []);
   useEffect(() => {
     if (!box.current) return;
     let dead = false;
@@ -2607,8 +2609,7 @@ function MascotStage({
         await loadScript("/demo-assets/mascot-tint.js");
         if (dead || !box.current) return;
         (window as unknown as { MascotTint?: { apply: (o: unknown) => void } }).MascotTint?.apply({
-          ...TINT_DEF,
-          ...(JSON.parse(tintKey) as MascotTint),
+          layers: (JSON.parse(tintKey) as MascotTint[]).map((t) => ({ ...TINT_DEF, ...t })),
           headIcon,
           scope: box.current,
         });
@@ -3257,19 +3258,77 @@ function WatermarkPlacement({
   );
 }
 
+/** Cuántas capas de recoloreado se dejan apilar. Cada una es una pasada más de
+ *  filtro sobre una mascota que además se anima, así que no son gratis. */
+const MAX_TINTS = 3;
+
 /**
- * El recoloreado de la mascota: qué franja de color se toca y qué se le hace.
+ * La pila de capas de recoloreado. Cada capa toca su propia franja de color
+ * sobre lo que dejó la anterior, que es lo que permite cambiar el azul del
+ * cuerpo y los rosas de las mejillas por separado.
+ *
+ * La lista se escribe entera de una vez y no por camino (`mascot.tints.0.hue`):
+ * set() crea objetos, no listas, y guardaría {0:…} en vez de un array.
+ */
+function TintLayers({
+  tints,
+  onChange,
+}: {
+  tints: MascotTint[];
+  onChange: (next: MascotTint[] | null) => void;
+}) {
+  const write = (next: MascotTint[]) => onChange(next.length ? next : null);
+  return (
+    <div className="space-y-2">
+      {tints.map((t, i) => (
+        <TintFields
+          key={i}
+          tint={t}
+          label={tints.length > 1 ? `Color ${i + 1}` : "Recolorear la mascota"}
+          hint={i === 0}
+          onChange={(k, v) => write(tints.map((x, j) => (j === i ? { ...x, [k]: v } : x)))}
+          onRemove={tints.length > 1 ? () => write(tints.filter((_, j) => j !== i)) : undefined}
+        />
+      ))}
+      {tints.length < MAX_TINTS && (
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => write([...tints, { ...TINT_DEF, on: true }])}
+        >
+          Añadir otro color
+        </Button>
+      )}
+      {tints.length > 1 && (
+        <p className="text-xs text-muted-foreground">
+          Las capas se aplican en orden: la segunda recolorea lo que dejó la primera. Cada una
+          encendida es una pasada más de filtro sobre una mascota que se está animando.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Una capa: qué franja de color se toca y qué se le hace.
  *
  * Los valores se guardan crudos (0–1 la saturación, grados el tono) y aquí se
  * enseñan en la unidad que entiende quien lo mueve. Lo que se ve de verdad lo
- * pinta MascotStage, justo encima, con el mismo motor que el demo.
+ * pinta MascotStage, más arriba, con el mismo motor que el demo.
  */
 function TintFields({
   tint,
+  label,
+  hint,
   onChange,
+  onRemove,
 }: {
   tint: MascotTint;
+  label: string;
+  /** El párrafo de qué hace esto. Sólo en la primera capa: repetirlo por capa es ruido. */
+  hint?: boolean;
   onChange: (k: keyof MascotTint, v: number | boolean) => void;
+  onRemove?: () => void;
 }) {
   const v = { ...TINT_DEF, ...tint };
   const pct = (x: number) => Math.round(x * 100);
@@ -3281,16 +3340,26 @@ function TintFields({
 
   return (
     <div className="rounded-lg border p-3 space-y-3">
-      <label className="flex items-start gap-3 cursor-pointer">
-        <Switch className="mt-0.5" checked={!!v.on} onCheckedChange={(on) => onChange("on", on)} />
-        <span className="leading-tight">
-          <span className="text-sm">Recolorear la mascota</span>
-          <span className="block text-xs text-muted-foreground">
-            Cambia sólo una franja de color y deja el resto intacto. Alcanza todas sus apariciones:
-            el cuerpo entero y la cabeza de la barra, los vítores y la marca de agua.
+      <div className="flex items-start gap-3">
+        <label className="flex items-start gap-3 cursor-pointer flex-1">
+          <Switch className="mt-0.5" checked={!!v.on} onCheckedChange={(on) => onChange("on", on)} />
+          <span className="leading-tight">
+            <span className="text-sm">{label}</span>
+            {hint && (
+              <span className="block text-xs text-muted-foreground">
+                Cambia sólo una franja de color y deja el resto intacto. Alcanza todas sus
+                apariciones: el cuerpo entero y la cabeza de la barra, los vítores y la marca de
+                agua.
+              </span>
+            )}
           </span>
-        </span>
-      </label>
+        </label>
+        {onRemove && (
+          <Button size="sm" variant="ghost" onClick={onRemove}>
+            Quitar
+          </Button>
+        )}
+      </div>
 
       {v.on && (
         <>

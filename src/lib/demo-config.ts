@@ -378,8 +378,13 @@ export type DemoConfig = {
      * capas <img> de Ozito y Gallito y a la cabeza que sale en la barra
      * superior, los vítores o la marca de agua. El filtro y su porqué están en
      * public/demo-assets/mascot-tint.js.
+     *
+     * Son capas, en orden: cada una toca su propia franja de color sobre el
+     * resultado de la anterior, porque un dibujo suele tener más de una familia
+     * de color que cambiar (el cuerpo azul de Boti y sus rosas). Cuesta una
+     * pasada de filtro por capa encendida.
      */
-    tint?: MascotTint;
+    tints?: MascotTint[];
   };
 
   /** Emoji o URL de imagen. */
@@ -474,9 +479,11 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
     accent: "#7C1C56",
     modules: ["#3faa24", "#ff6ba0", "#b875f5", "#1cb0f6", "#fd5d04"],
   },
-  // El teñido va completo aunque esté apagado: así la plantilla recibe siempre
-  // los siete valores y no tiene que conocer ningún valor de fábrica.
-  mascot: { pack: "ozito", tint: TINT_DEF },
+  // Una capa de teñido, apagada y completa: así la plantilla recibe siempre los
+  // siete valores y no tiene que conocer ningún valor de fábrica. `merge`
+  // reemplaza las listas enteras, así que un demo con dos capas guardadas no se
+  // mezcla con ésta.
+  mascot: { pack: "ozito", tints: [TINT_DEF] },
   // `goal` vacío conserva el anillo de progreso; con emoji o URL, lo sustituye.
   icons: { streak: "🔥", goal: "", dashboard: "📊" },
   copy: {

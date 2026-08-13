@@ -27,6 +27,12 @@
 //   5. se recomponen con in/out: lo de dentro del rango teñido, lo de fuera
 //      intacto — el original tal cual, no una copia reprocesada.
 //
+// Y ESTO, POR CAPAS
+// Una franja de tono sola no llega para un dibujo de dos familias de color: el
+// cuerpo azul de Boti y sus rosas piden ajustes distintos. Cada capa es un
+// <filter> propio y se apilan como lista de CSS, que es secuencial — la segunda
+// recolorea lo que dejó la primera. Cuesta una pasada por capa.
+//
 // LO QUE NO ES
 // `hueRotate` es la aproximación matricial del giro de tono, la misma que usa
 // filter:hue-rotate() en CSS, no una rotación HSL de verdad: los colores muy
@@ -122,8 +128,13 @@
   }
 
   // ── El nodo <filter>, creado una vez y reescrito en cada cambio ────────────
-  function build(doc) {
-    var f = doc.getElementById(FILTER_ID);
+  // Uno por capa. Se apilan como lista de CSS (`filter: url(#a) url(#b)`), que
+  // es secuencial: la segunda capa trabaja sobre lo que dejó la primera, así
+  // que se pueden cambiar dos familias de color de un mismo dibujo —el azul del
+  // cuerpo y el rosa de las mejillas— sin que una pise a la otra.
+  function build(doc, i) {
+    var id = FILTER_ID + '-' + i;
+    var f = doc.getElementById(id);
     if (f) return f;
 
     function mk(tag, attrs) {
@@ -136,7 +147,7 @@
     svg.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden');
 
     f = mk('filter', {
-      id: FILTER_ID,
+      id: id,
       // sRGB y no el linearRGB de serie: el tono se mide y se gira en el mismo
       // espacio en el que están escritos los colores del dibujo.
       'color-interpolation-filters': 'sRGB',
@@ -205,43 +216,32 @@
     var head = headIcon
       ? ',img[src="' + String(headIcon).replace(/["\\]/g, '\\$&') + '"]'
       : '';
-    // --own-filter es la salida de emergencia para un elemento que YA trae
-    // filtro propio: lo declara ahí y esta regla se lo devuelve detrás del
-    // teñido, porque `filter` no se acumula entre reglas y si no lo perdería.
-    // Hace falta para el logo flotante del módulo (.brand-float en
-    // demo-app.html), que unas veces enseña el logo de la institución —que no
-    // se tiñe— y otras la cabeza de la mascota —que sí—: la regla sólo gana
-    // cuando la URL casa, así que la distinción sale sola.
+    // El !important no es pereza: `filter` no se acumula entre reglas, así que
+    // CUALQUIER regla de la plantilla que le ponga un filtro a una cara de la
+    // mascota se lleva por delante el teñido. Pasó con el brillo dorado de
+    // `.sort .s-boti.cheer` (0,3,0 le ganaba a esta regla): la mascota salía sin
+    // teñir justo en la pantalla del veredicto. Contar especificidades contra
+    // reglas que aún no existen es perder; mejor que mande ésta y que quien
+    // tenga filtro propio lo declare en --own-filter, que se compone aquí
+    // detrás del teñido.
+    //
+    // --own-filter sirve además para distinguir: el logo flotante del módulo
+    // (.brand-float en demo-app.html) unas veces enseña el logo de la
+    // institución —que no se tiñe— y otras la cabeza de la mascota —que sí—.
+    // Como la regla sólo casa por URL, la distinción sale sola.
     var css = ':root{' + VAR + ': }\nimg.layer' + head +
-      '{filter:var(' + VAR + ') var(--own-filter,)}';
+      '{filter:var(' + VAR + ') var(--own-filter,) !important}';
     if (el.textContent !== css) el.textContent = css;
   }
 
-  /**
-   * Enciende, apaga o reajusta el teñido. Barato de llamar en cada cambio de
-   * un deslizador: no remonta nada, sólo reescribe números.
-   *
-   *   on, hue, range, feather, shift, sat, light   los parámetros
-   *   headIcon   URL de la cabeza, TAL CUAL viaja en el src de los <img>
-   *   scope      dónde vale (por defecto toda la página; el panel lo acota a
-   *              su previo para no teñirse entero)
-   */
-  function apply(o) {
-    o = o || {};
-    var scope = o.scope || document.documentElement;
-    var doc = scope.ownerDocument || document;
-
-    if (!o.on) { scope.style.removeProperty(VAR); return; }
-
-    var hue = num(o.hue, DEF.hue);
-    var range = clamp(num(o.range, DEF.range), 0, 180);
-    var feather = clamp(num(o.feather, DEF.feather), 0, 1);
-    var shift = num(o.shift, DEF.shift);
-    var sat = clamp(num(o.sat, DEF.sat), 0, 4);
-    var light = clamp(num(o.light, DEF.light), 0, 4);
-
-    style(doc, o.headIcon || '');
-    var f = build(doc);
+  // Escribe los números de UNA capa en su filtro. Barato: no remonta nada.
+  function tune(f, t) {
+    var hue = num(t.hue, DEF.hue);
+    var range = clamp(num(t.range, DEF.range), 0, 180);
+    var feather = clamp(num(t.feather, DEF.feather), 0, 1);
+    var shift = num(t.shift, DEF.shift);
+    var sat = clamp(num(t.sat, DEF.sat), 0, 4);
+    var light = clamp(num(t.light, DEF.light), 0, 4);
 
     // Tono + saturación + luminosidad. La luminosidad es un factor sobre el
     // resultado (lo mismo que hace filter:brightness), así que se funde con la
@@ -273,6 +273,28 @@
     var p0 = p1 - fw;
     f.__func.setAttribute('slope', String(2 / fw));
     f.__func.setAttribute('intercept', String(-(1 + p0) / fw));
+  }
+
+  /**
+   * Enciende, apaga o reajusta el teñido.
+   *
+   *   layers     las capas, en orden: la segunda trabaja sobre el resultado de
+   *              la primera. Las apagadas no cuestan nada, ni siquiera un
+   *              filtro vacío. Cada una lleva hue, range, feather, shift, sat
+   *              y light.
+   *   headIcon   URL de la cabeza, TAL CUAL viaja en el src de los <img>
+   *   scope      dónde vale (por defecto toda la página; el panel lo acota a
+   *              su previo para no teñirse entero)
+   */
+  function apply(o) {
+    o = o || {};
+    var scope = o.scope || document.documentElement;
+    var doc = scope.ownerDocument || document;
+
+    var activas = (o.layers || []).filter(function (t) { return t && t.on; });
+    if (!activas.length) { scope.style.removeProperty(VAR); return; }
+
+    style(doc, o.headIcon || '');
 
     // Con un <base href> en la página —lo que hace demo-page.ts— hubo
     // navegadores que resolvían el fragmento contra ÉL y no encontraban el
@@ -281,7 +303,12 @@
     // sin recargar, y una ruta escrita a fuego se quedaría vieja.
     var base = doc.querySelector('base[href]');
     var ref = base ? location.pathname + location.search : '';
-    scope.style.setProperty(VAR, 'url("' + ref + '#' + FILTER_ID + '")');
+
+    var urls = activas.map(function (t, i) {
+      tune(build(doc, i), t);
+      return 'url("' + ref + '#' + FILTER_ID + '-' + i + '")';
+    });
+    scope.style.setProperty(VAR, urls.join(' '));
   }
 
   global.MascotTint = { apply: apply, filterId: FILTER_ID };
@@ -289,12 +316,7 @@
   // Arranque solo en las páginas de demo: la configuración ya viaja en la
   // página, así que el teñido entra sin esperar a nadie.
   var d = global.DEMO;
-  if (d && d.mascot && d.mascot.tint) {
-    var t = d.mascot.tint;
-    apply({
-      on: t.on, hue: t.hue, range: t.range, feather: t.feather,
-      shift: t.shift, sat: t.sat, light: t.light,
-      headIcon: d.mascot.headIcon,
-    });
+  if (d && d.mascot && d.mascot.tints) {
+    apply({ layers: d.mascot.tints, headIcon: d.mascot.headIcon });
   }
 })(window);
