@@ -486,6 +486,169 @@
     .r-head{flex-direction:column}
     .r-head .who{text-align:left}
   }
+  /* ===== DATOS: rampa y tinta de los graficos =====
+     Estos colores NO siguen la marca, igual que .lvl y .flag. --violet y sus
+     derivados estan reenganchados al acento de cada institucion (ver themeCSS en
+     demo-page.ts), asi que pintar un mapa de calor con ellos haria que "mas alto"
+     fuera de otro color en cada demo y la leyenda dejaria de significar nada. Una
+     escala de magnitud tiene que ser la misma en todas partes para poder leerse.
+
+     Rampa secuencial de un solo tono, claro→oscuro, 5 pasos. Validada: paso de
+     luminosidad >= 0.06 entre escalones, extremo claro a 2.28:1 contra el blanco
+     —o sea, la celda mas floja se sigue distinguiendo del fondo— y dispersion de
+     tono de 5 grados, que es lo que la mantiene leyendose como UNA escala. */
+  :root{
+    --d1:#ada2f2; --d2:#9384ec; --d3:#7a66e4; --d4:#5b45c6; --d5:#3a2a80;
+    /* Tinta de los graficos: la linea va en el tono flojo y el punto de la semana
+       en curso en el fuerte, que es lo que separa "el historial" de "ahora". */
+    --d-line:#ada2f2; --d-dot:#5b4be6;
+    --d-grid:#e7e4f5; --d-ref:#c9c5de; --d-ink:#6b6790;
+  }
+
+  /* ----- KPI con minigrafico y referencia -----
+     La celda pasa de ser un numero suelto a un dato con historia (8 semanas) y
+     con vara de medir (la meta). Se construye UNA vez y luego se actualizan las
+     piezas: si se reescribiera el innerHTML en cada semana no habria valor
+     anterior desde el que contar, y el minigrafico parpadearia. */
+  .kpi{cursor:pointer; transition:background .15s}
+  .kpi:hover{background:#faf9ff}
+  .kpi:focus-visible{outline:2px solid var(--d-dot); outline-offset:-2px}
+  /* Filtro puesto desde este KPI. El filete de arriba dice cual manda sin robarle
+     sitio al numero. */
+  .kpi[aria-pressed="true"]{background:#f4f2ff; box-shadow:inset 0 3px 0 var(--d-dot)}
+  .kpi-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px}
+  .kpi-top .sk{flex:none; line-height:0}
+  .kpi .spark{display:block; width:78px; height:28px; overflow:visible}
+  /* En columna, no en linea. En linea la meta cabe al lado del delta en tres de
+     las cuatro celdas y en la del texto largo se cae a la fila siguiente: cuatro
+     celdas iguales con una desalineada se lee como un descuido. */
+  .kpi-foot{display:flex; flex-direction:column; align-items:flex-start; gap:4px; margin-top:4px}
+  /* .sub ya trae su propio margen de arriba, pensado para cuando iba suelto
+     debajo del rotulo. Dentro del pie lo pone el pie. */
+  .kpi-foot .sub{margin-top:0}
+  /* La meta es estado (se cumple o no), asi que lleva icono ademas de color: el
+     color solo no puede ser lo unico que lo diga. */
+  .bench{font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:7px; white-space:nowrap}
+  .bench.hit{background:var(--teal-soft); color:#0b6b60}
+  .bench.miss{background:#f1f0f6; color:#5f5b7a}
+
+  /* ----- Tendencia del aula: dos graficos pequeños, no uno con dos ejes -----
+     "% de alumnos activos" y "lecciones completadas" no comparten escala ni
+     unidad. Meterlos en un mismo plano obligaria a un segundo eje, y ahi la
+     altura relativa de las dos lineas la decide como se alinearon los ejes, no
+     los datos: se inventa una correlacion. Dos paneles, cada uno con su escala. */
+  .trends{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:14px 0 4px}
+  @media (max-width:640px){ .trends{grid-template-columns:1fr} }
+  .trend{margin:0; border:1px solid var(--line); border-radius:14px; padding:12px 13px 8px; background:var(--surface); position:relative}
+  .trend figcaption{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:6px}
+  .trend figcaption .t{font-family:"Bricolage Grotesque"; font-size:13px; font-weight:700}
+  .trend figcaption .v{font-family:"DM Mono"; font-size:13px; font-weight:500; color:var(--ink)}
+  .trend figcaption .m{font-size:10.5px; color:var(--muted); margin-left:auto; font-weight:600}
+  .trend svg{display:block; width:100%; height:auto}
+  .trend .hit{fill:transparent; cursor:pointer}
+  .trend .hit:focus-visible{outline:2px solid var(--d-dot); outline-offset:-2px}
+  /* El globo del dato vive en el <figure>, no dentro del SVG: dentro habria que
+     medirlo en unidades del viewBox y se deformaria al escalar el grafico. */
+  .tip{position:absolute; z-index:5; pointer-events:none; opacity:0; transition:opacity .12s;
+    background:var(--ink); color:#fff; font-size:11px; line-height:1.35; font-weight:600;
+    padding:5px 8px; border-radius:8px; white-space:nowrap; transform:translate(-50%,-100%)}
+  .tip b{font-family:"DM Mono"; font-weight:500}
+  .tip.on{opacity:1}
+
+  /* ----- Barra de filtros -----
+     Va ARRIBA de todo lo que filtra —tabla y mapa de calor—, no dentro de
+     ninguno de los dos: los dos se repintan contra el mismo recorte, y quien
+     mira sabe de un vistazo que hay puesto. */
+  .filtros{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin:16px 0 4px}
+  .fx-q{display:flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--surface);
+    border-radius:11px; padding:7px 11px; min-width:190px}
+  .fx-q svg{flex:none; opacity:.5}
+  .fx-q input{border:0; outline:0; background:transparent; font-family:"Inter"; font-size:13px;
+    color:var(--ink); width:100%; min-width:0}
+  .fx-q input::placeholder{color:var(--muted)}
+  .fx-q:focus-within{border-color:var(--d-dot); box-shadow:0 0 0 3px rgba(91,75,230,.12)}
+  .fx-chips{display:flex; gap:5px; flex-wrap:wrap}
+  .fx-chips button{border:1px solid var(--line); background:var(--surface); color:var(--muted);
+    font-family:"Inter"; font-weight:600; font-size:12px; padding:6px 11px; border-radius:999px;
+    cursor:pointer; transition:.15s}
+  .fx-chips button:hover{color:var(--ink); border-color:#d9d4ee}
+  .fx-chips button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:#fff}
+  .fx-chips button:focus-visible{outline:2px solid var(--d-dot); outline-offset:2px}
+  .fx-count{font-family:"DM Mono"; font-size:11.5px; color:var(--muted); margin-left:auto}
+  .fx-clear{border:0; background:transparent; color:var(--d-dot); font-family:"Inter";
+    font-weight:700; font-size:12px; cursor:pointer; padding:6px 4px; text-decoration:underline}
+  /* Nada coincide. Se explica que pasa y se ofrece la salida, en vez de dejar la
+     tabla en blanco y que parezca que se rompio. */
+  .fx-vacio{padding:26px 12px; text-align:center; color:var(--muted); font-size:13px}
+  .fx-vacio b{display:block; color:var(--ink); font-size:14px; margin-bottom:4px}
+
+  /* Fila recien entrada por un cambio de filtro: aparece en vez de saltar. Las
+     que ya estaban se mueven con FLIP desde el JS. */
+  @keyframes fx-in{from{opacity:0} to{opacity:1}}
+
+  /* ----- Mapa de destrezas -----
+     Va justo antes del aviso de la semana: el aviso dice "Writing es la mas
+     floja del aula" y aqui se ve, en las 32 filas a la vez, por que. */
+  .hm{margin-top:22px}
+  .hm-top{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:10px}
+  .hm-top h3{margin:0}
+  .hm-key{display:flex; align-items:center; gap:6px; margin-left:auto; font-size:10.5px; color:var(--muted); font-weight:600}
+  .hm-key i{display:flex; gap:2px}
+  .hm-key i b{width:15px; height:9px; border-radius:2px; display:block}
+  .hm-prom{display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
+    border:1px solid var(--line); border-left:4px solid var(--d3); border-radius:11px;
+    padding:9px 12px; margin-bottom:12px; background:#fbfaff}
+  .hm-prom .lb{font-size:12px; font-weight:700}
+  .hm-prom .lb small{display:block; font-weight:500; color:var(--muted); font-size:11px; margin-top:1px}
+  .hm-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 26px}
+  @media (max-width:720px){
+    .hm-grid{grid-template-columns:1fr}
+    /* Apiladas, las dos mitades son una sola lista: la segunda cabecera caeria
+       en mitad de los nombres y se leeria como un corte que no significa nada. */
+    .hm-col:last-child .hm-hd{display:none}
+  }
+  .hm-col{min-width:0}
+  .hm-hd{display:grid; grid-template-columns:1fr repeat(3,34px); gap:2px; align-items:center;
+    font-size:10px; color:var(--muted); font-weight:700; padding-bottom:5px}
+  .hm-hd span{text-align:center}
+  .hm-row{display:grid; grid-template-columns:1fr repeat(3,34px); gap:2px; align-items:center;
+    padding:1px 0; cursor:pointer; border-radius:6px}
+  .hm-row:hover{background:#f2f4f8}
+  .hm-row:focus-visible{outline:2px solid var(--d-dot); outline-offset:-1px}
+  .hm-row .nm{font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:8px}
+  /* El hueco de 2px entre celdas lo pone el `gap`, no un borde: separar con tinta
+     añade peso que no es dato, y sobre una escala de color ademas la ensucia. */
+  .hm-c{height:15px; border-radius:3px}
+  /* Las tres celdas del promedio, con su cifra al lado: el color solo situa, y
+     el numero es el que se puede citar en una reunion. */
+  .hm-med{display:flex; gap:10px}
+  .hm-med span{display:flex; align-items:center; gap:5px}
+  .hm-med i{width:15px; height:15px; border-radius:3px; display:block}
+  .hm-med em{font-family:"DM Mono"; font-style:normal; font-size:12px; font-weight:500}
+
+  /* La fila de "ningun alumno coincide" no es un alumno: ni cursor de mano ni
+     resaltado al pasar, o promete que se puede abrir. */
+  #t-body tr:not([data-i]){cursor:default}
+  #t-body tr:not([data-i]):hover,
+  #t-body tr:not([data-i]):hover td:first-child{background:var(--surface)}
+
+  /* ----- Evolucion del alumno, en la ficha -----
+     Ocho semanas del MISMO alumno. Es la unica forma de responder "¿cuando se
+     cayo?", que es lo primero que se pregunta quien abre una ficha en rojo. */
+  .evo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px}
+  .evo{margin:0; border:1px solid var(--line); border-radius:12px; padding:9px 10px 6px; background:var(--surface)}
+  .evo figcaption{font-size:10px; color:var(--muted); font-weight:700; line-height:1.25; margin-bottom:3px}
+  .evo figcaption b{display:block; font-family:"DM Mono"; font-weight:500; font-size:14px; color:var(--ink); margin-top:1px}
+  .evo svg{display:block; width:100%; height:auto}
+  /* La frase que nombra la caida. Solo sale cuando hay una de verdad. */
+  .evo-nota{margin:9px 0 0; font-size:11.5px; color:#5a4a2a; background:#fffdf6;
+    border:1px solid var(--line); border-left:4px solid var(--amber); border-radius:10px; padding:9px 11px}
+  .evo-nota b{color:var(--ink)}
+
+  /* Las barras de destreza animan su ancho al cambiar de semana o de alumno. Sin
+     esto el valor salta y el cambio pasa desapercibido. */
+  .meter i{transition:width .55s cubic-bezier(.32,.72,0,1)}
+
   /* El panel de la ficha queda fuera: bajo "reduce" no se queda inmovil, hace un
    fundido corto (ver el bloque de arriba). Este `*` con !important lo pisaba. */
 @media (prefers-reduced-motion:reduce){
@@ -586,6 +749,20 @@
             </div>
           </div>
 
+          <!-- Su evolucion. Va DESPUES de las destrezas y ANTES de las
+               sugerencias: primero lo que paso, luego el consejo. Los datos son
+               las ocho semanas del mismo alumno, que ya estaban escritas y solo
+               se podian ver de una en una moviendo las flechas. -->
+          <div class="sect">
+            <h4>Su evolución <span style="font-family:'Inter';text-transform:none;letter-spacing:0;font-weight:600;font-size:11px">8 semanas</span></h4>
+            <div class="evo-grid">
+              <figure class="evo" id="ev-dias"><figcaption>Días activos<b>—</b></figcaption></figure>
+              <figure class="evo" id="ev-min"><figcaption>Minutos<b>—</b></figcaption></figure>
+              <figure class="evo" id="ev-prom"><figcaption>Promedio<b>—</b></figcaption></figure>
+            </div>
+            <p class="evo-nota" id="ev-nota" hidden></p>
+          </div>
+
           <div class="sect">
             <h4>Sugerencias de mejora</h4>
             <!-- La mascota acompaña aqui igual que en el panel completo: son
@@ -655,7 +832,39 @@
       </div>
 
       <div class="r-body">
-        <h3>Detalle por alumno <span class="tag">32 alumnos</span></h3>
+        <!-- Tendencia del aula. Dos paneles y no uno con dos ejes: ver el
+             comentario de .trends en la hoja de estilos. Los rellena pintarTendencias(). -->
+        <div class="trends">
+          <figure class="trend" id="tr-act">
+            <figcaption><span class="t">Alumnos activos</span><span class="v"></span><span class="m"></span></figcaption>
+            <div class="tip"></div>
+          </figure>
+          <figure class="trend" id="tr-lec">
+            <figcaption><span class="t">Lecciones completadas</span><span class="v"></span><span class="m"></span></figcaption>
+            <div class="tip"></div>
+          </figure>
+        </div>
+
+        <!-- Filtros. Recortan a la vez la tabla y el mapa de destrezas. Los chips
+             de nivel se generan con los niveles que existen de verdad en el curso
+             (los pinta montarFiltros), no con una lista escrita a mano que se
+             quedaria coja el dia que aparezca un C1. -->
+        <div class="filtros">
+          <label class="fx-q">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <input id="fx-q" type="search" placeholder="Buscar alumno…" autocomplete="off" aria-label="Buscar alumno por nombre">
+          </label>
+          <div class="fx-chips" id="fx-estado" role="group" aria-label="Filtrar por estado">
+            <button type="button" data-estado="ok" aria-pressed="false">Al día</button>
+            <button type="button" data-estado="watch" aria-pressed="false">Bajó ritmo</button>
+            <button type="button" data-estado="risk" aria-pressed="false">En riesgo</button>
+          </div>
+          <div class="fx-chips" id="fx-nivel" role="group" aria-label="Filtrar por nivel MCER"></div>
+          <button type="button" class="fx-clear" id="fx-clear" hidden>Limpiar</button>
+          <span class="fx-count" id="fx-count" role="status"></span>
+        </div>
+
+        <h3>Detalle por alumno <span class="tag" id="t-count">32 alumnos</span></h3>
         <div class="tscroll">
         <table>
           <thead id="t-head">
@@ -746,6 +955,24 @@
         </table>
         </div>
 
+        <!-- Mapa de destrezas. Los datos ya estaban en la fila de cada alumno
+             —listening, reading y writing, posiciones 8, 9 y 10— y no se veian en
+             ninguna parte: la tabla no los pinta y la ficha solo enseña los del
+             alumno abierto. Aqui se ven los 32 a la vez, que es lo que convierte
+             el aviso de abajo en algo comprobable en vez de una afirmacion. -->
+        <div class="hm">
+          <div class="hm-top">
+            <h3>Mapa de destrezas <span class="tag" id="hm-count">32 alumnos</span></h3>
+            <div class="hm-key">
+              <span>menos</span>
+              <i><b style="background:var(--d1)"></b><b style="background:var(--d2)"></b><b style="background:var(--d3)"></b><b style="background:var(--d4)"></b><b style="background:var(--d5)"></b></i>
+              <span>más</span>
+            </div>
+          </div>
+          <div class="hm-prom" id="hm-prom"></div>
+          <div class="hm-grid" id="hm-grid"></div>
+        </div>
+
         <div class="callout">
           <div class="botimini" data-boti='{"interactive":true,"shadow":false}'></div>
           <p id="t-callout"><b>Análisis de la semana:</b> 3 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y uno más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio — considera reforzarla en clase.</p>
@@ -813,7 +1040,10 @@
 
   // Alumno con la ficha abierta, y como repintarla al cambiar de semana. Viven
   // fuera del IIFE porque el selector de semana esta en otro sitio del script.
-  var abierta = null, refrescarFicha = null;
+  // `abrirFicha` la usa tambien el mapa de destrezas: tocar una fila del mapa
+  // abre la misma ficha que tocarla en la tabla, y no puede haber dos caminos
+  // distintos para llegar a lo mismo.
+  var abierta = null, refrescarFicha = null, abrirFicha = null;
 
   // ===== Detalle de alumno =====
   // Tocar una fila del aula abre, sin salir de la pagina, la vista que veria su
@@ -899,6 +1129,10 @@
       if (h3) h3.innerHTML = '<span class="u-name">' + first + '</span> está en nivel ' + r[2];
       pintarTrack(r[2], r[4]);
       Array.prototype.forEach.call(parent.querySelectorAll('.u-name'), function(el){ el.textContent = first; });
+      // Sus ocho semanas. Es lo que responde "¿desde cuando?", que es a lo que
+      // se viene cuando se abre una fila en rojo: el chip dice que lleva 6 dias
+      // fuera, pero no que venia de practicar los siete.
+      pintarEvolucion(serieAlumno(i), wkIdx);
 
       // Las tres sugerencias se arman con lo que de verdad le pasa a ese alumno
       // esa semana. Cada una nombra la evidencia —dias, puntos de diferencia,
@@ -951,15 +1185,16 @@
             : 'Cada lección terminada suma; esta semana no completó ninguna');
     }
 
-    function open(tr){
-      var i = parseInt(tr.getAttribute('data-i'), 10);
+    // `origen` es el elemento desde el que se abrio —una fila de la tabla o una
+    // del mapa de destrezas—, y solo sirve para devolverle el foco al cerrar.
+    function open(i, origen){
       if (isNaN(i) || !T_STUD[i]) return;
       abierta = i;
       fill(i);
 
       // De donde se abrio, para devolverle el foco al cerrar: si no, el teclado
       // vuelve al principio del documento y hay que recorrer la tabla entera.
-      lastRow = tr;
+      lastRow = origen || null;
       parent.scrollTop = 0;
       document.body.classList.remove('closing', 'shown');
       document.body.classList.add('detail');
@@ -991,20 +1226,45 @@
     // t-body.innerHTML cada vez que cambia de semana —y una vez al cargar—, asi
     // que cualquier listener puesto en un <tr> se pierde con la primera pintada.
     // El contenedor sobrevive, y con el la escucha.
-    tb.addEventListener('click', function(e){
+    abrirFicha = open;
+
+    var deFila = function(e){
       var tr = e.target.closest('tr');
-      if (tr && tb.contains(tr)) open(tr);
+      // Sin data-i no es un alumno: es la fila de "ningun alumno coincide".
+      return tr && tb.contains(tr) && tr.dataset.i != null ? tr : null;
+    };
+    tb.addEventListener('click', function(e){
+      var tr = deFila(e);
+      if (tr) open(parseInt(tr.dataset.i, 10), tr);
     });
     tb.addEventListener('keydown', function(e){
       if (e.key !== 'Enter' && e.key !== ' ') return;
-      var tr = e.target.closest('tr');
-      if (tr && tb.contains(tr)) { e.preventDefault(); open(tr); }
+      var tr = deFila(e);
+      if (tr) { e.preventDefault(); open(parseInt(tr.dataset.i, 10), tr); }
     });
 
+    // Y lo mismo desde el mapa de destrezas. Delegado en el contenedor, que
+    // sobrevive a los repintados; las filas de dentro no.
+    var mapa = document.getElementById('hm-grid');
+    if (mapa){
+      var delMapa = function(e){ return e.target.closest ? e.target.closest('.hm-row') : null; };
+      mapa.addEventListener('click', function(e){
+        var f = delMapa(e);
+        if (f) open(parseInt(f.dataset.i, 10), f);
+      });
+      mapa.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var f = delMapa(e);
+        if (f) { e.preventDefault(); open(parseInt(f.dataset.i, 10), f); }
+      });
+    }
+
     // Las filas nuevas nacen sin foco ni rol; se les vuelve a poner tras cada
-    // repintado para que el teclado siga llegando.
+    // repintado para que el teclado siga llegando. La de "no hay coincidencias"
+    // se queda fuera: no lleva a ninguna parte, y anunciarla como boton mentiria.
     function stamp(){
       Array.prototype.forEach.call(tb.querySelectorAll('tr'), function(tr){
+        if (tr.dataset.i == null) return;
         tr.tabIndex = 0;
         tr.setAttribute('role', 'button');
       });
@@ -1631,23 +1891,31 @@
     const h0=document.getElementById('p-help0'), h1=document.getElementById('p-help1');
     if(h0) h0.innerHTML=d.help[0]+' <small>'+P_HELP_SUB[0]+'</small>';
     if(h1) h1.innerHTML=d.help[1]+' <small>'+P_HELP_SUB[1]+'</small>';
+    // Las ocho semanas de este alumno. En /padres es lo unico que hay, asi que
+    // se pinta aqui; con una ficha abierta lo pisa fill() con las del suyo.
+    pintarEvolucion(seriePadres(), wk);
   }
   function renderTeacher(wk){
     const d=TWEEK[wk];
-    const kpis=document.getElementById('kpis');
-    if(kpis) kpis.innerHTML=['a','b','c','d'].map((c,i)=>
-      `<div class="kpi ${c}"><div class="k">${d.kpi[i]}</div><div class="l">${KLABEL[i]}</div><div class="sub${i===3?' down':''}">${d.ksub[i]}</div></div>`).join('');
-    const tb=document.getElementById('t-body');
+    pintarKPIs(wk);
+    // La tendencia y los KPI hablan del aula entera: van ARRIBA de los filtros y
+    // no se recortan con ellos. Lo que el filtro alcanza es la tabla y el mapa.
+    pintarTendencias(wk);
+
     // Las filas se emparejan con T_STUD por indice, asi que se ordena la pareja
-    // —alumno + datos— y no cada array por su cuenta.
-    if(tb) tb.innerHTML=sortRows(d.rows.map((r,i)=>({r, s:T_STUD[i]}))).map(({r, s})=>{
-      // r[0] es el patron de la semana ('1101011'), no una cuenta: por eso hay
-      // huecos por dentro y no un bloque corrido desde el lunes.
-      const dots=r[0].split('').map(c=>`<i class="d${c==='1'?' on':''}"></i>`).join('');
-      // data-i = indice del alumno en T_STUD. Con la tabla ordenable, la
-      // posicion en pantalla ya no dice quien es: la ficha necesita el indice
-      // para leer SU fila entera, incluidos los campos que la tabla no pinta.
-      return `<tr data-i="${T_STUD.indexOf(s)}">
+    // —alumno + datos— y no cada array por su cuenta. El indice viaja dentro del
+    // par: con la tabla ordenable y filtrable, la posicion en pantalla ya no dice
+    // quien es, y la ficha lo necesita para leer SU fila entera.
+    const todos=d.rows.map((r,i)=>({r, s:T_STUD[i], i}));
+    const vis=sortRows(filtrar(todos));
+
+    const tb=document.getElementById('t-body');
+    if(tb) flip(tb, function(){
+      tb.innerHTML = vis.length ? vis.map(({r, s, i})=>{
+        // r[0] es el patron de la semana ('1101011'), no una cuenta: por eso hay
+        // huecos por dentro y no un bloque corrido desde el lunes.
+        const dots=r[0].split('').map(c=>`<i class="d${c==='1'?' on':''}"></i>`).join('');
+        return `<tr data-i="${i}">
         <td><div class="stud"><span class="av" style="background:${s[2]}">${mono(s[0])}</span><b>${s[0]}</b></div></td>
         <td class="c"><span class="use">${dots}</span></td>
         <td class="c avg">${r[1]}</td>
@@ -1655,10 +1923,667 @@
         <td class="c hide-sm avg">${r[3]}</td>
         <td class="c avg">${r[4]}%</td>
         <td class="c"><span class="flag ${r[5]}">${r[6]}</span></td>
-      </tr>`; }).join('');
+      </tr>`; }).join('')
+      // Nada coincide. Se dice que pasa y como salir, en vez de dejar el hueco
+      // en blanco y que parezca que la tabla se rompio. La fila no lleva data-i,
+      // y eso es lo que la deja fuera del click, del teclado y del FLIP.
+      : `<tr><td colspan="7"><div class="fx-vacio"><b>Ningún alumno coincide</b>
+           Prueba con otro estado o nivel, o limpia los filtros.</div></td></tr>`;
+    });
+
+    pintarFiltros(vis.length, todos.length);
+    pintarHeatmap(vis);
     const co=document.getElementById('t-callout');
     if(co) co.innerHTML='<b>Análisis de la semana:</b> '+d.callout;
   }
+
+  // ===================================================================
+  // GRAFICOS, FILTROS Y MOVIMIENTO
+  // ===================================================================
+  // Nada de lo que sigue inventa un dato. TWEEK ya guardaba ocho semanas por
+  // alumno con doce campos cada una —unas tres mil cifras— y solo se podia ver
+  // una semana cada vez, moviendo las flechas y recordando de memoria lo
+  // anterior. Esto lo unico que hace es enseñarlo.
+
+  var REDUCE = !!(window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches);
+
+  // Etiqueta corta de cada semana ('7 jul'). WEEKS guarda el rango entero y el
+  // inicio a veces no lleva mes ('7 – 13 jul 2026'): se le presta el del final.
+  var WK_CORTA = WEEKS.map(function(w){
+    var p = w.split('–');
+    var ini = (p[0] || '').trim(), fin = (p[1] || '').trim();
+    if (/[a-záéíóú]/i.test(ini)) return ini;
+    var mes = (fin.match(/[a-záéíóú]+/i) || [''])[0];
+    return (ini + ' ' + mes).trim();
+  });
+
+  var contarUnos = function(p){ return (String(p).match(/1/g) || []).length; };
+  // Los diacriticos combinantes se nombran por codigo (U+0300–U+036F) en vez de
+  // escribirlos dentro de la expresion: sueltos son invisibles en el editor y no
+  // sobreviven a cualquier guardado que normalice el archivo.
+  var COMBINANTES = new RegExp('[' + String.fromCharCode(0x300) + '-' + String.fromCharCode(0x36f) + ']', 'g');
+  var sinTildes = function(s){
+    return s.normalize ? s.normalize('NFD').replace(COMBINANTES, '') : s;
+  };
+
+  // Las series del aula, una por KPI, a lo largo de las ocho semanas.
+  var SERIES = {
+    act: TWEEK.map(function(w){ return parseInt(w.kpi[0], 10); }),
+    lec: TWEEK.map(function(w){ return parseInt(w.kpi[2], 10); }),
+    rie: TWEEK.map(function(w){ return parseInt(w.kpi[3], 10); }),
+    // El nivel medio de verdad, no la etiqueta: 'B1' no se puede dibujar, pero
+    // el promedio de los 32 niveles si, y es lo que deja ver que el aula sube
+    // aunque la etiqueta se pase seis semanas clavada en el mismo sitio.
+    niv: TWEEK.map(function(w){
+      var t = 0;
+      w.rows.forEach(function(r){ t += NIVEL[r[2]] || 0; });
+      return Math.round((t / w.rows.length) * 100) / 100;
+    })
+  };
+
+  // La vara de medir. Hasta ahora cada numero solo se comparaba con la semana
+  // anterior, que dice si sube pero no si esta bien: 83% con un +4% puede ser
+  // una buena semana de un aula mala. La meta del colegio es el otro extremo de
+  // la comparacion, y es el que convierte el numero en un juicio.
+  var META = [
+    { s:'act', v:80,  txt:'meta 80%', suf:'%', mejor:'alto' },
+    { s:'niv', v:3,   txt:'meta B1',  suf:'',  mejor:'alto' },
+    { s:'lec', v:300, txt:'meta 300', suf:'',  mejor:'alto' },
+    { s:'rie', v:2,   txt:'máx. 2',   suf:'',  mejor:'bajo' }
+  ];
+
+  // ----- Utilidades de dibujo -----
+
+  /** Redondea el dominio hacia fuera a un paso "limpio", para que los rotulos
+   *  del eje sean numeros que alguien diria en voz alta (40 y 90, no 48,7). */
+  function dominio(vals, extra){
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    if (extra != null){ lo = Math.min(lo, extra); hi = Math.max(hi, extra); }
+    var span = Math.max(1, hi - lo);
+    var p10 = Math.pow(10, Math.floor(Math.log10(span)));
+    var r = span / p10;
+    var paso = (r < 1.5 ? 0.2 : r < 3 ? 0.5 : 1) * p10;
+    return {
+      lo: Math.floor((lo - span * 0.15) / paso) * paso,
+      hi: Math.ceil((hi + span * 0.15) / paso) * paso
+    };
+  }
+
+  /** Columna con la punta redondeada y la base a escuadra, apoyada en la linea
+   *  de cero. Una barra con las cuatro esquinas redondas se despega del eje. */
+  function barraPath(x, y, w, h, r){
+    r = Math.max(0, Math.min(r, w / 2, h));
+    return 'M' + x + ',' + (y + h) + ' L' + x + ',' + (y + r) +
+           ' Q' + x + ',' + y + ' ' + (x + r) + ',' + y +
+           ' L' + (x + w - r) + ',' + y +
+           ' Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) +
+           ' L' + (x + w) + ',' + (y + h) + ' Z';
+  }
+
+  /** Minigrafico del KPI. El punto marca la semana en curso, no la ultima: al
+   *  moverse por el selector se ve donde esta uno dentro de la serie. */
+  function sparkSVG(vals, meta, wk){
+    var X0 = 5, X1 = 73, Y0 = 5, Y1 = 23;
+    var d = dominio(vals, meta);
+    var y = function(v){ return Y1 - ((v - d.lo) / (d.hi - d.lo)) * (Y1 - Y0); };
+    var x = function(i){ return X0 + i * (X1 - X0) / (vals.length - 1); };
+    var pts = vals.map(function(v, i){ return x(i).toFixed(1) + ',' + y(v).toFixed(1); }).join(' ');
+    return '<svg class="spark" viewBox="0 0 78 28" aria-hidden="true">' +
+      // La meta va discontinua. Es lo unico punteado del panel: la rejilla y los
+      // ejes van solidos, porque una linea de puntos significa "umbral" y usarla
+      // para una rejilla hace leer una referencia donde no la hay.
+      '<line x1="' + X0 + '" x2="' + X1 + '" y1="' + y(meta).toFixed(1) + '" y2="' + y(meta).toFixed(1) +
+        '" stroke="var(--d-ref)" stroke-width="1" stroke-dasharray="3 2" vector-effect="non-scaling-stroke"/>' +
+      '<polyline points="' + pts + '" fill="none" stroke="var(--d-line)" stroke-width="2" ' +
+        'stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>' +
+      '<circle cx="' + x(wk).toFixed(1) + '" cy="' + y(vals[wk]).toFixed(1) +
+        '" r="3.2" fill="var(--d-dot)" stroke="var(--surface)" stroke-width="2"/>' +
+      '</svg>';
+  }
+
+  /** Panel de tendencia del aula. Una sola serie por panel, con su escala. */
+  function tendenciaSVG(vals, meta, wk, suf){
+    var X0 = 40, X1 = 312, Y0 = 14, Y1 = 98, EJE = 103;
+    var d = dominio(vals, meta);
+    var y = function(v){ return Y1 - ((v - d.lo) / (d.hi - d.lo)) * (Y1 - Y0); };
+    var x = function(i){ return X0 + i * (X1 - X0) / (vals.length - 1); };
+    var pts = vals.map(function(v, i){ return x(i).toFixed(1) + ',' + y(v).toFixed(1); });
+    var s = '';
+
+    [d.hi, d.lo].forEach(function(v){
+      s += '<line x1="' + X0 + '" x2="' + X1 + '" y1="' + y(v).toFixed(1) + '" y2="' + y(v).toFixed(1) +
+        '" stroke="var(--d-grid)" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
+        '<text x="' + (X0 - 7) + '" y="' + (y(v) + 3.2).toFixed(1) + '" text-anchor="end" font-size="9" ' +
+        'fill="var(--d-ink)" font-family="DM Mono, monospace">' + Math.round(v) + '</text>';
+    });
+    s += '<line x1="' + X0 + '" x2="' + X1 + '" y1="' + y(meta).toFixed(1) + '" y2="' + y(meta).toFixed(1) +
+      '" stroke="var(--d-ref)" stroke-width="1" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>';
+    // El relleno es un lavado del 10%, no un bloque: da cuerpo a la linea sin
+    // convertirse el mismo en la marca que se lee.
+    s += '<path d="M' + x(0).toFixed(1) + ',' + EJE + ' L' + pts.join(' L') + ' L' +
+      x(vals.length - 1).toFixed(1) + ',' + EJE + ' Z" fill="var(--d-dot)" opacity=".10"/>';
+    s += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="var(--d-dot)" stroke-width="2" ' +
+      'stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>';
+
+    vals.forEach(function(v, i){
+      var act = i === wk;
+      s += '<circle class="pt" data-i="' + i + '" cx="' + x(i).toFixed(1) + '" cy="' + y(v).toFixed(1) +
+        '" r="' + (act ? 4 : 2.4) + '" fill="var(--d-dot)" stroke="var(--surface)" stroke-width="2"/>';
+    });
+
+    // Un solo rotulo directo, el de la semana en curso. Poner el valor en los
+    // ocho puntos es ruido y no se lee ninguno; el resto lo dan el eje y el globo.
+    // Va encima del punto salvo que ahi se salga por arriba, y se ancla al borde
+    // cuando la semana es la primera o la ultima: centrado en el ultimo punto la
+    // mitad del texto quedaba fuera del viewBox y salia cortado.
+    var yv = y(vals[wk]);
+    s += '<text x="' + x(wk).toFixed(1) + '" y="' + (yv - 9 >= 10 ? yv - 9 : yv + 15).toFixed(1) +
+      '" text-anchor="' + (wk === 0 ? 'start' : wk === vals.length - 1 ? 'end' : 'middle') +
+      '" font-size="11" font-weight="700" fill="var(--ink)" ' +
+      'font-family="DM Mono, monospace">' + vals[wk] + suf + '</text>';
+
+    // Fechas: los dos extremos, y debajo del punto la semana elegida. Ocho
+    // rotulos no caben y se solapan; estos tres bastan para situarse.
+    var eje = function(i, anc, tinta){
+      return '<text x="' + x(i).toFixed(1) + '" y="120" text-anchor="' + anc + '" font-size="9" fill="' +
+        tinta + '" font-family="Inter, sans-serif">' + WK_CORTA[i] + '</text>';
+    };
+    // El extremo se calla cuando la semana elegida esta a su lado, no solo cuando
+    // ES ese extremo: con la semana 2 seleccionada, su rotulo y el del principio
+    // caian uno encima del otro y se leia "26 may2 jun".
+    if (wk > 1) s += eje(0, 'start', 'var(--d-ink)');
+    if (wk < vals.length - 2) s += eje(vals.length - 1, 'end', 'var(--d-ink)');
+    s += eje(wk, wk === 0 ? 'start' : wk === vals.length - 1 ? 'end' : 'middle', 'var(--ink)');
+
+    // Zonas sensibles: una banda entera por semana, no el punto. Acertarle a un
+    // circulo de 5px con el raton es un juego de punteria, no una interfaz.
+    var banda = (X1 - X0) / (vals.length - 1);
+    vals.forEach(function(v, i){
+      s += '<rect class="hit" data-i="' + i + '" tabindex="0" role="button" ' +
+        'aria-label="Semana del ' + WK_CORTA[i] + ': ' + v + suf + '" ' +
+        'x="' + Math.max(0, x(i) - banda / 2).toFixed(1) + '" y="' + Y0 +
+        '" width="' + banda.toFixed(1) + '" height="' + (EJE - Y0) + '"/>';
+    });
+    return '<svg viewBox="0 0 320 126">' + s + '</svg>';
+  }
+
+  /** Las ocho semanas de un alumno, en columnas. */
+  function columnasSVG(vals, wk){
+    var X0 = 4, X1 = 116, Y0 = 6, BASE = 44;
+    var hi = Math.max.apply(null, vals) || 1;
+    var banda = (X1 - X0) / vals.length;
+    var ancho = Math.min(12, banda - 5);
+    var s = '<line x1="' + X0 + '" x2="' + X1 + '" y1="' + BASE + '" y2="' + BASE +
+      '" stroke="var(--d-grid)" stroke-width="1" vector-effect="non-scaling-stroke"/>';
+    vals.forEach(function(v, i){
+      var h = (v / hi) * (BASE - Y0);
+      // Una semana en cero tiene que dejar rastro: sin esto desaparece y no se
+      // distingue de "aqui no hay dato", que es lo contrario de lo que dice.
+      if (h < 1.5) h = 1.5;
+      var x = X0 + i * banda + (banda - ancho) / 2;
+      s += '<path d="' + barraPath(x, BASE - h, ancho, h, 3) + '" fill="' +
+        (i === wk ? 'var(--d-dot)' : 'var(--d1)') + '"/>';
+    });
+    return '<svg viewBox="0 0 120 50" aria-hidden="true">' + s + '</svg>';
+  }
+
+  /** El promedio es un nivel, no un recuento: linea, no columnas. */
+  function lineaSVG(vals, wk){
+    var X0 = 5, X1 = 115, Y0 = 8, Y1 = 42;
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    if (hi === lo) hi = lo + 1;
+    var y = function(v){ return Y1 - ((v - lo) / (hi - lo)) * (Y1 - Y0); };
+    var x = function(i){ return X0 + i * (X1 - X0) / (vals.length - 1); };
+    var pts = vals.map(function(v, i){ return x(i).toFixed(1) + ',' + y(v).toFixed(1); }).join(' ');
+    return '<svg viewBox="0 0 120 50" aria-hidden="true">' +
+      '<polyline points="' + pts + '" fill="none" stroke="var(--d1)" stroke-width="2" ' +
+        'stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>' +
+      '<circle cx="' + x(wk).toFixed(1) + '" cy="' + y(vals[wk]).toFixed(1) +
+        '" r="3.4" fill="var(--d-dot)" stroke="var(--surface)" stroke-width="2"/>' +
+      '</svg>';
+  }
+
+  // ----- KPIs: se montan una vez y luego se actualizan por piezas -----
+  // Antes se reescribia el innerHTML del bloque entero en cada semana. Asi no
+  // hay valor anterior desde el que contar —el numero saltaba— y el minigrafico
+  // se destruia y volvia a nacer cada vez.
+
+  function montarKPIs(){
+    var box = document.getElementById('kpis');
+    if (!box) return;
+    box.innerHTML = ['a', 'b', 'c', 'd'].map(function(c, i){
+      return '<div class="kpi ' + c + '" data-kpi="' + i + '" role="button" tabindex="0" aria-pressed="false">' +
+        '<div class="kpi-top"><div class="k" data-v="">—</div><span class="sk"></span></div>' +
+        '<div class="l">' + KLABEL[i] + '</div>' +
+        '<div class="kpi-foot"><span class="sub"></span><span class="bench"></span></div>' +
+      '</div>';
+    }).join('');
+  }
+
+  /** Cuenta de un valor al siguiente. Bajo "reduce" salta directo al final. */
+  function contar(el, hasta, suf){
+    var desde = parseFloat(el.dataset.v);
+    if (el._raf) cancelAnimationFrame(el._raf);
+    el.dataset.v = hasta;
+    if (REDUCE || isNaN(desde) || desde === hasta){ el.textContent = hasta + suf; return; }
+    var t0 = null;
+    var paso = function(t){
+      if (t0 === null) t0 = t;
+      var p = Math.min(1, (t - t0) / 520);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(desde + (hasta - desde) * e) + suf;
+      el._raf = p < 1 ? requestAnimationFrame(paso) : 0;
+    };
+    el._raf = requestAnimationFrame(paso);
+  }
+
+  function pintarKPIs(wk){
+    var d = TWEEK[wk];
+    Array.prototype.forEach.call(document.querySelectorAll('#kpis .kpi'), function(c, i){
+      var m = META[i], serie = SERIES[m.s], val = serie[wk];
+      var k = c.querySelector('.k'), n = parseFloat(d.kpi[i]);
+      // 'B1' no es un numero: se cambia y ya. Contar hasta una etiqueta no
+      // significa nada, y forzarlo sacaria un NaN a pantalla.
+      if (isNaN(n)){ k.textContent = d.kpi[i]; k.dataset.v = ''; }
+      else contar(k, n, String(d.kpi[i]).replace(/^-?[\d.]+/, ''));
+
+      var sub = c.querySelector('.sub');
+      sub.innerHTML = d.ksub[i];
+      sub.classList.toggle('down', i === 3);
+      c.querySelector('.sk').innerHTML = sparkSVG(serie, m.v, wk);
+
+      var ok = m.mejor === 'alto' ? val >= m.v : val <= m.v;
+      var b = c.querySelector('.bench');
+      b.className = 'bench ' + (ok ? 'hit' : 'miss');
+      // Icono ademas del color: si la unica señal de "cumple / no cumple" fuera
+      // el verde, quien no distingue ese verde se queda sin el dato.
+      b.textContent = (ok ? '✓ ' : m.mejor === 'alto' ? '↑ ' : '↓ ') + m.txt;
+    });
+  }
+
+  // ----- Tendencia del aula -----
+
+  var TREND = [
+    { id:'tr-act', s:'act', suf:'%' },
+    { id:'tr-lec', s:'lec', suf:''  }
+  ];
+
+  function mostrarTip(fig, i){
+    var tip = fig.querySelector('.tip');
+    var hit = fig.querySelector('.hit[data-i="' + i + '"]');
+    var pt = fig.querySelector('.pt[data-i="' + i + '"]');
+    if (!tip || !hit || !pt) return;
+    var f = fig.getBoundingClientRect(), h = hit.getBoundingClientRect(), p = pt.getBoundingClientRect();
+    tip.innerHTML = WK_CORTA[i] + ' · <b>' + fig._vals[i] + fig._suf + '</b>';
+    tip.style.left = (h.left - f.left + h.width / 2) + 'px';
+    tip.style.top = (p.top - f.top - 8) + 'px';
+    tip.classList.add('on');
+  }
+
+  function cablearTendencias(){
+    TREND.forEach(function(cfg){
+      var fig = document.getElementById(cfg.id);
+      if (!fig) return;
+      // Delegado: el SVG se rehace en cada semana, asi que cualquier escucha
+      // puesta en un <rect> se perderia con la primera pintada. El <figure> no.
+      var dentro = function(e){ return e.target.closest ? e.target.closest('.hit') : null; };
+      ['mouseover', 'focusin'].forEach(function(ev){
+        fig.addEventListener(ev, function(e){
+          var r = dentro(e);
+          // El teclado enseña lo mismo que el raton: si el globo fuera lo unico
+          // que da el valor y solo saliera al pasar por encima, quien navega con
+          // el tabulador se quedaria sin el.
+          if (r) mostrarTip(fig, +r.dataset.i);
+        });
+      });
+      ['mouseout', 'focusout'].forEach(function(ev){
+        fig.addEventListener(ev, function(e){
+          if (dentro(e)) fig.querySelector('.tip').classList.remove('on');
+        });
+      });
+      // Tocar una semana en el grafico la selecciona en todo el panel. Es lo que
+      // separa un dibujo de un mando: el grafico no solo cuenta, tambien lleva.
+      var ir = function(e){
+        var r = dentro(e);
+        if (!r) return;
+        wkIdx = +r.dataset.i;
+        wkRender();
+      };
+      fig.addEventListener('click', ir);
+      fig.addEventListener('keydown', function(e){
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        if (!dentro(e)) return;
+        e.preventDefault();
+        ir(e);
+      });
+    });
+  }
+
+  function pintarTendencias(wk){
+    TREND.forEach(function(cfg){
+      var fig = document.getElementById(cfg.id);
+      if (!fig) return;
+      var vals = SERIES[cfg.s];
+      var meta = META.filter(function(m){ return m.s === cfg.s; })[0].v;
+      fig._vals = vals;
+      fig._suf = cfg.suf;
+      var tip = fig.querySelector('.tip');
+      // Se apaga antes de repintar: al tocar una semana desaparece el <rect> que
+      // tenia el raton encima, no llega el mouseout y el globo se quedaria fijo.
+      if (tip) tip.classList.remove('on');
+      var viejo = fig.querySelector('svg');
+      if (viejo) viejo.remove();
+      fig.insertAdjacentHTML('beforeend', tendenciaSVG(vals, meta, wk, cfg.suf));
+      fig.querySelector('.v').textContent = vals[wk] + cfg.suf;
+      fig.querySelector('.m').textContent = 'meta ' + meta + cfg.suf;
+    });
+  }
+
+  // ----- Filtros -----
+  // Con 32 alumnos se puede recorrer la tabla con la vista. Con 300 no, y es en
+  // 300 en lo que piensa quien esta evaluando el producto.
+
+  var FX = { q:'', estado:'', nivel:'', activos:false };
+  function hayFiltro(){ return !!(FX.q || FX.estado || FX.nivel || FX.activos); }
+
+  function filtrar(pares){
+    if (!hayFiltro()) return pares;
+    var q = sinTildes(FX.q);
+    return pares.filter(function(p){
+      // Sin tildes en los dos lados: quien escribe "joaquin" espera encontrar a
+      // Joaquin, y en un teclado apurado nadie pone el acento.
+      if (q && sinTildes(p.s[0].toLowerCase()).indexOf(q) < 0) return false;
+      if (FX.estado && p.r[5] !== FX.estado) return false;
+      if (FX.nivel && p.r[2] !== FX.nivel) return false;
+      if (FX.activos && p.r[0].indexOf('1') < 0) return false;
+      return true;
+    });
+  }
+
+  function montarFiltros(){
+    // Los chips de nivel se sacan de los niveles que EXISTEN en el curso, no de
+    // una lista escrita a mano: el dia que aparezca un C1 el filtro ya lo tiene.
+    var caja = document.getElementById('fx-nivel');
+    if (caja){
+      var vistos = {};
+      TWEEK.forEach(function(w){ w.rows.forEach(function(r){ vistos[r[2]] = 1; }); });
+      caja.innerHTML = Object.keys(vistos)
+        .sort(function(a, b){ return (NIVEL[a] || 0) - (NIVEL[b] || 0); })
+        .map(function(n){ return '<button type="button" data-nivel="' + n + '" aria-pressed="false">' + n + '</button>'; })
+        .join('');
+      caja.addEventListener('click', function(e){
+        var b = e.target.closest('button[data-nivel]');
+        if (!b) return;
+        FX.nivel = FX.nivel === b.dataset.nivel ? '' : b.dataset.nivel;
+        renderTeacher(wkIdx);
+      });
+    }
+    var est = document.getElementById('fx-estado');
+    if (est) est.addEventListener('click', function(e){
+      var b = e.target.closest('button[data-estado]');
+      if (!b) return;
+      FX.estado = FX.estado === b.dataset.estado ? '' : b.dataset.estado;
+      renderTeacher(wkIdx);
+    });
+    var q = document.getElementById('fx-q');
+    if (q) q.addEventListener('input', function(){
+      FX.q = q.value.trim().toLowerCase();
+      renderTeacher(wkIdx);
+    });
+    var limpiar = document.getElementById('fx-clear');
+    if (limpiar) limpiar.addEventListener('click', function(){
+      FX = { q:'', estado:'', nivel:'', activos:false };
+      if (q) q.value = '';
+      renderTeacher(wkIdx);
+    });
+  }
+
+  function pintarFiltros(nVis, nTot){
+    Array.prototype.forEach.call(document.querySelectorAll('#fx-estado button'), function(b){
+      b.setAttribute('aria-pressed', String(b.dataset.estado === FX.estado));
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#fx-nivel button'), function(b){
+      b.setAttribute('aria-pressed', String(b.dataset.nivel === FX.nivel));
+    });
+    var f = hayFiltro();
+    var rot = f ? nVis + ' de ' + nTot + ' alumnos' : nTot + ' alumnos';
+    ['t-count', 'hm-count'].forEach(function(id){
+      var e = document.getElementById(id);
+      if (e) e.textContent = rot;
+    });
+    var c = document.getElementById('fx-count');
+    if (c) c.textContent = f ? 'Mostrando ' + nVis + ' de ' + nTot : '';
+    var l = document.getElementById('fx-clear');
+    if (l) l.hidden = !f;
+    // Cada KPI se enciende cuando el recorte puesto es el suyo, para que se vea
+    // de donde vino el filtro y se pueda quitar desde el mismo sitio.
+    Array.prototype.forEach.call(document.querySelectorAll('#kpis .kpi'), function(k){
+      var i = +k.dataset.kpi;
+      var on = i === 0 ? FX.activos
+             : i === 1 ? (!!FX.nivel && FX.nivel === TWEEK[wkIdx].kpi[1])
+             : i === 2 ? sortBy === 'lecc'
+             : FX.estado === 'risk';
+      k.setAttribute('aria-pressed', String(!!on));
+    });
+  }
+
+  function cablearKPIs(){
+    var box = document.getElementById('kpis');
+    if (!box) return;
+    var pulsar = function(i){
+      if (i === 0) FX.activos = !FX.activos;
+      else if (i === 1){
+        var n = TWEEK[wkIdx].kpi[1];
+        FX.nivel = FX.nivel === n ? '' : n;
+      } else if (i === 3){
+        FX.estado = FX.estado === 'risk' ? '' : 'risk';
+      } else {
+        // El unico que no recorta. "Lecciones completadas" no describe a un
+        // grupo de alumnos —las hacen todos—, asi que filtrar por el no querria
+        // decir nada; lo que se busca al tocarlo es quien las hizo y quien no.
+        if (sortBy === 'lecc'){ sortBy = null; sortStep = 0; sortDir = 1; }
+        else { sortBy = 'lecc'; sortStep = 1; sortDir = -1; }
+        marcarCabecera();
+      }
+      renderTeacher(wkIdx);
+    };
+    box.addEventListener('click', function(e){
+      var k = e.target.closest('.kpi');
+      if (k) pulsar(+k.dataset.kpi);
+    });
+    box.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var k = e.target.closest('.kpi');
+      if (!k) return;
+      e.preventDefault();
+      pulsar(+k.dataset.kpi);
+    });
+  }
+
+  // ----- Mapa de destrezas -----
+
+  var HM_SK = [{ k:8, n:'Listening', i:'🎧' }, { k:9, n:'Reading', i:'📖' }, { k:10, n:'Writing', i:'✍️' }];
+  // Dominio FIJO, en cinco tramos iguales. Fijo a proposito: si la escala se
+  // recalculara con cada semana o cada filtro, el mismo 78% saldria de un color
+  // distinto segun lo que hubiera al lado y el mapa dejaria de poder compararse
+  // consigo mismo, que es justo para lo que sirve.
+  var HM_LO = 40, HM_HI = 100, HM_N = 5;
+  function tono(v){
+    var b = Math.floor((v - HM_LO) / ((HM_HI - HM_LO) / HM_N));
+    return 'var(--d' + (Math.max(0, Math.min(HM_N - 1, b)) + 1) + ')';
+  }
+
+  function pintarHeatmap(vis){
+    var grid = document.getElementById('hm-grid'), prom = document.getElementById('hm-prom');
+    if (!grid || !prom) return;
+
+    var n = vis.length || 1;
+    var med = HM_SK.map(function(sk){
+      var t = 0;
+      vis.forEach(function(p){ t += p.r[sk.k]; });
+      return Math.round(t / n);
+    });
+    var floja = 0, mejor = 0;
+    med.forEach(function(v, i){
+      if (v < med[floja]) floja = i;
+      if (v > med[mejor]) mejor = i;
+    });
+    // Con filtro puesto el promedio es el del recorte, y el rotulo lo dice. Dar
+    // el del aula entera junto a tres filas seria comparar dos cosas distintas
+    // sin avisar de que son distintas.
+    prom.innerHTML =
+      '<div class="lb">' + (hayFiltro() ? 'Promedio de la selección' : 'Promedio del aula') +
+        '<small>' + (floja === mejor
+          ? 'Las tres destrezas van parejas.'
+          : HM_SK[floja].n + ' es la más floja: ' + med[floja] + '% frente a ' + med[mejor] + '% de ' + HM_SK[mejor].n) +
+        '</small></div>' +
+      '<div class="hm-med">' + HM_SK.map(function(sk, i){
+        return '<span title="' + sk.n + ' ' + med[i] + '%"><i style="background:' + tono(med[i]) + '"></i>' +
+          '<em>' + med[i] + '%</em></span>';
+      }).join('') + '</div>';
+
+    var columna = function(items){
+      return '<div class="hm-col"><div class="hm-hd"><span style="text-align:left">Alumno</span>' +
+        HM_SK.map(function(sk){ return '<span title="' + sk.n + '">' + sk.i + '</span>'; }).join('') +
+        '</div>' + items.map(function(p){
+          return '<div class="hm-row" data-i="' + p.i + '" tabindex="0" role="button" ' +
+            'aria-label="Ver la ficha de ' + p.s[0] + '"><span class="nm">' + p.s[0] + '</span>' +
+            HM_SK.map(function(sk){
+              return '<span class="hm-c" role="img" style="background:' + tono(p.r[sk.k]) + '" ' +
+                'title="' + sk.n + ' ' + p.r[sk.k] + '%" aria-label="' + sk.n + ' ' + p.r[sk.k] + '%"></span>';
+            }).join('') + '</div>';
+        }).join('') + '</div>';
+    };
+    // Dos columnas: 32 filas de una sola tirada obligan a desplazarse y se pierde
+    // justo lo que el mapa tiene de bueno, que es verlas todas a la vez. La
+    // segunda solo se pinta si le toca alguien: con un unico resultado quedaba
+    // una columna vacia con su cabecera colgando al lado.
+    var mitad = Math.ceil(vis.length / 2);
+    grid.innerHTML = !vis.length ? ''
+      : columna(vis.slice(0, mitad)) + (vis.length > mitad ? columna(vis.slice(mitad)) : '');
+  }
+
+  // ----- Evolucion del alumno -----
+
+  function serieAlumno(i){
+    return {
+      dias: TWEEK.map(function(w){ return contarUnos(w.rows[i][0]); }),
+      min:  TWEEK.map(function(w){ return w.rows[i][7]; }),
+      prom: TWEEK.map(function(w){ return w.rows[i][4]; })
+    };
+  }
+
+  // El panel de familia tiene su propio juego de datos (PWEEK). Los minutos van
+  // escritos ahi ('1 h 45', '54 min') porque es lo que se pinta en el chip; para
+  // dibujarlos hacen falta como numero.
+  function minutos(t){
+    var s = String(t);
+    var h = /(\d+)\s*h/.exec(s);
+    var m = /(\d+)\s*(?:min)?\s*$/.exec(s.replace(/\d+\s*h/, ''));
+    return (h ? +h[1] * 60 : 0) + (m ? +m[1] : 0);
+  }
+  function seriePadres(){
+    return {
+      dias: PWEEK.map(function(d){ return contarUnos(d.pat); }),
+      min:  PWEEK.map(function(d){ return minutos(d.tiempo); }),
+      prom: PWEEK.map(function(d){ return d.prom; })
+    };
+  }
+
+  function pintarEvolucion(serie, wk){
+    var poner = function(id, rotulo, valor, svg){
+      var f = document.getElementById(id);
+      if (!f) return;
+      f.querySelector('figcaption').innerHTML = rotulo + '<b>' + valor + '</b>';
+      var v = f.querySelector('svg');
+      if (v) v.remove();
+      f.insertAdjacentHTML('beforeend', svg);
+    };
+    poner('ev-dias', 'Días activos', serie.dias[wk] + ' / 7', columnasSVG(serie.dias, wk));
+    poner('ev-min', 'Minutos', serie.min[wk], columnasSVG(serie.min, wk));
+    poner('ev-prom', 'Promedio', serie.prom[wk] + '%', lineaSVG(serie.prom, wk));
+
+    // Y la frase que nombra la caida. Es la primera pregunta de quien abre una
+    // ficha en rojo: no "cuanto lleva fuera" —eso ya lo dice el chip— sino desde
+    // cuando y si volvio. Sale del propio recorrido, no de una plantilla.
+    var nota = document.getElementById('ev-nota');
+    if (!nota) return;
+    // Se lee siempre contra la ULTIMA semana, que es hasta donde llega el
+    // grafico: midiendolo contra la semana elegida, el texto podria decir "no ha
+    // vuelto" con la recuperacion dibujada justo al lado.
+    var d = serie.dias, n = d.length, ultimo = d[n - 1], texto = '';
+
+    if (ultimo === 0){
+      // Ya no entra. Aqui la pregunta no es cuanto ha bajado —bajo a cero— sino
+      // desde cuando, y eso el chip de "sin ingresar 55 d" no lo dice: dice el
+      // tamaño del agujero, no el borde por el que se cayo.
+      var visto = -1;
+      for (var j = n - 1; j >= 0; j--){ if (d[j] > 0){ visto = j; break; } }
+      texto = visto < 0
+        ? 'No ha entrado ninguna de las ocho semanas.'
+        : 'La última semana que entró fue la del <b>' + WK_CORTA[visto] + '</b>, con <b>' +
+          d[visto] + ' día' + (d[visto] === 1 ? '' : 's') + '</b>.';
+    } else {
+      var peor = 0, cuando = -1;
+      for (var i = 1; i < n; i++){
+        var baja = d[i - 1] - d[i];
+        if (baja > peor){ peor = baja; cuando = i; }
+      }
+      // Menos de dos dias de diferencia es la variacion normal de una semana a
+      // otra, no una caida: nombrarla seria inventar un suceso.
+      if (peor < 2 || cuando < 0){ nota.hidden = true; return; }
+      texto = 'Pasó de <b>' + d[cuando - 1] + '</b> a <b>' + d[cuando] + ' días</b> en la semana del <b>' +
+        WK_CORTA[cuando] + '</b>. ' +
+        (ultimo >= d[cuando - 1] - 1 ? 'Ya volvió al ritmo que llevaba.' : 'Todavía no ha vuelto a ese ritmo.');
+    }
+    nota.innerHTML = texto;
+    nota.hidden = false;
+  }
+
+  // ----- Movimiento de la tabla (FLIP) -----
+  // Se mide donde esta cada fila, se repinta, se mide otra vez, se la devuelve
+  // con un transform a donde estaba y se suelta. El resultado es que las filas
+  // se deslizan a su sitio nuevo: al ordenar o al filtrar se VE que se movio,
+  // en vez de aparecer otra tabla distinta de golpe.
+  function flip(tb, dibujar){
+    if (REDUCE){ dibujar(); return; }
+    var antes = {};
+    Array.prototype.forEach.call(tb.children, function(tr){
+      if (tr.dataset.i != null) antes[tr.dataset.i] = tr.getBoundingClientRect().top;
+    });
+    dibujar();
+    var mover = [];
+    Array.prototype.forEach.call(tb.children, function(tr){
+      var y0 = antes[tr.dataset.i];
+      // Fila que no estaba (entro por un cambio de filtro): aparece. FLIP solo
+      // sabe mover lo que ya existia.
+      if (y0 == null){ tr.style.animation = 'fx-in .3s ease both'; return; }
+      var dy = y0 - tr.getBoundingClientRect().top;
+      if (Math.abs(dy) < 1) return;
+      tr.style.transition = 'none';
+      tr.style.transform = 'translateY(' + dy + 'px)';
+      mover.push(tr);
+    });
+    if (!mover.length) return;
+    void tb.offsetHeight;   // fija el estado inicial antes de soltar
+    mover.forEach(function(tr){
+      tr.style.transition = 'transform .34s cubic-bezier(.32,.72,0,1)';
+      tr.style.transform = '';
+      // Se limpia al terminar. Mientras hay transform, el <tr> hace de bloque
+      // contenedor y la columna fija del alumno deja de quedarse fija al
+      // desplazar en horizontal: que dure lo que la animacion y ni un frame mas.
+      var fin = function(){
+        tr.style.transition = '';
+        tr.removeEventListener('transitionend', fin);
+      };
+      tr.addEventListener('transitionend', fin);
+    });
+  }
+
+  montarKPIs();
+  cablearKPIs();
+  cablearTendencias();
+  montarFiltros();
 
   const WK_SELS=[{l:'wk-label',p:'wk-prev',n:'wk-next'},{l:'wk-label-p',p:'wk-prev-p',n:'wk-next-p'}];
   function wkRender(){
