@@ -1407,6 +1407,12 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={get(cfg, "colors.spinner")}
                 onChange={upd("colors.spinner")}
               />
+              <ColorField
+                label="Barra superior del panel"
+                hint="La cabecera de /dashboard y /padres. Si lo dejas vacío, la del profesor va oscura y la de familia toma el acento, como hasta ahora."
+                value={get(cfg, "colors.dashboardBar")}
+                onChange={upd("colors.dashboardBar")}
+              />
               <hr />
               <p className="text-sm font-medium">Color de cada módulo</p>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -1584,6 +1590,14 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={get(cfg, "copy.audience")}
                 placeholder={DEFAULTS.copy.audience}
                 onChange={upd("copy.audience")}
+              />
+
+              <Field
+                label="Grupo del reporte"
+                hint="Va bajo el título del reporte de aula, en /dashboard. Un colegio pone «Inglés · 5.º A»; una universidad, «Inglés · Ciclo III»; una empresa, «Inglés · Equipo de ventas»."
+                value={get(cfg, "copy.groupLabel")}
+                placeholder={DEFAULTS.copy.groupLabel}
+                onChange={upd("copy.groupLabel")}
               />
 
               <details className="rounded-lg border p-3">

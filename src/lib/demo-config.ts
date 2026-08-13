@@ -181,6 +181,16 @@ export type DemoConfig = {
     highlight?: string;
     highlightDark?: string;
     /**
+     * La barra superior del panel de seguimiento: la cabecera oscura del
+     * reporte en /<slug>/dashboard y la cabecera de color en /<slug>/padres.
+     *
+     * Si se deja vacío cada una conserva el suyo —la del profesor tira a
+     * oscuro, la de familia al acento—, que es como se maquetaron. En cuanto
+     * se pone un color, manda en las dos: son la misma barra vista por dos
+     * personas distintas, y conviene que la institución la reconozca igual.
+     */
+    dashboardBar?: string;
+    /**
      * De qué color va la barra fija del pie del curso («Tu próxima lección»):
      * el rótulo, el título y el botón.
      *   "module" (por defecto) — el color del módulo al que pertenece la
@@ -226,6 +236,13 @@ export type DemoConfig = {
     audience: string;
     dashboardCta: string;
     dashboardCtaSub: string;
+    /**
+     * El grupo del que habla el reporte del aula, bajo el título: «Inglés · 5.º
+     * A», «Inglés · Ciclo III», «Inglés · Equipo de ventas». Es texto libre
+     * porque cambia con la institución: un colegio numera secciones, una
+     * universidad habla de ciclos y una empresa, de áreas.
+     */
+    groupLabel?: string;
   };
 
   map: {
@@ -277,6 +294,7 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
     audience: "estudiante",
     dashboardCta: "Ver mi panel de progreso",
     dashboardCtaSub: "Racha, XP, niveles y logros",
+    groupLabel: "Inglés · Ciclo III",
   },
   map: {},
   features: { placement: true, share: true, dashboard: true },

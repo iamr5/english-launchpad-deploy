@@ -23,18 +23,28 @@ function json(v: unknown) {
   return JSON.stringify(v).replace(/</g, "\\u003c");
 }
 
-function headTags(cfg: DemoConfig) {
+/**
+ * Una subpágina del demo (el panel, la vista de familia). Cambia el título, la
+ * descripción y la og:url; el resto de la marca —imagen social, favicon— sigue
+ * siendo la del demo, que es justo lo que se quiere.
+ */
+export type DemoSubpage = { title: string; description: string; path: string };
+
+function headTags(cfg: DemoConfig, page?: DemoSubpage) {
   const m = cfg.meta;
   const image = m.image ?? "https://aprendoenglish.com/social-preview.jpg";
   const alt = m.imageAlt ?? m.title;
   const icon = cfg.brand.appbarIcon ?? "/head.png";
+  const title = page?.title ?? m.title;
+  const description = page?.description ?? m.description;
+  const url = `https://aprendoenglish.com/${esc(cfg.slug)}${page ? esc(page.path) : ""}`;
   return `
 <link rel="icon" href="${esc(icon)}">
-<meta name="description" content="${esc(m.description)}">
-<meta property="og:title" content="${esc(m.title)}">
-<meta property="og:description" content="${esc(m.description)}">
+<meta name="description" content="${esc(description)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://aprendoenglish.com/${esc(cfg.slug)}">
+<meta property="og:url" content="${url}">
 <meta property="og:image" content="${esc(image)}">
 <meta property="og:image:secure_url" content="${esc(image)}">
 <meta property="og:image:type" content="image/jpeg">
@@ -42,8 +52,8 @@ function headTags(cfg: DemoConfig) {
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="${esc(alt)}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(m.title)}">
-<meta name="twitter:description" content="${esc(m.description)}">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${esc(image)}">`;
 }
 
@@ -125,7 +135,23 @@ function themeCSS(cfg: DemoConfig) {
     `--greenDark:${c.actionDark ?? (c.action ? shadeHex(action, -0.28) : STOCK.actionDark)}`,
     `--blue:${highlight}`,
     `--blueDark:${c.highlightDark ?? (c.highlight ? shadeHex(highlight, -0.24) : STOCK.highlightDark)}`,
+
+    // El panel de seguimiento (/dashboard y /padres) venía pintado con una
+    // paleta violeta propia —--violet, --violet2, --violet-soft— que no tocaba
+    // ninguna de las variables de arriba, así que salía con el mismo morado
+    // para todas las instituciones por mucho color que se eligiera en /demos.
+    // Se reenganchan al acento: el degradado y los fondos suaves salen de él.
+    `--violet:${c.accent}`,
+    `--violet2:${shadeHex(c.accent, 0.24)}`,
+    `--violet-soft:${shadeHex(c.accent, 0.88)}`,
   ];
+
+  // Barra superior del panel. Solo se emite si el demo la fijó: la plantilla
+  // trae un `var(--bar-1, …)` con el color de siempre como respaldo, así que no
+  // declararla deja cada cabecera como estaba y evita repintar demos ya hechos.
+  if (c.dashboardBar) {
+    vars.push(`--bar-1:${c.dashboardBar}`, `--bar-2:${shadeHex(c.dashboardBar, 0.2)}`);
+  }
   return `<style id="demo-theme">:root{${vars.join(";")}}</style>`;
 }
 
@@ -226,7 +252,11 @@ export function renderDemoNotFound(slug: string): Response {
  * tema y mascota. Lo comparten la app y el panel de progreso, que necesitan
  * exactamente lo mismo.
  */
-async function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {}) {
+async function inject(
+  tpl: string,
+  cfg: DemoConfig,
+  opts: { head?: boolean; view?: "parent" | "teacher"; page?: DemoSubpage } = {},
+) {
   const mascot = resolveMascot(cfg);
   // Pase para pedir el contenido del curso. Va dentro de la pagina, asi que solo
   // lo tiene quien la ha abierto; caduca a las 6 h.
@@ -243,13 +273,37 @@ async function inject(tpl: string, cfg: DemoConfig, opts: { head?: boolean } = {
     features: cfg.features,
     mascot: mascot.runtime,
     courseToken,
+    // Pestaña con la que abre el panel. La fija la URL (/<slug>/padres abre en
+    // "parent"), no el cliente: el servidor no ve el #hash, así que el deep link
+    // por hash de la plantilla no alcanza para enrutarlo.
+    view: opts.view,
   };
   return (
     tpl
       .replace(
         "<head>",
-        `<head><base href="${ASSET_BASE}">${opts.head ? headTags(cfg) : ""}
+        `<head><base href="${ASSET_BASE}">${opts.head ? headTags(cfg, opts.page) : ""}
 ` + `<script>window.DEMO=${json(demo)};</script>`,
+      )
+      // El <title> de la plantilla es genérico ("Dashboard · Seguimiento para
+      // familias y profesores"). En una subpágina lo pisamos con el de la
+      // institución: es lo que se ve en la pestaña y al compartir el enlace.
+      // Reemplazo por función, no por cadena: un "$" en el nombre de la
+      // institución se interpretaría como grupo de captura y saldría mutilado.
+      .replace(/<title>[\s\S]*?<\/title>/, (m) =>
+        opts.page ? `<title>${esc(opts.page.title)}</title>` : m,
+      )
+      // Página de una sola vista: la pestaña se fija AQUÍ y no en el cliente.
+      // Si la decidiera el JS del final de la página, el navegador alcanzaría a
+      // pintar la vista de familia antes de saltar a la de profesor, y en
+      // /dashboard se vería el parpadeo.
+      .replace(/<body(\s[^>]*)?>/, (m, attrs) =>
+        opts.view ? `<body${attrs ?? ""} class="solo solo-${opts.view}">` : m,
+      )
+      .replace(/<section class="view( on)?" id="(parent|teacher)">/g, (m, _on, id) =>
+        opts.view
+          ? `<section class="view${id === opts.view ? " on" : ""}" id="${id}">`
+          : m,
       )
       // El tema cierra el <head>: antes lo pisaría el :root de la plantilla.
       .replace(
@@ -277,8 +331,28 @@ const SIN_CACHE = {
 };
 
 /** El panel de progreso, con la marca y la mascota del demo que lo abre. */
-export async function renderDemoDashboard(cfg: DemoConfig): Promise<Response> {
-  return new Response(await inject(dashboardTemplate, cfg), { headers: SIN_CACHE });
+export async function renderDemoDashboard(
+  cfg: DemoConfig,
+  view?: "parent" | "teacher",
+): Promise<Response> {
+  // La vista de familia es la que se manda por WhatsApp o por correo, así que
+  // se le pone su propio título y descripción: la tarjeta del enlace tiene que
+  // decir de qué institución es y qué se va a ver al abrirla.
+  const page: DemoSubpage =
+    view === "parent"
+      ? {
+          title: `Progreso del alumno · ${cfg.institution}`,
+          description: `Mira el avance semanal, la racha y los minutos de práctica en ${cfg.institution}.`,
+          path: "/padres",
+        }
+      : {
+          title: `Panel de seguimiento · ${cfg.institution}`,
+          description: `Resumen semanal para familias y reporte de aula para profesores en ${cfg.institution}.`,
+          path: "/dashboard",
+        };
+  return new Response(await inject(dashboardTemplate, cfg, { head: true, view, page }), {
+    headers: SIN_CACHE,
+  });
 }
 
 export async function renderDemoPage(cfg: DemoConfig): Promise<Response> {

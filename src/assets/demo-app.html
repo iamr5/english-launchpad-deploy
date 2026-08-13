@@ -2729,11 +2729,12 @@ function showSpinner(on) {
     el.hidden = true;
   }
 }
-// El panel de progreso del demo vive en /demo-dashboard.
+// El panel de progreso del demo vive en /<slug>/dashboard.
 function openDashboard() {
-  // Le pasamos el slug: sin el, el panel no sabe de que demo es y no puede
-  // pintar ni la marca de la institucion ni su mascota.
-  const url = '/demo-dashboard' + (DEMO.slug ? '?d=' + encodeURIComponent(DEMO.slug) : '');
+  // El slug va en la ruta, no en un query param: asi el panel sabe de que demo
+  // es y puede pintar la marca de la institucion y su mascota. Sin slug caemos
+  // en la direccion vieja, que sirve la plantilla generica.
+  const url = DEMO.slug ? '/' + encodeURIComponent(DEMO.slug) + '/dashboard' : '/demo-dashboard';
   try { (window.top || window).location.href = url; }
   catch (e) { window.location.href = url; }
 }

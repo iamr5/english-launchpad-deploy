@@ -87,13 +87,189 @@
   .botistand svg, .botimini svg{max-width:100%; max-height:100%}
   @media (max-width:900px){ .botiside{padding-top:6px} }
 
+  /* Mascota flotante, abajo a la derecha. Solo acompaña al panel del profesor:
+     la vista de familia ya tiene la suya de cuerpo entero dentro del contenido.
+     Va despues de .botistand para ganarle el ancho y el alto. */
+  .botifloat{position:fixed; right:20px; bottom:20px; width:118px; height:178px; z-index:40;
+    filter:drop-shadow(0 10px 24px rgba(15,23,42,.18)); pointer-events:none}
+  body:not(.solo-teacher) .botifloat{display:none}
+  /* Solo cabe cuando sobra margen a los lados del reporte: son 920px de tarjeta
+     mas 16 de padding, y la mascota pide ~160 con su aire. Por debajo de eso se
+     monta sobre la tabla, asi que cede el sitio a la cabeza. */
+  @media (max-width:1280px){ body.solo-teacher .botifloat{display:none} }
+
+
+  /* Pagina de una sola vista (/padres, /dashboard). Es el panel de alguien, no
+     la demostracion de un producto: fuera la cabecera entera —logo, nombre de
+     la institucion y el enlace de vuelta al demo—, el reclamo de venta y el
+     selector de pestanas. Se entra directo al contenido.
+     Se ocultan, no se borran del markup: brandDashboard sigue escribiendo en
+     #dash-logo, #dash-inst y #dash-back, y quitarlos lo dejaria sin destino. */
+  body.solo .top,
+  body.solo .lede,
+  body.solo .seg{display:none}
+  /* Sin cabecera no hay nada de lo que separarse: el .wrap traia 26px arriba y
+     70px abajo pensados para el demo, y aqui solo dejan hueco muerto. */
+  body.solo .view{margin-top:0}
+  /* Mientras la tarjeta tenga aire a los lados, lo tiene tambien arriba: con 16
+     en los costados y 0 arriba salia cortada contra el borde superior. Cuando
+     el ancho obliga a pegarla a los bordes (≤860) se va a sangre por los cuatro
+     lados, que es coherente, y ahi si vuelve a 0. */
+  body.solo .wrap{padding:18px 16px 32px}
+
+  /* iPad vertical (834) hacia abajo: la tarjeta deja de ser tarjeta y se pega a
+     los bordes. Hasta aqui habia tres rellenos anidados —16 del .wrap, el borde
+     y el radio de .report, y 26 del .r-body—: en escritorio no se notan, pero en
+     390px se comen casi una cuarta parte del ancho, y lo que sobra es la tabla
+     de alumnos, que es justo lo que hay que leer. */
+  @media (max-width:860px){
+    body.solo .wrap{padding:0 0 24px}
+    body.solo-teacher .report{border-radius:0; border:0; box-shadow:none; max-width:none}
+    body.solo-teacher .r-head{padding:18px 16px}
+    body.solo-teacher .r-body{padding:10px 14px 22px}
+    /* La vista de familia no es tarjeta, pero tambien traia su propio aire. */
+    body.solo-parent .phone, body.detail .phone{max-width:none}
+    body.solo-parent .s-head, body.detail .s-head{border-radius:0}
+  }
+
+  /* ===== DETALLE DE ALUMNO =====
+     Al tocar una fila del aula se abre, en la misma pagina, la vista que veria
+     su familia. Es exactamente el mismo bloque #parent —no una copia— relleno
+     con los datos de esa fila; asi el profesor ve literalmente lo que ve el
+     padre, y no hay dos maquetas que mantener. */
+  #t-body tr{cursor:pointer}
+  /* Gris frio y literal, no --violet-soft: esa variable esta reenganchada al
+     acento, asi que la fila se teñia del color de la institucion al pasar por
+     encima. Señalar la fila bajo el cursor es un gesto de la interfaz, no un
+     sitio donde poner marca — y ademas competia con los chips de estado, que
+     son lo que ahi hay que leer. */
+  #t-body tr:hover{background:#f2f4f8}
+  #t-body tr:focus-visible{outline:2px solid #94a0b8; outline-offset:-2px}
+  /* El aula NO se esconde: la ficha entra por encima y el profesor conserva el
+     sitio en la tabla, que es lo que distingue un panel de un cambio de pagina. */
+  body.detail #parent{display:block}
+  body.detail .botifloat{display:none}
+  /* Mismo desmontaje del atrezzo que en /padres: aqui tampoco es una demo de
+     como se ve en el movil, es la ficha del alumno. */
+  body.detail .stage{display:block}
+  body.detail .botiside{display:none}
+  body.detail .notch{display:none}
+  body.detail .phone{width:100%; max-width:760px; margin:0 auto;
+    padding:0; border:0; border-radius:0; background:transparent; box-shadow:none}
+  body.detail .screen{border-radius:0; background:transparent; overflow:visible}
+  body.detail .s-head{border-radius:20px}
+
+  .backbar{display:none; align-items:center; gap:12px; margin:0 auto 14px; max-width:760px}
+  body.detail .backbar{display:flex}
+  .backbar button{border:1px solid var(--line); background:var(--surface); color:var(--ink);
+    font-family:"Inter"; font-weight:600; font-size:14px; padding:8px 14px; border-radius:12px;
+    cursor:pointer; box-shadow:var(--shadow-sm)}
+  .backbar button:hover{background:var(--violet-soft)}
+  .backbar .crumb{font-size:13px; color:var(--muted)}
+  .backbar .crumb b{color:var(--ink)}
+
+  /* ----- La ficha, presentada como panel -----
+     Escritorio: panel lateral derecho. Movil: hoja inferior. Es la convencion
+     de siempre —side sheet para el detalle de una fila, bottom sheet cuando no
+     hay ancho— y aqui ademas conserva la tabla detras, que es justo lo que se
+     pierde al cambiar de pagina.
+     El velo se crea desde JS, no en el markup: asi esta plantilla sigue
+     sirviendo igual para /padres, donde no hay ficha que abrir. */
+  .scrim{position:fixed; inset:0; z-index:50; background:rgba(32,26,75,.42);
+    opacity:0; pointer-events:none; transition:opacity .22s ease}
+  body.detail .scrim{opacity:1; pointer-events:auto}
+  /* Con el panel abierto el fondo no se desplaza: si no, el dedo arrastra la
+     tabla de abajo en vez de la ficha. */
+  body.detail{overflow:hidden}
+
+  body.detail #parent{
+    position:fixed; z-index:60; background:var(--surface);
+    overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+    margin:0;
+    /* Mata el `rise` que trae .view: es opacidad + 10px, o sea un fundido, y
+       compitiendo con esto es justo lo que se ve cuando "no hay movimiento". */
+    animation:none;
+    /* Transicion, no animation: el panel viene de display:none, y animar un
+       elemento en el mismo fotograma en que aparece se salta el arranque en
+       varios navegadores. Con transicion se fija el estado inicial, se fuerza
+       un reflow y recien entonces se cambia — eso siempre corre. */
+    transition:transform .3s cubic-bezier(.32,.72,0,1);
+    will-change:transform;
+  }
+  /* Estado abierto. Lo pone el JS en el fotograma siguiente. */
+  body.detail.shown #parent{transform:none}
+  /* La cabecera de la ficha se queda fija al hacer scroll dentro del panel:
+     el boton de cerrar tiene que estar siempre a mano. */
+  body.detail .backbar{max-width:none; position:sticky; top:0; z-index:1;
+    background:var(--surface); margin:0 0 10px; padding:4px 0 10px}
+  body.detail .phone{max-width:none}
+
+  /* Movil: hoja inferior, con su asidero. */
+  @media (max-width:899px){
+    body.detail #parent{
+      left:0; right:0; bottom:0; max-height:88vh;
+      border-radius:20px 20px 0 0; box-shadow:0 -18px 44px -20px rgba(32,26,75,.55);
+      padding:8px 16px 26px;
+      transform:translateY(100%);
+    }
+    body.detail #parent::before{content:''; display:block; width:38px; height:4px;
+      border-radius:999px; background:var(--line); margin:2px auto 8px}
+  }
+
+  /* Escritorio: panel derecho a altura completa. */
+  @media (min-width:900px){
+    body.detail #parent{
+      top:0; bottom:0; right:0; width:min(560px,92vw);
+      border-left:1px solid var(--line); box-shadow:-26px 0 54px -30px rgba(32,26,75,.55);
+      padding:18px 22px 30px;
+      transform:translateX(100%);
+    }
+  }
+
+  /* Salida: basta con quitar .shown — el panel vuelve al transform de su media
+     query y la transicion lo lleva. Sale mas rapido que como entra (.2 frente a
+     .3) y con curva de aceleracion en vez de frenado: entrar pide que el ojo lo
+     alcance, salir solo pide quitarlo de en medio. */
+  body.detail.closing .scrim{opacity:0}
+  body.detail.closing #parent{transition:transform .2s cubic-bezier(.4,0,1,1)}
+
+  /* El panel se desliza igual con prefers-reduced-motion activo: es una decision
+     tomada a proposito, no un olvido. Es la unica pieza de la pagina que ignora
+     esa preferencia —el resto la respeta en el bloque del final—, porque el
+     movimiento es lo que hace legible de donde sale y adonde vuelve.
+     Nada de opacidad en la entrada: el desplazamiento es toda la animacion. */
+
+  /* /padres: fuera el andamio. El marco de telefono y la mascota de al lado
+     son atrezzo de demostracion —"mira como se ve en el movil"—; aqui esto ES
+     el panel de la familia, asi que el contenido se queda y el envoltorio se
+     va. Se desmonta por CSS y no tocando el markup: dentro del telefono vive
+     toda la vista, y moverla de sitio arriesga romperla sin necesidad. */
+  body.solo-parent .stage{display:block}
+  body.solo-parent .botiside{display:none}
+  body.solo-parent .notch{display:none}
+  body.solo-parent .phone{
+    width:100%; max-width:760px; margin:0 auto;
+    padding:0; border:0; border-radius:0; background:transparent; box-shadow:none;
+  }
+  /* La ".screen" era la pantalla del movil: su degradado y sus esquinas eran
+     parte del atrezzo. Aqui es la superficie del panel, sin marco: el fondo lo
+     pone la pagina y cada bloque trae el suyo. */
+  body.solo-parent .screen{border-radius:0; background:transparent; overflow:visible}
+  /* La cabecera violeta era el techo de la pantalla del movil; sin marco que la
+     recorte necesita sus propias esquinas. */
+  body.solo-parent .s-head{border-radius:20px}
+
   /* ===== STUDENT (phone) ===== */
   .stage{display:flex; gap:34px; align-items:flex-start; flex-wrap:wrap; justify-content:center}
   .phone{width:390px; max-width:100%; background:var(--surface); border-radius:38px; padding:14px;
     box-shadow:var(--shadow); border:1px solid var(--line); position:relative}
   .notch{width:130px; height:26px; background:var(--ink); border-radius:0 0 16px 16px; margin:0 auto 10px; opacity:.9}
   .screen{border-radius:26px; overflow:hidden; background:linear-gradient(180deg,#fbfaff,#f4f2fd)}
-  .s-head{padding:18px 18px 18px; background:linear-gradient(135deg,var(--violet),#6f5cf1);
+  /* Mismo degradado que la cabecera del reporte (.r-head), incluidos los
+     valores de respaldo. Las dos leian --bar-1/--bar-2, pero caian a sitios
+     distintos cuando el demo no configura la barra: el reporte a --ink y esta
+     al acento, asi que la ficha abria con otro color que el panel del que sale. */
+  .s-head{padding:18px 18px 18px; background:linear-gradient(135deg,var(--bar-1,var(--ink)),var(--bar-2,var(--accent-d,#3a2f7e)));
     color:#fff; border-radius:26px 26px 22px 22px}
   .s-head .row{display:flex; align-items:center; justify-content:space-between}
   .hi{font-family:"Bricolage Grotesque"; font-weight:700; font-size:20px; letter-spacing:-.01em}
@@ -124,10 +300,16 @@
   .ring-info h3{margin:0 0 3px; font-family:"Bricolage Grotesque"; font-size:16px; letter-spacing:-.01em}
   .ring-info p{margin:0 0 10px; font-size:12.5px; color:var(--muted)}
   .track{display:flex; gap:5px}
-  .tk{flex:1; text-align:center; font-size:10px; font-weight:700; color:var(--muted); padding:5px 0; border-radius:8px;
-    background:var(--violet-soft)}
+  /* El nivel en curso no se pinta lleno: se llena SEGUN lo avanzado dentro de
+     el, asi que el peldaño actual es en si mismo una barra de progreso. Antes
+     los cuatro estaban fijos en el HTML y siempre marcaban B1. */
+  .tk{position:relative; overflow:hidden; flex:1; text-align:center; font-size:10px; font-weight:700;
+    color:var(--muted); padding:5px 0; border-radius:8px; background:var(--violet-soft)}
+  .tk > span{position:relative; z-index:1}
   .tk.done{background:var(--violet); color:#fff}
-  .tk.now{background:var(--amber); color:#5a3d00; box-shadow:0 0 0 3px var(--amber-soft)}
+  .tk.now{background:var(--amber-soft); color:#5a3d00; box-shadow:0 0 0 3px var(--amber-soft)}
+  .tk.now > i{position:absolute; left:0; top:0; bottom:0; width:0; background:var(--amber);
+    transition:width .6s cubic-bezier(.32,.72,0,1)}
 
   .band{display:flex; gap:9px; padding:14px 16px 4px}
   .chip{flex:1; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:11px 12px; text-align:center}
@@ -149,21 +331,25 @@
   .meter i{display:block; height:100%; border-radius:99px}
   .badge-done{margin-left:auto; font-size:15px}
 
-  .mission{display:flex; align-items:center; gap:11px; padding:11px; border:1px solid var(--line); border-radius:14px; margin-bottom:9px; background:var(--surface)}
+  /* Mismo tratamiento que el aviso del reporte —filete de 4px a la izquierda y
+     fondo crema— para que se lean como lo que son: lo accionable de la ficha.
+     Con borde fino y fondo blanco pasaban por simple lista. */
+  .tips{display:flex; align-items:flex-start; gap:10px}
+  .tips-list{flex:1; min-width:0}
+  .mission{display:flex; align-items:center; gap:11px; padding:12px 13px; border:1px solid var(--line);
+    border-left:4px solid var(--amber); border-radius:12px; margin-bottom:9px; background:#fffdf6}
   .mission .box{width:22px;height:22px;border-radius:7px;border:2px solid var(--line); flex:none; display:grid; place-items:center; font-size:13px; color:#fff}
   .mission.done .box{background:var(--teal); border-color:var(--teal)}
   .mission .t{font-size:13px; font-weight:600; flex:1}
-  .mission .t small{display:block; font-weight:500; color:var(--muted); font-size:11px}
+  /* Gris calido, no var(--muted): sobre el crema del aviso el gris frio se veia
+     sucio. */
+  .mission .t small{display:block; font-weight:500; color:#6b5c3f; font-size:11px}
   .mission .pts{font-family:"DM Mono"; font-size:12px; color:var(--amber); font-weight:500; background:var(--amber-soft); padding:3px 8px; border-radius:8px}
 
-  .cert{margin:14px 16px 18px; border-radius:16px; padding:15px; color:#fff; display:flex; gap:13px; align-items:center;
-    background:linear-gradient(120deg,#241d55,#413593); position:relative; overflow:hidden}
-  .cert::after{content:"🎓"; position:absolute; right:-6px; bottom:-14px; font-size:74px; opacity:.16}
-  .cert .lock{font-size:22px}
-  .cert b{font-family:"Bricolage Grotesque"; font-size:14px; display:block}
-  .cert p{margin:2px 0 0; font-size:11.5px; opacity:.85}
-  .cert .go{margin-left:auto; z-index:1; font-family:"DM Mono"; font-size:12px; background:var(--amber); color:#5a3d00;
-    padding:6px 10px; border-radius:9px; font-weight:500; white-space:nowrap}
+  /* El bloque .cert ("Constancia de logro B2" bajo candado) se quito de la
+     ficha. Su unico dato real, los XP que faltan, vive ahora en la tercera
+     sugerencia; el resto era un recuadro grande diciendo que algo no ha pasado
+     todavia. Los estilos se van con el. */
 
   /* annotations beside phone */
   .notes{flex:1; min-width:250px; max-width:340px; padding-top:6px}
@@ -174,7 +360,7 @@
 
   /* ===== TEACHER REPORT ===== */
   .report{background:var(--surface); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); overflow:hidden; max-width:920px; margin:0 auto}
-  .r-head{padding:22px 26px; background:linear-gradient(135deg,#201a4b,#3a2f7e); color:#fff; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:wrap}
+  .r-head{padding:22px 26px; background:linear-gradient(135deg,var(--bar-1,var(--ink)),var(--bar-2,var(--accent-d,#3a2f7e))); color:#fff; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:wrap}
   .r-head .capa{font-family:"DM Mono"; font-size:11px; letter-spacing:.14em; text-transform:uppercase; background:rgba(255,255,255,.14); padding:5px 11px; border-radius:999px; display:inline-block; margin-bottom:12px}
   .r-head h2{font-family:"Bricolage Grotesque"; font-weight:800; font-size:24px; margin:0 0 4px; letter-spacing:-.02em}
   .r-head p{margin:0; font-size:13px; opacity:.85}
@@ -182,30 +368,100 @@
   .r-head .who b{display:block; font-size:14px; font-family:"Bricolage Grotesque"}
 
   .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line)}
-  .kpi{background:var(--surface); padding:18px 20px}
-  .kpi .k{font-family:"Bricolage Grotesque"; font-weight:800; font-size:28px; letter-spacing:-.02em; line-height:1}
-  .kpi .l{font-size:12px; color:var(--muted); margin-top:6px; font-weight:600}
-  .kpi .sub{font-size:11px; margin-top:3px; font-family:"DM Mono"}
+  /* Las cuatro celdas ya se igualan solas: son de una misma fila de grid, asi
+     que la mas alta manda. El sobrante era aire propio —relleno generoso y el
+     interlineado 1.5 del body en dos rotulos cortos que no lo necesitan—, no
+     un alto impuesto. Se aprieta eso y la fila queda a la medida del contenido. */
+  /* El aire va arriba, no abajo. Ojo con medirlo solo por el padding: el numero
+     lleva line-height:1 —cero interlineado, el hueco de arriba es exactamente
+     el padding— mientras que el rotulo de abajo arrastra su propio interlineado
+     y suma unos 2-3px que no se ven en la regla. Por eso el de abajo se recorta
+     por debajo del de arriba: para que OPTICAMENTE queden desiguales a favor
+     del numero, que es lo que se pidio. */
+  .kpi{background:var(--surface); padding:16px 16px 8px}
+  .kpi .k{font-family:"Bricolage Grotesque"; font-weight:800; font-size:24px; letter-spacing:-.02em; line-height:1}
+  .kpi .l{font-size:12px; color:var(--muted); margin-top:4px; font-weight:600; line-height:1.3}
+  .kpi .sub{font-size:11px; margin-top:2px; font-family:"DM Mono"; line-height:1.35}
   .kpi .k{color:var(--ink)} .kpi.d .k{color:var(--risk)}
   .up{color:var(--ok)} .down{color:var(--risk)}
 
-  .r-body{padding:22px 26px 26px}
+  /* Los 22px de arriba eran el hueco que se veia DEBAJO de los KPI: la tarjeta
+     acaba en su padding, pero justo despues empieza este bloque y los dos huecos
+     se suman. Recortando aqui —no en la tarjeta, donde ya no quedaba nada que
+     quitar— la banda deja de flotar sobre un vacio. */
+  .r-body{padding:12px 26px 26px}
   .r-body h3{font-family:"Bricolage Grotesque"; font-size:15px; margin:4px 0 14px; display:flex; align-items:center; gap:9px}
-  .r-body h3 .tag{font-family:"DM Mono"; font-size:10px; font-weight:500; color:var(--violet); background:var(--violet-soft); padding:3px 8px; border-radius:7px; letter-spacing:.04em}
+  /* Valores literales, no --violet: esa variable esta reenganchada al acento del
+     demo, asi que el chip cambiaba de color por institucion. Es un dato de la
+     tabla —cuantos alumnos hay—, no un elemento de marca, igual que .lvl. */
+  .r-body h3 .tag{font-family:"DM Mono"; font-size:10px; font-weight:500; color:#5b4be6; background:#efedfd; padding:3px 8px; border-radius:7px; letter-spacing:.04em}
 
+  /* La tabla se desplaza en horizontal en vez de recortar columnas. min-width
+     evita que las siete se aplasten hasta ser ilegibles: por debajo de eso,
+     scroll. overscroll-behavior-x corta el "swipe atras" del navegador al
+     llegar al borde. */
+  .tscroll{overflow-x:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch}
+  .tscroll table{min-width:700px}
   table{width:100%; border-collapse:collapse; font-size:13px}
+  /* Cabeceras ordenables. La flecha solo se pinta en la columna activa: una
+     flecha gris en las siete a la vez es ruido y no dice cual manda.
+     ANCLAJE: la flecha va en posicion absoluta, fuera del flujo, y el hueco se
+     reserva SIEMPRE con padding. Asi el rotulo no se mueve ni un pixel al
+     aparecer o desaparecer la flecha, ni al cambiar de columna ordenada. */
+  #t-head th[data-sort]{position:relative; cursor:pointer; user-select:none; transition:color .15s;
+    padding-right:30px}
+  /* En las centradas se reserva el mismo hueco a la izquierda, o el texto
+     quedaria descentrado por el sitio de la flecha. */
+  #t-head th[data-sort].c{padding-left:30px}
+  #t-head th[data-sort]:hover{color:var(--ink)}
+  #t-head th[data-sort]:focus-visible{outline:2px solid var(--violet); outline-offset:-2px; border-radius:6px}
+  #t-head th.sorted{color:var(--ink)}
+  /* La flecha va a 16px, no a los 11 del rotulo: la cabecera esta en
+     versalitas y con mucho tracking, asi que una flecha a su mismo tamano se
+     perdia entre las letras. Al ir absoluta puede crecer sin empujar nada. */
+  #t-head th[data-sort]::after{content:'↑'; position:absolute; right:8px; top:0;
+    font-size:14px; line-height:inherit; font-weight:700; opacity:0; transition:opacity .15s}
+  #t-head th.sorted::after{opacity:.9}
+  #t-head[data-dir="desc"] th.sorted::after{content:'↓'}
+
+  /* La columna del alumno se queda fija: al desplazarse, la fila sigue teniendo
+     nombre y no hay que adivinar de quien es el dato. Necesita fondo opaco
+     propio —el resto le pasa por debajo— y separador con box-shadow, no
+     border-right: con border-collapse los bordes no acompañan a la celda fija.
+     VA DESPUES de #t-head th[data-sort]{position:relative}: misma especificidad,
+     asi que si fuera antes, la cabecera "Alumno" no se quedaria fija. Sticky
+     tambien sirve de ancla para la flecha absoluta, igual que relative. */
+  #t-head th:first-child, #t-body td:first-child{position:sticky; left:0; z-index:1;
+    background:var(--surface); box-shadow:1px 0 0 var(--line)}
+  #t-body tr:hover td:first-child{background:#f2f4f8}
   thead th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); font-weight:700; padding:0 12px 10px}
   thead th.c{text-align:center} 
-  tbody td{padding:11px 12px; border-top:1px solid var(--line); vertical-align:middle}
-  tbody tr:hover{background:#faf9ff}
+  /* El alto de la fila lo fija el elemento mas alto que lleva dentro —el avatar,
+     30px— y el relleno de arriba y abajo. Solo se recorta el relleno: bajar el
+     avatar encogeria la inicial hasta hacerla dificil de leer, y con 32 filas lo
+     que sobra es aire, no contenido. */
+  tbody td{padding:8px 12px; border-top:1px solid var(--line); vertical-align:middle}
+  tbody tr:hover{background:#f6f7fa}   /* gris frio, a juego con #t-body */
   td.c{text-align:center}
   .stud{display:flex; align-items:center; gap:10px}
-  .stud .av{width:30px;height:30px;border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:700; font-size:12px; flex:none}
+  .stud .av{width:30px;height:30px;border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:700;
+    /* Dos letras en un circulo de 30px: 12px se salia. */
+    font-size:11px; letter-spacing:-.02em; flex:none}
   .stud b{font-weight:600}
-  .use{display:inline-flex; gap:3px; align-items:center}
-  .use .d{width:7px;height:14px;border-radius:2px;background:#e6e3f5}
+  /* Barritas verticales redondeadas, como estaban. Lo que fallaba no era la
+     forma sino la proporcion: con 7px de ancho y 3 de hueco el espacio era menos
+     de la mitad de la pieza y las siete se leian como una sola barra. Ahora el
+     hueco es MAS ancho que la barra (7 contra 6), que es lo que obliga al ojo a
+     contarlas por separado sin renunciar al rectangulo. */
+  .use{display:inline-flex; gap:8px; align-items:center}
+  .use .d{width:9px;height:16px;border-radius:4px;background:#e6e3f5}
   .use .d.on{background:var(--teal)}
-  .lvl{font-family:"DM Mono"; font-weight:500; padding:3px 9px; border-radius:8px; font-size:12px; background:var(--violet-soft); color:var(--violet)}
+  /* Los chips de nivel NO siguen la marca: --violet y --violet-soft estan
+     reenganchados al acento del demo, asi que usarlos aqui hacia que la
+     etiqueta de nivel cambiara de color por institucion. Es un dato del alumno,
+     no un elemento de marca, y ademas convive con los chips de estado, que ya
+     son fijos (teal/ambar/rosa). Valores literales, a proposito. */
+  .lvl{font-family:"DM Mono"; font-weight:500; padding:3px 9px; border-radius:8px; font-size:12px; background:#efedfd; color:#5b4be6}
   .lvl.b2{background:var(--amber-soft); color:#8a5a00}
   .avg{font-family:"DM Mono"; font-weight:500}
   .flag{font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px}
@@ -223,11 +479,18 @@
 
   @media (max-width:520px){
     .kpis{grid-template-columns:repeat(2,1fr)}
-    .hide-sm{display:none}
+    /* .hide-sm ya no oculta nada: ocultaba "Lecciones" en pantallas estrechas
+       porque no cabia. Ahora cabe desplazandose, y esconder un dato es peor que
+       pedir un gesto para verlo. La clase se queda en el markup por si hiciera
+       falta volver a recortar alguna columna. */
     .r-head{flex-direction:column}
     .r-head .who{text-align:left}
   }
-  @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+  /* El panel de la ficha queda fuera: bajo "reduce" no se queda inmovil, hace un
+   fundido corto (ver el bloque de arriba). Este `*` con !important lo pisaba. */
+@media (prefers-reduced-motion:reduce){
+  *:not(#parent){animation:none!important; transition:none!important}
+}
 </style>
 </head>
 <body>
@@ -237,18 +500,23 @@
     <div class="brand">
       <div>
         <img class="brandlogo" id="dash-logo" src="Logo.png" alt="AprendoEnglish.com">
-        <span>Curso de inglés · alineado al MCER</span>
+        <span class="tagline">Curso de inglés · alineado al MCER</span>
       </div>
     </div>
     <div class="wl" style="display:flex;align-items:center;gap:12px">
-      <a href="/democip" style="display:inline-block;padding:8px 14px;border-radius:12px;background:#1CB0F6;color:#fff;font-weight:700;text-decoration:none;font-size:14px">← Volver al demo</a>
-      <b>Colegio de Ingenieros del Perú</b>
+      <!-- El href lo pone brandDashboard con el slug del demo: fijo apuntaba
+           siempre a /democip, que desde cualquier otro demo saca a la
+           institucion equivocada. -->
+      <a class="backdemo" id="dash-back" href="/" style="display:inline-block;padding:8px 14px;border-radius:12px;background:#1CB0F6;color:#fff;font-weight:700;text-decoration:none;font-size:14px">← Volver al demo</a>
+      <!-- id="dash-inst": sin el, brandDashboard no encontraba nada y el nombre
+           se quedaba en el de la institucion que se uso para maquetar. -->
+      <b id="dash-inst">Colegio de Ingenieros del Perú</b>
     </div>
   </div>
 
   <div class="lede">
-    <span class="eyebrow">Dashboard navegable · Seguimiento</span>
-    <p style="margin-top:8px">El alumno aprende en la app; este es el producto de <b style="color:var(--ink)">seguimiento</b> que la acompaña: el resumen semanal para la <b style="color:var(--ink)">familia</b> y el reporte de aula para el <b style="color:var(--ink)">profesor</b> — con los mismos datos del juego, sin costo adicional. Los datos son de ejemplo.</p>
+    <span class="eyebrow" id="lede-eyebrow">Dashboard navegable · Seguimiento</span>
+    <p style="margin-top:8px" id="lede-text">El alumno aprende en la app; este es el producto de <b style="color:var(--ink)">seguimiento</b> que la acompaña: el resumen semanal para la <b style="color:var(--ink)">familia</b> y el reporte de aula para el <b style="color:var(--ink)">profesor</b> — con los mismos datos del juego, sin costo adicional. Los datos son de ejemplo.</p>
   </div>
 
   <div class="seg" role="tablist" id="seg">
@@ -258,6 +526,13 @@
 
   <!-- ================= PARENT (vista por defecto) ================= -->
   <section class="view on" id="parent">
+    <!-- Solo se ve cuando se llega desde una fila del aula (body.detail). -->
+    <div class="backbar">
+      <button type="button" id="back-aula">← Volver al aula</button>
+      <!-- Iba aqui "Vista de la familia de <nombre>". Sobra: el nombre del
+           alumno ya encabeza la ficha dos lineas mas abajo. -->
+      <span class="crumb" hidden><b id="crumb-name">—</b></span>
+    </div>
     <div class="stage">
       <div class="phone">
         <div class="notch"></div>
@@ -278,17 +553,19 @@
             <div class="ring-info">
               <h3><span class="u-name">Valeria</span> está en nivel B1</h3>
               <p id="p-sub">Muy cerca de B2 — le faltan 550 XP</p>
-              <div class="track">
-                <div class="tk done">A1</div>
-                <div class="tk done">A2</div>
-                <div class="tk now">B1</div>
-                <div class="tk">B2</div>
+              <!-- Lo pinta pintarTrack() con el nivel y el promedio del alumno.
+                   Esto es solo el estado inicial por si el JS no corre. -->
+              <div class="track" id="p-track">
+                <div class="tk done"><span>A1</span></div>
+                <div class="tk done"><span>A2</span></div>
+                <div class="tk now"><i style="width:45%"></i><span>B1</span></div>
+                <div class="tk"><span>B2</span></div>
               </div>
             </div>
           </div>
 
           <div class="band">
-            <div class="chip"><div class="ico">📅</div><div class="k" id="p-dias">6 / 7</div><div class="l">Días activos</div></div>
+            <div class="chip"><div class="ico">📅</div><div class="k" id="p-dias"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i></span></div><div class="l">Días activos · <b id="p-dias-n">6 / 7</b></div></div>
             <div class="chip"><div class="ico">⏱️</div><div class="k" id="p-tiempo">1 h 45</div><div class="l">Esta semana</div></div>
             <div class="chip"><div class="ico">📚</div><div class="k" id="p-lecc">9</div><div class="l">Lecciones</div></div>
           </div>
@@ -297,37 +574,41 @@
             <h4>Sus destrezas</h4>
             <div class="skill">
               <div class="ic" style="background:var(--violet-soft)">🎧</div>
-              <div class="bar"><div class="lab"><span>Listening</span><i id="p-l-pct">90%</i></div><div class="meter"><i id="p-l-bar" style="width:90%;background:linear-gradient(90deg,#5b4be6,#8175f4)"></i></div></div>
+              <div class="bar"><div class="lab"><span>Listening</span><i id="p-l-pct">90%</i></div><div class="meter"><i id="p-l-bar" style="width:90%;background:linear-gradient(90deg,var(--violet),var(--violet2))"></i></div></div>
             </div>
             <div class="skill">
               <div class="ic" style="background:var(--violet-soft)">📖</div>
-              <div class="bar"><div class="lab"><span>Reading</span><i id="p-r-pct">78%</i></div><div class="meter"><i id="p-r-bar" style="width:78%;background:linear-gradient(90deg,#5b4be6,#8175f4)"></i></div></div>
+              <div class="bar"><div class="lab"><span>Reading</span><i id="p-r-pct">78%</i></div><div class="meter"><i id="p-r-bar" style="width:78%;background:linear-gradient(90deg,var(--violet),var(--violet2))"></i></div></div>
             </div>
             <div class="skill">
               <div class="ic" style="background:var(--violet-soft)">✍️</div>
-              <div class="bar"><div class="lab"><span>Writing</span><i id="p-w-pct">65%</i></div><div class="meter"><i id="p-w-bar" style="width:65%;background:linear-gradient(90deg,#5b4be6,#8175f4)"></i></div></div>
+              <div class="bar"><div class="lab"><span>Writing</span><i id="p-w-pct">65%</i></div><div class="meter"><i id="p-w-bar" style="width:65%;background:linear-gradient(90deg,var(--violet),var(--violet2))"></i></div></div>
             </div>
           </div>
 
           <div class="sect">
-            <h4>Cómo ayudar en casa</h4>
-            <div class="mission">
-              <div class="box" style="border:0;font-size:17px">💬</div>
-              <div class="t" id="p-help0">Practicó 6 de 7 días <small>Un «¡sigue así!» en casa refuerza el hábito</small></div>
+            <h4>Sugerencias de mejora</h4>
+            <!-- La mascota acompaña aqui igual que en el panel completo: son
+                 consejos dirigidos a la familia, y viniendo de quien acompaña al
+                 alumno dentro del juego se leen como tales y no como un regaño
+                 del sistema. -->
+            <div class="tips">
+              <div class="tips-list">
+                <div class="mission">
+                  <div class="box" style="border:0;font-size:17px" id="p-help0i">💬</div>
+                  <div class="t" id="p-help0">Practicó 6 de 7 días <small>Un «¡sigue así!» en casa refuerza el hábito</small></div>
+                </div>
+                <div class="mission">
+                  <div class="box" style="border:0;font-size:17px" id="p-help1i">✍️</div>
+                  <div class="t" id="p-help1">Writing es su punto a reforzar <small>Esta semana el juego se lo repasará solo</small></div>
+                </div>
+                <div class="mission">
+                  <div class="box" style="border:0;font-size:17px" id="p-help2i">🎓</div>
+                  <div class="t" id="p-help2">Le faltan 550 XP para la constancia B2 <small>Cada lección terminada suma</small></div>
+                </div>
+              </div>
+              <div class="botimini" data-boti='{"interactive":true}' aria-hidden="true"></div>
             </div>
-            <div class="mission">
-              <div class="box" style="border:0;font-size:17px">✍️</div>
-              <div class="t" id="p-help1">Writing es su punto a reforzar <small>Esta semana el juego se lo repasará solo</small></div>
-            </div>
-          </div>
-
-          <div class="cert">
-            <span class="lock">🔒</span>
-            <div>
-              <b>Constancia de logro B2</b>
-              <p>Se desbloquea al aprobar su evaluación de nivel</p>
-            </div>
-            <span class="go" id="p-cert">Faltan 550 XP</span>
           </div>
         </div>
       </div>
@@ -349,9 +630,8 @@
     <div class="report">
       <div class="r-head">
         <div>
-          <span class="capa">Capa 1 · Reporte automático</span>
           <h2>Reporte semanal del aula</h2>
-          <p>Inglés · 5.º A</p>
+          <p id="dash-group">Inglés · Ciclo III</p>
           <div class="wksel" id="wksel">
             <button id="wk-prev" aria-label="Semana anterior">‹</button>
             <span class="wklabel" id="wk-label">7 – 13 jul 2026</span>
@@ -359,9 +639,11 @@
           </div>
         </div>
         <div class="who">
-          <b>Prof. Rosa Delgado</b>
           Colegio de Ingenieros del Perú<br>
-          <span style="font-family:'DM Mono';font-size:11px;opacity:.8">Enviado: lun 14 jul, 7:00 a. m.</span>
+          <!-- La hora la escribe el JS al cargar: un reporte "automatico" con
+               fecha fija se delata solo en cuanto alguien lo mira dos dias
+               seguidos. El texto de aqui es solo el respaldo si el JS no corre. -->
+          <span id="r-sent" style="font-family:'DM Mono';font-size:11px;opacity:.8">Enviado: —</span>
         </div>
       </div>
 
@@ -373,22 +655,23 @@
       </div>
 
       <div class="r-body">
-        <h3>Detalle por alumno <span class="tag">30 alumnos · muestra de 8</span></h3>
+        <h3>Detalle por alumno <span class="tag">32 alumnos</span></h3>
+        <div class="tscroll">
         <table>
-          <thead>
+          <thead id="t-head">
             <tr>
-              <th>Alumno</th>
-              <th class="c">Uso (días activos)</th>
-              <th class="c">Racha</th>
-              <th class="c">Nivel MCER</th>
-              <th class="c hide-sm">Lecciones</th>
-              <th class="c">Promedio</th>
-              <th class="c">Estado</th>
+              <th data-sort="name">Alumno</th>
+              <th class="c" data-sort="dias">Uso (días activos)</th>
+              <th class="c" data-sort="racha">Racha</th>
+              <th class="c" data-sort="nivel">Nivel MCER</th>
+              <th class="c hide-sm" data-sort="lecc">Lecciones</th>
+              <th class="c" data-sort="prom">Promedio</th>
+              <th class="c" data-sort="estado">Estado</th>
             </tr>
           </thead>
           <tbody id="t-body">
             <tr>
-              <td><div class="stud"><span class="av" style="background:#f4a51e">M</span><b>Mateo Rivas</b></div></td>
+              <td><div class="stud"><span class="av" style="background:#f4a51e">MR</span><b>Mateo Rivas</b></div></td>
               <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i></span></td>
               <td class="c avg">31</td>
               <td class="c"><span class="lvl b2">B2</span></td>
@@ -397,7 +680,7 @@
               <td class="c"><span class="flag ok">Al día</span></td>
             </tr>
             <tr>
-              <td><div class="stud"><span class="av" style="background:#12b0a0">L</span><b>Luciana Paredes</b></div></td>
+              <td><div class="stud"><span class="av" style="background:#12b0a0">LP</span><b>Luciana Paredes</b></div></td>
               <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d"></i></span></td>
               <td class="c avg">18</td>
               <td class="c"><span class="lvl b2">B2</span></td>
@@ -406,7 +689,7 @@
               <td class="c"><span class="flag ok">Al día</span></td>
             </tr>
             <tr>
-              <td><div class="stud"><span class="av" style="background:#5b4be6">V</span><b>Valeria Quispe</b></div></td>
+              <td><div class="stud"><span class="av" style="background:#5b4be6">VQ</span><b>Valeria Quispe</b></div></td>
               <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i></span></td>
               <td class="c avg">24</td>
               <td class="c"><span class="lvl">B1</span></td>
@@ -415,7 +698,7 @@
               <td class="c"><span class="flag ok">Al día</span></td>
             </tr>
             <tr>
-              <td><div class="stud"><span class="av" style="background:#ec5b8b">D</span><b>Diego Salas</b></div></td>
+              <td><div class="stud"><span class="av" style="background:#ec5b8b">DS</span><b>Diego Salas</b></div></td>
               <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d"></i><i class="d on"></i><i class="d"></i><i class="d"></i></span></td>
               <td class="c avg">3</td>
               <td class="c"><span class="lvl">B1</span></td>
@@ -424,7 +707,7 @@
               <td class="c"><span class="flag watch">Bajó ritmo</span></td>
             </tr>
             <tr>
-              <td><div class="stud"><span class="av" style="background:#8175f4">C</span><b>Camila Torres</b></div></td>
+              <td><div class="stud"><span class="av" style="background:#8175f4">CT</span><b>Camila Torres</b></div></td>
               <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d"></i><i class="d"></i></span></td>
               <td class="c avg">12</td>
               <td class="c"><span class="lvl">B1</span></td>
@@ -433,7 +716,7 @@
               <td class="c"><span class="flag ok">Al día</span></td>
             </tr>
             <tr>
-              <td><div class="stud"><span class="av" style="background:#12b0a0">J</span><b>Joaquín Vega</b></div></td>
+              <td><div class="stud"><span class="av" style="background:#12b0a0">JV</span><b>Joaquín Vega</b></div></td>
               <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></td>
               <td class="c avg">0</td>
               <td class="c"><span class="lvl">A2</span></td>
@@ -442,7 +725,7 @@
               <td class="c"><span class="flag risk">Sin ingresar 6 d</span></td>
             </tr>
             <tr>
-              <td><div class="stud"><span class="av" style="background:#f4a51e">A</span><b>Ariana Flores</b></div></td>
+              <td><div class="stud"><span class="av" style="background:#f4a51e">AF</span><b>Ariana Flores</b></div></td>
               <td class="c"><span class="use"><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d on"></i><i class="d"></i></span></td>
               <td class="c avg">15</td>
               <td class="c"><span class="lvl">B1</span></td>
@@ -451,7 +734,7 @@
               <td class="c"><span class="flag ok">Al día</span></td>
             </tr>
             <tr>
-              <td><div class="stud"><span class="av" style="background:#ec5b8b">S</span><b>Sebastián Ríos</b></div></td>
+              <td><div class="stud"><span class="av" style="background:#ec5b8b">SR</span><b>Sebastián Ríos</b></div></td>
               <td class="c"><span class="use"><i class="d"></i><i class="d"></i><i class="d on"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i></span></td>
               <td class="c avg">0</td>
               <td class="c"><span class="lvl">A2</span></td>
@@ -461,10 +744,11 @@
             </tr>
           </tbody>
         </table>
+        </div>
 
         <div class="callout">
           <div class="botimini" data-boti='{"interactive":true,"shadow":false}'></div>
-          <p id="t-callout"><b>Sugerencia automática:</b> 3 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y uno más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio — considera reforzarla en clase.</p>
+          <p id="t-callout"><b>Análisis de la semana:</b> 3 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y uno más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio — considera reforzarla en clase.</p>
         </div>
       </div>
     </div>
@@ -472,8 +756,32 @@
 
 </div>
 
+<!-- Mascota flotante del panel de profesor. Vive fuera de las vistas para que
+     no la esconda el cambio de pestana, y la CSS decide cuando se ve. -->
+<div class="botistand botifloat" data-boti='{"interactive":true}'></div>
+
 <!--MASCOT-SCRIPTS-->
 <script>
+  // Pagina de una sola vista. La URL manda: /<slug>/padres inyecta view
+  // "parent" y /<slug>/dashboard, "teacher". Se aplica ANTES de montar las
+  // mascotas: un hueco oculto mide cero y la mascota saldria deformada.
+  (function lockView(){
+    var v = window.DEMO && window.DEMO.view;
+    var float = document.querySelector('.botifloat');
+    // Fuera del panel de profesor la flotante no se usa: se quita del DOM en
+    // vez de ocultarse, porque montar una mascota en un hueco oculto la mide
+    // en cero y sale deformada si luego se muestra.
+    if (v !== 'teacher' && float) float.remove();
+    if (v !== 'parent' && v !== 'teacher') return;
+    // Red de seguridad: inject() ya deja esto resuelto en el HTML, para que no
+    // se vea el parpadeo de la otra vista. Aqui solo cubre el caso de servir la
+    // plantilla sin pasar por el servidor.
+    document.body.classList.add('solo', 'solo-' + v);
+    document.querySelectorAll('.view').forEach(function(s){
+      s.classList.toggle('on', s.id === v);
+    });
+  })();
+
   // Monta la mascota DEL DEMO en cada hueco [data-boti]. Sirve para los dos
   // motores: los packs con script propio traen su global y se montan solos; los
   // de capas se montan uno a uno con el runtime comun.
@@ -494,6 +802,360 @@
     if (inst && D.institution) inst.textContent = D.institution;
     var logo = document.getElementById('dash-logo');
     if (logo && D.brand && D.brand.logo) { logo.src = D.brand.logo; logo.alt = D.institution || ''; }
+    // El grupo del que habla el reporte. Un colegio numera secciones, una
+    // universidad habla de ciclos y una empresa de areas: por eso es texto
+    // libre en la config y no una lista cerrada.
+    var grp = document.getElementById('dash-group');
+    if (grp && D.copy && D.copy.groupLabel) grp.textContent = D.copy.groupLabel;
+    var back = document.getElementById('dash-back');
+    if (back && D.slug) back.href = '/' + D.slug;
+  })();
+
+  // Alumno con la ficha abierta, y como repintarla al cambiar de semana. Viven
+  // fuera del IIFE porque el selector de semana esta en otro sitio del script.
+  var abierta = null, refrescarFicha = null;
+
+  // ===== Detalle de alumno =====
+  // Tocar una fila del aula abre, sin salir de la pagina, la vista que veria su
+  // familia. Reusa el bloque #parent tal cual —no una copia— relleno con los
+  // datos DE ESA FILA: lo que ve el profesor y lo que ve el padre no pueden
+  // discrepar, y no quedan dos maquetas que mantener.
+  (function studentDetail(){
+    var tb = document.getElementById('t-body');
+    var parent = document.getElementById('parent');
+    if (!tb || !parent) return;
+
+    // Fila desde la que se abrio la ficha; se guarda para devolverle el foco.
+    var lastRow = null;
+    refrescarFicha = function(){ if (abierta != null) fill(abierta); };
+
+    var txt = function(el){ return el ? el.textContent.trim() : ''; };
+    var set = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = v; };
+    var html = function(id, v){ var el = document.getElementById(id); if (el) el.innerHTML = v; };
+    var bar = function(id, p){ var el = document.getElementById(id); if (el) el.style.width = p + '%'; };
+
+    function readRow(tr){
+      var c = tr.children;
+      return {
+        name: txt(tr.querySelector('.stud b')),
+        dias: tr.querySelectorAll('.use .d.on').length,
+        total: tr.querySelectorAll('.use .d').length || 7,
+        racha: txt(c[2]),
+        nivel: txt(tr.querySelector('.lvl')) || 'A2',
+        lecciones: txt(c[4]) || '0',
+        prom: parseInt(txt(c[5]), 10) || 0,
+        estado: txt(tr.querySelector('.flag')),
+        alerta: !!tr.querySelector('.flag.risk, .flag.warn')
+      };
+    }
+
+    // Las tres destrezas salen del promedio de la fila con el sesgo que tiene el
+    // curso —listening por delante, writing por detras— mas un desvio propio de
+    // cada nombre para que no salgan calcadas. Determinista: el mismo alumno da
+    // siempre los mismos numeros, aunque recargues.
+    function seed(s){ var n = 7; for (var i = 0; i < s.length; i++) n = (n * 31 + s.charCodeAt(i)) % 97; return n; }
+    function cl(n){ return Math.max(35, Math.min(99, Math.round(n))); }
+
+    // Rellena la ficha con los datos del alumno `i` en la semana en curso. Va
+    // aparte de open() porque tambien se llama al cambiar de semana con la
+    // ficha abierta: entonces no hay que abrir nada, solo repintar.
+    function fill(i){
+      // Se lee la fila REAL del alumno, no lo que se ve en pantalla. Antes esto
+      // raspaba las celdas y lo que no estaba en la tabla —tiempo, destrezas,
+      // XP— se inventaba con un hash del nombre, asi que la ficha y el reporte
+      // contaban cosas distintas del mismo alumno. Y p-sub ni se tocaba:
+      // se quedaban con los XP del alumno del panel de familia.
+      var r = (TWEEK[wkIdx] && TWEEK[wkIdx].rows[i]) || null;
+      var s = T_STUD[i];
+      if (!r || !s) return;
+
+      var dias = (r[0].match(/1/g) || []).length;
+      var sk = { l: r[8], r: r[9], w: r[10] };
+      var mins = r[7], hh = Math.floor(mins / 60), mm = mins % 60;
+      var xp = r[11];
+      var alerta = r[5] !== 'ok';
+      var first = s[0].split(' ')[0];
+
+      set('crumb-name', s[0]);
+      set('p-racha', r[1]);
+      // Mismo idioma que la tabla: las siete barras de la semana, y debajo el
+      // recuento. El dato no se pierde, se enseña como en el reporte.
+      var elDias = document.getElementById('p-dias');
+      if (elDias) {
+        elDias.innerHTML = '<span class="use">' +
+          r[0].split('').map(function(c){ return '<i class="d' + (c === '1' ? ' on' : '') + '"></i>'; }).join('') +
+          '</span>';
+      }
+      set('p-dias-n', dias + ' / 7');
+      set('p-tiempo', hh ? hh + ' h ' + (mm < 10 ? '0' + mm : mm) : mm + ' min');
+      set('p-lecc', r[3]);
+      set('p-l-pct', sk.l + '%'); bar('p-l-bar', sk.l);
+      set('p-r-pct', sk.r + '%'); bar('p-r-bar', sk.r);
+      set('p-w-pct', sk.w + '%'); bar('p-w-bar', sk.w);
+      // Los XP que faltan para B2 son de ESTE alumno, no del panel de familia.
+      set('p-sub', (xp < 400 ? 'Muy cerca de B2 — le faltan ' : 'En camino a B2 — le faltan ') + xp + ' XP');
+
+      var h3 = parent.querySelector('.ring-info h3');
+      if (h3) h3.innerHTML = '<span class="u-name">' + first + '</span> está en nivel ' + r[2];
+      pintarTrack(r[2], r[4]);
+      Array.prototype.forEach.call(parent.querySelectorAll('.u-name'), function(el){ el.textContent = first; });
+
+      // Las tres sugerencias se arman con lo que de verdad le pasa a ese alumno
+      // esa semana. Cada una nombra la evidencia —dias, puntos de diferencia,
+      // XP— para que el consejo se pueda comprobar en la tabla y no suene a
+      // frase de plantilla.
+      var tip = function(n, icono, texto, detalle){
+        set('p-help' + n + 'i', icono);
+        html('p-help' + n, texto + ' <small>' + detalle + '</small>');
+      };
+
+      // 1. Habito. El patron dice mas que el recuento: no es lo mismo cinco dias
+      // seguidos que cinco sueltos, asi que se mira si la semana esta partida.
+      var cortes = (r[0].match(/10/g) || []).length;   // veces que dejo de entrar
+      if (alerta) {
+        tip(0, '🔔', 'Conviene retomar el hábito',
+            r[6] + ' — un recordatorio en casa suele bastar para volver');
+      } else if (dias === 7) {
+        tip(0, '🔥', 'Semana completa: practicó los 7 días',
+            'Lleva ' + r[1] + ' días seguidos. Reconocerlo en casa es lo que lo sostiene');
+      } else if (cortes >= 2) {
+        tip(0, '📅', 'Practicó ' + dias + ' de 7 días, pero salteados',
+            'Le cuesta más retomar que empezar: una misma hora fija cada día ayuda más que pedirle más rato');
+      } else {
+        tip(0, '💬', 'Practicó ' + dias + ' de 7 días',
+            'Con ' + (7 - dias) + ' día' + (dias === 6 ? '' : 's') + ' más cierra la semana completa');
+      }
+
+      // 2. Destreza floja, dicha con la distancia real a su punto fuerte: "va 25
+      // puntos por debajo" se entiende y se comprueba; "es su punto a reforzar"
+      // no dice cuanto.
+      var nom = { l: 'Listening', r: 'Reading', w: 'Writing' };
+      var ico = { l: '🎧', r: '📖', w: '✍️' };
+      var cual = 'w';
+      if (sk.l < sk[cual]) cual = 'l';
+      if (sk.r < sk[cual]) cual = 'r';
+      var mejor = 'l';
+      if (sk.r > sk[mejor]) mejor = 'r';
+      if (sk.w > sk[mejor]) mejor = 'w';
+      var brecha = sk[mejor] - sk[cual];
+      tip(1, ico[cual], nom[cual] + ' es su punto a reforzar',
+          brecha >= 8
+            ? 'Va ' + brecha + ' puntos por debajo de ' + nom[mejor] + '. El juego se lo repasará solo esta semana'
+            : 'Las tres destrezas van parejas (' + sk[cual] + '–' + sk[mejor] + '%): basta con mantener el ritmo');
+
+      // 3. Los XP que faltan para B2. Es el dato que llevaba el bloque de la
+      // constancia, que se quito: se conserva aqui, ya en forma de sugerencia.
+      tip(2, '🎓', 'Le faltan ' + xp + ' XP para la constancia ' + (r[2] === 'B2' ? 'C1' : 'B2'),
+          r[3] > 0
+            ? 'A las ' + r[3] + ' lecciones por semana que lleva, es cuestión de unas semanas'
+            : 'Cada lección terminada suma; esta semana no completó ninguna');
+    }
+
+    function open(tr){
+      var i = parseInt(tr.getAttribute('data-i'), 10);
+      if (isNaN(i) || !T_STUD[i]) return;
+      abierta = i;
+      fill(i);
+
+      // De donde se abrio, para devolverle el foco al cerrar: si no, el teclado
+      // vuelve al principio del documento y hay que recorrer la tabla entera.
+      lastRow = tr;
+      parent.scrollTop = 0;
+      document.body.classList.remove('closing', 'shown');
+      document.body.classList.add('detail');
+      // Reflow forzado. Sin esto el navegador agrupa "aparecer" y "moverse" en
+      // un solo recalculo y no hay estado inicial desde el que transicionar: el
+      // panel sale ya puesto. Leer offsetHeight le obliga a fijarlo.
+      void parent.offsetHeight;
+      requestAnimationFrame(function(){ document.body.classList.add('shown'); });
+
+      // El foco entra al panel —si no, el lector de pantalla sigue leyendo la
+      // tabla de debajo— pero DESPUES de que la animacion pinte su primer
+      // fotograma, y sin arrastrar el scroll:
+      //   · focus() hace scroll-into-view, y como el panel arranca desplazado
+      //     fuera de la pantalla, el navegador lo traia de golpe y la entrada no
+      //     se veia. preventScroll lo evita.
+      //   · el rAF deja que el estilo inicial (translate fuera) se pinte antes
+      //     de tocar el foco; hacerlo en la misma vuelta fuerza un recalculo que
+      //     se come el arranque.
+      requestAnimationFrame(function(){
+        var cerrar = document.getElementById('back-aula');
+        if (!cerrar) return;
+        try { cerrar.focus({ preventScroll: true }); }
+        catch (e) { cerrar.focus(); }   // navegadores sin preventScroll
+      });
+      if (window.Boti) Boti.reactAll();
+    }
+
+    // Delegado en el <tbody>, no fila por fila: el selector de semana reescribe
+    // t-body.innerHTML cada vez que cambia de semana —y una vez al cargar—, asi
+    // que cualquier listener puesto en un <tr> se pierde con la primera pintada.
+    // El contenedor sobrevive, y con el la escucha.
+    tb.addEventListener('click', function(e){
+      var tr = e.target.closest('tr');
+      if (tr && tb.contains(tr)) open(tr);
+    });
+    tb.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var tr = e.target.closest('tr');
+      if (tr && tb.contains(tr)) { e.preventDefault(); open(tr); }
+    });
+
+    // Las filas nuevas nacen sin foco ni rol; se les vuelve a poner tras cada
+    // repintado para que el teclado siga llegando.
+    function stamp(){
+      Array.prototype.forEach.call(tb.querySelectorAll('tr'), function(tr){
+        tr.tabIndex = 0;
+        tr.setAttribute('role', 'button');
+      });
+    }
+    stamp();
+    new MutationObserver(stamp).observe(tb, { childList: true });
+
+    // El velo se crea aqui y no en el markup: esta plantilla tambien sirve
+    // /padres, donde no hay tabla ni ficha que abrir y sobraria un nodo suelto.
+    var scrim = document.createElement('div');
+    scrim.className = 'scrim';
+    document.body.appendChild(scrim);
+
+    var closing = false;
+    function finish(){
+      closing = false;
+      document.body.classList.remove('detail', 'closing', 'shown');
+      abierta = null;
+      // El foco vuelve a la fila desde la que se abrio.
+      if (lastRow && document.contains(lastRow)) lastRow.focus();
+      lastRow = null;
+    }
+    function close(){
+      if (closing || !document.body.classList.contains('detail')) return;
+      // Sin caso especial para prefers-reduced-motion: ahi tambien hay recorrido
+      // —24 px con opacidad en vez del barrido—, asi que transitionend llega
+      // igual y saltarselo se comeria la salida.
+      closing = true;
+      document.body.classList.add('closing');
+      // Quitar .shown devuelve el panel al transform de su media query; la
+      // transicion hace el resto.
+      document.body.classList.remove('shown');
+      // Se espera a que termine de salir, no a un temporizador que adivine la
+      // duracion. El guardia de 400 ms es por si transitionend no llega
+      // —pestaña en segundo plano, transicion interrumpida—: sin el, el panel se
+      // quedaria abierto para siempre con el fondo bloqueado.
+      var done = false;
+      var end = function(e){
+        if (e && (e.target !== parent || e.propertyName !== 'transform')) return;
+        if (done) return;
+        done = true;
+        parent.removeEventListener('transitionend', end);
+        finish();
+      };
+      parent.addEventListener('transitionend', end);
+      setTimeout(end, 400);
+    }
+
+    var b = document.getElementById('back-aula');
+    if (b) b.addEventListener('click', close);
+    scrim.addEventListener('click', close);
+    // Escape cierra: es lo que espera cualquiera que haya usado un panel asi.
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') close();
+    });
+    // Aqui habia un cierre automatico al tocar cualquier .wksel, para que la
+    // ficha no se quedara con datos de otra semana. El fallo: el selector de
+    // semana de la propia ficha TAMBIEN es .wksel, asi que tocarlo la cerraba y
+    // era imposible moverse por las fechas desde dentro. Ahora no se cierra:
+    // wkRender() la repinta con el mismo alumno en la semana nueva.
+
+    // ===== Arrastrar la hoja para cerrarla =====
+    // Solo en la hoja inferior: en el panel lateral de escritorio se cierra con
+    // el boton, Esc o el velo, y arrastrar con raton no es un gesto que nadie
+    // espere ahi.
+    (function drag(){
+      if (!window.PointerEvent) return;   // sin Pointer Events, queda el boton
+      var esHoja = function(){ return matchMedia('(max-width:899px)').matches; };
+      var activo = false, moviendo = false, y0 = 0, dy = 0, t0 = 0, alto = 0, id = null;
+      var UMBRAL = 6;   // px que hay que recorrer antes de llamarlo arrastre
+
+      parent.addEventListener('pointerdown', function(e){
+        if (!document.body.classList.contains('detail') || !esHoja()) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        // Nunca desde un control. setPointerCapture redirige el click posterior
+        // al elemento que captura, asi que el boton no llega a recibirlo nunca:
+        // esto es lo que impedia mover las semanas dentro de la ficha, y de paso
+        // habria roto cualquier otro boton que se metiera en el panel.
+        if (e.target.closest && e.target.closest('button,a,input,select,textarea,label,[role="button"]')) return;
+        // Solo si el contenido ya esta arriba del todo. Si no, el dedo viene a
+        // hacer scroll dentro de la ficha y robarselo seria molesto.
+        if (parent.scrollTop > 0) return;
+        activo = true; moviendo = false; y0 = e.clientY; dy = 0; t0 = Date.now();
+        alto = parent.offsetHeight || 1; id = e.pointerId;
+      });
+
+      // No pasivo: hay que poder cortar el scroll del navegador mientras se
+      // arrastra, o la pagina de debajo se mueve a la vez que la hoja.
+      parent.addEventListener('pointermove', function(e){
+        if (!activo) return;
+        dy = e.clientY - y0;
+        // La captura se pide al empezar a moverse de verdad, no al tocar: asi un
+        // toque nunca se convierte en captura y el click llega a su destino.
+        if (!moviendo) {
+          if (Math.abs(dy) < UMBRAL) return;
+          moviendo = true;
+          parent.setPointerCapture(id);
+          parent.style.transition = 'none';
+        }
+        // Hacia arriba hay resistencia: la hoja no sube mas alla de su sitio.
+        if (dy < 0) dy = dy * 0.25;
+        if (dy > 0) e.preventDefault();
+        parent.style.transform = 'translateY(' + dy + 'px)';
+      }, { passive: false });
+
+      function soltar(){
+        if (!activo) return;
+        activo = false;
+        if (id !== null && parent.hasPointerCapture && parent.hasPointerCapture(id)) {
+          parent.releasePointerCapture(id);
+        }
+        id = null;
+        // Un toque que no llego al umbral no movio nada ni toco estilos: se sale
+        // sin cerrar, o cualquier pulsacion dentro de la hoja la cerraria.
+        if (!moviendo) { dy = 0; return; }
+        moviendo = false;
+        parent.style.transition = '';
+        parent.style.transform = '';
+        // Cierra por distancia (mas de un cuarto de la hoja) o por impulso: un
+        // gesto corto pero rapido tambien cuenta, que es como se cierra de
+        // verdad una hoja con el pulgar.
+        var v = dy / Math.max(1, Date.now() - t0);   // px por ms
+        if (dy > alto * 0.25 || v > 0.5) close();
+        dy = 0;
+      }
+      parent.addEventListener('pointerup', soltar);
+      parent.addEventListener('pointercancel', soltar);
+    })();
+  })();
+
+  // Hora de envio del reporte = momento en que se abrio la pagina. Un reporte
+  // "automatico" con fecha clavada se delata en cuanto alguien lo abre dos dias
+  // seguidos; asi siempre acaba de llegar.
+  (function sello(){
+    var el = document.getElementById('r-sent');
+    if (!el) return;
+    try {
+      var d = new Date();
+      // El locale abrevia con punto ("lun.", "jul.") y segun la version de ICU
+      // capitaliza el mes ("Ago"); se normaliza para que quede como estaba
+      // escrito a mano y no cambie de aspecto entre navegadores.
+      var corto = function(o){
+        return d.toLocaleDateString('es-PE', o).replace(/\./g, '').toLowerCase();
+      };
+      var dia = corto({ weekday: 'short' });
+      var mes = corto({ month: 'short' });
+      var hora = d.toLocaleTimeString('es-PE', { hour: 'numeric', minute: '2-digit' });
+      el.textContent = 'Enviado: ' + dia + ' ' + d.getDate() + ' ' + mes + ', ' + hora;
+    } catch (e) {
+      el.textContent = 'Enviado: hoy';
+    }
   })();
 
   const btns=document.querySelectorAll('.seg button');
@@ -506,53 +1168,465 @@
     if(window.Boti) Boti.reactAll();   // saltito al cambiar de vista
   }
   btns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
-  // deep link: #parent / #teacher
-  const initial=location.hash.replace('#','');
+  // Con qué pestaña abre. Manda la URL —/<slug>/padres inyecta DEMO.view— y si
+  // no, el deep link por hash (#parent / #teacher), que el servidor nunca ve.
+  const initial=(window.DEMO&&window.DEMO.view)||location.hash.replace('#','');
   if(views[initial]) show(initial);
 
   // week selector — shared week state across the teacher + parent tabs, and it
   // swaps the dashboard data so each week shows different (dummy) numbers.
-  const WEEKS=['30 jun – 6 jul 2026','7 – 13 jul 2026','14 – 20 jul 2026'];
-  let wkIdx=1;
+  const WEEKS=['26 may – 1 jun 2026','2 – 8 jun 2026','9 – 15 jun 2026','16 – 22 jun 2026','23 – 29 jun 2026','30 jun – 6 jul 2026','7 – 13 jul 2026','14 – 20 jul 2026'];
+  let wkIdx=WEEKS.length-1;   // abre en la semana mas reciente
 
   // Parent (Valeria) — per week
   const PWEEK=[
-    {racha:17, sub:'En camino a B2 — le faltan 780 XP', dias:'5 / 7', tiempo:'1 h 20', lecc:6, sk:[84,72,60],
-     help:['Practicó 5 de 7 días','Reading es su punto a reforzar'], cert:'Faltan 780 XP'},
-    {racha:24, sub:'Muy cerca de B2 — le faltan 550 XP', dias:'6 / 7', tiempo:'1 h 45', lecc:9, sk:[90,78,65],
-     help:['Practicó 6 de 7 días','Writing es su punto a reforzar'], cert:'Faltan 550 XP'},
-    {racha:31, sub:'Muy cerca de B2 — le faltan 300 XP', dias:'7 / 7', tiempo:'2 h 10', lecc:11, sk:[93,82,71],
-     help:['Practicó 7 de 7 días · ¡racha perfecta!','Writing sigue mejorando'], cert:'Faltan 300 XP'},
+    {racha:1, pat:'1100001', nivel:'B1', prom:81, sub:'En camino a B2 — le faltan 1116 XP', dias:'3 / 7', tiempo:'54 min', lecc:5, sk:[88,76,67],
+     help:['Practicó 3 de 7 días','Writing es su punto a reforzar'], cert:'Faltan 1116 XP'},
+    {racha:1, pat:'0110001', nivel:'B1', prom:85, sub:'En camino a B2 — le faltan 804 XP', dias:'3 / 7', tiempo:'1 h 09', lecc:6, sk:[92,81,71],
+     help:['Practicó 3 de 7 días','Writing es su punto a reforzar'], cert:'Faltan 804 XP'},
+    {racha:2, pat:'1110011', nivel:'B1', prom:86, sub:'En camino a B2 — le faltan 636 XP', dias:'5 / 7', tiempo:'1 h 25', lecc:9, sk:[93,82,71],
+     help:['Practicó 5 de 7 días','Writing es su punto a reforzar'], cert:'Faltan 636 XP'},
+    {racha:0, pat:'1110010', nivel:'B1', prom:90, sub:'Muy cerca de B2 — le faltan 369 XP', dias:'4 / 7', tiempo:'1 h 28', lecc:8, sk:[97,87,75],
+     help:['Practicó 4 de 7 días','Writing es su punto a reforzar'], cert:'Faltan 369 XP'},
+    {racha:1, pat:'0111101', nivel:'B1', prom:91, sub:'Muy cerca de B2 — le faltan 246 XP', dias:'5 / 7', tiempo:'1 h 25', lecc:10, sk:[98,88,76],
+     help:['Practicó 5 de 7 días','Writing es su punto a reforzar'], cert:'Faltan 246 XP'},
+    {racha:8, pat:'1111111', nivel:'B2', prom:97, sub:'Muy cerca de B2 — le faltan 60 XP', dias:'7 / 7', tiempo:'2 h 27', lecc:14, sk:[99,90,81],
+     help:['Practicó los 7 días de la semana','Writing es su punto a reforzar'], cert:'Faltan 60 XP'},
+    {racha:15, pat:'1111111', nivel:'B2', prom:98, sub:'Muy cerca de B2 — le faltan 60 XP', dias:'7 / 7', tiempo:'1 h 52', lecc:14, sk:[99,92,88],
+     help:['Practicó los 7 días de la semana','Writing es su punto a reforzar'], cert:'Faltan 60 XP'},
+    {racha:22, pat:'1111111', nivel:'B2', prom:98, sub:'Muy cerca de B2 — le faltan 60 XP', dias:'7 / 7', tiempo:'2 h 27', lecc:14, sk:[99,92,88],
+     help:['Practicó los 7 días de la semana','Writing es su punto a reforzar'], cert:'Faltan 60 XP'},
   ];
   const P_HELP_SUB=['Un «¡sigue así!» en casa refuerza el hábito','Esta semana el juego se lo repasará solo'];
+
+  // Monograma de dos letras: iniciales de nombre y apellido. Se calcula del
+  // nombre en vez de leer T_STUD[i][1] —que solo guarda una— para que no haya
+  // dos sitios que puedan discrepar. Con 32 alumnos hay iniciales repetidas
+  // (Ariana y Antonella, ambas 'A'), y dos letras las distinguen.
+  const mono = n => n.trim().split(/\s+/).slice(0,2)
+    .map(w => w.charAt(0).toUpperCase()).join('');
 
   // Teacher (5.º A) — per week. Row: [díasActivos, racha, nivel, lecciones, promedio, estadoClase, estadoTexto]
   const T_STUD=[['Mateo Rivas','M','#f4a51e'],['Luciana Paredes','L','#12b0a0'],['Valeria Quispe','V','#5b4be6'],
     ['Diego Salas','D','#ec5b8b'],['Camila Torres','C','#8175f4'],['Joaquín Vega','J','#12b0a0'],
-    ['Ariana Flores','A','#f4a51e'],['Sebastián Ríos','S','#ec5b8b']];
+    ['Ariana Flores','A','#f4a51e'],['Sebastián Ríos','S','#ec5b8b'],
+    ['Fernanda Ruiz','F','#5b4be6'],['Nicolás Chávez','N','#12b0a0'],['Isabella Mendoza','I','#ec5b8b'],
+    ['Rodrigo Cárdenas','R','#8175f4'],['Antonella Bravo','A','#f4a51e'],['Gabriel Ponce','G','#12b0a0'],
+    ['Renata Alvarado','R','#ec5b8b'],['Matías Herrera','M','#5b4be6'],['Micaela Guzmán','M','#8175f4'],
+    ['Alonso Espinoza','A','#12b0a0'],['Daniela Ramos','D','#f4a51e'],['Emilio Castro','E','#ec5b8b'],
+    ['Ximena Peralta','X','#5b4be6'],['Thiago Molina','T','#8175f4'],['Alessia Cordero','A','#12b0a0'],
+    ['Bruno Zegarra','B','#f4a51e'],
+    ['Adriana Loayza','A','#12b0a0'],['Facundo Bermúdez','F','#ec5b8b'],['Valentina Nieto','V','#5b4be6'],
+    ['Santiago Ledesma','S','#8175f4'],['Paula Ibáñez','P','#f4a51e'],['Iván Palomino','I','#12b0a0'],
+    ['Renzo Villanueva','R','#ec5b8b'],['Fiorella Sánchez','F','#5b4be6']];
   const TWEEK=[
-    { kpi:['79%','B1','176','5'], ksub:['<span style="color:var(--muted)">≈ estable</span>','2 alumnos ya en B2','<span class="up">▲ 9</span> esta semana','requieren atención'],
-      callout:'5 alumnos no ingresan hace más de 5 días. Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio — considera reforzarla en clase.',
-      rows:[[7,24,'B2',10,91,'ok','Al día'],[5,11,'B1',9,88,'ok','Al día'],[6,17,'B1',7,85,'ok','Al día'],
-            [2,0,'B1',4,74,'risk','Sin ingresar 5 d'],[5,5,'B1',6,81,'ok','Al día'],[3,3,'A2',2,69,'watch','Bajó ritmo'],
-            [6,8,'B1',8,83,'ok','Al día'],[1,0,'A2',1,66,'risk','Sin ingresar 7 d']] },
-    { kpi:['87%','B1','214','3'], ksub:['<span class="up">▲ 4%</span> vs. semana previa','3 alumnos ya en B2','<span class="up">▲ 18</span> esta semana','requieren atención'],
-      callout:'3 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y uno más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio — considera reforzarla en clase.',
-      rows:[[7,31,'B2',12,94,'ok','Al día'],[6,18,'B2',11,91,'ok','Al día'],[7,24,'B1',9,88,'ok','Al día'],
-            [3,3,'B1',6,79,'watch','Bajó ritmo'],[5,12,'B1',8,84,'ok','Al día'],[2,0,'A2',2,71,'risk','Sin ingresar 6 d'],
-            [6,15,'B1',10,86,'ok','Al día'],[1,0,'A2',1,68,'risk','Sin ingresar 5 d']] },
-    { kpi:['91%','B1','238','2'], ksub:['<span class="up">▲ 4%</span> vs. semana previa','4 alumnos ya en B2','<span class="up">▲ 24</span> esta semana','requieren atención'],
-      callout:'2 alumnos no ingresan hace más de 5 días. <b>Writing</b> sigue siendo la destreza más floja del aula, pero va mejorando — ¡buen ritmo esta semana!',
-      rows:[[7,38,'B2',13,95,'ok','Al día'],[7,25,'B2',12,92,'ok','Al día'],[7,31,'B2',11,90,'ok','Al día'],
-            [6,9,'B1',8,83,'ok','Al día'],[6,19,'B1',9,86,'ok','Al día'],[4,4,'A2',4,75,'watch','Bajó ritmo'],
-            [7,22,'B1',11,88,'ok','Al día'],[3,2,'A2',3,72,'watch','Bajó ritmo']] },
+    { kpi:['53%','A2','206','6'], ksub:['<span style="color:var(--muted)">primera semana</span>','0 alumnos ya en B2','<span style="color:var(--muted)">línea de base</span>','requieren atención'],
+      callout:'6 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y 4 más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio (57%) — considera reforzarla en clase.',
+      rows:[['1000110',0,'A2',5,64,'ok','Al día',54,71,58,48,2442],
+            ['1110111',3,'A2',10,72,'ok','Al día',108,76,67,57,1683],
+            ['1100001',1,'B1',5,81,'ok','Al día',54,88,76,67,1116],
+            ['0110100',0,'A2',5,58,'ok','Al día',54,63,53,45,2910],
+            ['1010101',1,'B1',7,77,'ok','Al día',68,84,73,65,1383],
+            ['1000000',0,'A2',2,55,'risk','Sin ingresar 6 d',17,60,51,43,3234],
+            ['1110010',0,'B1',7,77,'ok','Al día',68,85,74,66,1383],
+            ['0000000',0,'A2',0,52,'risk','Sin ingresar 7 d',0,57,49,40,3513],
+            ['1011111',5,'B1',10,74,'ok','Al día',96,82,72,59,1527],
+            ['1000000',0,'B1',2,82,'risk','Sin ingresar 6 d',16,88,75,68,1128],
+            ['0010111',3,'A2',7,69,'ok','Al día',64,78,63,55,2007],
+            ['1111110',0,'B1',11,81,'ok','Al día',90,87,75,68,981],
+            ['1110000',0,'A2',5,69,'watch','Bajó ritmo',45,78,64,57,2052],
+            ['1011011',2,'B1',9,76,'ok','Al día',75,83,71,65,1416],
+            ['0000000',0,'A2',0,53,'risk','Sin ingresar 7 d',0,57,49,43,3435],
+            ['0000000',0,'B1',0,74,'risk','Sin ingresar 7 d',0,81,70,58,1797],
+            ['1101011',2,'A2',8,62,'ok','Al día',120,67,59,47,2508],
+            ['1011100',0,'A2',7,72,'ok','Al día',96,79,69,58,1773],
+            ['1111111',7,'B1',13,84,'ok','Al día',161,89,81,71,702],
+            ['0000000',0,'A2',0,52,'risk','Sin ingresar 7 d',0,60,50,40,3513],
+            ['0101000',0,'B1',4,77,'watch','Bajó ritmo',46,82,70,66,1473],
+            ['1111111',7,'A2',12,69,'ok','Al día',154,77,63,58,1872],
+            ['1011101',1,'B1',9,75,'ok','Al día',110,81,69,59,1494],
+            ['1101111',4,'A2',10,65,'ok','Al día',132,73,60,50,2229],
+            ['1111011',2,'B1',10,75,'ok','Al día',132,81,70,61,1449],
+            ['0101100',0,'B1',5,80,'ok','Al día',63,89,76,67,1194],
+            ['1011111',5,'A2',10,71,'ok','Al día',126,78,67,58,1761],
+            ['1000001',1,'B1',4,80,'watch','Bajó ritmo',42,84,77,68,1239],
+            ['1110110',0,'A2',8,67,'ok','Al día',100,74,64,56,2118],
+            ['1110111',3,'B1',11,78,'ok','Al día',120,83,76,68,1215],
+            ['0000111',3,'A2',5,66,'ok','Al día',60,73,59,51,2286],
+            ['1010010',0,'A2',5,72,'ok','Al día',60,77,66,57,1818]] },
+    { kpi:['53%','B1','206','3'], ksub:['<span style="color:var(--muted)">≈ estable</span>','0 alumnos ya en B2','<span style="color:var(--muted)">≈ estable</span>','requieren atención'],
+      callout:'3 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y 1 más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio (60%) — considera reforzarla en clase.',
+      rows:[['0010101',1,'A2',5,64,'ok','Al día',69,71,59,48,2442],
+            ['1110110',0,'B1',9,76,'ok','Al día',115,80,71,61,1416],
+            ['0110001',1,'B1',6,85,'ok','Al día',69,92,81,71,804],
+            ['1100111',3,'A2',8,58,'ok','Al día',110,63,54,44,2820],
+            ['0010110',0,'B1',5,81,'ok','Al día',66,88,78,68,1116],
+            ['0000000',0,'A2',0,57,'risk','Sin ingresar 13 d',0,62,54,45,3123],
+            ['1101111',4,'B1',11,78,'ok','Al día',126,86,75,67,1215],
+            ['0000000',0,'A2',0,55,'risk','Sin ingresar 14 d',0,60,53,45,3279],
+            ['1111101',1,'B1',11,78,'ok','Al día',126,86,71,63,1215],
+            ['0011010',0,'B1',5,83,'ok','Al día',63,89,77,68,960],
+            ['1000100',0,'A2',3,72,'watch','Bajó ritmo',40,80,66,58,1863],
+            ['1111111',7,'B1',13,85,'ok','Al día',140,91,80,72,624],
+            ['0111010',0,'A2',7,69,'ok','Al día',80,78,64,57,2007],
+            ['1001001',1,'B1',5,79,'ok','Al día',57,86,75,68,1272],
+            ['0000001',1,'A2',2,57,'watch','Bajó ritmo',19,61,53,46,3078],
+            ['1101000',0,'B1',5,75,'watch','Bajó ritmo',57,82,72,59,1584],
+            ['0111011',2,'A2',8,65,'ok','Al día',95,70,62,50,2274],
+            ['0001111',4,'B1',7,75,'ok','Al día',72,82,73,61,1539],
+            ['1111101',1,'B1',11,82,'ok','Al día',108,87,75,69,903],
+            ['0000000',0,'A2',0,54,'risk','Sin ingresar 14 d',0,62,48,41,3357],
+            ['1111000',0,'B1',7,81,'watch','Bajó ritmo',68,86,75,69,1071],
+            ['0111111',6,'A2',10,68,'ok','Al día',102,76,62,57,1995],
+            ['0001111',4,'B1',7,79,'ok','Al día',68,85,74,69,1227],
+            ['1111100',0,'A2',8,69,'ok','Al día',85,77,64,54,1962],
+            ['0101011',2,'B1',7,75,'ok','Al día',64,81,71,60,1539],
+            ['1111101',1,'B1',11,87,'ok','Al día',96,96,83,73,513],
+            ['0010100',0,'B1',3,74,'watch','Bajó ritmo',32,80,71,61,1707],
+            ['0010011',2,'B1',5,81,'ok','Al día',45,85,78,69,1116],
+            ['1110111',3,'A2',10,72,'ok','Al día',90,79,70,61,1683],
+            ['0100110',0,'B1',5,81,'ok','Al día',45,86,74,70,1116],
+            ['1011111',5,'A2',10,68,'ok','Al día',90,75,62,52,1995],
+            ['0000001',1,'B1',2,76,'watch','Bajó ritmo',14,81,70,61,1596]] },
+    { kpi:['65%','B1','260','2'], ksub:['<span class="up">▲ 12</span> vs. semana previa','0 alumnos ya en B2','<span class="up">▲ 54</span> esta semana','requieren atención'],
+      callout:'2 alumnos no ingresan hace más de 5 días (Joaquín y Sebastián). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio (63%) — considera reforzarla en clase.',
+      rows:[['0000101',1,'A2',3,68,'watch','Bajó ritmo',36,74,63,58,2175],
+            ['1110111',3,'B1',11,81,'ok','Al día',108,85,77,66,981],
+            ['1110011',2,'B1',9,86,'ok','Al día',85,93,82,71,636],
+            ['0110100',0,'A2',5,61,'ok','Al día',51,66,58,47,2676],
+            ['1110110',0,'B1',9,86,'ok','Al día',85,93,83,73,636],
+            ['0000000',0,'A2',0,56,'risk','Sin ingresar 20 d',0,61,54,44,3201],
+            ['1111101',1,'B1',11,82,'ok','Al día',96,90,75,71,903],
+            ['1000000',0,'A2',2,58,'risk','Sin ingresar 6 d',16,63,52,47,3000],
+            ['1111111',8,'B1',12,79,'ok','Al día',112,87,73,63,1092],
+            ['1011011',2,'B1',9,88,'ok','Al día',75,94,83,73,480],
+            ['0010100',0,'B1',3,76,'watch','Bajó ritmo',30,84,71,62,1551],
+            ['1111101',1,'B1',11,84,'ok','Al día',90,90,79,71,747],
+            ['1101011',2,'A2',9,73,'ok','Al día',70,82,69,60,1650],
+            ['1011011',2,'B1',9,83,'ok','Al día',70,89,79,71,870],
+            ['0000010',0,'A2',2,55,'watch','Bajó ritmo',24,59,52,44,3234],
+            ['0111111',6,'B1',11,79,'ok','Al día',144,86,76,69,1137],
+            ['1111101',1,'A2',10,69,'ok','Al día',138,73,67,54,1917],
+            ['1111111',11,'B1',12,76,'ok','Al día',161,83,69,61,1326],
+            ['1111110',0,'B1',11,86,'ok','Al día',138,91,80,72,591],
+            ['0000010',0,'A2',2,57,'watch','Bajó ritmo',22,65,51,44,3078],
+            ['0111011',2,'B1',9,81,'ok','Al día',110,86,76,69,1026],
+            ['1101110',0,'A2',8,70,'ok','Al día',110,78,65,59,1884],
+            ['0011111',5,'B1',9,85,'ok','Al día',110,91,81,74,714],
+            ['1111111',7,'A2',12,71,'ok','Al día',147,79,67,55,1716],
+            ['1111100',0,'B1',9,81,'ok','Al día',105,87,77,66,1026],
+            ['0101111',4,'B1',10,91,'ok','Al día',105,99,88,77,246],
+            ['1010111',3,'B1',9,76,'ok','Al día',100,82,73,63,1416],
+            ['0010010',0,'B1',4,85,'watch','Bajó ritmo',40,89,83,72,849],
+            ['1101111',4,'B1',11,77,'ok','Al día',120,84,70,65,1293],
+            ['1110101',1,'B1',9,82,'ok','Al día',100,86,76,71,948],
+            ['1111111',12,'A2',12,73,'ok','Al día',133,80,67,63,1560],
+            ['1010011',2,'B1',7,82,'ok','Al día',76,87,77,67,993]] },
+    { kpi:['70%','B1','285','3'], ksub:['<span class="up">▲ 5</span> vs. semana previa','0 alumnos ya en B2','<span class="up">▲ 25</span> esta semana','requieren atención'],
+      callout:'3 alumnos no ingresan hace más de 5 días (Joaquín, Emilio y 1 más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio (65%) — considera reforzarla en clase.',
+      rows:[['1110110',0,'B1',9,74,'ok','Al día',115,80,70,63,1572],
+            ['0111111',6,'B1',11,81,'ok','Al día',132,85,77,65,981],
+            ['1110010',0,'B1',8,90,'ok','Al día',88,97,87,75,369],
+            ['1100100',0,'A2',5,64,'ok','Al día',66,68,61,50,2442],
+            ['1101101',1,'B1',9,86,'ok','Al día',105,93,84,73,636],
+            ['0000000',0,'A2',0,58,'risk','Sin ingresar 27 d',0,63,51,45,3045],
+            ['0111111',6,'B1',11,86,'ok','Al día',126,94,80,74,591],
+            ['0010011',2,'A2',5,58,'ok','Al día',63,63,52,47,2910],
+            ['1111111',15,'B1',13,82,'ok','Al día',140,90,77,72,858],
+            ['1011001',1,'B1',8,91,'ok','Al día',80,97,86,76,291],
+            ['1010111',3,'B1',9,77,'ok','Al día',100,85,73,62,1338],
+            ['1111111',8,'B1',13,88,'ok','Al día',133,94,84,74,390],
+            ['1111011',2,'B1',11,77,'ok','Al día',114,86,74,64,1293],
+            ['1111111',9,'B1',13,84,'ok','Al día',133,90,81,72,702],
+            ['0010000',0,'A2',2,58,'watch','Bajó ritmo',19,62,55,47,3000],
+            ['1101111',4,'B1',11,79,'ok','Al día',108,86,77,68,1137],
+            ['1111110',0,'A2',10,68,'ok','Al día',108,72,61,52,1995],
+            ['1111101',1,'B1',11,78,'ok','Al día',108,85,72,63,1215],
+            ['1101111',4,'B1',11,85,'ok','Al día',102,90,79,71,669],
+            ['0000000',0,'A2',0,55,'risk','Sin ingresar 8 d',0,62,50,42,3279],
+            ['1101011',2,'B1',9,84,'ok','Al día',85,89,79,71,792],
+            ['1111111',7,'A2',12,70,'ok','Al día',119,78,66,58,1794],
+            ['1001100',0,'B1',6,85,'ok','Al día',48,91,81,74,804],
+            ['1111111',14,'B1',12,76,'ok','Al día',112,84,73,66,1326],
+            ['1111111',7,'B1',13,83,'ok','Al día',112,89,80,68,780],
+            ['1110110',0,'B1',10,92,'ok','Al día',75,99,90,77,168],
+            ['1110111',3,'B1',11,82,'ok','Al día',90,88,75,68,903],
+            ['1000000',0,'B1',2,85,'risk','Sin ingresar 6 d',15,89,79,72,894],
+            ['1111111',11,'B1',12,78,'ok','Al día',105,85,72,66,1170],
+            ['1100111',3,'B1',9,87,'ok','Al día',70,91,81,76,558],
+            ['1111111',19,'A2',12,73,'ok','Al día',98,80,68,62,1560],
+            ['0011011',2,'B1',7,82,'ok','Al día',96,87,77,66,993]] },
+    { kpi:['69%','B1','281','4'], ksub:['<span class="down">▼ 1</span> vs. semana previa','1 alumno ya en B2','<span class="down">▼ 4</span> esta semana','requieren atención'],
+      callout:'4 alumnos no ingresan hace más de 5 días (Joaquín, Sebastián y 2 más). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio (67%) — considera reforzarla en clase.',
+      rows:[['0110110',0,'B1',7,74,'ok','Al día',68,80,71,63,1617],
+            ['1101111',4,'B1',11,86,'ok','Al día',102,95,83,76,591],
+            ['0111101',1,'B1',10,91,'ok','Al día',85,98,88,76,246],
+            ['0100110',0,'A2',5,63,'ok','Al día',48,67,61,48,2520],
+            ['1111111',8,'B1',13,92,'ok','Al día',112,99,85,78,78],
+            ['0000000',0,'A2',0,57,'risk','Sin ingresar 34 d',0,62,51,44,3123],
+            ['1111111',13,'B1',13,87,'ok','Al día',112,94,81,75,468],
+            ['0000000',0,'A2',0,60,'risk','Sin ingresar 7 d',0,65,55,49,2889],
+            ['1111111',22,'B1',13,82,'ok','Al día',105,90,77,71,858],
+            ['1111011',2,'B1',12,92,'ok','Al día',90,98,88,76,123],
+            ['0001111',4,'B1',7,80,'ok','Al día',56,88,76,65,1149],
+            ['1111111',15,'B1',13,88,'ok','Al día',98,94,85,74,390],
+            ['0101001',1,'B1',5,75,'ok','Al día',72,84,72,62,1584],
+            ['1111111',16,'B1',13,87,'ok','Al día',168,93,85,74,468],
+            ['1000000',0,'A2',2,57,'risk','Sin ingresar 6 d',23,66,50,45,3078],
+            ['0111101',1,'B1',9,82,'ok','Al día',115,89,76,71,948],
+            ['1111111',7,'A2',12,72,'ok','Al día',161,76,66,62,1638],
+            ['0101100',0,'B1',5,76,'ok','Al día',66,83,70,61,1506],
+            ['1111111',11,'B1',13,88,'ok','Al día',154,93,83,73,390],
+            ['0000000',0,'A2',0,58,'risk','Sin ingresar 15 d',0,65,53,44,3045],
+            ['0111000',0,'B1',5,82,'watch','Bajó ritmo',66,87,78,69,1038],
+            ['1111111',14,'A2',12,73,'ok','Al día',147,81,69,61,1560],
+            ['0111101',1,'B1',10,91,'ok','Al día',105,96,88,80,246],
+            ['1111111',21,'B1',12,77,'ok','Al día',147,85,74,66,1248],
+            ['1110111',3,'B1',11,87,'ok','Al día',120,93,85,71,513],
+            ['0110100',0,'B2',6,96,'ok','Al día',60,99,89,81,60],
+            ['1100111',3,'B1',9,82,'ok','Al día',100,88,76,68,948],
+            ['0010001',1,'B1',4,91,'watch','Bajó ritmo',40,99,85,78,381],
+            ['1111111',18,'B1',13,82,'ok','Al día',133,89,77,70,858],
+            ['1111111',10,'B1',13,89,'ok','Al día',133,93,84,77,312],
+            ['1111111',26,'B1',12,78,'ok','Al día',133,85,74,67,1170],
+            ['1011111',5,'B1',11,87,'ok','Al día',108,92,83,77,513]] },
+    { kpi:['77%','B1','321','2'], ksub:['<span class="up">▲ 8</span> vs. semana previa','6 alumnos ya en B2','<span class="up">▲ 40</span> esta semana','requieren atención'],
+      callout:'2 alumnos no ingresan hace más de 5 días (Joaquín y Emilio). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio (70%) — considera reforzarla en clase.',
+      rows:[['1100101',1,'B1',7,79,'ok','Al día',88,85,76,68,1227],
+            ['1111111',11,'B1',13,87,'ok','Al día',154,96,85,76,468],
+            ['1111111',8,'B2',14,97,'ok','Al día',147,99,90,81,60],
+            ['1010111',3,'A2',8,67,'ok','Al día',105,71,61,52,2118],
+            ['1111111',15,'B1',13,92,'ok','Al día',147,99,86,78,78],
+            ['0000000',0,'A2',0,60,'risk','Sin ingresar 41 d',0,65,55,47,2889],
+            ['1111111',20,'B1',13,91,'ok','Al día',140,98,86,78,156],
+            ['0010000',0,'A2',2,59,'watch','Bajó ritmo',20,64,54,47,2922],
+            ['0111101',1,'B1',9,85,'ok','Al día',100,93,81,74,714],
+            ['1101010',0,'B2',8,95,'ok','Al día',76,99,91,85,60],
+            ['1011100',0,'B1',7,80,'ok','Al día',76,88,77,65,1149],
+            ['1111111',22,'B1',13,92,'ok','Al día',133,98,89,77,78],
+            ['1111010',0,'B1',9,80,'ok','Al día',95,89,78,66,1104],
+            ['1111111',23,'B1',13,87,'ok','Al día',126,93,80,74,468],
+            ['0010001',1,'A2',3,60,'watch','Bajó ritmo',36,69,54,48,2799],
+            ['1111110',0,'B1',11,86,'ok','Al día',108,93,80,75,591],
+            ['1111111',14,'A2',12,71,'ok','Al día',119,75,66,60,1716],
+            ['1111111',7,'B1',13,81,'ok','Al día',119,88,76,65,936],
+            ['1111111',18,'B1',13,91,'ok','Al día',119,96,87,76,156],
+            ['0000000',0,'A2',0,57,'risk','Sin ingresar 22 d',0,64,53,43,3123],
+            ['1111111',7,'B1',13,87,'ok','Al día',112,92,83,74,468],
+            ['1111111',21,'B1',12,76,'ok','Al día',112,84,73,64,1326],
+            ['1111111',8,'B2',14,93,'ok','Al día',112,98,90,81,60],
+            ['1110111',3,'B1',11,82,'ok','Al día',96,90,80,71,903],
+            ['1110111',3,'B1',12,92,'ok','Al día',90,98,85,82,123],
+            ['1100111',3,'B2',10,98,'ok','Al día',75,99,92,83,60],
+            ['1111101',1,'B1',11,87,'ok','Al día',90,93,81,73,513],
+            ['1000011',2,'B2',6,96,'ok','Al día',42,99,91,82,60],
+            ['1111111',25,'B1',13,83,'ok','Al día',98,90,78,70,780],
+            ['1111111',17,'B2',14,93,'ok','Al día',168,97,89,81,60],
+            ['1111111',33,'B1',13,82,'ok','Al día',168,89,78,71,858],
+            ['1111101',1,'B1',11,88,'ok','Al día',138,93,85,78,435]] },
+    { kpi:['79%','B1','334','2'], ksub:['<span class="up">▲ 2</span> vs. semana previa','9 alumnos ya en B2','<span class="up">▲ 13</span> esta semana','requieren atención'],
+      callout:'2 alumnos no ingresan hace más de 5 días (Joaquín y Emilio). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio (72%) — considera reforzarla en clase.',
+      rows:[['1110111',3,'B1',11,80,'ok','Al día',102,86,78,68,1059],
+            ['1011101',1,'B1',10,90,'ok','Al día',85,99,83,79,324],
+            ['1111111',15,'B2',14,98,'ok','Al día',112,99,92,88,60],
+            ['1000101',1,'A2',5,65,'ok','Al día',48,69,59,50,2364],
+            ['1111110',0,'B2',12,96,'ok','Al día',96,99,91,81,60],
+            ['0000000',0,'A2',0,62,'risk','Sin ingresar 48 d',0,67,57,48,2733],
+            ['1111101',1,'B1',11,91,'ok','Al día',90,98,87,78,201],
+            ['0000010',0,'A2',2,62,'watch','Bajó ritmo',15,67,58,50,2688],
+            ['1111111',8,'B1',13,90,'ok','Al día',105,98,87,79,234],
+            ['1111111',7,'B2',14,96,'ok','Al día',98,99,93,86,60],
+            ['0001110',0,'B1',5,83,'ok','Al día',72,91,80,67,960],
+            ['1111111',29,'B2',14,95,'ok','Al día',168,99,93,80,60],
+            ['1111111',7,'B1',13,80,'ok','Al día',161,88,73,66,1014],
+            ['1111111',30,'B1',13,90,'ok','Al día',161,96,84,77,234],
+            ['1001010',0,'A2',5,63,'ok','Al día',69,72,57,51,2520],
+            ['1101111',4,'B1',11,85,'ok','Al día',138,91,80,73,669],
+            ['1111111',21,'B1',12,74,'ok','Al día',154,78,69,63,1482],
+            ['1101111',4,'B1',11,84,'ok','Al día',132,91,80,74,747],
+            ['1111111',25,'B1',13,90,'ok','Al día',154,95,86,75,234],
+            ['0000000',0,'A2',0,60,'risk','Sin ingresar 29 d',0,67,57,46,2889],
+            ['1111111',14,'B1',13,90,'ok','Al día',147,95,87,76,234],
+            ['1111111',28,'B1',12,75,'ok','Al día',147,83,73,62,1404],
+            ['0110111',3,'B2',10,97,'ok','Al día',105,99,90,85,60],
+            ['1111111',10,'B1',13,87,'ok','Al día',140,95,81,76,468],
+            ['1111111',10,'B2',14,93,'ok','Al día',140,99,87,83,60],
+            ['1110111',3,'B2',12,98,'ok','Al día',120,99,92,82,60],
+            ['1111111',8,'B1',13,92,'ok','Al día',133,98,87,77,78],
+            ['0010110',0,'B2',6,97,'ok','Al día',57,99,92,83,60],
+            ['1111111',32,'B1',13,88,'ok','Al día',133,94,84,75,390],
+            ['1111111',24,'B2',14,98,'ok','Al día',133,99,94,86,60],
+            ['1111111',40,'B1',13,83,'ok','Al día',126,90,80,71,780],
+            ['1101111',4,'B1',12,92,'ok','Al día',108,97,89,81,123]] },
+    { kpi:['83%','B1','356','2'], ksub:['<span class="up">▲ 4</span> vs. semana previa','15 alumnos ya en B2','<span class="up">▲ 22</span> esta semana','requieren atención'],
+      callout:'2 alumnos no ingresan hace más de 5 días (Joaquín y Emilio). Un recordatorio esta semana suele recuperarlos. En todo el aula, <b>Writing</b> es la destreza con menor avance promedio (74%) — considera reforzarla en clase.',
+      rows:[['1101111',4,'B1',11,85,'ok','Al día',132,91,78,73,669],
+            ['1111111',8,'B2',14,95,'ok','Al día',147,99,89,84,60],
+            ['1111111',22,'B2',14,98,'ok','Al día',147,99,92,88,60],
+            ['0010110',0,'A2',5,69,'ok','Al día',63,73,64,53,2052],
+            ['1111111',7,'B2',14,98,'ok','Al día',140,99,93,83,60],
+            ['0000000',0,'A2',0,61,'risk','Sin ingresar 55 d',0,66,57,47,2811],
+            ['1111111',8,'B2',14,95,'ok','Al día',140,99,91,82,60],
+            ['1000011',2,'A2',5,66,'ok','Al día',60,71,63,54,2286],
+            ['1111111',15,'B1',13,90,'ok','Al día',133,98,87,78,234],
+            ['1111111',14,'B2',14,98,'ok','Al día',133,99,96,87,60],
+            ['1011111',5,'B1',11,89,'ok','Al día',114,97,82,79,357],
+            ['1111111',36,'B2',14,95,'ok','Al día',126,99,89,80,60],
+            ['1111111',14,'B1',13,84,'ok','Al día',126,92,78,70,702],
+            ['1111111',37,'B2',14,94,'ok','Al día',126,99,88,80,60],
+            ['0101000',0,'A2',3,62,'watch','Bajó ritmo',36,71,57,49,2643],
+            ['1111111',11,'B1',13,89,'ok','Al día',119,95,84,77,312],
+            ['1111111',28,'B1',12,78,'ok','Al día',119,82,74,67,1170],
+            ['1111101',1,'B1',11,83,'ok','Al día',102,90,79,73,825],
+            ['1111111',32,'B2',14,94,'ok','Al día',112,98,91,78,60],
+            ['0000000',0,'A2',0,63,'risk','Sin ingresar 36 d',0,70,60,48,2655],
+            ['1111111',21,'B1',13,88,'ok','Al día',112,93,86,74,390],
+            ['1101111',4,'B1',11,77,'ok','Al día',96,85,70,64,1293],
+            ['1110101',1,'B2',10,98,'ok','Al día',75,99,92,86,60],
+            ['1011111',5,'B1',11,88,'ok','Al día',90,96,82,76,435],
+            ['1111111',17,'B2',14,98,'ok','Al día',105,99,93,87,60],
+            ['0110111',3,'B2',10,98,'ok','Al día',70,99,93,82,60],
+            ['1111111',15,'B2',14,93,'ok','Al día',98,99,89,78,60],
+            ['1110101',1,'B2',10,98,'ok','Al día',120,99,94,84,60],
+            ['1111111',39,'B1',13,88,'ok','Al día',168,94,84,74,390],
+            ['1111111',31,'B2',14,98,'ok','Al día',161,99,95,85,60],
+            ['1111111',47,'B1',13,87,'ok','Al día',161,94,84,75,468],
+            ['1111111',11,'B2',14,93,'ok','Al día',161,97,91,82,60]] },
   ];
   const KLABEL=['Alumnos activos','Nivel promedio','Lecciones completadas','Sin ingresar +5 días'];
+
+  // ===== Orden de la tabla =====
+  // Al estilo de una base de datos de Notion: un clic ordena, otro invierte, y
+  // el tercero vuelve al orden natural de la lista. La flecha solo aparece en la
+  // columna activa. Cada columna se ordena por lo que ES, no por como se ve:
+  // los numeros como numeros, el nivel por rango (A2 < B1 < B2) y el estado por
+  // gravedad, para que "ordenar por estado" ponga arriba a quien hay que mirar.
+  var sortBy = null, sortDir = 1, sortStep = 0;
+  var NIVEL = { A1:1, A2:2, B1:3, B2:4, C1:5 };
+  var GRAVE = { risk:3, watch:2, ok:1 };
+  // Indice de cada campo dentro de la fila:
+  // [0] patron de la semana ('1101011') · [1] racha · [2] nivel · [3] lecciones
+  // · [4] promedio · [5] estado
+  var CAMPO = {
+    name:  function(p){ return p.s[0]; },
+    // Se ordena por dias activos de verdad, contando el patron: ordenar la
+    // cadena tal cual pondria '1101011' antes que '0111111', que tiene mas.
+    dias:  function(p){ return (p.r[0].match(/1/g) || []).length; },
+    racha: function(p){ return p.r[1]; },
+    nivel: function(p){ return NIVEL[p.r[2]] || 0; },
+    lecc:  function(p){ return p.r[3]; },
+    prom:  function(p){ return p.r[4]; },
+    // Gravedad, y dentro de "sin ingresar" los dias que lleva fuera: tres filas
+    // en rojo no son igual de urgentes, y desempatarlas por nombre dejaba
+    // "Sin ingresar 5 d" por encima de "Sin ingresar 6 d".
+    estado:function(p){
+      var g = GRAVE[p.r[5]] || 0;
+      var d = (String(p.r[6]).match(/(\d+)\s*d/) || [])[1];
+      return g * 100 + (d ? +d : 0);
+    },
+  };
+
+  function sortRows(pares){
+    if (!sortBy || !CAMPO[sortBy]) return pares;
+    var val = CAMPO[sortBy];
+    // Copia: ordenar in situ mutaria el array recien construido y, sobre todo,
+    // dejaria el orden pegado entre repintados.
+    return pares.slice().sort(function(a, b){
+      var x = val(a), y = val(b), c;
+      if (typeof x === 'string') c = x.localeCompare(y, 'es');
+      else c = x - y;
+      // Solo la clave principal cambia de sentido. Antes multiplicaba tambien
+      // los desempates, asi que en descendente los nombres iban de la Z a la A
+      // y el orden dentro de un empate se sentia arbitrario.
+      c = c * sortDir;
+      // Primer desempate: la racha, en el mismo sentido que la columna. Con
+      // varios alumnos de 7 dias, arriba queda el que lleva mas encadenados.
+      if (c === 0 && sortBy !== 'racha') c = (a.r[1] - b.r[1]) * sortDir;
+      // Ultimo desempate: el nombre, SIEMPRE de la A a la Z, para que dos filas
+      // idénticas no se intercambien de sitio entre repintados.
+      if (c === 0) c = a.s[0].localeCompare(b.s[0], 'es');
+      return c;
+    });
+  }
+
+  function marcarCabecera(){
+    var th = document.querySelectorAll('#t-head th[data-sort]');
+    Array.prototype.forEach.call(th, function(h){
+      var act = h.dataset.sort === sortBy;
+      h.classList.toggle('sorted', act);
+      h.setAttribute('aria-sort', act ? (sortDir === 1 ? 'ascending' : 'descending') : 'none');
+    });
+    var head = document.getElementById('t-head');
+    if (head) head.dataset.dir = sortDir === 1 ? 'asc' : 'desc';
+  }
+
+  (function ordenar(){
+    var head = document.getElementById('t-head');
+    if (!head) return;
+    head.addEventListener('click', function(e){
+      var th = e.target.closest('th[data-sort]');
+      if (!th) return;
+      var k = th.dataset.sort;
+      // Tres posiciones por columna, con un contador de paso. La version
+      // anterior deducia el paso del signo de sortDir y nunca llegaba a la
+      // tercera: el segundo clic caia siempre en el reset.
+      if (sortBy !== k) {
+        sortBy = k; sortStep = 1;
+        // Los textos empiezan de la A; los numeros y el estado, de mayor a
+        // menor: al ordenar por racha o por promedio lo que se busca es la
+        // punta, y al ordenar por estado, a quien hay que atender.
+        sortDir = (k === 'name') ? 1 : -1;
+      } else if (sortStep === 1) {
+        sortStep = 2; sortDir = -sortDir;   // segundo clic: al reves
+      } else {
+        sortBy = null; sortStep = 0; sortDir = 1;   // tercero: orden natural
+      }
+      marcarCabecera();
+      renderTeacher(wkIdx);
+    });
+    // Teclado: las cabeceras son th, no botones, asi que hay que darles entrada.
+    Array.prototype.forEach.call(head.querySelectorAll('th[data-sort]'), function(h){
+      h.tabIndex = 0;
+      h.setAttribute('role', 'button');
+    });
+    head.addEventListener('keydown', function(e){
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var th = e.target.closest('th[data-sort]');
+      if (!th) return;
+      e.preventDefault();
+      th.click();
+    });
+  })();
+
+  // La escalera de niveles del alumno. Los superados van llenos, el actual se
+  // llena en proporcion a lo avanzado dentro de su tramo, y los que faltan van
+  // vacios. Las bandas son las mismas que decide el nivel en la tabla —A2 hasta
+  // 74, B1 hasta 93— asi que la barra y el chip de nivel nunca se contradicen.
+  const BANDAS = { A1:[0,60], A2:[60,74], B1:[74,93], B2:[93,100] };
+  const ESCALA = ['A1','A2','B1','B2'];
+  function pintarTrack(nivel, prom){
+    const el = document.getElementById('p-track');
+    if (!el) return;
+    const act = Math.max(0, ESCALA.indexOf(nivel));
+    const [a, z] = BANDAS[ESCALA[act]];
+    const avance = Math.round(Math.max(4, Math.min(100, ((prom - a) / (z - a)) * 100)));
+    el.innerHTML = ESCALA.map((n, i) =>
+      i < act ? '<div class="tk done"><span>' + n + '</span></div>'
+      : i === act ? '<div class="tk now"><i style="width:' + avance + '%"></i><span>' + n + '</span></div>'
+      : '<div class="tk"><span>' + n + '</span></div>'
+    ).join('');
+  }
 
   function set(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; }
   function renderParent(wk){
     const d=PWEEK[wk];
-    set('p-racha',d.racha); set('p-sub',d.sub); set('p-dias',d.dias); set('p-tiempo',d.tiempo); set('p-lecc',d.lecc); set('p-cert',d.cert);
+    set('p-racha',d.racha); set('p-sub',d.sub); set('p-tiempo',d.tiempo); set('p-lecc',d.lecc);;
+    // Los días se pintan con las mismas siete barras que el reporte del aula, y
+    // el recuento queda debajo: mismo dato, mismo idioma en las dos vistas.
+    const elD=document.getElementById('p-dias');
+    if(elD) elD.innerHTML='<span class="use">'+d.pat.split('').map(c=>'<i class="d'+(c==='1'?' on':'')+'"></i>').join('')+'</span>';
+    set('p-dias-n',d.dias);
+    pintarTrack(d.nivel,d.prom);
     ['l','r','w'].forEach((k,i)=>{ set('p-'+k+'-pct',d.sk[i]+'%'); const bar=document.getElementById('p-'+k+'-bar'); if(bar) bar.style.width=d.sk[i]+'%'; });
     const h0=document.getElementById('p-help0'), h1=document.getElementById('p-help1');
     if(h0) h0.innerHTML=d.help[0]+' <small>'+P_HELP_SUB[0]+'</small>';
@@ -564,10 +1638,17 @@
     if(kpis) kpis.innerHTML=['a','b','c','d'].map((c,i)=>
       `<div class="kpi ${c}"><div class="k">${d.kpi[i]}</div><div class="l">${KLABEL[i]}</div><div class="sub${i===3?' down':''}">${d.ksub[i]}</div></div>`).join('');
     const tb=document.getElementById('t-body');
-    if(tb) tb.innerHTML=d.rows.map((r,i)=>{
-      const s=T_STUD[i], dots=Array.from({length:7},(_,j)=>`<i class="d${j<r[0]?' on':''}"></i>`).join('');
-      return `<tr>
-        <td><div class="stud"><span class="av" style="background:${s[2]}">${s[1]}</span><b>${s[0]}</b></div></td>
+    // Las filas se emparejan con T_STUD por indice, asi que se ordena la pareja
+    // —alumno + datos— y no cada array por su cuenta.
+    if(tb) tb.innerHTML=sortRows(d.rows.map((r,i)=>({r, s:T_STUD[i]}))).map(({r, s})=>{
+      // r[0] es el patron de la semana ('1101011'), no una cuenta: por eso hay
+      // huecos por dentro y no un bloque corrido desde el lunes.
+      const dots=r[0].split('').map(c=>`<i class="d${c==='1'?' on':''}"></i>`).join('');
+      // data-i = indice del alumno en T_STUD. Con la tabla ordenable, la
+      // posicion en pantalla ya no dice quien es: la ficha necesita el indice
+      // para leer SU fila entera, incluidos los campos que la tabla no pinta.
+      return `<tr data-i="${T_STUD.indexOf(s)}">
+        <td><div class="stud"><span class="av" style="background:${s[2]}">${mono(s[0])}</span><b>${s[0]}</b></div></td>
         <td class="c"><span class="use">${dots}</span></td>
         <td class="c avg">${r[1]}</td>
         <td class="c"><span class="lvl${r[2]==='B2'?' b2':''}">${r[2]}</span></td>
@@ -576,7 +1657,7 @@
         <td class="c"><span class="flag ${r[5]}">${r[6]}</span></td>
       </tr>`; }).join('');
     const co=document.getElementById('t-callout');
-    if(co) co.innerHTML='<b>Sugerencia automática:</b> '+d.callout;
+    if(co) co.innerHTML='<b>Análisis de la semana:</b> '+d.callout;
   }
 
   const WK_SELS=[{l:'wk-label',p:'wk-prev',n:'wk-next'},{l:'wk-label-p',p:'wk-prev-p',n:'wk-next-p'}];
@@ -584,6 +1665,9 @@
     WK_SELS.forEach(s=>{ const l=document.getElementById(s.l); if(!l) return;
       l.textContent=WEEKS[wkIdx]; document.getElementById(s.p).disabled=wkIdx===0; document.getElementById(s.n).disabled=wkIdx===WEEKS.length-1; });
     renderParent(wkIdx); renderTeacher(wkIdx);
+    // renderParent acaba de escribir en los ids de la ficha con el alumno del
+    // panel de familia. Si hay una ficha abierta, se repinta encima con el suyo.
+    if(document.body.classList.contains("detail") && refrescarFicha) refrescarFicha();
   }
   WK_SELS.forEach(s=>{ const p=document.getElementById(s.p), n=document.getElementById(s.n); if(!p||!n) return;
     p.addEventListener('click',()=>{ if(wkIdx>0){wkIdx--; wkRender();} });
