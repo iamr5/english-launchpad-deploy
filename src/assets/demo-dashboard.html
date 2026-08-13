@@ -413,7 +413,14 @@
      solo añadia un recuadro blanco que no es de nadie. */
   .r-logo{flex:none; display:grid; place-items:center}
   .r-logo[hidden]{display:none}
-  .r-logo img{display:block; height:76px; width:auto; max-width:260px; object-fit:contain}
+  /* `drop-shadow` y no `box-shadow`: el primero sigue el canal alfa de la
+     imagen —la silueta de lo que hay pintado— y el segundo la caja, que aqui
+     dibujaria un rectangulo alrededor de un logo recortado.
+     Dos capas: una corta y algo mas marcada, que es el contacto, y otra amplia
+     y suave de ambiente. Una sola queda o dura o sucia; separadas dan la caida
+     que se espera sin que la sombra se lea como un efecto. */
+  .r-logo img{display:block; height:76px; width:auto; max-width:260px; object-fit:contain;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.24)) drop-shadow(0 7px 16px rgba(0,0,0,.18))}
   @media (max-width:640px){
     .r-left{gap:13px}
     .r-logo img{height:50px; max-width:150px}
