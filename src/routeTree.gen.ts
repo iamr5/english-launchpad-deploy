@@ -10,6 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PresentationRouteImport } from './routes/presentation'
+import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
+import { Route as PresentacionLaTinkaRouteImport } from './routes/presentacion-la-tinka'
+import { Route as PresentacionBcpRouteImport } from './routes/presentacion-bcp'
+import { Route as PresentacionAjeRouteImport } from './routes/presentacion-aje'
 import { Route as PresentacionRouteImport } from './routes/presentacion'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
@@ -33,6 +37,26 @@ import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/l
 const PresentationRoute = PresentationRouteImport.update({
   id: '/presentation',
   path: '/presentation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionRepsolRoute = PresentacionRepsolRouteImport.update({
+  id: '/presentacion-repsol',
+  path: '/presentacion-repsol',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionLaTinkaRoute = PresentacionLaTinkaRouteImport.update({
+  id: '/presentacion-la-tinka',
+  path: '/presentacion-la-tinka',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionBcpRoute = PresentacionBcpRouteImport.update({
+  id: '/presentacion-bcp',
+  path: '/presentacion-bcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionAjeRoute = PresentacionAjeRouteImport.update({
+  id: '/presentacion-aje',
+  path: '/presentacion-aje',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PresentacionRoute = PresentacionRouteImport.update({
@@ -142,6 +166,10 @@ export interface FileRoutesByFullPath {
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
+  '/presentacion-aje': typeof PresentacionAjeRoute
+  '/presentacion-bcp': typeof PresentacionBcpRoute
+  '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/app': typeof AuthenticatedAppRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -163,6 +191,10 @@ export interface FileRoutesByTo {
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
+  '/presentacion-aje': typeof PresentacionAjeRoute
+  '/presentacion-bcp': typeof PresentacionBcpRoute
+  '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/app': typeof AuthenticatedAppRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -186,6 +218,10 @@ export interface FileRoutesById {
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
+  '/presentacion-aje': typeof PresentacionAjeRoute
+  '/presentacion-bcp': typeof PresentacionBcpRoute
+  '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/_authenticated/app': typeof AuthenticatedAppRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -209,6 +245,10 @@ export interface FileRouteTypes {
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
+    | '/presentacion-aje'
+    | '/presentacion-bcp'
+    | '/presentacion-la-tinka'
+    | '/presentacion-repsol'
     | '/presentation'
     | '/app'
     | '/dashboard'
@@ -230,6 +270,10 @@ export interface FileRouteTypes {
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
+    | '/presentacion-aje'
+    | '/presentacion-bcp'
+    | '/presentacion-la-tinka'
+    | '/presentacion-repsol'
     | '/presentation'
     | '/app'
     | '/dashboard'
@@ -252,6 +296,10 @@ export interface FileRouteTypes {
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
+    | '/presentacion-aje'
+    | '/presentacion-bcp'
+    | '/presentacion-la-tinka'
+    | '/presentacion-repsol'
     | '/presentation'
     | '/_authenticated/app'
     | '/_authenticated/dashboard'
@@ -275,6 +323,10 @@ export interface RootRouteChildren {
   DemoDashboardRoute: typeof DemoDashboardRoute
   LoginRoute: typeof LoginRoute
   PresentacionRoute: typeof PresentacionRoute
+  PresentacionAjeRoute: typeof PresentacionAjeRoute
+  PresentacionBcpRoute: typeof PresentacionBcpRoute
+  PresentacionLaTinkaRoute: typeof PresentacionLaTinkaRoute
+  PresentacionRepsolRoute: typeof PresentacionRepsolRoute
   PresentationRoute: typeof PresentationRoute
   ApiBrandSplatRoute: typeof ApiBrandSplatRoute
   ApiCourseBundleRoute: typeof ApiCourseBundleRoute
@@ -290,6 +342,34 @@ declare module '@tanstack/react-router' {
       path: '/presentation'
       fullPath: '/presentation'
       preLoaderRoute: typeof PresentationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-repsol': {
+      id: '/presentacion-repsol'
+      path: '/presentacion-repsol'
+      fullPath: '/presentacion-repsol'
+      preLoaderRoute: typeof PresentacionRepsolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-la-tinka': {
+      id: '/presentacion-la-tinka'
+      path: '/presentacion-la-tinka'
+      fullPath: '/presentacion-la-tinka'
+      preLoaderRoute: typeof PresentacionLaTinkaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-bcp': {
+      id: '/presentacion-bcp'
+      path: '/presentacion-bcp'
+      fullPath: '/presentacion-bcp'
+      preLoaderRoute: typeof PresentacionBcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-aje': {
+      id: '/presentacion-aje'
+      path: '/presentacion-aje'
+      fullPath: '/presentacion-aje'
+      preLoaderRoute: typeof PresentacionAjeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/presentacion': {
@@ -455,6 +535,10 @@ const rootRouteChildren: RootRouteChildren = {
   DemoDashboardRoute: DemoDashboardRoute,
   LoginRoute: LoginRoute,
   PresentacionRoute: PresentacionRoute,
+  PresentacionAjeRoute: PresentacionAjeRoute,
+  PresentacionBcpRoute: PresentacionBcpRoute,
+  PresentacionLaTinkaRoute: PresentacionLaTinkaRoute,
+  PresentacionRepsolRoute: PresentacionRepsolRoute,
   PresentationRoute: PresentationRoute,
   ApiBrandSplatRoute: ApiBrandSplatRoute,
   ApiCourseBundleRoute: ApiCourseBundleRoute,
