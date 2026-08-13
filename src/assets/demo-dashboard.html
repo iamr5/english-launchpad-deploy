@@ -410,28 +410,26 @@
   .r-head .who b{display:block; font-size:14px; font-family:"Bricolage Grotesque"}
 
   /* ----- Metas -----
-     El liston se decide mirando la tabla, no en un formulario de otra pantalla.
-     Anclado abajo a la derecha: es un mando del que lo esta mirando, no parte
-     del reporte, y ahi no le quita sitio a ningun dato ni se va con el scroll.
-     Va sobre el fondo de la pagina, no sobre la cabecera oscura, asi que lleva
-     colores propios en vez de los translucidos de antes. */
-  .metas-btn{position:fixed; right:20px; bottom:20px; z-index:45;
-    display:inline-flex; align-items:center; gap:7px;
-    border:1px solid var(--line); background:var(--surface); color:var(--ink);
-    font-family:"Inter"; font-weight:700; font-size:13px; padding:10px 16px; border-radius:999px;
-    cursor:pointer; transition:.15s; box-shadow:0 10px 26px -12px rgba(32,26,75,.5)}
+     En la cabecera, abajo a la derecha: justo enfrente del selector de semana.
+     Los dos mandos del reporte, uno en cada esquina de su barra.
+     La cabecera se estira y .who se reparte en columna para que el boton caiga
+     al fondo, a la altura del selector, en vez de pegado al nombre. Y pasa a
+     position:relative para que el desplegable se cuelgue de ella. */
+  .r-head{position:relative; align-items:stretch}
+  .r-head .who{display:flex; flex-direction:column; align-items:flex-end;
+    justify-content:space-between; gap:11px}
+  .metas-btn{display:inline-flex; align-items:center; gap:6px;
+    border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.12); color:#fff;
+    font-family:"Inter"; font-weight:600; font-size:12.5px; padding:7px 13px; border-radius:999px;
+    cursor:pointer; transition:.15s}
   .metas-btn[hidden]{display:none}
-  .metas-btn::before{content:'⚙'; font-size:13px; opacity:.6}
-  .metas-btn:hover{background:#faf9ff; border-color:#d9d4ee}
-  .metas-btn:focus-visible{outline:2px solid var(--d-dot); outline-offset:2px}
-  /* Con la ficha abierta el velo tapa la pagina: el boton sobraria por encima. */
+  .metas-btn::before{content:'⚙'; font-size:12px; opacity:.85}
+  .metas-btn:hover{background:rgba(255,255,255,.2)}
+  .metas-btn:focus-visible{outline:2px solid #fff; outline-offset:2px}
+  /* Con la ficha abierta el velo tapa la pagina: sobraria por encima. */
   body.detail .metas-btn, body.detail .metas-pop{display:none}
-  /* La mascota flotante vive en esa misma esquina. Cuando hay boton, sube y se
-     apilan; la regla solo actua si de verdad hay sesion, asi que el demo que ve
-     el cliente conserva la mascota exactamente donde estaba. */
-  body.con-metas .botifloat{bottom:76px}
 
-  .metas-pop{position:fixed; right:20px; bottom:72px; z-index:70; width:290px;
+  .metas-pop{position:absolute; right:26px; top:calc(100% - 10px); z-index:70; width:290px;
     background:var(--surface); border:1px solid var(--line); border-radius:16px;
     box-shadow:0 24px 50px -22px rgba(32,26,75,.6); padding:15px 16px 14px; color:var(--ink)}
   .metas-pop[hidden]{display:none}
@@ -454,10 +452,11 @@
   .metas-msg{margin:9px 0 0; font-size:11.5px; min-height:1em}
   .metas-msg.mal{color:var(--risk)}
   .metas-msg.bien{color:var(--ok)}
-  /* Estrecho: el desplegable pasa a ocupar el ancho disponible. */
+  /* Estrecho: la cabecera se apila, asi que .who deja de alinear a la derecha y
+     el desplegable pasa a ocupar el ancho disponible. */
   @media (max-width:520px){
-    .metas-btn{right:14px; bottom:14px}
-    .metas-pop{right:14px; left:14px; bottom:66px; width:auto}
+    .r-head .who{align-items:flex-start}
+    .metas-pop{right:16px; left:16px; width:auto}
   }
 
   .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line)}
@@ -950,12 +949,48 @@
              lo monta y lo enseña el bloque `metas()` del final. Quien recibe el
              enlace del panel no lo ve. -->
         <div class="who">
+          <div class="who-txt">
           Colegio de Ingenieros del Perú<br>
           <!-- La hora la escribe el JS al cargar: un reporte "automatico" con
                fecha fija se delata solo en cuanto alguien lo mira dos dias
                seguidos. El texto de aqui es solo el respaldo si el JS no corre. -->
           <span id="r-sent" style="font-family:'DM Mono';font-size:11px;opacity:.8">Enviado: —</span>
+          </div>
         </div>
+
+  <!-- Metas: anclado abajo a la derecha, fuera de cualquier vista para que no lo
+       esconda el cambio de pestana. Solo aparece con sesion iniciada; lo enseña el
+       bloque `metas()` del final del script. -->
+  <button type="button" class="metas-btn" id="metas-btn" hidden
+          aria-expanded="false" aria-controls="metas-pop">Metas</button>
+  <div class="metas-pop" id="metas-pop" hidden role="dialog" aria-label="Metas del aula">
+    <h4>Metas del aula</h4>
+    <p class="sub">La vara contra la que se lee cada número del reporte. Vacío = el valor de siempre.</p>
+    <div class="metas-f">
+      <label for="meta-act">Alumnos activos<small>por defecto 80%</small></label>
+      <input id="meta-act" type="number" min="0" max="100" inputmode="numeric" placeholder="80">
+    </div>
+    <div class="metas-f">
+      <label for="meta-niv">Nivel promedio<small>por defecto B1</small></label>
+      <select id="meta-niv">
+        <option value="">B1</option>
+        <option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option>
+      </select>
+    </div>
+    <div class="metas-f">
+      <label for="meta-lec">Lecciones<small>por defecto 300</small></label>
+      <input id="meta-lec" type="number" min="0" inputmode="numeric" placeholder="300">
+    </div>
+    <div class="metas-f">
+      <label for="meta-rie">Sin ingresar<small>máximo tolerado, por defecto 2</small></label>
+      <input id="meta-rie" type="number" min="0" inputmode="numeric" placeholder="2">
+    </div>
+    <div class="metas-acc">
+      <button type="button" id="meta-cancel">Cancelar</button>
+      <button type="button" class="ok" id="meta-save">Guardar</button>
+    </div>
+    <p class="metas-msg" id="meta-msg" role="status"></p>
+  </div>
       </div>
 
       <div class="kpis" id="kpis">
@@ -1129,40 +1164,6 @@
 <!-- Mascota flotante del panel de profesor. Vive fuera de las vistas para que
      no la esconda el cambio de pestana, y la CSS decide cuando se ve. -->
 <div class="botistand botifloat" data-boti='{"interactive":true}'></div>
-
-<!-- Metas: anclado abajo a la derecha, fuera de cualquier vista para que no lo
-     esconda el cambio de pestana. Solo aparece con sesion iniciada; lo enseña el
-     bloque `metas()` del final del script. -->
-<button type="button" class="metas-btn" id="metas-btn" hidden
-        aria-expanded="false" aria-controls="metas-pop">Metas</button>
-<div class="metas-pop" id="metas-pop" hidden role="dialog" aria-label="Metas del aula">
-  <h4>Metas del aula</h4>
-  <p class="sub">La vara contra la que se lee cada número del reporte. Vacío = el valor de siempre.</p>
-  <div class="metas-f">
-    <label for="meta-act">Alumnos activos<small>por defecto 80%</small></label>
-    <input id="meta-act" type="number" min="0" max="100" inputmode="numeric" placeholder="80">
-  </div>
-  <div class="metas-f">
-    <label for="meta-niv">Nivel promedio<small>por defecto B1</small></label>
-    <select id="meta-niv">
-      <option value="">B1</option>
-      <option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option>
-    </select>
-  </div>
-  <div class="metas-f">
-    <label for="meta-lec">Lecciones<small>por defecto 300</small></label>
-    <input id="meta-lec" type="number" min="0" inputmode="numeric" placeholder="300">
-  </div>
-  <div class="metas-f">
-    <label for="meta-rie">Sin ingresar<small>máximo tolerado, por defecto 2</small></label>
-    <input id="meta-rie" type="number" min="0" inputmode="numeric" placeholder="2">
-  </div>
-  <div class="metas-acc">
-    <button type="button" id="meta-cancel">Cancelar</button>
-    <button type="button" class="ok" id="meta-save">Guardar</button>
-  </div>
-  <p class="metas-msg" id="meta-msg" role="status"></p>
-</div>
 
 <!--MASCOT-SCRIPTS-->
 <script>
@@ -2889,9 +2890,9 @@
     // se le pone delante un boton que el servidor le va a rechazar.
     if (!token()) return;
     btn.hidden = false;
-    // Avisa a la hoja de estilos de que esa esquina esta ocupada, para que la
-    // mascota flotante suba y no queden encima uno del otro.
-    document.body.classList.add('con-metas');
+
+
+
 
     var CAMPOS = { activos:'meta-act', nivel:'meta-niv', lecciones:'meta-lec', riesgo:'meta-rie' };
     var el = function(id){ return document.getElementById(id); };
