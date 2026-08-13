@@ -36,6 +36,7 @@ import { Route as AuthenticatedDemosRouteImport } from './routes/_authenticated/
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
 import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiDemosInvalidateRouteImport } from './routes/api/demos/invalidate'
+import { Route as ApiDemosMetasRouteImport } from './routes/api/demos/metas'
 import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
@@ -173,6 +174,11 @@ const ApiDemosInvalidateRoute = ApiDemosInvalidateRouteImport.update({
   path: '/api/demos/invalidate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDemosMetasRoute = ApiDemosMetasRouteImport.update({
+  id: '/api/demos/metas',
+  path: '/api/demos/metas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
   id: '/api/public/share-invite',
   path: '/api/public/share-invite',
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
+  '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
+  '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
+  '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/demos/invalidate'
+    | '/api/demos/metas'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/demos/invalidate'
+    | '/api/demos/metas'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   id:
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/demos/invalidate'
+    | '/api/demos/metas'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -396,6 +408,7 @@ export interface RootRouteChildren {
   ApiBrandSplatRoute: typeof ApiBrandSplatRoute
   ApiCourseBundleRoute: typeof ApiCourseBundleRoute
   ApiDemosInvalidateRoute: typeof ApiDemosInvalidateRoute
+  ApiDemosMetasRoute: typeof ApiDemosMetasRoute
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -591,6 +604,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDemosInvalidateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/demos/metas': {
+      id: '/api/demos/metas'
+      path: '/api/demos/metas'
+      fullPath: '/api/demos/metas'
+      preLoaderRoute: typeof ApiDemosMetasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/share-invite': {
       id: '/api/public/share-invite'
       path: '/api/public/share-invite'
@@ -648,6 +668,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiBrandSplatRoute: ApiBrandSplatRoute,
   ApiCourseBundleRoute: ApiCourseBundleRoute,
   ApiDemosInvalidateRoute: ApiDemosInvalidateRoute,
+  ApiDemosMetasRoute: ApiDemosMetasRoute,
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
