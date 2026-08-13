@@ -1,7 +1,7 @@
 import template from "../assets/demo-app.html?raw";
 import dashboardTemplate from "../assets/demo-dashboard.html?raw";
 import { BUILT_IN_PACKS, MASCOTS_DIR, type MascotPack } from "./mascot-packs";
-import { type DemoConfig, shadeHex } from "./demo-config";
+import { type DemoConfig, fontStack, fontsHref, shadeHex } from "./demo-config";
 import { issueCourseToken } from "./course-token";
 
 // Punto único donde se arma la página de un demo: coge la plantilla común y le
@@ -152,7 +152,43 @@ function themeCSS(cfg: DemoConfig) {
   if (c.dashboardBar) {
     vars.push(`--bar-1:${c.dashboardBar}`, `--bar-2:${shadeHex(c.dashboardBar, 0.2)}`);
   }
-  return `<style id="demo-theme">:root{${vars.join(";")}}</style>`;
+
+  // Tipografías y color de letra: sólo se emiten si el demo los define, así lo
+  // ya publicado mantiene exactamente el aspecto de hoy.
+  const ui = fontStack(cfg.type?.uiFont, "ui");
+  const body = fontStack(cfg.type?.bodyFont, "body");
+  if (ui) vars.push(`--font-round:${ui}`);
+  if (body) vars.push(`--font-body:${body}`);
+  if (c.ink) vars.push(`--ink:${c.ink}`);
+  if (c.muted) vars.push(`--muted:${c.muted}`, `--muted2:${c.muted}`);
+  if (c.header) vars.push(`--brand-ink:${c.header}`);
+
+  // Los textos de marca: rótulo de cabecera y los de la bienvenida.
+  const s = cfg.splash ?? {};
+  const headerFont = fontStack(cfg.brand.headerFont, "ui");
+  const titleFont = fontStack(s.titleFont, "ui");
+  const phraseFont = fontStack(s.phraseFont, "ui");
+  if (headerFont) vars.push(`--brand-font:${headerFont}`);
+  if (titleFont) vars.push(`--sp-word-font:${titleFont}`);
+  if (s.titleColor) vars.push(`--sp-word-ink:${s.titleColor}`);
+  if (phraseFont) vars.push(`--sp-phrase-font:${phraseFont}`);
+  if (s.phraseColor) vars.push(`--sp-phrase-ink:${s.phraseColor}`);
+
+  const href = fontsHref(
+    cfg.type?.uiFont,
+    cfg.type?.bodyFont,
+    cfg.brand.headerFont,
+    s.titleFont,
+    s.phraseFont,
+  );
+
+  const link = href
+    ? `<link rel="preconnect" href="https://fonts.googleapis.com">` +
+      `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>` +
+      `<link rel="stylesheet" href="${esc(href)}">`
+    : "";
+
+  return `${link}<style id="demo-theme">:root{${vars.join(";")}}</style>`;
 }
 
 /**

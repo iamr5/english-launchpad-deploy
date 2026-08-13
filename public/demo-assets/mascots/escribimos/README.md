@@ -35,7 +35,22 @@ Un detalle de la data, por si alguien compara: la manga aparece dos veces, en
 las dos —la del brazo se mueve, la del polo tapa— y el port hace lo mismo para no
 cambiar el aspecto. Los `svg/*.svg` sueltos, que no se animan, sólo traen una.
 
+## El torito
+
+El torito llegó después, como dibujo entero y en su propio lienzo. De él sólo se
+guardó la cabeza —cuernos, orejas, flequillo, hocico y ojos—: su cuerpo, sus brazos y
+su ropa se descartaron, porque el constructor los pone. El dibujo original resultó ser
+el mismo cuerpo compartido, sólo movido, así que encajarlo fue una traslación exacta
+(`-20,8` en X y `+257,4` en Y), horneada en los trazos. Los lentes son los del set,
+bajados 26,5 px para que se apoyen en sus ojos. No tiene cola.
+
+Si aparece otro personaje dibujado así, el camino es el mismo: medir su polo contra el
+polo compartido para sacar la traslación, quedarse con la cabeza y traducir sus `fill`
+a tokens (`f0` el pelaje base, `f1`… los derivados, `p0` el rosado, `ink`, `eye`,
+`eyeHi`).
+
 ## Archivos
+
 
 | Archivo | Para qué sirve |
 |---|---|

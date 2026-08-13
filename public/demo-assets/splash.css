@@ -28,11 +28,11 @@
   gap: 20px; padding: 28px; text-align: center; max-width: 480px; }
 .sp-logo { max-width: min(64vw, 300px); max-height: 30vh; object-fit: contain; display: block;
   animation: spMarkIn 1.5s cubic-bezier(.16,.85,.25,1) .15s both; }
-.sp-word { font-family: var(--font-round); font-weight: 800; color: #fff; letter-spacing: -.01em;
+.sp-word { font-family: var(--sp-word-font, var(--font-round)); font-weight: 800; color: var(--sp-word-ink, #fff); letter-spacing: -.01em;
   font-size: clamp(28px, 8vw, 46px); line-height: 1.15; text-shadow: 0 2px 30px rgba(0,0,0,.25);
   animation: spMarkIn 1.5s cubic-bezier(.16,.85,.25,1) .15s both; }
 .sp-phrase { margin: 0; font-size: clamp(14px, 3.7vw, 17px); font-weight: 600; line-height: 1.55;
-  color: rgba(255,255,255,.9); text-wrap: balance;
+  font-family: var(--sp-phrase-font, inherit); color: var(--sp-phrase-ink, rgba(255,255,255,.9)); text-wrap: balance;
   animation: spPhraseIn 1.3s cubic-bezier(.2,.85,.3,1) .75s both; }
 /* Sale del desenfoque, se pasa un pelo de tamaño y se asienta: la marca
    "llega", no aparece. */

@@ -17,7 +17,14 @@ import {
   recolorSvg,
   type DemoRow,
 } from "@/lib/demos.data";
-import { DEFAULTS, SPLASH_STYLES, shadeHex } from "@/lib/demo-config";
+import {
+  DEFAULTS,
+  DEMO_FONTS,
+  SPLASH_STYLES,
+  fontStack,
+  fontsHref,
+  shadeHex,
+} from "@/lib/demo-config";
 import { BUILT_IN_PACKS, packAsset, packChoices, packInfo } from "@/lib/mascot-packs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -174,11 +181,24 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
   const logo = g("brand.logo");
   const appbarIcon = g("brand.appbarIcon") || pack.head;
 
+  // Tipografía y color de letra: el previo usa exactamente lo mismo que sirve
+  // demo-page.ts, para que lo que se ve aquí sea lo que verá el visitante.
+  const uiFont = g("type.uiFont");
+  const bodyFont = g("type.bodyFont");
+  const headerFont = g("brand.headerFont");
+  const spTitleFont = g("splash.titleFont");
+  const spPhraseFont = g("splash.phraseFont");
+  useDemoFonts([uiFont, bodyFont, headerFont, spTitleFont, spPhraseFont]);
+  const ink = g("colors.ink") || "#1A1A1A";
+  const headerInk = g("colors.header");
+
+
   const frame: React.CSSProperties = {
-    fontFamily: "ui-rounded, 'Segoe UI', system-ui, sans-serif",
+    fontFamily: fontStack(uiFont, "ui") || "ui-rounded, 'Segoe UI', system-ui, sans-serif",
     background: "#F4F4F6",
     borderRadius: 14,
     padding: 14,
+    color: ink,
   };
 
   const AppBar = (
@@ -197,12 +217,22 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
       {logo ? (
         <img src={logo} alt="" style={{ height: 24, maxWidth: 150, objectFit: "contain" }} />
       ) : headerText ? (
-        <span style={{ fontWeight: 700, fontSize: 18 }}>{headerText}</span>
+        <span
+          style={{
+            fontWeight: 700,
+            fontSize: 18,
+            color: headerInk || undefined,
+            fontFamily: fontStack(headerFont, "ui") || undefined,
+          }}
+        >
+          {headerText}
+        </span>
+
       ) : (
         <span style={{ fontWeight: 700, fontSize: 18 }}>
-          <span style={{ color: "#000" }}>Aprendo</span>
-          <span style={{ color: "#539bec" }}>English</span>
-          <span style={{ color: "#ea4e57", fontSize: 13 }}>.com</span>
+          <span style={{ color: headerInk || "#000" }}>Aprendo</span>
+          <span style={{ color: headerInk || "#539bec" }}>English</span>
+          <span style={{ color: headerInk || "#ea4e57", fontSize: 13 }}>.com</span>
         </span>
       )}
       <span style={{ flex: 1 }} />
@@ -285,8 +315,17 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
                 "--sp-from": from,
                 "--sp-to": to,
                 "--sp-glow": glow,
+                ...(fontStack(spTitleFont, "ui")
+                  ? { "--sp-word-font": fontStack(spTitleFont, "ui") }
+                  : {}),
+                ...(g("splash.titleColor") ? { "--sp-word-ink": g("splash.titleColor") } : {}),
+                ...(fontStack(spPhraseFont, "ui")
+                  ? { "--sp-phrase-font": fontStack(spPhraseFont, "ui") }
+                  : {}),
+                ...(g("splash.phraseColor") ? { "--sp-phrase-ink": g("splash.phraseColor") } : {}),
               } as React.CSSProperties
             }
+
           >
             <div className="sp-deco" />
             <div className="sp-mark">
@@ -1035,6 +1074,22 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={get(cfg, "brand.headerText")}
                 onChange={upd("brand.headerText")}
               />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <FontField
+                  label="Fuente del rótulo"
+                  hint="Solo el texto de la cabecera. Vacío = la fuente de interfaz."
+                  value={g2("brand.headerFont")}
+                  onChange={upd("brand.headerFont")}
+                />
+                <ColorField
+                  label="Color del rótulo"
+                  hint="El mismo de «Texto de la cabecera» en Colores."
+                  fallback="#1A1A1A"
+                  value={get(cfg, "colors.header")}
+                  onChange={upd("colors.header")}
+                />
+              </div>
+
               <FileField
                 label="Logo"
                 fallbackLabel="logotipo AprendoEnglish"
@@ -1287,6 +1342,23 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     onChange={upd("splash.logo")}
                   />
 
+                  <div className="rounded-lg border p-3 space-y-3">
+                    <Label className="text-xs font-medium">Rótulo (sin logo)</Label>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <FontField
+                        label="Fuente"
+                        value={g2("splash.titleFont")}
+                        onChange={upd("splash.titleFont")}
+                      />
+                      <ColorField
+                        label="Color"
+                        fallback="#FFFFFF"
+                        value={get(cfg, "splash.titleColor")}
+                        onChange={upd("splash.titleColor")}
+                      />
+                    </div>
+                  </div>
+
                   <Field
                     label="Frase"
                     hint="Una línea. Si la dejas vacía sale solo la marca."
@@ -1294,6 +1366,21 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     value={get(cfg, "splash.phrase")}
                     onChange={upd("splash.phrase")}
                   />
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <FontField
+                      label="Fuente de la frase"
+                      value={g2("splash.phraseFont")}
+                      onChange={upd("splash.phraseFont")}
+                    />
+                    <ColorField
+                      label="Color de la frase"
+                      fallback="#FFFFFF"
+                      value={get(cfg, "splash.phraseColor")}
+                      onChange={upd("splash.phraseColor")}
+                    />
+                  </div>
+
 
                   <div className="rounded-lg border p-3 space-y-3">
                     <div>
@@ -1431,6 +1518,45 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   />
                 ))}
               </div>
+
+              <hr />
+              <p className="text-sm font-medium">Tipografía</p>
+              <FontField
+                label="Fuente de la interfaz"
+                hint="Títulos, botones, mapa y cabecera."
+                value={g2("type.uiFont")}
+                onChange={upd("type.uiFont")}
+              />
+              <FontField
+                label="Fuente de lectura"
+                hint="Párrafos y tablas dentro de las lecciones."
+                value={g2("type.bodyFont")}
+                onChange={upd("type.bodyFont")}
+              />
+
+              <hr />
+              <p className="text-sm font-medium">Color de letra</p>
+              <ColorField
+                label="Texto principal"
+                hint="Títulos y párrafos. Vacío = el de siempre."
+                fallback="#1A1A1A"
+                value={get(cfg, "colors.ink")}
+                onChange={upd("colors.ink")}
+              />
+              <ColorField
+                label="Texto secundario"
+                hint="Subtítulos y textos apagados."
+                fallback="#7A7A7A"
+                value={get(cfg, "colors.muted")}
+                onChange={upd("colors.muted")}
+              />
+              <ColorField
+                label="Texto de la cabecera"
+                hint="El rótulo de la barra superior. Vacío = como está hoy."
+                fallback="#1A1A1A"
+                value={get(cfg, "colors.header")}
+                onChange={upd("colors.header")}
+              />
             </TabsContent>
 
             <TabsContent value="mascota" className="space-y-4">
@@ -2925,7 +3051,58 @@ function ColorField({
   );
 }
 
+/**
+ * Elige una de las tipografías de la lista curada. Cada opción se pinta con su
+ * propia letra, así se decide viendo y no leyendo nombres. Vacío = la del
+ * sistema, que es como se ven hoy los demos.
+ */
+function FontField({
+  label,
+  hint,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  // Cargar las familias en el propio panel: sin esto el desplegable enseñaría
+  // todas las opciones con la misma letra.
+  useDemoFonts(DEMO_FONTS.map((f) => f.id));
+  return (
+    <div className="space-y-1.5">
+      <Label>{label}</Label>
+      <select
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-9 w-full rounded-md border bg-background px-3 text-sm"
+        style={{ fontFamily: fontStack(value, "ui") || undefined }}
+      >
+        {DEMO_FONTS.map((f) => (
+          <option key={f.id} value={f.id} style={{ fontFamily: f.stack || undefined }}>
+            {f.name}
+          </option>
+        ))}
+      </select>
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
 
+/** Mete en el <head> del panel el <link> de Google Fonts que haga falta. */
+function useDemoFonts(ids: (string | undefined)[]) {
+  const href = fontsHref(...ids);
+  useEffect(() => {
+    if (!href) return;
+    if (document.querySelector(`link[data-demo-fonts][href="${href}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.dataset.demoFonts = "1";
+    document.head.appendChild(link);
+  }, [href]);
+}
 
 function FileField({
   label,

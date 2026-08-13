@@ -20,6 +20,12 @@ import { Route as CipRouteImport } from './routes/cip'
 import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PresentacionRouteImport } from './routes/presentacion'
+import { Route as PresentacionAjeRouteImport } from './routes/presentacion-aje'
+import { Route as PresentacionBcpRouteImport } from './routes/presentacion-bcp'
+import { Route as PresentacionLaTinkaRouteImport } from './routes/presentacion-la-tinka'
+import { Route as PresentacionMovistarRouteImport } from './routes/presentacion-movistar'
+import { Route as PresentacionNuamRouteImport } from './routes/presentacion-nuam'
+import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as SlugDashboardRouteImport } from './routes/$slug_.dashboard'
 import { Route as SlugPadresRouteImport } from './routes/$slug_.padres'
@@ -84,6 +90,36 @@ const LoginRoute = LoginRouteImport.update({
 const PresentacionRoute = PresentacionRouteImport.update({
   id: '/presentacion',
   path: '/presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionAjeRoute = PresentacionAjeRouteImport.update({
+  id: '/presentacion-aje',
+  path: '/presentacion-aje',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionBcpRoute = PresentacionBcpRouteImport.update({
+  id: '/presentacion-bcp',
+  path: '/presentacion-bcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionLaTinkaRoute = PresentacionLaTinkaRouteImport.update({
+  id: '/presentacion-la-tinka',
+  path: '/presentacion-la-tinka',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionMovistarRoute = PresentacionMovistarRouteImport.update({
+  id: '/presentacion-movistar',
+  path: '/presentacion-movistar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionNuamRoute = PresentacionNuamRouteImport.update({
+  id: '/presentacion-nuam',
+  path: '/presentacion-nuam',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionRepsolRoute = PresentacionRepsolRouteImport.update({
+  id: '/presentacion-repsol',
+  path: '/presentacion-repsol',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PresentationRoute = PresentationRouteImport.update({
@@ -154,6 +190,12 @@ export interface FileRoutesByFullPath {
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
+  '/presentacion-aje': typeof PresentacionAjeRoute
+  '/presentacion-bcp': typeof PresentacionBcpRoute
+  '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-movistar': typeof PresentacionMovistarRoute
+  '/presentacion-nuam': typeof PresentacionNuamRoute
+  '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
@@ -177,6 +219,12 @@ export interface FileRoutesByTo {
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
+  '/presentacion-aje': typeof PresentacionAjeRoute
+  '/presentacion-bcp': typeof PresentacionBcpRoute
+  '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-movistar': typeof PresentacionMovistarRoute
+  '/presentacion-nuam': typeof PresentacionNuamRoute
+  '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
@@ -202,6 +250,12 @@ export interface FileRoutesById {
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
+  '/presentacion-aje': typeof PresentacionAjeRoute
+  '/presentacion-bcp': typeof PresentacionBcpRoute
+  '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-movistar': typeof PresentacionMovistarRoute
+  '/presentacion-nuam': typeof PresentacionNuamRoute
+  '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/$slug_/dashboard': typeof SlugDashboardRoute
   '/$slug_/padres': typeof SlugPadresRoute
@@ -227,6 +281,12 @@ export interface FileRouteTypes {
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
+    | '/presentacion-aje'
+    | '/presentacion-bcp'
+    | '/presentacion-la-tinka'
+    | '/presentacion-movistar'
+    | '/presentacion-nuam'
+    | '/presentacion-repsol'
     | '/presentation'
     | '/$slug/dashboard'
     | '/$slug/padres'
@@ -250,6 +310,12 @@ export interface FileRouteTypes {
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
+    | '/presentacion-aje'
+    | '/presentacion-bcp'
+    | '/presentacion-la-tinka'
+    | '/presentacion-movistar'
+    | '/presentacion-nuam'
+    | '/presentacion-repsol'
     | '/presentation'
     | '/$slug/dashboard'
     | '/$slug/padres'
@@ -274,6 +340,12 @@ export interface FileRouteTypes {
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
+    | '/presentacion-aje'
+    | '/presentacion-bcp'
+    | '/presentacion-la-tinka'
+    | '/presentacion-movistar'
+    | '/presentacion-nuam'
+    | '/presentacion-repsol'
     | '/presentation'
     | '/$slug_/dashboard'
     | '/$slug_/padres'
@@ -299,6 +371,12 @@ export interface RootRouteChildren {
   DemoDashboardRoute: typeof DemoDashboardRoute
   LoginRoute: typeof LoginRoute
   PresentacionRoute: typeof PresentacionRoute
+  PresentacionAjeRoute: typeof PresentacionAjeRoute
+  PresentacionBcpRoute: typeof PresentacionBcpRoute
+  PresentacionLaTinkaRoute: typeof PresentacionLaTinkaRoute
+  PresentacionMovistarRoute: typeof PresentacionMovistarRoute
+  PresentacionNuamRoute: typeof PresentacionNuamRoute
+  PresentacionRepsolRoute: typeof PresentacionRepsolRoute
   PresentationRoute: typeof PresentationRoute
   SlugDashboardRoute: typeof SlugDashboardRoute
   SlugPadresRoute: typeof SlugPadresRoute
@@ -386,6 +464,48 @@ declare module '@tanstack/react-router' {
       path: '/presentacion'
       fullPath: '/presentacion'
       preLoaderRoute: typeof PresentacionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-aje': {
+      id: '/presentacion-aje'
+      path: '/presentacion-aje'
+      fullPath: '/presentacion-aje'
+      preLoaderRoute: typeof PresentacionAjeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-bcp': {
+      id: '/presentacion-bcp'
+      path: '/presentacion-bcp'
+      fullPath: '/presentacion-bcp'
+      preLoaderRoute: typeof PresentacionBcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-la-tinka': {
+      id: '/presentacion-la-tinka'
+      path: '/presentacion-la-tinka'
+      fullPath: '/presentacion-la-tinka'
+      preLoaderRoute: typeof PresentacionLaTinkaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-movistar': {
+      id: '/presentacion-movistar'
+      path: '/presentacion-movistar'
+      fullPath: '/presentacion-movistar'
+      preLoaderRoute: typeof PresentacionMovistarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-nuam': {
+      id: '/presentacion-nuam'
+      path: '/presentacion-nuam'
+      fullPath: '/presentacion-nuam'
+      preLoaderRoute: typeof PresentacionNuamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-repsol': {
+      id: '/presentacion-repsol'
+      path: '/presentacion-repsol'
+      fullPath: '/presentacion-repsol'
+      preLoaderRoute: typeof PresentacionRepsolRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/presentation': {
@@ -495,6 +615,12 @@ const rootRouteChildren: RootRouteChildren = {
   DemoDashboardRoute: DemoDashboardRoute,
   LoginRoute: LoginRoute,
   PresentacionRoute: PresentacionRoute,
+  PresentacionAjeRoute: PresentacionAjeRoute,
+  PresentacionBcpRoute: PresentacionBcpRoute,
+  PresentacionLaTinkaRoute: PresentacionLaTinkaRoute,
+  PresentacionMovistarRoute: PresentacionMovistarRoute,
+  PresentacionNuamRoute: PresentacionNuamRoute,
+  PresentacionRepsolRoute: PresentacionRepsolRoute,
   PresentationRoute: PresentationRoute,
   SlugDashboardRoute: SlugDashboardRoute,
   SlugPadresRoute: SlugPadresRoute,
