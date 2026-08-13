@@ -468,7 +468,9 @@
      letras de al lado —en Windows lo pinta la fuente de emoji, con su propio
      alto y su propio descendente—, asi que quedaba bajo. Con alto fijo y
      place-items da igual como venga la fuente. */
-  .metas-btn::before{content:'⚙'; font-size:15px; line-height:1; height:15px;
+  /* `flex:none` importa: es un item flex y por defecto puede encogerse, asi que
+     el contenedor se lo estaba comiendo por mucho que le subiera el tamaño. */
+  .metas-btn::before{content:'⚙'; flex:none; font-size:20px; line-height:1; height:20px;
     display:grid; place-items:center; opacity:.8}
   .metas-btn:hover{background:rgba(255,255,255,.24)}
   .metas-btn:focus-visible{outline:2px solid #fff; outline-offset:2px}
@@ -515,7 +517,7 @@
       height:42px; padding:0 16px; font-size:12.5px;
       border-color:var(--line); background:var(--surface); color:var(--ink);
       box-shadow:0 10px 24px -10px rgba(32,26,75,.55)}
-    .metas-btn::before{font-size:16px; height:16px; opacity:.6}
+    .metas-btn::before{font-size:22px; height:22px; opacity:.6}
     .metas-btn:hover{background:#faf9ff}
     /* Por encima del boton: mide 42 y arranca a 26, asi que su borde superior
        queda en 68; el desplegable apoya justo encima. */
