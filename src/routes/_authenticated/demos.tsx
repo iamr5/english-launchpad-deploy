@@ -314,7 +314,7 @@ function DashPreview({
               padding: "10px 12px",
             }}
           >
-            <div style={{ fontSize: 13, fontWeight: 800, fontFamily: head }}>Reporte semanal del aula</div>
+            <div style={{ fontSize: 13, fontWeight: 800, fontFamily: head }}>Reporte semanal</div>
             <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>Inglés · Ciclo III</div>
           </div>
 
