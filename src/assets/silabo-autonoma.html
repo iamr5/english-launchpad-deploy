@@ -366,6 +366,19 @@ ul.clean li.no .ck{background:#ece5d3;color:var(--muted)}
 .demo-caption .mark{width:22px;height:22px;border-radius:7px;background:var(--sky-wash);color:var(--sky-deep);
   display:grid;place-items:center;flex:none;font-weight:900}
 
+/* ---------- demos reales: anula la maqueta estática de arriba ---------- */
+.demo-screen.live-embed{display:block;grid-template-columns:none;min-height:0;padding:0;background:#f4f7fb}
+.demo-screen.live-embed iframe.live{display:block;width:100%;height:660px;border:0;background:#f4f7fb}
+.demo-screen.live-embed.teacher iframe.live{height:780px}
+.device-shell.phone{width:300px}
+.phone-bezel{min-height:0}
+.phone-bezel iframe.live{display:block;width:100%;height:620px;border:0;background:#f4f7fb}
+@media(max-width:640px){
+  .demo-screen.live-embed iframe.live{height:520px}
+  .demo-screen.live-embed.teacher iframe.live{height:600px}
+}
+
+
 @media(max-width:860px){
   .device-stage{grid-template-columns:1fr}
   .phone-wrap{justify-content:flex-start}
