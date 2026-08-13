@@ -43,7 +43,15 @@ export type Personaje = {
   tokens: Record<string, string>;
   /** Punto de giro de la cola, o null si la especie no tiene. */
   pivot: [number, number] | null;
+  /**
+   * Especies que van sin ropa: traen su propio cuerpo dibujado y no usan el
+   * torso común, ni polo, ni ranura de logo. El cuy es la primera.
+   */
+  sinUniforme?: boolean;
+  /** Cuerpo propio, cuando la especie no usa el común. */
+  propio?: { back: Figura[]; armL: Figura[]; armR: Figura[] };
 };
+
 
 export type Personajes = {
   viewBox: string;
