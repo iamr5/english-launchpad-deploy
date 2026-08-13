@@ -43,7 +43,15 @@ export type Personaje = {
   tokens: Record<string, string>;
   /** Punto de giro de la cola, o null si la especie no tiene. */
   pivot: [number, number] | null;
+  /**
+   * Especies que van sin ropa: traen su propio cuerpo dibujado y no usan el
+   * torso común, ni polo, ni ranura de logo. El cuy es la primera.
+   */
+  sinUniforme?: boolean;
+  /** Cuerpo propio, cuando la especie no usa el común. */
+  propio?: { back: Figura[]; armL: Figura[]; armR: Figura[] };
 };
+
 
 export type Personajes = {
   viewBox: string;
@@ -80,6 +88,8 @@ export type Personajes = {
 /** El emoji con el que cada especie se presenta en las lecciones. */
 export const EMOJIS: Record<string, string> = {
   conejito: "🐰",
+  cuycito: "🐹",
+
   gatito: "🐱",
   llamita: "🦙",
   mapachito: "🦝",
@@ -440,11 +450,14 @@ function bloqueLogo(data: Personajes, S: EstadoMascota, vars: Record<string, str
 
 function interior(data: Personajes, S: EstadoMascota, vars: Record<string, string>) {
   const c = data.chars[S.char],
-    B = data.body;
+    // Una especie sin uniforme trae su propio torso y brazos: no se le pone el
+    // cuerpo común, ni el polo, ni la ranura del logo.
+    B = c.propio ?? data.body;
+  const sinUniforme = !!c.sinUniforme;
   const cabeza = c.head
     .map((g) => (g.ojo ? `<g class="ojo">${nodos(g.p, vars)}</g>` : nodos(g.p, vars)))
     .join("");
-  const dy = cuerpoDe(data, S).subeCabeza || 0;
+  const dy = sinUniforme ? 0 : cuerpoDe(data, S).subeCabeza || 0;
   const sube = dy ? ` transform="translate(0,${-dy})"` : "";
   return (
     `<g id="personaje">` +
@@ -452,8 +465,10 @@ function interior(data: Personajes, S: EstadoMascota, vars: Record<string, strin
     `<g id="cuerpo">${nodos(B.back, vars)}</g>` +
     `<g id="brazo-izq">${nodos(B.armL, vars)}</g><g id="brazo-der">${nodos(B.armR, vars)}</g>` +
     (c.mid.length ? `<g id="pecho">${nodos(c.mid, vars)}</g>` : "") +
-    `<g id="polo">${nodos(cuerpoDe(data, S).shirt ?? B.shirt, vars)}</g>` +
-    bloqueLogo(data, S, vars) +
+    (sinUniforme
+      ? ""
+      : `<g id="polo">${nodos(cuerpoDe(data, S).shirt ?? data.body.shirt, vars)}</g>` +
+        bloqueLogo(data, S, vars)) +
     // El rostro (y los lentes con él) suben lo que pida la variante. Es el
     // único cambio de dibujo entre cuerpos: el arte es exactamente el mismo.
     `<g id="cabeza"${sube}>${cabeza}</g>` +
@@ -461,6 +476,7 @@ function interior(data: Personajes, S: EstadoMascota, vars: Record<string, strin
     `</g>`
   );
 }
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Encuadre

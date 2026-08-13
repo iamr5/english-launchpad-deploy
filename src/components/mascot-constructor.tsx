@@ -246,9 +246,10 @@ export function MascotConstructor({
       <div className="rounded-lg border p-3 space-y-2">
         <p className="text-sm font-medium">Diseñar una mascota</p>
         <p className="text-xs text-muted-foreground">
-          Nueve personajes con el mismo cuerpo —conejito, gatito, llamita, mapachito, monito, osito,
-          perrito, torito y zorrito— a los que se les elige el color del pelaje, el uniforme y el
-          logo del polo. Sale una mascota propia sin dibujar nada.
+          Diez personajes —conejito, cuycito, gatito, llamita, mapachito, monito, osito, perrito,
+          torito y zorrito— a los que se les elige el color del pelaje, el uniforme y el logo del
+          polo. El cuycito va sin ropa. Sale una mascota propia sin dibujar nada.
+
         </p>
         <Button variant="outline" size="sm" onClick={() => setAbierto(true)}>
           Abrir el constructor
@@ -291,7 +292,7 @@ export function MascotConstructor({
     if (!data || !S) return null;
     // Si el logo aún no está —se está reponiendo, o falló— más vale parar que
     // generar la mascota sin él y que nadie lo note hasta verla publicada.
-    if (S.logo === "img" && !S.logoImg) {
+    if (S.logo === "img" && !S.logoImg && !data.chars[S.char].sinUniforme) {
       toast.error("Falta la imagen del logo. Súbela, o elige «sin logo», antes de guardar.");
       return null;
     }
@@ -433,7 +434,7 @@ export function MascotConstructor({
 
       {/* Cuerpo: cambia dónde va el rostro y el hueco del logo en el polo.
           Vale para los ocho personajes porque comparten el mismo arte. */}
-      {Object.keys(data.cuerpos ?? {}).length > 1 && (
+      {!data.chars[S.char].sinUniforme && Object.keys(data.cuerpos ?? {}).length > 1 && (
         <div className="space-y-1.5">
           <Label>Polo</Label>
           <div className="grid gap-2 sm:grid-cols-2">
@@ -545,7 +546,12 @@ export function MascotConstructor({
 
         <div className="min-w-0 space-y-2">
 
-          {UNIFORME.map(([clave, etiqueta, paleta]) => (
+          {/* Sin uniforme sólo quedan los que sí se le ven: lentes y contorno. */}
+          {UNIFORME.filter(
+            ([clave]) =>
+              !data.chars[S.char].sinUniforme || clave === "glass" || clave === "ink",
+          ).map(([clave, etiqueta, paleta]) => (
+
             <CampoColor
               key={clave}
               etiqueta={etiqueta}
@@ -557,7 +563,10 @@ export function MascotConstructor({
         </div>
       </div>
 
-      <LogoDelPolo S={S} setS={setS} brandLogo={brandLogo} paletaLogo={UNIFORME[0][2]} />
+      {!data.chars[S.char].sinUniforme && (
+        <LogoDelPolo S={S} setS={setS} brandLogo={brandLogo} paletaLogo={UNIFORME[0][2]} />
+      )}
+
 
       <div className="space-y-2 border-t pt-3">
         <div className="flex flex-wrap items-end gap-2">
