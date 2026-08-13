@@ -1244,12 +1244,22 @@
     if (inst && D.institution) inst.textContent = D.institution;
     var logo = document.getElementById('dash-logo');
     if (logo && D.brand && D.brand.logo) { logo.src = D.brand.logo; logo.alt = D.institution || ''; }
-    // El mismo logo, abriendo la cabecera del reporte. Sin logo se queda oculto:
-    // mejor una cabecera como la de siempre que una placa blanca vacia.
+    // La marca que abre la cabecera del reporte, con respaldo.
+    // Mirar solo `brand.logo` no vale: hay demos que no lo tienen y guardan su
+    // logotipo en `brand.appbarIcon` —el CIP, sin ir mas lejos—, y ahi el panel
+    // se quedaba sin ninguna marca aun teniendola configurada. Se recorre lo que
+    // el demo TIENE, en orden, y como ultimo recurso el logotipo del producto,
+    // que es lo mismo que hace la barra del demo.
     var rl = document.getElementById('r-logo'), ri = document.getElementById('r-logo-img');
-    if (rl && ri && D.brand && D.brand.logo) {
-      ri.src = D.brand.logo;
+    if (rl && ri) {
+      var b = D.brand || {};
+      // "none" significa "sin icono", no una direccion.
+      var icono = b.appbarIcon && b.appbarIcon !== 'none' ? b.appbarIcon : '';
+      ri.src = b.logo || icono || 'Logo.png';
       ri.alt = D.institution || '';
+      // Si la imagen no llega, se retira la placa: mejor la cabecera de siempre
+      // que un recuadro blanco con el icono de imagen rota.
+      ri.onerror = function(){ rl.hidden = true; };
       rl.hidden = false;
     }
     // El grupo del que habla el reporte. Un colegio numera secciones, una
