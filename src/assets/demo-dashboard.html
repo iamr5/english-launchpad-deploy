@@ -454,10 +454,10 @@
      en la misma linea y ademas miden lo mismo, que es lo que los deja alineados
      de verdad y no «casi»: cuadrarlo a ojo con un bottom cualquiera depende de
      como mida la letra, y se desalinea al cambiar de tipografia. */
-  /* El hueco de abajo, algo mas de vez y media el de los lados. Igualarlo a
-     los 26 dejaba el boton pegado al canto —tiene la cabecera encima y el
-     cuerpo del reporte debajo— y doblarlo lo despegaba de la cabecera. */
-  .metas-btn{position:absolute; right:26px; bottom:40px; height:36px;
+  /* Apoyado en la linea inferior de la cabecera: `bottom` = su relleno de
+     abajo (18). El aire extra es cosa del boton FLOTANTE, que va suelto sobre
+     la pagina; aqui dentro subirlo solo lo despega de su propia caja. */
+  .metas-btn{position:absolute; right:26px; bottom:18px; height:36px;
     display:inline-flex; align-items:center; gap:5px;
     border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.14); color:#fff;
     font-family:"Inter"; font-weight:600; font-size:11.5px; padding:0 14px; border-radius:999px;
