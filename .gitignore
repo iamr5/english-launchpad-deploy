@@ -30,3 +30,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Worktrees de subagentes de Claude Code. Son checkouts completos del propio
+# repo: git los ve como submodulos y los commitea como gitlinks rotos (sin
+# .gitmodules, apuntando a commits que solo existen en local).
+.claude/worktrees/
