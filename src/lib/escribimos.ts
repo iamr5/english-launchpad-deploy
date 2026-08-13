@@ -88,6 +88,8 @@ export type Personajes = {
 /** El emoji con el que cada especie se presenta en las lecciones. */
 export const EMOJIS: Record<string, string> = {
   conejito: "🐰",
+  cuycito: "🐹",
+
   gatito: "🐱",
   llamita: "🦙",
   mapachito: "🦝",
