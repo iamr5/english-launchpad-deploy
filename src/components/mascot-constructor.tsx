@@ -562,7 +562,10 @@ export function MascotConstructor({
         </div>
       </div>
 
-      <LogoDelPolo S={S} setS={setS} brandLogo={brandLogo} paletaLogo={UNIFORME[0][2]} />
+      {!data.chars[S.char].sinUniforme && (
+        <LogoDelPolo S={S} setS={setS} brandLogo={brandLogo} paletaLogo={UNIFORME[0][2]} />
+      )}
+
 
       <div className="space-y-2 border-t pt-3">
         <div className="flex flex-wrap items-end gap-2">
