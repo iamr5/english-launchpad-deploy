@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
+import { Route as PresentacionNuamRouteImport } from './routes/presentacion-nuam'
+import { Route as PresentacionMovistarRouteImport } from './routes/presentacion-movistar'
 import { Route as PresentacionLaTinkaRouteImport } from './routes/presentacion-la-tinka'
 import { Route as PresentacionBcpRouteImport } from './routes/presentacion-bcp'
 import { Route as PresentacionAjeRouteImport } from './routes/presentacion-aje'
@@ -42,6 +44,16 @@ const PresentationRoute = PresentationRouteImport.update({
 const PresentacionRepsolRoute = PresentacionRepsolRouteImport.update({
   id: '/presentacion-repsol',
   path: '/presentacion-repsol',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionNuamRoute = PresentacionNuamRouteImport.update({
+  id: '/presentacion-nuam',
+  path: '/presentacion-nuam',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionMovistarRoute = PresentacionMovistarRouteImport.update({
+  id: '/presentacion-movistar',
+  path: '/presentacion-movistar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PresentacionLaTinkaRoute = PresentacionLaTinkaRouteImport.update({
@@ -169,6 +181,8 @@ export interface FileRoutesByFullPath {
   '/presentacion-aje': typeof PresentacionAjeRoute
   '/presentacion-bcp': typeof PresentacionBcpRoute
   '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-movistar': typeof PresentacionMovistarRoute
+  '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/app': typeof AuthenticatedAppRoute
@@ -194,6 +208,8 @@ export interface FileRoutesByTo {
   '/presentacion-aje': typeof PresentacionAjeRoute
   '/presentacion-bcp': typeof PresentacionBcpRoute
   '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-movistar': typeof PresentacionMovistarRoute
+  '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/app': typeof AuthenticatedAppRoute
@@ -221,6 +237,8 @@ export interface FileRoutesById {
   '/presentacion-aje': typeof PresentacionAjeRoute
   '/presentacion-bcp': typeof PresentacionBcpRoute
   '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-movistar': typeof PresentacionMovistarRoute
+  '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/_authenticated/app': typeof AuthenticatedAppRoute
@@ -248,6 +266,8 @@ export interface FileRouteTypes {
     | '/presentacion-aje'
     | '/presentacion-bcp'
     | '/presentacion-la-tinka'
+    | '/presentacion-movistar'
+    | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentation'
     | '/app'
@@ -273,6 +293,8 @@ export interface FileRouteTypes {
     | '/presentacion-aje'
     | '/presentacion-bcp'
     | '/presentacion-la-tinka'
+    | '/presentacion-movistar'
+    | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentation'
     | '/app'
@@ -299,6 +321,8 @@ export interface FileRouteTypes {
     | '/presentacion-aje'
     | '/presentacion-bcp'
     | '/presentacion-la-tinka'
+    | '/presentacion-movistar'
+    | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentation'
     | '/_authenticated/app'
@@ -326,6 +350,8 @@ export interface RootRouteChildren {
   PresentacionAjeRoute: typeof PresentacionAjeRoute
   PresentacionBcpRoute: typeof PresentacionBcpRoute
   PresentacionLaTinkaRoute: typeof PresentacionLaTinkaRoute
+  PresentacionMovistarRoute: typeof PresentacionMovistarRoute
+  PresentacionNuamRoute: typeof PresentacionNuamRoute
   PresentacionRepsolRoute: typeof PresentacionRepsolRoute
   PresentationRoute: typeof PresentationRoute
   ApiBrandSplatRoute: typeof ApiBrandSplatRoute
@@ -349,6 +375,20 @@ declare module '@tanstack/react-router' {
       path: '/presentacion-repsol'
       fullPath: '/presentacion-repsol'
       preLoaderRoute: typeof PresentacionRepsolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-nuam': {
+      id: '/presentacion-nuam'
+      path: '/presentacion-nuam'
+      fullPath: '/presentacion-nuam'
+      preLoaderRoute: typeof PresentacionNuamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-movistar': {
+      id: '/presentacion-movistar'
+      path: '/presentacion-movistar'
+      fullPath: '/presentacion-movistar'
+      preLoaderRoute: typeof PresentacionMovistarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/presentacion-la-tinka': {
@@ -538,6 +578,8 @@ const rootRouteChildren: RootRouteChildren = {
   PresentacionAjeRoute: PresentacionAjeRoute,
   PresentacionBcpRoute: PresentacionBcpRoute,
   PresentacionLaTinkaRoute: PresentacionLaTinkaRoute,
+  PresentacionMovistarRoute: PresentacionMovistarRoute,
+  PresentacionNuamRoute: PresentacionNuamRoute,
   PresentacionRepsolRoute: PresentacionRepsolRoute,
   PresentationRoute: PresentationRoute,
   ApiBrandSplatRoute: ApiBrandSplatRoute,
