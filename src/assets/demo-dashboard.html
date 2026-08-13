@@ -402,7 +402,14 @@
 
   /* ===== TEACHER REPORT ===== */
   .report{background:var(--surface); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); overflow:hidden; max-width:920px; margin:0 auto}
-  .r-head{padding:16px 26px 18px; background:linear-gradient(135deg,var(--bar-1,var(--ink)),var(--bar-2,var(--accent-d,#3a2f7e))); color:#fff; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:wrap}
+  /* `nowrap` a proposito. Con `wrap` la cabecera se partia sola a un ancho que
+     depende de lo ancho que sea el logo de cada institucion, y entre ese punto
+     y el del movil quedaba un estado intermedio: el sello de envio ya suelto en
+     su propia linea y el boton de metas todavia anclado a la esquina. Sin
+     `wrap` solo hay un cambio de forma, el de la media query de abajo, y las
+     dos cosas se mueven a la vez. `.r-left` ya lleva min-width:0, asi que lo
+     que cede al estrecharse es el titulo, no la fila entera. */
+  .r-head{padding:16px 26px 18px; background:linear-gradient(135deg,var(--bar-1,var(--ink)),var(--bar-2,var(--accent-d,#3a2f7e))); color:#fff; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:nowrap}
   /* El logo primero, y el titulo a su lado. Centrado contra el bloque de
      titulo, no arriba: un logotipo apoyado en la linea del <h2> parece una
      viñeta del texto en vez de la marca de quien firma el reporte. */
@@ -485,13 +492,19 @@
   .metas-msg{margin:9px 0 0; font-size:11.5px; min-height:1em}
   .metas-msg.mal{color:var(--risk)}
   .metas-msg.bien{color:var(--ok)}
-  /* Movil: la cabecera se apila y ya no hay esquina de la que colgarlo, asi que
-     pasa a boton flotante, anclado a la pantalla y no a la cabecera. Aqui no
-     estorba a nadie: la mascota flotante solo sale por encima de 1280px.
+  /* El punto en que la cabecera se apila Y el boton pasa a flotante. Es UNO
+     solo, y por eso esta a 860 y no a 520: en cuanto el sello de envio deja de
+     caber al lado del titulo, el boton ya no tiene esquina que ocupar, y el
+     estado en que el sello va suelto pero el boton sigue anclado no llega a
+     existir. 860 es ademas donde la tarjeta del reporte se va a sangre.
+     Anclado a la pantalla no estorba a nadie: la mascota flotante solo sale por
+     encima de 1280px.
      `top:auto` es imprescindible en los dos: la regla de escritorio los coloca
      con `bottom`/`top` y, sin anularlo, el desplegable seguiria descolgado de
      la cabecera aunque el boton ya este abajo. */
-  @media (max-width:520px){
+  @media (max-width:860px){
+    .r-head{flex-direction:column}
+    .r-head .who{text-align:left}
     .metas-btn{position:fixed; right:18px; bottom:26px; top:auto; z-index:45;
       height:42px; padding:0 16px; font-size:12.5px;
       border-color:var(--line); background:var(--surface); color:var(--ink);
@@ -627,8 +640,9 @@
        porque no cabia. Ahora cabe desplazandose, y esconder un dato es peor que
        pedir un gesto para verlo. La clase se queda en el markup por si hiciera
        falta volver a recortar alguna columna. */
-    .r-head{flex-direction:column}
-    .r-head .who{text-align:left}
+    /* La cabecera ya se apila en 860, junto con el paso del boton de metas a
+       flotante: las dos cosas van en el mismo punto a proposito, asi que
+       repetirlas aqui solo daria dos sitios donde tocarlas. */
   }
   /* ===== DATOS: rampa y tinta de los graficos =====
      Estos colores NO siguen la marca, igual que .lvl y .flag. --violet y sus
