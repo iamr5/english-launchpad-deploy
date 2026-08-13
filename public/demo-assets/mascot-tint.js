@@ -19,6 +19,8 @@
 //      («cuánto de este tono tiene») y lo guarda en el canal alfa;
 //   2. una rampa lineal lo convierte en máscara 0–1: dónde empieza a contar (la
 //      anchura del rango) y cómo de blando es el borde (el difuminado);
+//   2b. la máscara se dilata un píxel y se desenfoca medio, para que su borde
+//      siga el suavizado del dibujo en vez de dentarse (ver más abajo);
 //   3. la máscara se cruza con el alfa del original, para que respete la
 //      transparencia del dibujo;
 //   4. en paralelo, otra matriz aplica tono + saturación + luminosidad;
@@ -155,16 +157,32 @@
     var ramp = mk('feComponentTransfer', { in: 'proj', result: 'ramp' });
     var func = mk('feFuncA', { type: 'linear' });
     ramp.appendChild(func);
+    // ── El borde del teñido ───────────────────────────────────────────────
+    // El dibujo llega suavizado: entre dos colores hay un píxel que es mezcla
+    // de los dos. Su tono es intermedio, así que se queda FUERA de la franja y
+    // conserva el color viejo: alrededor de cada zona recoloreada aparecía un
+    // hilo del color original, y el borde salía dentado en vez de seguir la
+    // curva. La rampa no lo puede arreglar —es inclinada a propósito, de eso
+    // vive la selección—, así que se arregla en el espacio y no en el color:
+    //   · dilatar un píxel mete esa orla de mezcla dentro de la máscara;
+    //   · medio píxel de desenfoque deshace el escalón que deja dilatar.
+    // Las dos van SOBRE LA MÁSCARA y antes de cruzarla con el alfa del
+    // original, así que el contorno de la silueta sigue igual de nítido y sólo
+    // se ablandan las fronteras de dentro. Medido: un píxel basta y no se come
+    // los detalles finos ni a 44 px, el tamaño del icono de la barra.
+    var grow = mk('feMorphology', { in: 'ramp', operator: 'dilate', radius: '1', result: 'grow' });
+    var soft = mk('feGaussianBlur', { in: 'grow', stdDeviation: '0.5', result: 'soft' });
     // La máscara hereda la transparencia del dibujo: fuera de la silueta no hay
     // nada que teñir.
-    var mask = mk('feComposite', { in: 'ramp', in2: 'SourceGraphic', operator: 'in', result: 'mask' });
+    var mask = mk('feComposite', { in: 'soft', in2: 'SourceGraphic', operator: 'in', result: 'mask' });
     var hot = mk('feComposite', { in: 'tone', in2: 'mask', operator: 'in', result: 'hot' });
     var cold = mk('feComposite', { in: 'SourceGraphic', in2: 'mask', operator: 'out', result: 'cold' });
     var merge = mk('feMerge', {});
     merge.appendChild(mk('feMergeNode', { in: 'cold' }));
     merge.appendChild(mk('feMergeNode', { in: 'hot' }));
 
-    [tone, vivid, proj, ramp, mask, hot, cold, merge].forEach(function (n) { f.appendChild(n); });
+    [tone, vivid, proj, ramp, grow, soft, mask, hot, cold, merge]
+      .forEach(function (n) { f.appendChild(n); });
     svg.appendChild(f);
     (doc.body || doc.documentElement).appendChild(svg);
 
