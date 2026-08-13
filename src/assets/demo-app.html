@@ -71,7 +71,13 @@
     position: fixed; right: 12px; bottom: 14px; z-index: 8; pointer-events: none;
     width: 76px; max-width: 34vw; height: auto; max-height: 60px;
     object-fit: contain; object-position: right bottom;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,.24)) drop-shadow(0 7px 16px rgba(0,0,0,.18));
+    /* La sombra va en --own-filter y no directa en `filter` porque este logo a
+       veces ES la cabeza de la mascota (demo sin logo propio). Cuando lo es y
+       hay recoloreado, la regla de mascot-tint.js gana a ésta y devuelve la
+       sombra leyendo esta variable; cuando es el logo de la institución, no
+       casa, no se tiñe, y manda la declaración de aquí abajo. */
+    --own-filter: drop-shadow(0 2px 3px rgba(0,0,0,.24)) drop-shadow(0 7px 16px rgba(0,0,0,.18));
+    filter: var(--own-filter);
   }
 
   /* App bar */

@@ -237,6 +237,9 @@ function resolveMascot(cfg: DemoConfig) {
       emoji: cfg.mascot.emoji ?? pack?.emoji ?? "",
       artboard: pack?.artboard ?? { width: 2, height: 3 },
       headIcon: pack?.headIcon ? dir + pack.headIcon : "",
+      // El recoloreado necesita esta misma cadena para cazar por CSS todos los
+      // <img> de la cabeza, así que viaja al lado de ella.
+      tint: cfg.mascot.tint,
     },
   };
 }
@@ -266,13 +269,15 @@ function appbarIcon(cfg: DemoConfig, m: ReturnType<typeof resolveMascot>) {
 /** Las etiquetas <script> que cargan la mascota, según su motor. */
 function mascotScripts(m: ReturnType<typeof resolveMascot>) {
   if (!m.pack) return "";
-  if (m.pack.engine === "script") {
-    return `<script src="${esc(m.dir + (m.pack.entry ?? "mascot.js"))}"></script>`;
-  }
-  return (
-    `<script src="${esc(MASCOTS_DIR)}mascot-runtime.js"></script>\n` +
-    `<script>Mascot.init(${json(m.pack)}, ${json(m.dir)});</script>`
-  );
+  const motor =
+    m.pack.engine === "script"
+      ? `<script src="${esc(m.dir + (m.pack.entry ?? "mascot.js"))}"></script>`
+      : `<script src="${esc(MASCOTS_DIR)}mascot-runtime.js"></script>\n` +
+        `<script>Mascot.init(${json(m.pack)}, ${json(m.dir)});</script>`;
+  // El recoloreado va después del motor y se enciende solo leyendo window.DEMO.
+  // Se carga siempre, no sólo cuando está encendido: pesa poco y así el panel
+  // no tiene que pedir una recarga distinta para verlo.
+  return `${motor}\n<script src="mascot-tint.js"></script>`;
 }
 
 /** Slug que no corresponde a ningún demo publicado. */

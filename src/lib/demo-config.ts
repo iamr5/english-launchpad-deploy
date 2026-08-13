@@ -7,6 +7,46 @@
 // código no se entera, porque todo pasa por aquí.
 
 /**
+ * Recoloreado de la mascota: qué franja de color se toca y qué se le hace.
+ *
+ * El rango se mide en grados de tono alrededor de `hue`, pero la selección es
+ * por CERCANÍA de color, no un corte limpio: un color pálido de ese mismo tono
+ * entra menos que uno saturado, y `feather` decide cómo de blando es el borde.
+ * Así es como se evita el recorte duro que delataría el truco.
+ */
+export type MascotTint = {
+  on?: boolean;
+  /** Tono que se busca, 0–360. */
+  hue?: number;
+  /** Anchura de la franja alrededor de `hue`, en grados (0–180). 180 = todo. */
+  range?: number;
+  /** Blandura del borde de la franja, 0–1. */
+  feather?: number;
+  /** Cuánto se gira el tono de lo seleccionado, en grados (−180 a 180). */
+  shift?: number;
+  /** Saturación, 1 = igual. */
+  sat?: number;
+  /** Luminosidad, 1 = igual. */
+  light?: number;
+};
+
+/**
+ * El punto de partida del recoloreado: apagado, y apuntando al azul —el color
+ * dominante de Boti, que es de quien nace el ajuste—. Lo comparten el panel
+ * (los deslizadores parten de aquí) y el servidor, que manda el objeto ya
+ * completo para que la plantilla no tenga que rellenar huecos.
+ */
+export const TINT_DEF: Required<MascotTint> = {
+  on: false,
+  hue: 210,
+  range: 60,
+  feather: 0.35,
+  shift: 0,
+  sat: 1,
+  light: 1,
+};
+
+/**
  * Los cinco estilos de splash. Cada uno es una puesta en escena distinta, no un
  * cambio de color: el degradado ya es configurable aparte. La lista vive aquí
  * para que el panel y la plantilla no puedan desincronizarse.
@@ -331,6 +371,15 @@ export type DemoConfig = {
     name?: string;
     kind?: string;
     emoji?: string;
+    /**
+     * Recoloreado selectivo del personaje. Se aplica a TODAS sus apariciones
+     * —cuerpo entero y cabeza suelta— con un filtro SVG sobre los píxeles ya
+     * pintados: es lo único que alcanza por igual al SVG inline de Boti, a las
+     * capas <img> de Ozito y Gallito y a la cabeza que sale en la barra
+     * superior, los vítores o la marca de agua. El filtro y su porqué están en
+     * public/demo-assets/mascot-tint.js.
+     */
+    tint?: MascotTint;
   };
 
   /** Emoji o URL de imagen. */
@@ -425,7 +474,9 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
     accent: "#7C1C56",
     modules: ["#3faa24", "#ff6ba0", "#b875f5", "#1cb0f6", "#fd5d04"],
   },
-  mascot: { pack: "ozito" },
+  // El teñido va completo aunque esté apagado: así la plantilla recibe siempre
+  // los siete valores y no tiene que conocer ningún valor de fábrica.
+  mascot: { pack: "ozito", tint: TINT_DEF },
   // `goal` vacío conserva el anillo de progreso; con emoji o URL, lo sustituye.
   icons: { streak: "🔥", goal: "", dashboard: "📊" },
   copy: {

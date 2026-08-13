@@ -20,7 +20,9 @@ import {
 import {
   DEFAULTS,
   DEMO_FONTS,
+  type MascotTint,
   SPLASH_STYLES,
+  TINT_DEF,
   fontStack,
   fontsHref,
   shadeHex,
@@ -1885,6 +1887,12 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 packId={g2("mascot.pack", "ozito")}
                 manifest={get(cfg, "mascot.manifest", null) as MascotManifest | null}
                 baseUrl={g2("mascot.baseUrl")}
+                tint={(get(cfg, "mascot.tint", null) as MascotTint | null) ?? undefined}
+                headIcon={mascotHead}
+              />
+              <TintFields
+                tint={(get(cfg, "mascot.tint", null) as MascotTint | null) ?? {}}
+                onChange={(k, v) => upd(`mascot.tint.${k}`)(v)}
               />
               <div className="space-y-1.5">
                 <Label>Personaje</Label>
@@ -2518,10 +2526,14 @@ function MascotStage({
   packId,
   manifest,
   baseUrl,
+  tint,
+  headIcon,
 }: {
   packId: string;
   manifest: MascotManifest | null;
   baseUrl: string;
+  tint?: MascotTint;
+  headIcon?: string;
 }) {
   const box = useRef<HTMLDivElement | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -2578,6 +2590,36 @@ function MascotStage({
       dead = true;
     };
   }, [packId, manifest, baseUrl]);
+
+  // El recoloreado, en vivo. Se acota a esta caja (`scope`) y no a la página:
+  // el panel entero tiene iconos de mascota sueltos que no se están editando.
+  // Es el MISMO motor que corre en el demo, así que lo que se ve aquí es lo que
+  // habrá allí, sin una segunda implementación que mantener a juego.
+  //
+  // La dependencia va por valor y no por identidad: el objeto se rehace en cada
+  // render del panel, y como tal relanzaría el efecto en cada tecla.
+  const tintKey = JSON.stringify(tint ?? {});
+  useEffect(() => {
+    if (!box.current) return;
+    let dead = false;
+    (async () => {
+      try {
+        await loadScript("/demo-assets/mascot-tint.js");
+        if (dead || !box.current) return;
+        (window as unknown as { MascotTint?: { apply: (o: unknown) => void } }).MascotTint?.apply({
+          ...TINT_DEF,
+          ...(JSON.parse(tintKey) as MascotTint),
+          headIcon,
+          scope: box.current,
+        });
+      } catch {
+        /* sin recoloreado se sigue viendo la mascota; no vale un error en pantalla */
+      }
+    })();
+    return () => {
+      dead = true;
+    };
+  }, [tintKey, headIcon, packId]);
 
   const ratio = (() => {
     const p = packId === "custom" ? manifest : BUILT_IN_PACKS[packId];
@@ -3211,6 +3253,121 @@ function WatermarkPlacement({
           La marca de agua se pinta por debajo de botones y tarjetas: nunca los tapa.
         </p>
       </div>
+    </div>
+  );
+}
+
+/**
+ * El recoloreado de la mascota: qué franja de color se toca y qué se le hace.
+ *
+ * Los valores se guardan crudos (0–1 la saturación, grados el tono) y aquí se
+ * enseñan en la unidad que entiende quien lo mueve. Lo que se ve de verdad lo
+ * pinta MascotStage, justo encima, con el mismo motor que el demo.
+ */
+function TintFields({
+  tint,
+  onChange,
+}: {
+  tint: MascotTint;
+  onChange: (k: keyof MascotTint, v: number | boolean) => void;
+}) {
+  const v = { ...TINT_DEF, ...tint };
+  const pct = (x: number) => Math.round(x * 100);
+  // Las dos muestras: el color que se busca y en qué se convierte. Es lo que
+  // permite elegir el giro sin ir a ciegas, antes de mirar a la mascota.
+  const muestra = (h: number) => ({
+    background: `hsl(${((h % 360) + 360) % 360} 85% 52%)`,
+  });
+
+  return (
+    <div className="rounded-lg border p-3 space-y-3">
+      <label className="flex items-start gap-3 cursor-pointer">
+        <Switch className="mt-0.5" checked={!!v.on} onCheckedChange={(on) => onChange("on", on)} />
+        <span className="leading-tight">
+          <span className="text-sm">Recolorear la mascota</span>
+          <span className="block text-xs text-muted-foreground">
+            Cambia sólo una franja de color y deja el resto intacto. Alcanza todas sus apariciones:
+            el cuerpo entero y la cabeza de la barra, los vítores y la marca de agua.
+          </span>
+        </span>
+      </label>
+
+      {v.on && (
+        <>
+          <div className="flex items-center gap-2">
+            <span className="h-7 w-7 rounded-md border" style={muestra(v.hue)} />
+            <span className="text-muted-foreground text-xs">→</span>
+            <span className="h-7 w-7 rounded-md border" style={muestra(v.hue + v.shift)} />
+            <span className="text-xs text-muted-foreground">
+              El color que se busca y en qué se convierte.
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Slider2
+              label="Tono que se busca"
+              value={Math.round(v.hue)}
+              min={0}
+              max={360}
+              step={1}
+              suffix="°"
+              onChange={(n) => onChange("hue", n)}
+            />
+            <Slider2
+              label="Anchura de la franja"
+              value={Math.round(v.range)}
+              min={0}
+              max={180}
+              step={1}
+              suffix="°"
+              onChange={(n) => onChange("range", n)}
+            />
+            <Slider2
+              label="Borde difuminado"
+              value={pct(v.feather)}
+              min={0}
+              max={100}
+              step={1}
+              suffix="%"
+              onChange={(n) => onChange("feather", n / 100)}
+            />
+            <Slider2
+              label="Giro del tono"
+              value={Math.round(v.shift)}
+              min={-180}
+              max={180}
+              step={1}
+              suffix="°"
+              onChange={(n) => onChange("shift", n)}
+            />
+            <Slider2
+              label="Saturación"
+              value={pct(v.sat)}
+              min={0}
+              max={200}
+              step={5}
+              suffix="%"
+              onChange={(n) => onChange("sat", n / 100)}
+            />
+            <Slider2
+              label="Luminosidad"
+              value={pct(v.light)}
+              min={50}
+              max={150}
+              step={5}
+              suffix="%"
+              onChange={(n) => onChange("light", n / 100)}
+            />
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            La franja no es un corte limpio: un color pálido de ese mismo tono entra menos que uno
+            saturado, y por eso no se ve el recorte. Sube la anchura a 180° para teñir la mascota
+            entera. Distingue por tono, no por pieza: unos ojos del mismo color que el cuerpo
+            cambian con él.
+          </p>
+        </>
+      )}
     </div>
   );
 }

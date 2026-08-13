@@ -28,8 +28,12 @@
 
   var CSS = ".boti-svg .boti-st0 {\n        fill: #fef3e0;\n      }\n      .boti-svg .boti-st1 {\n        fill: #fc8290;\n      }\n      .boti-svg .boti-st2, .boti-svg .boti-st3 {\n        fill: #b6d8fc;\n      }\n      .boti-svg .boti-st4 {\n        fill: #fff;\n      }\n      .boti-svg .boti-st5 {\n        fill: none;\n      }\n      .boti-svg .boti-st6 {\n        fill: #16327f;\n      }\n      .boti-svg .boti-st3 {\n        stroke: #000;\n        stroke-miterlimit: 10;\n        stroke-width: .8px;\n      }\n      .boti-svg .boti-st7 {\n        fill: #959497;\n      }\n      .boti-svg .boti-st8 {\n        fill: #5082d1;\n      }\n      .boti-svg .boti-st9 {\n        fill: #010927;\n      }\n      .boti-svg .boti-st10 {\n        fill: #fb707d;\n      }\n      .boti-svg .boti-st11 {\n        fill: #ee4b57;\n      }\n      .boti-svg .boti-st12 {\n        fill: #000723;\n      }\n" +
     ".boti{position:relative;display:block;line-height:0}" +
+    // --mascot-tint es el recoloreado de mascot-tint.js: se compone AQUI, en la
+    // misma declaracion, porque `filter` no se acumula entre reglas y una regla
+    // aparte le costaria la sombra. El respaldo vacio del var() la deja intacta
+    // en las paginas que no cargan ese archivo (preview.html, el panel).
     ".boti-svg{width:100%;height:100%;display:block;overflow:visible;" +
-      "filter:drop-shadow(0 10px 12px rgba(1,9,39,.10))}" +
+      "filter:var(--mascot-tint,) drop-shadow(0 10px 12px rgba(1,9,39,.10))}" +
     ".boti-shadow{position:absolute;left:50%;bottom:1.5%;width:58%;height:4.5%;" +
       "transform:translateX(-50%);border-radius:50%;background:rgba(0,0,0,.20)}" +
     ".boti-char{transform-box:view-box;transform-origin:0 0;will-change:transform}" +
