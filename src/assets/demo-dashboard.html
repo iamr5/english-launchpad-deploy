@@ -318,7 +318,7 @@
   .rachabadge b{font-family:"DM Mono"; font-size:16px; font-weight:500; line-height:1; color:#fff}
   .rachabadge span{font-size:9.5px; font-weight:600; color:rgba(255,255,255,.82); line-height:1; white-space:nowrap}
   /* week selector (teacher header) */
-  .wksel{display:inline-flex; align-items:center; gap:2px; margin-top:12px; background:rgba(255,255,255,.12); border-radius:12px; padding:4px}
+  .wksel{display:inline-flex; align-items:center; gap:2px; margin-top:7px; background:rgba(255,255,255,.12); border-radius:12px; padding:4px}
   .wksel button{border:0; background:transparent; color:#fff; width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:17px; font-weight:700; display:grid; place-items:center; line-height:1}
   .wksel button:hover{background:rgba(255,255,255,.18)}
   .wksel button:disabled{opacity:.35; cursor:default}
@@ -402,7 +402,7 @@
 
   /* ===== TEACHER REPORT ===== */
   .report{background:var(--surface); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); overflow:hidden; max-width:920px; margin:0 auto}
-  .r-head{padding:22px 26px; background:linear-gradient(135deg,var(--bar-1,var(--ink)),var(--bar-2,var(--accent-d,#3a2f7e))); color:#fff; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:wrap}
+  .r-head{padding:16px 26px 18px; background:linear-gradient(135deg,var(--bar-1,var(--ink)),var(--bar-2,var(--accent-d,#3a2f7e))); color:#fff; display:flex; justify-content:space-between; align-items:flex-start; gap:18px; flex-wrap:wrap}
   /* El logo primero, y el titulo a su lado. Centrado contra el bloque de
      titulo, no arriba: un logotipo apoyado en la linea del <h2> parece una
      viñeta del texto en vez de la marca de quien firma el reporte. */
@@ -427,8 +427,8 @@
   }
 
   .r-head .capa{font-family:"DM Mono"; font-size:11px; letter-spacing:.14em; text-transform:uppercase; background:rgba(255,255,255,.14); padding:5px 11px; border-radius:999px; display:inline-block; margin-bottom:12px}
-  .r-head h2{font-family:"Bricolage Grotesque"; font-weight:800; font-size:24px; margin:0 0 4px; letter-spacing:-.02em}
-  .r-head p{margin:0; font-size:13px; opacity:.85}
+  .r-head h2{font-family:"Bricolage Grotesque"; font-weight:800; font-size:24px; margin:0 0 1px; letter-spacing:-.02em}
+  .r-head p{margin:0; font-size:13px; opacity:.85; line-height:1.35}
   .r-head .who{text-align:left; font-size:12.5px; opacity:.9}
   .r-head .who b{display:block; font-size:14px; font-family:"Bricolage Grotesque"}
 
@@ -482,11 +482,20 @@
   .metas-msg{margin:9px 0 0; font-size:11.5px; min-height:1em}
   .metas-msg.mal{color:var(--risk)}
   .metas-msg.bien{color:var(--ok)}
-  /* Estrecho: la cabecera se apila y ya no hay esquina donde colgarlo, asi que
-     el boton vuelve al flujo y el desplegable ocupa el ancho disponible. */
+  /* Movil: la cabecera se apila y ya no hay esquina de la que colgarlo, asi que
+     pasa a boton flotante, anclado a la pantalla y no a la cabecera. Aqui no
+     estorba a nadie: la mascota flotante solo sale por encima de 1280px.
+     `top:auto` es imprescindible en los dos: la regla de escritorio los coloca
+     con `bottom`/`top` y, sin anularlo, el desplegable seguiria descolgado de
+     la cabecera aunque el boton ya este abajo. */
   @media (max-width:520px){
-    .metas-btn{position:static; margin-top:10px}
-    .metas-pop{right:16px; left:16px; width:auto}
+    .metas-btn{position:fixed; right:14px; bottom:14px; top:auto; z-index:45;
+      height:42px; padding:0 16px; font-size:12.5px;
+      border-color:var(--line); background:var(--surface); color:var(--ink);
+      box-shadow:0 10px 24px -10px rgba(32,26,75,.55)}
+    .metas-btn::before{opacity:.6}
+    .metas-btn:hover{background:#faf9ff}
+    .metas-pop{position:fixed; right:14px; left:14px; bottom:64px; top:auto; width:auto}
   }
 
   .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line)}
@@ -993,7 +1002,10 @@
              lo monta y lo enseña el bloque `metas()` del final. Quien recibe el
              enlace del panel no lo ve. -->
         <div class="who">
-          Colegio de Ingenieros del Perú<br>
+          <!-- Aqui iba el nombre de la institucion, escrito a mano y sin id: no
+               lo actualizaba nadie, asi que el panel de CUALQUIER demo ponia
+               "Colegio de Ingenieros del Peru". Sobra ademas: quien firma el
+               reporte ya se ve en el logo de la izquierda. -->
           <!-- La hora la escribe el JS al cargar: un reporte "automatico" con
                fecha fija se delata solo en cuanto alguien lo mira dos dias
                seguidos. El texto de aqui es solo el respaldo si el JS no corre. -->
