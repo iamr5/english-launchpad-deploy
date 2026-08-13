@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import asset from "../assets/presentacion-aje.html.asset.json";
+import { mascotaDelDemo } from "@/lib/presentacion-mascota";
 
 // La presentación pesa ~25 MB (imágenes incrustadas): vive como asset y se sirve desde aquí.
 const headTags = `

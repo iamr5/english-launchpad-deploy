@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import asset from "../assets/presentacion-la-tinka.html.asset.json";
+import { mascotaDelDemo } from "@/lib/presentacion-mascota";
 
 // La presentación pesa ~25 MB (imágenes incrustadas): vive como asset y se sirve desde aquí.
 const headTags = `
@@ -31,7 +32,11 @@ export const Route = createFileRoute("/presentacion-la-tinka")({
           if (!res.ok) return new Response("No disponible", { status: 502 });
           cache = (await res.text()).replace("<head>", `<head>${headTags}`);
         }
-        return new Response(cache, {
+        // La mascota sale del demo de la marca, así que se resuelve en cada
+        // respuesta: si cambia en /demos, la presentación la toma sola.
+        const mascota = await mascotaDelDemo("demolatinka");
+        const page = mascota ? cache.replace("</head>", `${mascota}</head>`) : cache;
+        return new Response(page, {
           headers: { "Content-Type": "text/html; charset=utf-8" },
         });
       },
