@@ -659,6 +659,12 @@
      bandas porque el gesto empieza donde caiga el dedo. */
   .trend svg{user-select:none; -webkit-user-select:none}
   .trend .hit{fill:transparent; cursor:pointer}
+  /* Al pulsar una banda, el navegador le pintaba su aro de foco por defecto: un
+     recuadro alto y oscuro sobre el grafico, justo donde se acaba de tocar. Se
+     quita para el raton y se conserva para el teclado, que ahi si hace falta
+     saber donde se esta — sin `:focus{outline:none}` manda el del navegador y
+     el `:focus-visible` de abajo no llega a verse nunca. */
+  .trend .hit:focus{outline:none}
   .trend .hit:focus-visible{outline:2px solid var(--d-dot); outline-offset:-2px}
   /* El globo del dato vive en el <figure>, no dentro del SVG: dentro habria que
      medirlo en unidades del viewBox y se deformaria al escalar el grafico. */
