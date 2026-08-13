@@ -545,7 +545,12 @@ export function MascotConstructor({
 
         <div className="min-w-0 space-y-2">
 
-          {UNIFORME.map(([clave, etiqueta, paleta]) => (
+          {/* Sin uniforme sólo quedan los que sí se le ven: lentes y contorno. */}
+          {UNIFORME.filter(
+            ([clave]) =>
+              !data.chars[S.char].sinUniforme || clave === "glass" || clave === "ink",
+          ).map(([clave, etiqueta, paleta]) => (
+
             <CampoColor
               key={clave}
               etiqueta={etiqueta}
