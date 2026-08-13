@@ -153,6 +153,25 @@ function themeCSS(cfg: DemoConfig) {
     vars.push(`--bar-1:${c.dashboardBar}`, `--bar-2:${shadeHex(c.dashboardBar, 0.2)}`);
   }
 
+  // El fondo de la página del panel: lo que rodea a la tarjeta del reporte. Era
+  // lo único de esa pantalla que no se podía cambiar por institución —un gris
+  // frío fijo con dos halos, uno violeta y otro turquesa—, así que un demo con
+  // marca cálida acababa con su reporte flotando sobre un fondo de otra paleta.
+  //
+  // Mismo criterio que la barra de arriba: solo se emite si el demo lo fija. La
+  // plantilla trae los valores de siempre como respaldo, así que no declararlo
+  // deja cada panel exactamente como está hoy.
+  if (c.dashboardBg) {
+    vars.push(
+      `--bg:${c.dashboardBg}`,
+      // Los halos se rederivan de la marca en vez de quedarse en el violeta y el
+      // turquesa de fábrica: sobre un fondo nuevo esos dos se leen como manchas.
+      // Muy lavados a propósito — son un halo, no un color más de la pantalla.
+      `--bg-glow1:${shadeHex(c.accent, 0.86)}`,
+      `--bg-glow2:${shadeHex(highlight, 0.86)}`,
+    );
+  }
+
   // Tipografías y color de letra: sólo se emiten si el demo los define, así lo
   // ya publicado mantiene exactamente el aspecto de hoy.
   const ui = fontStack(cfg.type?.uiFont, "ui");
@@ -307,6 +326,10 @@ async function inject(
     splash: cfg.splash,
     map: cfg.map,
     features: cfg.features,
+    // Las metas del panel. Viajan tal cual: la plantilla rellena los huecos con
+    // los valores de fábrica, así que no hay que normalizarlas aquí — y hacerlo
+    // en dos sitios es la forma segura de que acaben discrepando.
+    metas: cfg.metas,
     mascot: mascot.runtime,
     courseToken,
     // Pestaña con la que abre el panel. La fija la URL (/<slug>/padres abre en

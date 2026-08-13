@@ -20,10 +20,28 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0}
+  /* El hueco de la barra de desplazamiento se reserva SIEMPRE.
+     Al abrir la ficha hay que bloquear el fondo, y bloquearlo quita la barra;
+     sin el hueco reservado la pagina se ensancha de golpe los ~15px que ocupaba
+     y TODO se recoloca —la tarjeta se recentra, la tabla se estira— justo en el
+     fotograma en que entra el panel. Reservandolo, quitar la barra no mueve un
+     pixel. Donde no se soporte (Safari < 18.2) se comporta como hasta ahora.
+     En macOS, con barras superpuestas, no reserva nada porque ahi no hace falta. */
+  /* `overflow-y:scroll` ademas de `scrollbar-gutter`, y no solo lo segundo:
+     medido, la variante con gutter a secas seguia ensanchando la pagina 15px al
+     abrir la ficha. Al fijar el fondo, el documento se queda sin recorrido y ahi
+     el navegador retira la barra igualmente; forzando el canal, la barra —o su
+     hueco— esta SIEMPRE, y abrir el panel no recoloca nada. */
+  html{overflow-y:scroll; scrollbar-gutter:stable}
   body{
+    /* El fondo de la pagina: lo que se ve POR FUERA de la tarjeta del reporte.
+       Son tres capas —dos resplandores y un color de base— y las tres salen de
+       variables para que cada institucion pueda cambiarlas. Los valores de aqui
+       son los de fabrica y siguen mandando mientras el demo no configure el
+       fondo, asi que nada de lo ya publicado cambia de aspecto. */
     background:
-      radial-gradient(1100px 500px at 12% -8%, #ece9ff 0%, transparent 60%),
-      radial-gradient(900px 500px at 100% 0%, #e2fbf6 0%, transparent 55%),
+      radial-gradient(1100px 500px at 12% -8%, var(--bg-glow1,#ece9ff) 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, var(--bg-glow2,#e2fbf6) 0%, transparent 55%),
       var(--bg);
     color:var(--ink); font-family:"Inter",system-ui,sans-serif; line-height:1.5;
     -webkit-font-smoothing:antialiased; min-height:100vh;
@@ -179,8 +197,16 @@
     opacity:0; pointer-events:none; transition:opacity .22s ease}
   body.detail .scrim{opacity:1; pointer-events:auto}
   /* Con el panel abierto el fondo no se desplaza: si no, el dedo arrastra la
-     tabla de abajo en vez de la ficha. */
-  body.detail{overflow:hidden}
+     tabla de abajo en vez de la ficha.
+     Se fija, no se le pone overflow:hidden. Con overflow:hidden el documento se
+     queda sin recorrido posible y el navegador recorta el desplazamiento a cero
+     — por eso al cerrar la ficha la pagina reaparecia arriba del todo, hubieras
+     estado donde hubieras estado. Fijandolo, el contenido se queda exactamente
+     donde se dejo: --lock-y lo escribe el JS con el desplazamiento en negativo,
+     y al cerrar lo devuelve.
+     left/right en vez de width:100%: el bloque contenedor de un elemento fijo
+     es el viewport, y ahi el 100% y los bordes no siempre miden lo mismo. */
+  body.locked{position:fixed; top:var(--lock-y,0px); left:0; right:0; overflow:hidden}
 
   body.detail #parent{
     position:fixed; z-index:60; background:var(--surface);
@@ -390,7 +416,12 @@
      se suman. Recortando aqui —no en la tarjeta, donde ya no quedaba nada que
      quitar— la banda deja de flotar sobre un vacio. */
   .r-body{padding:12px 26px 26px}
-  .r-body h3{font-family:"Bricolage Grotesque"; font-size:15px; margin:4px 0 14px; display:flex; align-items:center; gap:9px}
+  /* Titulo de seccion. Sube de 15 a 19px: a 15 se quedaba a un pelo de los 13
+     de la tabla y no encabezaba nada, competia con ella. Asi hay tres escalones
+     claros —24 del numero de un KPI, 19 del titulo, 13 del contenido— y se ve
+     de un vistazo donde empieza cada bloque. */
+  .r-body h3{font-family:"Bricolage Grotesque"; font-weight:800; font-size:19px; letter-spacing:-.015em;
+    margin:18px 0 10px; display:flex; align-items:center; gap:9px}
   /* Valores literales, no --violet: esa variable esta reenganchada al acento del
      demo, asi que el chip cambiaba de color por institucion. Es un dato de la
      tabla —cuantos alumnos hay—, no un elemento de marca, igual que .lvl. */
@@ -545,6 +576,12 @@
   .trend figcaption .v{font-family:"DM Mono"; font-size:13px; font-weight:500; color:var(--ink)}
   .trend figcaption .m{font-size:10.5px; color:var(--muted); margin-left:auto; font-weight:600}
   .trend svg{display:block; width:100%; height:auto}
+  /* Sin seleccion de texto dentro del grafico. Al tocar una banda para cambiar
+     de semana, el navegador la interpretaba como el principio de un arrastre de
+     seleccion y pintaba el recuadro azul un instante antes de irse: parece un
+     parpadeo del panel, no una pulsacion. Va en el <svg> entero y no solo en las
+     bandas porque el gesto empieza donde caiga el dedo. */
+  .trend svg{user-select:none; -webkit-user-select:none}
   .trend .hit{fill:transparent; cursor:pointer}
   .trend .hit:focus-visible{outline:2px solid var(--d-dot); outline-offset:-2px}
   /* El globo del dato vive en el <figure>, no dentro del SVG: dentro habria que
@@ -559,7 +596,9 @@
      Va ARRIBA de todo lo que filtra —tabla y mapa de calor—, no dentro de
      ninguno de los dos: los dos se repintan contra el mismo recorte, y quien
      mira sabe de un vistazo que hay puesto. */
-  .filtros{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin:16px 0 4px}
+  /* Pegados al titulo que ahora tienen encima: el aire de separacion ya lo pone
+     el margen inferior del h3, y repetirlo aqui los desprenderia de el. */
+  .filtros{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin:0 0 12px}
   .fx-q{display:flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--surface);
     border-radius:11px; padding:7px 11px; min-width:190px}
   .fx-q svg{flex:none; opacity:.5}
@@ -575,8 +614,16 @@
   .fx-chips button[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:#fff}
   .fx-chips button:focus-visible{outline:2px solid var(--d-dot); outline-offset:2px}
   .fx-count{font-family:"DM Mono"; font-size:11.5px; color:var(--muted); margin-left:auto}
-  .fx-clear{border:0; background:transparent; color:var(--d-dot); font-family:"Inter";
-    font-weight:700; font-size:12px; cursor:pointer; padding:6px 4px; text-decoration:underline}
+  /* Boton, no enlace. Comparte la caja de los chips de al lado —mismo alto,
+     mismo radio, mismo borde— porque vive en su misma fila y hace lo mismo que
+     ellos: tocar el recorte. El subrayado lo hacia parecer una nota al pie. */
+  .fx-clear{display:inline-flex; align-items:center; gap:6px;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink);
+    font-family:"Inter"; font-weight:600; font-size:12px; padding:6px 11px;
+    border-radius:999px; cursor:pointer; transition:.15s}
+  .fx-clear::before{content:'✕'; font-size:10px; opacity:.55}
+  .fx-clear:hover{background:#f2f4f8; border-color:#d9d4ee}
+  .fx-clear:focus-visible{outline:2px solid var(--d-dot); outline-offset:2px}
   /* Nada coincide. Se explica que pasa y se ofrece la salida, en vez de dejar la
      tabla en blanco y que parezca que se rompio. */
   .fx-vacio{padding:26px 12px; text-align:center; color:var(--muted); font-size:13px}
@@ -597,7 +644,7 @@
   .hm-key i b{width:15px; height:9px; border-radius:2px; display:block}
   .hm-prom{display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
     border:1px solid var(--line); border-left:4px solid var(--d3); border-radius:11px;
-    padding:9px 12px; margin-bottom:12px; background:#fbfaff}
+    padding:9px 12px; margin-top:12px; background:#fbfaff}
   .hm-prom .lb{font-size:12px; font-weight:700}
   .hm-prom .lb small{display:block; font-weight:500; color:var(--muted); font-size:11px; margin-top:1px}
   .hm-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 26px}
@@ -845,8 +892,15 @@
           </figure>
         </div>
 
-        <!-- Filtros. Recortan a la vez la tabla y el mapa de destrezas. Los chips
-             de nivel se generan con los niveles que existen de verdad en el curso
+        <h3>Detalle por alumno <span class="tag" id="t-count">32 alumnos</span></h3>
+
+        <!-- Filtros. Van DEBAJO del titulo, no encima: son los mandos de esta
+             seccion, asi que primero se dice de que seccion se trata y luego se
+             ofrece con que tocarla. Encima del titulo flotaban sin dueño, como
+             si mandaran sobre toda la pagina — y no: la tendencia y los KPI de
+             arriba hablan del aula entera y no se recortan con ellos.
+             Recortan a la vez la tabla y el mapa de destrezas. Los chips de
+             nivel se generan con los niveles que existen de verdad en el curso
              (los pinta montarFiltros), no con una lista escrita a mano que se
              quedaria coja el dia que aparezca un C1. -->
         <div class="filtros">
@@ -864,7 +918,6 @@
           <span class="fx-count" id="fx-count" role="status"></span>
         </div>
 
-        <h3>Detalle por alumno <span class="tag" id="t-count">32 alumnos</span></h3>
         <div class="tscroll">
         <table>
           <thead id="t-head">
@@ -969,8 +1022,11 @@
               <span>más</span>
             </div>
           </div>
-          <div class="hm-prom" id="hm-prom"></div>
+          <!-- El resumen va DEBAJO de la parrilla, no encima: es la conclusion
+               que se saca de las 32 filas, y una conclusion antes de la prueba
+               obliga a creerla; despues, se comprueba mirando arriba. -->
           <div class="hm-grid" id="hm-grid"></div>
+          <div class="hm-prom" id="hm-prom"></div>
         </div>
 
         <div class="callout">
@@ -1057,6 +1113,27 @@
 
     // Fila desde la que se abrio la ficha; se guarda para devolverle el foco.
     var lastRow = null;
+
+    // ===== Bloqueo del fondo =====
+    // Se apunta donde estaba la pagina y se le devuelve al cerrar. El navegador
+    // no lo conserva por su cuenta: al dejar el documento sin recorrido, recorta
+    // el desplazamiento a cero, y eso es lo que hacia que cerrar la ficha te
+    // dejara arriba del todo en vez de en la fila que estabas mirando.
+    var scrollY = 0;
+    function bloquear(){
+      if (document.body.classList.contains('locked')) return;
+      scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      document.body.style.setProperty('--lock-y', -scrollY + 'px');
+      document.body.classList.add('locked');
+    }
+    function desbloquear(){
+      if (!document.body.classList.contains('locked')) return;
+      document.body.classList.remove('locked');
+      document.body.style.removeProperty('--lock-y');
+      // 'auto' a proposito: esto es una restitucion, no un recorrido. Animandolo
+      // se veria la pagina viajando a su sitio DESPUES de haber cerrado.
+      window.scrollTo({ top: scrollY, left: 0, behavior: 'auto' });
+    }
     refrescarFicha = function(){ if (abierta != null) fill(abierta); };
 
     var txt = function(el){ return el ? el.textContent.trim() : ''; };
@@ -1196,6 +1273,9 @@
       // vuelve al principio del documento y hay que recorrer la tabla entera.
       lastRow = origen || null;
       parent.scrollTop = 0;
+      // Antes de tocar ninguna clase: hay que leer el desplazamiento con la
+      // pagina todavia como esta.
+      bloquear();
       document.body.classList.remove('closing', 'shown');
       document.body.classList.add('detail');
       // Reflow forzado. Sin esto el navegador agrupa "aparecer" y "moverse" en
@@ -1282,9 +1362,15 @@
     function finish(){
       closing = false;
       document.body.classList.remove('detail', 'closing', 'shown');
+      desbloquear();
       abierta = null;
-      // El foco vuelve a la fila desde la que se abrio.
-      if (lastRow && document.contains(lastRow)) lastRow.focus();
+      // El foco vuelve a la fila desde la que se abrio, pero SIN arrastrar el
+      // scroll: acabamos de devolverlo a su sitio y focus() lo movería otra vez
+      // para traer la fila a la vista, deshaciendo justo lo que se restituyo.
+      if (lastRow && document.contains(lastRow)) {
+        try { lastRow.focus({ preventScroll: true }); }
+        catch (e) { lastRow.focus(); }
+      }
       lastRow = null;
     }
     function close(){
@@ -1985,12 +2071,31 @@
   // anterior, que dice si sube pero no si esta bien: 83% con un +4% puede ser
   // una buena semana de un aula mala. La meta del colegio es el otro extremo de
   // la comparacion, y es el que convierte el numero en un juicio.
+  //
+  // Las fija cada institucion desde el panel de demos. Estaban escritas aqui, y
+  // eso hacia que un instituto de dos horas semanales y uno de seis se juzgaran
+  // con el mismo liston. Cada hueco cae al valor de siempre, asi que un demo
+  // que no las toque se comporta exactamente igual que antes.
+  var CFG_META = (window.DEMO && window.DEMO.metas) || {};
+  var num = function(v, porDefecto){
+    var n = parseFloat(v);
+    return isFinite(n) ? n : porDefecto;
+  };
+  // El nivel se guarda como etiqueta ('B1') porque es como se piensa y como se
+  // enseña, pero se compara contra el promedio numerico de los 32 alumnos.
+  var META_NIV = CFG_META.nivel && NIVEL[CFG_META.nivel] ? CFG_META.nivel : 'B1';
   var META = [
-    { s:'act', v:80,  txt:'meta 80%', suf:'%', mejor:'alto' },
-    { s:'niv', v:3,   txt:'meta B1',  suf:'',  mejor:'alto' },
-    { s:'lec', v:300, txt:'meta 300', suf:'',  mejor:'alto' },
-    { s:'rie', v:2,   txt:'máx. 2',   suf:'',  mejor:'bajo' }
+    { s:'act', v:num(CFG_META.activos, 80),   suf:'%', mejor:'alto' },
+    { s:'niv', v:NIVEL[META_NIV],             suf:'',  mejor:'alto', rotulo:META_NIV },
+    { s:'lec', v:num(CFG_META.lecciones, 300), suf:'', mejor:'alto' },
+    { s:'rie', v:num(CFG_META.riesgo, 2),     suf:'',  mejor:'bajo' }
   ];
+  // El texto del chip sale del propio valor: escrito aparte, cambiar la meta y
+  // olvidarse del rotulo dejaria el panel diciendo "meta 300" con la linea
+  // dibujada en otro sitio, que es peor que no tener meta.
+  META.forEach(function(m){
+    m.txt = (m.mejor === 'bajo' ? 'máx. ' : 'meta ') + (m.rotulo != null ? m.rotulo : m.v + m.suf);
+  });
 
   // ----- Utilidades de dibujo -----
 
@@ -2264,7 +2369,11 @@
       var fig = document.getElementById(cfg.id);
       if (!fig) return;
       var vals = SERIES[cfg.s];
-      var meta = META.filter(function(m){ return m.s === cfg.s; })[0].v;
+      // La misma entrada de META que usa el KPI: el rotulo de aqui y el chip de
+      // arriba tienen que decir lo mismo, y la unica forma de garantizarlo es
+      // que salgan del mismo sitio.
+      var m = META.filter(function(x){ return x.s === cfg.s; })[0];
+      var meta = m.v;
       fig._vals = vals;
       fig._suf = cfg.suf;
       var tip = fig.querySelector('.tip');
@@ -2275,7 +2384,7 @@
       if (viejo) viejo.remove();
       fig.insertAdjacentHTML('beforeend', tendenciaSVG(vals, meta, wk, cfg.suf));
       fig.querySelector('.v').textContent = vals[wk] + cfg.suf;
-      fig.querySelector('.m').textContent = 'meta ' + meta + cfg.suf;
+      fig.querySelector('.m').textContent = m.txt;
     });
   }
 

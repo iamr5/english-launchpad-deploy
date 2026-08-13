@@ -151,6 +151,232 @@ function SplashCss() {
   return null;
 }
 
+/**
+ * El panel de seguimiento, en pequeño.
+ *
+ * De la marca en el panel sólo se podía juzgar la barra superior, y para eso
+ * había que guardar, abrir el demo y navegar hasta /dashboard. Todo lo demás
+ * —el fondo de la página, el degradado de las destrezas, los fondos suaves— se
+ * deriva del acento por caminos que no se ven en ningún sitio del formulario.
+ *
+ * Las cadenas de respaldo de aquí son LAS MISMAS que aplica themeCSS en
+ * demo-page.ts. Si divergen, este previo miente, y un previo que miente es peor
+ * que no tenerlo: cualquier cambio allí hay que reflejarlo aquí.
+ */
+function DashPreview({
+  accent,
+  accentDark,
+  bar,
+  bg,
+  highlight,
+  ink,
+  muted,
+  uiFont,
+  metas,
+}: {
+  accent: string;
+  accentDark: string;
+  bar: string;
+  bg: string;
+  highlight: string;
+  ink: string;
+  muted: string;
+  uiFont: string;
+  /** Si se pasan, cada KPI enseña su chip de meta como en el panel real. */
+  metas?: { activos?: unknown; nivel?: unknown; lecciones?: unknown; riesgo?: unknown };
+}) {
+  // La cabecera del reporte: linear-gradient(135deg, --bar-1, --bar-2). Sin
+  // barra configurada cae a --ink (que en la plantilla del panel es #201a4b, no
+  // el #1A1A1A del texto de la app) y a --accent-d.
+  const tplInk = ink || "#201a4b";
+  const bar1 = bar || tplInk;
+  const bar2 = bar ? shade(bar, 0.2) : accentDark;
+
+  // El fondo de la página: color de base y dos halos. Sin configurar, los de
+  // fábrica; configurado, los halos se rederivan de la marca.
+  const base = bg || "#f3f2fb";
+  const glow1 = bg ? shade(accent, 0.86) : "#ece9ff";
+  const glow2 = bg ? shade(highlight, 0.86) : "#e2fbf6";
+
+  const soft = shade(accent, 0.88); // --violet-soft, reenganchado al acento
+  const mut = muted || "#6b6790";
+  const head = fontStack(uiFont, "ui") || undefined;
+
+  // Los números del previo son los mismos que trae la plantilla de ejemplo, así
+  // que el chip de meta se puede resolver de verdad y no de adorno.
+  const RANGO: Record<string, number> = { A1: 1, A2: 2, B1: 3, B2: 4, C1: 5 };
+  const nm = (v: unknown, def: number) => {
+    const n = Number(v);
+    return v == null || v === "" || !Number.isFinite(n) ? def : n;
+  };
+  const chipMeta = (cumple: boolean, txt: string) => (
+    <span
+      style={{
+        display: "inline-block",
+        marginTop: 4,
+        fontSize: 9,
+        fontWeight: 700,
+        padding: "2px 6px",
+        borderRadius: 6,
+        background: cumple ? "#dcf6f2" : "#f1f0f6",
+        color: cumple ? "#0b6b60" : "#5f5b7a",
+      }}
+    >
+      {txt}
+    </span>
+  );
+
+  const kpi = (v: string, l: string, tinta?: string, meta?: React.ReactNode) => (
+    <div style={{ flex: 1, background: "#fff", padding: "8px 10px" }}>
+      <div style={{ fontSize: 17, fontWeight: 800, lineHeight: 1, color: tinta || tplInk, fontFamily: head }}>
+        {v}
+      </div>
+      <div style={{ fontSize: 9.5, color: mut, marginTop: 3, fontWeight: 600 }}>{l}</div>
+      {meta}
+    </div>
+  );
+
+  // Los chips de nivel y de estado van con valores literales A PROPÓSITO, igual
+  // que en la plantilla: son datos del alumno, no elementos de marca, y si
+  // siguieran al acento cambiarían de color en cada institución.
+  const fila = (ini: string, nom: string, av: string, nivel: string, flag: string, ok: boolean) => (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 7,
+        padding: "6px 10px",
+        borderTop: "1px solid #e7e4f5",
+        fontSize: 11,
+      }}
+    >
+      <span
+        style={{
+          width: 20,
+          height: 20,
+          borderRadius: "50%",
+          background: av,
+          color: "#fff",
+          fontSize: 8,
+          fontWeight: 700,
+          display: "grid",
+          placeItems: "center",
+          flex: "none",
+        }}
+      >
+        {ini}
+      </span>
+      <b style={{ flex: 1, fontWeight: 600 }}>{nom}</b>
+      <span style={{ background: "#efedfd", color: "#5b4be6", borderRadius: 6, padding: "2px 6px", fontSize: 9.5 }}>
+        {nivel}
+      </span>
+      <span
+        style={{
+          background: ok ? "#dcf6f2" : "#fde3ec",
+          color: ok ? "#0b6b60" : "#a8264b",
+          borderRadius: 999,
+          padding: "2px 7px",
+          fontSize: 9,
+          fontWeight: 700,
+        }}
+      >
+        {flag}
+      </span>
+    </div>
+  );
+
+  return (
+    <>
+      <div
+        style={{
+          marginTop: 16,
+          borderRadius: 12,
+          padding: 14,
+          // Las tres capas del fondo real, en el mismo orden.
+          background: `radial-gradient(300px 160px at 12% -8%, ${glow1} 0%, transparent 60%),
+                       radial-gradient(240px 160px at 100% 0%, ${glow2} 0%, transparent 55%),
+                       ${base}`,
+        }}
+      >
+        <div
+          style={{
+            background: "#fff",
+            border: "1px solid #e7e4f5",
+            borderRadius: 12,
+            overflow: "hidden",
+            boxShadow: "0 10px 24px -18px rgba(32,26,75,.5)",
+          }}
+        >
+          <div
+            style={{
+              background: `linear-gradient(135deg, ${bar1}, ${bar2})`,
+              color: "#fff",
+              padding: "10px 12px",
+            }}
+          >
+            <div style={{ fontSize: 13, fontWeight: 800, fontFamily: head }}>Reporte semanal del aula</div>
+            <div style={{ fontSize: 10, opacity: 0.85, marginTop: 1 }}>Inglés · Ciclo III</div>
+          </div>
+
+          <div style={{ display: "flex", gap: 1, background: "#e7e4f5" }}>
+            {(() => {
+              if (!metas) {
+                return (
+                  <>
+                    {kpi("83%", "Activos")}
+                    {kpi("B1", "Nivel")}
+                    {kpi("2", "En riesgo", "#d1495b")}
+                  </>
+                );
+              }
+              const mAct = nm(metas.activos, 80);
+              const mNiv = RANGO[String(metas.nivel || "B1")] ?? 3;
+              const mRie = nm(metas.riesgo, 2);
+              return (
+                <>
+                  {kpi("83%", "Activos", undefined,
+                    chipMeta(83 >= mAct, (83 >= mAct ? "✓ " : "↑ ") + "meta " + mAct + "%"))}
+                  {kpi("B1", "Nivel", undefined,
+                    chipMeta(3 >= mNiv, (3 >= mNiv ? "✓ " : "↑ ") + "meta " + (metas.nivel || "B1")))}
+                  {kpi("2", "En riesgo", "#d1495b",
+                    // La única que se cumple por debajo.
+                    chipMeta(2 <= mRie, (2 <= mRie ? "✓ " : "↓ ") + "máx. " + mRie))}
+                </>
+              );
+            })()}
+          </div>
+
+          {fila("MR", "Mateo Rivas", "#f4a51e", "B1", "Al día", true)}
+          {fila("JV", "Joaquín Vega", "#12b0a0", "A2", "Sin ingresar", false)}
+
+          {/* Una destreza: el degradado sale de --violet → --violet2, o sea del
+              acento. Es lo que más superficie de color tiene en la ficha. */}
+          <div style={{ padding: "9px 10px 11px", background: soft }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, fontWeight: 600, marginBottom: 4 }}>
+              <span>Listening</span>
+              <span style={{ color: mut }}>90%</span>
+            </div>
+            <div style={{ height: 7, borderRadius: 99, background: "#fff", overflow: "hidden" }}>
+              <div
+                style={{
+                  width: "90%",
+                  height: "100%",
+                  borderRadius: 99,
+                  background: `linear-gradient(90deg, ${accent}, ${shade(accent, 0.24)})`,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style={caption}>
+        El panel de seguimiento (/dashboard y /padres): fondo de la página, barra superior, chips
+        y destrezas. Los chips de nivel y estado no siguen la marca — son datos del alumno.
+      </p>
+    </>
+  );
+}
+
 function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institution: string }) {
   const g = (p: string, f: unknown = "") => get(cfg, p, f) as string;
   const accent = g("colors.accent", DEFAULTS.colors.accent);
@@ -499,6 +725,38 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
         <p style={caption}>
           Cabecera de módulo, colores de módulo, botón, ruedita, acción principal y resaltado.
         </p>
+
+        <DashPreview
+          accent={accent}
+          accentDark={g("colors.accentDark") || shade(accent, -0.24)}
+          bar={g("colors.dashboardBar")}
+          bg={g("colors.dashboardBg")}
+          highlight={highlight}
+          ink={g("colors.ink")}
+          muted={g("colors.muted")}
+          uiFont={uiFont}
+        />
+      </div>
+    );
+  }
+
+  if (tab === "panel") {
+    // Mismo previo que en Colores, pero con los chips de meta puestos: sin
+    // verlos resueltos, un número en un formulario no dice si el aula del
+    // ejemplo lo cumpliría o no, que es justo lo que se está decidiendo.
+    return (
+      <div style={frame}>
+        <DashPreview
+          accent={accent}
+          accentDark={g("colors.accentDark") || shade(accent, -0.24)}
+          bar={g("colors.dashboardBar")}
+          bg={g("colors.dashboardBg")}
+          highlight={highlight}
+          ink={g("colors.ink")}
+          muted={g("colors.muted")}
+          uiFont={uiFont}
+          metas={get(cfg, "metas", {}) as Record<string, unknown>}
+        />
       </div>
     );
   }
@@ -1057,6 +1315,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <TabsTrigger value="marca">Marca</TabsTrigger>
               <TabsTrigger value="splash">Bienvenida</TabsTrigger>
               <TabsTrigger value="colores">Colores</TabsTrigger>
+              <TabsTrigger value="panel">Panel</TabsTrigger>
               <TabsTrigger value="mascota">Mascota</TabsTrigger>
               <TabsTrigger value="textos">Textos</TabsTrigger>
               <TabsTrigger value="mapa">Mapa</TabsTrigger>
@@ -1500,6 +1759,13 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 value={get(cfg, "colors.dashboardBar")}
                 onChange={upd("colors.dashboardBar")}
               />
+              <ColorField
+                label="Fondo del panel"
+                hint="Lo que se ve por fuera de la tarjeta del reporte. Vacío = el gris frío de siempre. Al ponerle color, los dos halos se rederivan del acento y del resaltado."
+                fallback="#f3f2fb"
+                value={get(cfg, "colors.dashboardBg")}
+                onChange={upd("colors.dashboardBg")}
+              />
               <hr />
               <p className="text-sm font-medium">Color de cada módulo</p>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -1556,6 +1822,56 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 fallback="#1A1A1A"
                 value={get(cfg, "colors.header")}
                 onChange={upd("colors.header")}
+              />
+            </TabsContent>
+
+            <TabsContent value="panel" className="space-y-4">
+              <p className="text-sm font-medium">Metas del panel de seguimiento</p>
+              <p className="text-xs text-muted-foreground">
+                La vara contra la que se lee cada número en <code>/{"<enlace>"}/dashboard</code>. Cada
+                KPI lleva debajo un chip que dice si se cumple, y es la línea discontinua que se ve
+                en los minigráficos y en las curvas. Vacío = el valor de siempre.
+              </p>
+              <MetaField
+                label="Alumnos activos"
+                unit="%"
+                fallback="80"
+                hint="Qué porcentaje del aula debería practicar cada semana."
+                value={get(cfg, "metas.activos")}
+                onChange={upd("metas.activos")}
+              />
+              <div className="space-y-1.5">
+                <Label>Nivel promedio</Label>
+                <select
+                  className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                  value={(get(cfg, "metas.nivel") as string) || ""}
+                  onChange={(e) => upd("metas.nivel")(e.target.value)}
+                >
+                  <option value="">B1 (por defecto)</option>
+                  {["A1", "A2", "B1", "B2", "C1"].map((n) => (
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
+                  ))}
+                </select>
+                <span className="block text-xs text-muted-foreground">
+                  A qué nivel MCER debería llegar el aula. Se compara contra el promedio real de
+                  todos los alumnos, no contra la etiqueta.
+                </span>
+              </div>
+              <MetaField
+                label="Lecciones completadas"
+                fallback="300"
+                hint="Cuántas lecciones debería sumar el aula entera en una semana."
+                value={get(cfg, "metas.lecciones")}
+                onChange={upd("metas.lecciones")}
+              />
+              <MetaField
+                label="Alumnos sin ingresar"
+                fallback="2"
+                hint="Cuántos se toleran antes de que la semana cuente como mala. Es la única que se cumple por debajo: aquí menos es mejor."
+                value={get(cfg, "metas.riesgo")}
+                onChange={upd("metas.riesgo")}
               />
             </TabsContent>
 
@@ -2983,6 +3299,59 @@ function normalizeHex(raw: string) {
         .toUpperCase()
     );
   return "";
+}
+
+/**
+ * Una meta del panel: un número, con su unidad al lado y el valor de fábrica
+ * como marcador de posición.
+ *
+ * Vacío significa «el de siempre», no «cero»: por eso se guarda `undefined` y no
+ * un 0 en cuanto se borra el campo. Un 0 guardado sería una meta de verdad —una
+ * que se cumple sola— y dejaría el chip en verde para siempre.
+ */
+function MetaField({
+  label,
+  hint,
+  unit,
+  fallback,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint?: string;
+  unit?: string;
+  fallback: string;
+  value: unknown;
+  onChange: (v: number | undefined) => void;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label>{label}</Label>
+      <div className="flex items-center gap-2">
+        <Input
+          type="number"
+          min={0}
+          inputMode="numeric"
+          className="w-32"
+          placeholder={fallback}
+          value={value == null || value === "" ? "" : String(value)}
+          onChange={(e) => {
+            const t = e.target.value.trim();
+            if (t === "") return onChange(undefined);
+            const n = Number(t);
+            onChange(Number.isFinite(n) && n >= 0 ? n : undefined);
+          }}
+          aria-label={label}
+        />
+        {unit ? <span className="text-sm text-muted-foreground">{unit}</span> : null}
+        <span className="text-xs text-muted-foreground">
+          por defecto {fallback}
+          {unit ?? ""}
+        </span>
+      </div>
+      {hint ? <span className="block text-xs text-muted-foreground">{hint}</span> : null}
+    </div>
+  );
 }
 
 function ColorField({

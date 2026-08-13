@@ -273,6 +273,16 @@ export type DemoConfig = {
      */
     dashboardBar?: string;
     /**
+     * El fondo de la página del panel de seguimiento: lo que se ve por fuera de
+     * la tarjeta del reporte, en /<slug>/dashboard y /<slug>/padres.
+     *
+     * Vacío deja el de fábrica —un gris frío con un halo violeta y otro
+     * turquesa—, que es como se maquetó. En cuanto se pone un color, ese pasa a
+     * ser la base y los dos halos se rederivan del acento y del resalte, para
+     * que no queden dos manchas de otra paleta flotando encima.
+     */
+    dashboardBg?: string;
+    /**
      * De qué color va la barra fija del pie del curso («Tu próxima lección»):
      * el rótulo, el título y el botón.
      *   "module" (por defecto) — el color del módulo al que pertenece la
@@ -357,6 +367,32 @@ export type DemoConfig = {
      * `buttonOffsets`.
      */
     buttonShift?: (number | null)[];
+  };
+
+  /**
+   * Las metas del panel de seguimiento: la vara contra la que se lee cada KPI
+   * en /<slug>/dashboard. Cada número lleva debajo un chip que dice si se
+   * cumple («✓ meta 80%») o cuánto falta, y la línea discontinua de los
+   * minigráficos y de las curvas es justamente esta.
+   *
+   * Estaban escritas dentro de la plantilla, así que todas las instituciones
+   * medían contra las mismas: un instituto que da dos horas semanales y uno que
+   * da seis se juzgaban con el mismo listón. Cualquier hueco cae al valor de
+   * fábrica, que es el que había escrito, así que un demo que no las toque se
+   * comporta exactamente igual que hasta ahora.
+   */
+  metas?: {
+    /** % de alumnos activos en la semana. De fábrica, 80. */
+    activos?: number;
+    /** Nivel MCER promedio esperado, como etiqueta ("B1"). De fábrica, B1. */
+    nivel?: string;
+    /** Lecciones completadas por el aula en la semana. De fábrica, 300. */
+    lecciones?: number;
+    /**
+     * Cuántos alumnos sin ingresar se toleran. Es la única que se cumple por
+     * DEBAJO: aquí menos es mejor. De fábrica, 2.
+     */
+    riesgo?: number;
   };
 
   features: {
