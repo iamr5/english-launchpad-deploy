@@ -57,26 +57,27 @@ const METRICS = [
 
 const BENEFITS = [
   {
-    e: "/demo-assets/clock.svg",
-    t: "15 minutos al día",
+    e: "/demo-assets/ob-thunder.svg",
+    t: "20 minutos al día",
     d: "Microlecciones pensadas para agendas de ingeniero: entras, practicas y sigues con tu día.",
   },
   {
-    e: "/demo-assets/settings.svg",
+    e: "/demo-assets/ob-words.svg",
     t: "Inglés técnico de verdad",
     d: "Vocabulario de matemáticas, programación, construcción, energía y calidad, no frases de turista.",
   },
   {
-    e: "/demo-assets/dart.svg",
+    e: "/demo-assets/ob-goal.svg",
     t: "Empiezas en tu nivel",
     d: "Un test de ubicación de 40 preguntas te coloca en A1, A2, B1, B2 o C1 desde el primer día.",
   },
   {
-    e: "/demo-assets/stats.svg",
+    e: "/demo-assets/streak.svg",
     t: "Progreso medible",
     d: "Racha, XP y niveles. Tú y el Colegio ven el avance real, no la asistencia.",
   },
 ];
+
 
 type Quiz = {
   q: string;
