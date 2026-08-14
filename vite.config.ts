@@ -26,7 +26,14 @@ function courseContentPlugin() {
     "data_modulo4.js",
     "data_modulo5.js",
     "placement_items.js",
+    // Banco de práctica: ejercicios extra por bloque de teoría. Se cargan aquí
+    // por lo mismo que el curso — el runtime de Workers no evalúa código suelto.
+    "practice_bank_m1m2.js",
+    "practice_bank_m3.js",
+    "practice_bank_m4.js",
+    "practice_bank_m5.js",
   ];
+
   return {
     name: "course-content",
     resolveId(id: string) {
