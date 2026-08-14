@@ -5134,8 +5134,11 @@ function openPracticeQuiz(lesson, block, bank) {
     sh.innerHTML = `<div class="handle"></div><div class="center-col" style="padding:34px 0">
       <div class="pr-spin"></div><div class="result-sub">Preparando tus ejercicios…</div></div>`;
     sh.dataset.dismissible = 'true'; ov.classList.add('active');
-    fetchBank(block).then(() => { closeOverlay(); openPracticeQuiz(lesson, block, bank); })
-      .catch(() => { closeOverlay(); toast('No se pudieron cargar los ejercicios. Inténtalo de nuevo.'); });
+    fetchBank(block).then(
+      // Fuera de la cadena de promesas: si el quiz fallara al pintarse, el error
+      // es suyo y debe verse como tal, no convertirse en "no se pudo cargar".
+      () => setTimeout(() => { closeOverlay(); openPracticeQuiz(lesson, block, bank); }, 0),
+      (e) => { console.error('[banco]', e); closeOverlay(); toast('No se pudieron cargar los ejercicios. Inténtalo de nuevo.'); });
     return;
   }
   const preguntas = block ? (bank ? block.practiceBank : block.miniQuiz) : lesson.quizQuestions;
