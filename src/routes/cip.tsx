@@ -266,7 +266,8 @@ function Benefits() {
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           {BENEFITS.map((x) => (
             <div key={x.t} className="rounded-2xl border border-slate-200 p-5 shadow-sm">
-              <div className="text-3xl">{x.e}</div>
+              <img src={x.e} alt="" aria-hidden className="h-12 w-12" />
+
               <h3 className="mt-2 text-lg font-bold">{x.t}</h3>
               <p className="mt-1 text-sm text-slate-600">{x.d}</p>
             </div>
