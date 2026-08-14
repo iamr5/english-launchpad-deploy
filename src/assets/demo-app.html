@@ -2612,6 +2612,8 @@ function fetchBank(block) {
     .then(r => r.ok ? r.json() : Promise.reject(new Error('banco ' + r.status)))
     .then(j => {
       const items = applyTokens((j.practice || {})[block.id] || []);
+      // Red de seguridad: los "encuentra el error" del banco no traían enunciado.
+      for (const q of items) if (q && q.type === 'tap' && !q.question) q.question = 'Toca la palabra incorrecta:';
       block.practiceBank = items;
       block.bankN = items.length || block.bankN;
       return items;
