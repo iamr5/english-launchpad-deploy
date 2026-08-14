@@ -2962,7 +2962,20 @@ function addBankDone(lesson, blockId, n, tope) {
   const L = lp(lesson.id);
   const prev = (L.blocks[blockId] && L.blocks[blockId].n) || 0;
   L.blocks[blockId] = Object.assign({}, L.blocks[blockId], { n: Math.min(prev + n, tope) });
+  saveProgress(PROGRESS);
 }
+
+// Registro propio del cuaderno. La pestaña Práctica NO convalida la ruta: lo que
+// se supera aquí se anota aparte y no desbloquea secciones ni completa lecciones.
+function prKey(block, bank) { return block ? (bank ? block.id + '-bank' : block.id) : 'final'; }
+function isPracticeDone(id, key) { const p = PROGRESS[id]; return !!(p && p.prDone && p.prDone[key]); }
+function markPracticeDone(id, key) {
+  const L = lp(id);
+  if (!L.prDone) L.prDone = {};
+  L.prDone[key] = 1;
+  saveProgress(PROGRESS);
+}
+
 
 
 function lastUnlockedBlockIndex(lesson) {
