@@ -18,7 +18,7 @@ export const Route = createFileRoute("/cip")({
       {
         name: "description",
         content:
-          "Inglés completo de A1 a C1 (MCER), con inglés técnico de ingeniería incluido. Todavía no existe: se activa si somos suficientes. Deja tu correo y pásale la voz a tus colegas.",
+          "Inglés completo de A1 a C1 (MCER), con inglés técnico de ingeniería incluido. La plataforma ya está construida; el CIP la activa para todos los colegiados. Deja tu correo y únete.",
       },
       { property: "og:type", content: "website" },
       {
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/cip")({
       {
         property: "og:description",
         content:
-          "Curso completo A1–C1 con marca del Colegio: 45 microlecciones, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Falta la demanda. Preinscríbete y comparte.",
+          "Curso completo A1–C1 con marca del Colegio: 45 microlecciones, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Plataforma lista, esperando el visto bueno del CIP.",
       },
       { property: "og:image", content: "https://aprendoenglish.com/social-preview.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/cip")({
       },
       {
         name: "twitter:description",
-        content: "Inglés A1–C1 con inglés técnico incluido. Deja tu correo y pásale la voz.",
+        content: "Inglés A1–C1 con inglés técnico incluido. Plataforma construida, el CIP la activa cuando los colegiados la piden.",
       },
       { name: "twitter:image", content: "https://aprendoenglish.com/social-preview.jpg" },
 
@@ -124,17 +124,17 @@ const STEPS = [
   {
     n: "1",
     t: "Dejas tu correo",
-    d: "Toma diez segundos y no cuesta nada. Es tu voto para que el programa exista.",
+    d: "Toma diez segundos y no cuesta nada. Es tu voto para que el CIP active el programa.",
   },
   {
     n: "2",
     t: "Le pasas la voz a tus colegas",
-    d: "Mientras más ingenieros firmen, más fuerte es el pedido al Colegio. Una firma sola no mueve nada.",
+    d: "Mientras más ingenieros firmen, más claro es el pedido al Colegio. Una firma sola no mueve nada.",
   },
   {
     n: "3",
-    t: "El Colegio lo activa",
-    d: "La plataforma ya está construida. Con la demanda demostrada, puede estar funcionando en un mes.",
+    t: "El Colegio activa el acceso",
+    d: "La plataforma ya está construida. Con la demanda demostrada, los colegiados empiezan a disfrutarla.",
   },
 ];
 
@@ -248,7 +248,7 @@ function CipLanding() {
       <FinalCta brand={b} />
       <footer className="bg-paper band !py-8">
         <div className="sheet text-center text-xs font-semibold tracking-wide text-[var(--muted)]">
-          AprendoEnglish × {b.institution} · Campaña de preinscripción · Aún no es un servicio activo
+          AprendoEnglish × {b.institution} · Campaña de preinscripción · Plataforma lista para activarse
         </div>
       </footer>
     </main>
@@ -376,7 +376,7 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
               className="mb-7 h-16 w-auto object-contain"
             />
           ) : null}
-          <p className="eyebrow text-white/70">Todavía no existe · Puede existir en un mes</p>
+          <p className="eyebrow text-white/70">Plataforma construida · El Colegio debe activarla</p>
           <h1 className="title">
             Que todos los ingenieros del Perú
             <br />
@@ -384,8 +384,8 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
           </h1>
           <p className="lede mt-5 text-white/85">
             Un curso de inglés completo, de cero a nivel avanzado, con la marca del Colegio — y con
-            inglés técnico de ingeniería incluido. Ya está construido. Falta una sola cosa: demostrar
-            que los colegiados lo quieren. Tu correo es esa prueba.
+            inglés técnico de ingeniería incluido. La plataforma ya está construida; el Colegio debe
+            asegurarse de que los colegiados la quieren para encender el acceso.
           </p>
           <ul className="badges">
             {BADGES.map((b) => (
@@ -414,10 +414,10 @@ function Steps() {
     <section className="band bg-cream">
       <div className="sheet">
         <p className="eyebrow text-[var(--cip)]">Cómo funciona esta campaña</p>
-        <h2 className="head">Esto no está funcionando todavía. De ti depende que arranque.</h2>
+        <h2 className="head">El Colegio necesita ver que los colegiados lo quieren.</h2>
         <p className="lede mt-3 text-[var(--ink-2)]">
-          No estás comprando un curso: estás pidiendo que el Colegio lo active para todos los
-          colegiados.
+          No estás comprando un curso: estás confirmando tu interés para que el Colegio active la
+          plataforma que ya está lista.
         </p>
         <div className="mt-10 grid gap-8 md:grid-cols-3">
           {STEPS.map((s) => (
@@ -644,8 +644,8 @@ function Share() {
           </p>
           <p className="mt-4 text-[15.5px] font-semibold leading-relaxed text-[var(--ink-2)]">
             «Colega, el Colegio puede darnos inglés completo —de A1 a C1, con inglés técnico
-            incluido— a todos los colegiados, con la plataforma ya construida. Sólo falta que
-            seamos suficientes. Firma acá, toma diez segundos.»
+            incluido— a todos los colegiados, con la plataforma ya construida. Sólo falta que el
+            Colegio vea que los colegiados lo pedimos. Firma acá, toma diez segundos.»
 
           </p>
         </div>
@@ -731,8 +731,8 @@ function FinalCta({ brand }: { brand: { institution: string } }) {
         <p className="eyebrow text-white/75">Última llamada</p>
         <h2 className="head text-white">Firma y pásala</h2>
         <p className="lede mx-auto mt-3 text-white/90">
-          Diez segundos tuyos para que el {brand.institution} pueda lanzar, en un mes, la plataforma
-          de inglés de todos los colegiados: A1 a C1, con inglés técnico incluido.
+          Diez segundos tuyos para que el {brand.institution} pueda lanzar la plataforma de inglés de
+          todos los colegiados: A1 a C1, con inglés técnico incluido.
 
         </p>
         <div
