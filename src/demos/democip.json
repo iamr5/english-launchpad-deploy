@@ -7,6 +7,6 @@
     "imageAlt": "AprendoEnglish × CIP"
   },
   "mascot": { "pack": "boti" },
-  "copy": { "audience": "ingenier@" },
+  "copy": { "audience": "ingenier@", "groupNoun": "ciclo" },
   "vocab": { "packs": ["ingenieria"] }
 }
