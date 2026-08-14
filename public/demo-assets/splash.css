@@ -44,6 +44,20 @@
 @keyframes spPhraseIn {
   0% { opacity: 0; transform: translateY(14px); filter: blur(7px) }
   100% { opacity: 1; transform: none; filter: blur(0) } }
+/* Pista de interacción en la parte inferior: evita que el splash se vea
+   vacío en la parte de abajo y recuerda que es tocable. */
+.sp-hint { position: absolute; left: 0; right: 0; bottom: max(22px, 5vh); z-index: 3;
+  text-align: center; font-size: 13px; font-weight: 700; letter-spacing: .02em;
+  color: var(--sp-hint-ink, rgba(255,255,255,.92)); text-shadow: 0 1px 10px rgba(0,0,0,.25);
+  pointer-events: none; animation: spHintIn 1.4s cubic-bezier(.2,.85,.3,1) 1.2s both, spHintPulse 2.4s ease-in-out 2.6s infinite; }
+@keyframes spHintIn {
+  0% { opacity: 0; transform: translateY(12px); filter: blur(4px) }
+  100% { opacity: 1; transform: none; filter: blur(0) } }
+@keyframes spHintPulse {
+  0%,100% { opacity: .65; transform: translateY(0) }
+  50% { opacity: 1; transform: translateY(-4px) } }
+/* En el previo del panel el splash es pequeño y la pista sobra. */
+.sp.sp-preview .sp-hint { display: none; }
 
 /* — 1 · AURORA — manchas de luz a la deriva. Dos periodos que no encajan
      (9s y 11.5s): la luz nunca repite el mismo estado. */
