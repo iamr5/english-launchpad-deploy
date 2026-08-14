@@ -54,8 +54,9 @@ function courseContentPlugin() {
         .join("\n;\n");
       const run = new Function(
         "window",
-        `${src}\n;return { course: typeof COURSE_DATA !== "undefined" ? COURSE_DATA : window.COURSE_DATA, placement: window.PLACEMENT_ITEMS || [], practice: window.PRACTICE_BANK || {} };`,
+        `${src}\n;return { course: typeof COURSE_DATA !== "undefined" ? COURSE_DATA : window.COURSE_DATA, placement: window.PLACEMENT_ITEMS || [], practice: window.PRACTICE_BANK || {}, speaking: window.SPEAKING_BANK || {} };`,
       );
+
 
       const out = run({}) as { course?: { modules?: unknown[] } };
       if (!out?.course?.modules?.length) {
