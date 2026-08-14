@@ -1331,6 +1331,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <TabsTrigger value="textos">Textos</TabsTrigger>
               <TabsTrigger value="vocabulario">Vocabulario</TabsTrigger>
               <TabsTrigger value="mapa">Mapa</TabsTrigger>
+              <TabsTrigger value="preinscripciones">Preinscripciones</TabsTrigger>
             </TabsList>
 
             <div className="mb-5">
