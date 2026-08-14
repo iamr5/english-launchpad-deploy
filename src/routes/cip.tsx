@@ -320,6 +320,7 @@ const QUIZ_CSS = `
 
 function SampleQuiz() {
   const [i, setI] = useState(0);
+  const [sel, setSel] = useState<number | null>(null);
   const [picked, setPicked] = useState<number | null>(null);
   const [marks, setMarks] = useState<("done" | "fail")[]>([]);
   const q = SAMPLE[i]!;
@@ -329,15 +330,22 @@ function SampleQuiz() {
 
   function choose(k: number) {
     if (done) return;
-    setPicked(k);
-    setMarks((m) => [...m, k === q.ok ? "done" : "fail"]);
+    setSel(k);
+  }
+
+  function confirm() {
+    if (sel === null) return;
+    setPicked(sel);
+    setMarks((m) => [...m, sel === q.ok ? "done" : "fail"]);
   }
 
   function next() {
     if (last) return;
     setI(i + 1);
     setPicked(null);
+    setSel(null);
   }
+
 
   return (
     <section className="bg-slate-50 px-5 py-14">
