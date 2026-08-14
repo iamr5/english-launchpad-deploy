@@ -1,25 +1,35 @@
-# Fusionar las definiciones en español al banco de vocabulario
+# Landing de preinscripción en /cip
 
-Las 11.040 definiciones generadas siguen disponibles en el archivo intermedio (562 lotes, 0 errores). Falta incorporarlas al contenido del curso y comprobar que se vean en la ficha de cada palabra.
+Una página de venta corta, con la marca del demo del CIP (logos, colores, mascota Boti, vocabulario de ingeniería), cuyo único objetivo es: que el estudiante vea el valor en menos de un minuto y deje su correo.
 
-## Qué se hará
+## Movimiento de rutas
 
-1. **Fusión de datos**
-   - Script de una sola pasada que recorre el archivo intermedio de definiciones y las inserta como campo `d` en cada palabra de `src/content/vocab/general.js` y `src/content/vocab/packs.js`.
-   - El emparejamiento es por tema + palabra en inglés (normalizado), para evitar que una palabra repetida en dos temas reciba la definición equivocada.
-   - Se conserva el formato compacto actual del archivo generado (una línea por sección) para no inflar el peso ni romper el plugin de build.
+- La presentación que hoy vive en `/cip` pasa a `/cip-presentacion` (sigue existiendo `/CIP-presenta`).
+- `/cip` queda para el nuevo landing de preinscripción.
 
-2. **Verificación de cobertura**
-   - Recuento posterior a la fusión: cuántas palabras quedaron con `d`, cuántas sin ella y en qué temas, para cerrar los huecos con un segundo lote si los hubiera.
+## Estructura del landing (una sola pantalla larga, sin ruido)
 
-3. **Ficha de palabra**
-   - En `src/assets/demo-app.html`, la ficha mostrará la definición en español (`d`) como texto principal y la traducción como dato secundario; si una palabra no tuviera definición, sigue funcionando el respaldo actual.
+1. **Héroe**: logo CIP + AprendoEnglish, titular directo ("Aprende inglés técnico, sin salir del trabajo"), una línea de apoyo, Boti a un lado y el formulario de correo visible de inmediato (campo + botón "Quiero preinscribirme"). Debajo, contador social: "X ingenieros ya se preinscribieron".
+2. **Prueba el curso aquí mismo** (el bloque central): un quiz real interactivo tomado del banco del curso y una tarjeta de vocabulario de ingeniería, jugables en la propia página. Al terminar 2–3 preguntas aparece de nuevo el formulario con "Te faltan 8.127 ejercicios como este".
+3. **Vista del demo en vivo**: un marco con `/democip` cargado bajo demanda (aparece cuando se llega al bloque, igual que en los sílabos) para que vean la app real, más un botón "Abrir el demo completo".
+4. **Qué incluye**: cifras reales en 4–6 datos (45 microlecciones A1–C1, 377 quizzes, 8.127 ejercicios, 11.040 palabras con 779 de ingeniería, panel de progreso, certificado por nivel).
+5. **Cierre**: formulario otra vez + una línea de por qué ahora (cupos de la primera cohorte del CIP).
 
-4. **Comprobación en el navegador**
-   - Revisión en el demo: abrir varias palabras de temas distintos (banco general y un pack especializado) y confirmar que la definición aparece, que el peso de carga por tema no crece de forma notoria y que las tandas de 10 + examen siguen funcionando.
+Sin menú de navegación, sin secciones de relleno; cada bloque termina apuntando al mismo formulario.
+
+## Formulario y números
+
+- Un solo campo (correo) y un botón. Cada envío cuenta como firma.
+- Validación en el navegador y en el servidor; correo repetido no duplica registro, responde "ya estabas en la lista".
+- Estados: enviando, confirmado (mensaje de gracias con "compártelo con un colega") y error con reintento.
+- Se guarda correo, demo de origen (`cip`), fecha, y datos de campaña (`utm_*`) si vienen en el enlace.
+- **Panel en `/demos`**: nueva pestaña "Preinscripciones" con total, total de hoy, últimos registros y descarga CSV. Solo administradores.
 
 ## Detalles técnicos
 
-- Campo nuevo: `d` (definición en español) en cada entrada de palabra; no cambia el orden ni la forma del arreglo, así que el índice y la carga por tema (`virtual:vocab-content`) siguen igual.
-- La fusión se hace fuera del bundle del cliente: el contenido se evalúa en build, por lo que el navegador sigue recibiendo solo el tema pedido.
-- Sin cambios de esquema en base de datos ni en las rutas de demos.
+- Tabla `public.preinscripciones` (id, email único por demo, slug, utm, created_at) con RLS: inserción vía endpoint de servidor (no escritura directa desde el navegador), lectura solo para el rol admin; GRANTs explícitos.
+- Endpoint `src/routes/api/public/preinscripcion.ts`: validación con Zod, límite de intentos por IP, respuesta idempotente.
+- Landing servido desde `src/routes/cip.tsx` (HTML propio en `src/assets/cip-preinscripcion.html`), con la marca resuelta en el servidor con la misma configuración de `democip` que ya usa `/demos` — si mañana cambian el logo o los colores del demo, el landing los toma solos.
+- El quiz de muestra se sirve desde el banco existente por la API de práctica; nada de duplicar contenido.
+- Metadatos propios: título, descripción, og:image y favicon del CIP.
+- Nueva ruta `src/routes/cip-presentacion.tsx` con el HTML actual de la presentación.
