@@ -217,6 +217,93 @@ export type Database = {
           },
         ]
       }
+      speaking_attempts: {
+        Row: {
+          ai_latency_ms: number | null
+          ai_transcript: string
+          attempt_number: number
+          audio_bytes: number | null
+          audio_expires_at: string | null
+          audio_path: string | null
+          created_at: string
+          demo_slug: string
+          duration_ms: number
+          exercise_id: string
+          feedback: Json
+          fluency_score: number | null
+          grammar_score: number | null
+          id: string
+          level: string
+          local_latency_ms: number | null
+          local_score: number | null
+          local_transcript: string
+          mode: string
+          passed: boolean
+          problem_words: Json
+          pronunciation_score: number | null
+          updated_at: string
+          usage: Json
+          user_id: string
+          word_differences: Json
+        }
+        Insert: {
+          ai_latency_ms?: number | null
+          ai_transcript?: string
+          attempt_number: number
+          audio_bytes?: number | null
+          audio_expires_at?: string | null
+          audio_path?: string | null
+          created_at?: string
+          demo_slug: string
+          duration_ms?: number
+          exercise_id: string
+          feedback?: Json
+          fluency_score?: number | null
+          grammar_score?: number | null
+          id?: string
+          level: string
+          local_latency_ms?: number | null
+          local_score?: number | null
+          local_transcript?: string
+          mode: string
+          passed?: boolean
+          problem_words?: Json
+          pronunciation_score?: number | null
+          updated_at?: string
+          usage?: Json
+          user_id: string
+          word_differences?: Json
+        }
+        Update: {
+          ai_latency_ms?: number | null
+          ai_transcript?: string
+          attempt_number?: number
+          audio_bytes?: number | null
+          audio_expires_at?: string | null
+          audio_path?: string | null
+          created_at?: string
+          demo_slug?: string
+          duration_ms?: number
+          exercise_id?: string
+          feedback?: Json
+          fluency_score?: number | null
+          grammar_score?: number | null
+          id?: string
+          level?: string
+          local_latency_ms?: number | null
+          local_score?: number | null
+          local_transcript?: string
+          mode?: string
+          passed?: boolean
+          problem_words?: Json
+          pronunciation_score?: number | null
+          updated_at?: string
+          usage?: Json
+          user_id?: string
+          word_differences?: Json
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
