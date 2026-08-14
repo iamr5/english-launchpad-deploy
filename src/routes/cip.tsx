@@ -195,7 +195,7 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
           {state === "sending" ? "Enviando…" : cta}
         </button>
       </div>
-      <p className="mt-2 text-xs text-slate-500">
+      <p className="mt-1 text-xs text-slate-500">
         Solo usamos tu correo para avisarte del inicio.
       </p>
       {state === "error" && (
