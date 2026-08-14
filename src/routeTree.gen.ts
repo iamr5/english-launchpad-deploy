@@ -36,6 +36,7 @@ import { Route as SlugDashboardRouteImport } from './routes/$slug_.dashboard'
 import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as ApiDemosMetasRouteImport } from './routes/api/demos/metas'
 import { Route as ApiDemosInvalidateRouteImport } from './routes/api/demos/invalidate'
+import { Route as ApiCourseVocabRouteImport } from './routes/api/course/vocab'
 import { Route as ApiCoursePracticeRouteImport } from './routes/api/course/practice'
 import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
@@ -175,6 +176,11 @@ const ApiDemosInvalidateRoute = ApiDemosInvalidateRouteImport.update({
   path: '/api/demos/invalidate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCourseVocabRoute = ApiCourseVocabRouteImport.update({
+  id: '/api/course/vocab',
+  path: '/api/course/vocab',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCoursePracticeRoute = ApiCoursePracticeRouteImport.update({
   id: '/api/course/practice',
   path: '/api/course/practice',
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/course/practice': typeof ApiCoursePracticeRoute
+  '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
@@ -256,6 +263,7 @@ export interface FileRoutesByTo {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/course/practice': typeof ApiCoursePracticeRoute
+  '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
@@ -290,6 +298,7 @@ export interface FileRoutesById {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/course/practice': typeof ApiCoursePracticeRoute
+  '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
@@ -324,6 +333,7 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/course/practice'
+    | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
     | '/api/public/share-invite'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/course/practice'
+    | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
     | '/api/public/share-invite'
@@ -389,6 +400,7 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/course/practice'
+    | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
     | '/api/public/share-invite'
@@ -420,6 +432,7 @@ export interface RootRouteChildren {
   ApiBrandSplatRoute: typeof ApiBrandSplatRoute
   ApiCourseBundleRoute: typeof ApiCourseBundleRoute
   ApiCoursePracticeRoute: typeof ApiCoursePracticeRoute
+  ApiCourseVocabRoute: typeof ApiCourseVocabRoute
   ApiDemosInvalidateRoute: typeof ApiDemosInvalidateRoute
   ApiDemosMetasRoute: typeof ApiDemosMetasRoute
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
@@ -617,6 +630,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiDemosInvalidateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/course/vocab': {
+      id: '/api/course/vocab'
+      path: '/api/course/vocab'
+      fullPath: '/api/course/vocab'
+      preLoaderRoute: typeof ApiCourseVocabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/course/practice': {
       id: '/api/course/practice'
       path: '/api/course/practice'
@@ -688,6 +708,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiBrandSplatRoute: ApiBrandSplatRoute,
   ApiCourseBundleRoute: ApiCourseBundleRoute,
   ApiCoursePracticeRoute: ApiCoursePracticeRoute,
+  ApiCourseVocabRoute: ApiCourseVocabRoute,
   ApiDemosInvalidateRoute: ApiDemosInvalidateRoute,
   ApiDemosMetasRoute: ApiDemosMetasRoute,
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,

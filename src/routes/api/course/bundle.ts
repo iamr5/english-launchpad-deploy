@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getCourse, getPlacement, getPracticeIndex } from "@/lib/course-data.server";
+import { getVocabIndex } from "@/lib/vocab-data.server";
 import { verifyCourseToken } from "@/lib/course-token";
 
 // El contenido del curso. Antes vivía en public/ y se bajaba entero con una sola
@@ -44,11 +45,25 @@ export const Route = createFileRoute("/api/course/bundle")({
           return Response.json({ error: "rate_limited" }, { status: 429 });
         }
 
+        // Qué bancos de vocabulario especializado lleva este demo. Los elige el
+        // panel al configurarlo; van en la URL porque el pase sólo dice el slug.
+        const packs = (url.searchParams.get("vpacks") || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .slice(0, 8);
+
         return Response.json(
-          // El banco NO viaja aquí: son ~2 MB y bloqueaban el arranque. Sólo su índice
-          // (cuántos ejercicios tiene cada teoría); los ejercicios salen por
-          // /api/course/practice cuando el alumno abre esa tanda.
-          { course: getCourse(), placement: getPlacement(), practiceIndex: getPracticeIndex() },
+          // Ni el banco de práctica ni la biblioteca de vocabulario viajan aquí:
+          // son varios MB y bloqueaban el arranque. Sólo sus índices; el
+          // contenido sale por /api/course/practice y /api/course/vocab cuando
+          // el alumno abre esa tanda o ese tema.
+          {
+            course: getCourse(),
+            placement: getPlacement(),
+            practiceIndex: getPracticeIndex(),
+            vocabIndex: getVocabIndex(packs, url.searchParams.get("vmax") || ""),
+          },
           {
             headers: {
               // Que no se quede en ninguna caché intermedia: cada visita pasa
