@@ -28,7 +28,9 @@ const cache = bundle as {
   course: Course;
   placement: unknown[];
   practice?: Record<string, unknown[]>;
+  speaking?: Record<string, unknown[]>;
 };
+
 
 /** El curso ya armado (evaluado en build). */
 function build() {
