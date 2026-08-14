@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getCourse, getPlacement, getPracticeIndex } from "@/lib/course-data.server";
+import {
+  getCourse,
+  getPlacement,
+  getPracticeIndex,
+  getSpeakingIndex,
+} from "@/lib/course-data.server";
+
 import { getVocabIndex } from "@/lib/vocab-data.server";
 import { verifyCourseToken } from "@/lib/course-token";
 
