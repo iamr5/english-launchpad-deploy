@@ -4973,7 +4973,8 @@ function renderPractice() {
   el.querySelectorAll('.pr-q').forEach(b => b.onclick = () => {
     const lesson = allLessons[+b.getAttribute('data-l')];
     const bi = +b.getAttribute('data-b');
-    if (lesson) openPracticeQuiz(lesson, bi >= 0 ? lesson.contentBlocks[bi] : null);
+    if (lesson) openPracticeQuiz(lesson, bi >= 0 ? lesson.contentBlocks[bi] : null,
+      b.getAttribute('data-bank') === '1');
   });
 }
 
@@ -4991,9 +4992,11 @@ function practiceRefresh(cambio) {
 }
 
 // `block` = el bloque cuyo mini-quiz se practica; null = el quiz final.
-function openPracticeQuiz(lesson, block) {
-  const preguntas = block ? block.miniQuiz : lesson.quizQuestions;
+// `bank` = se practican los ejercicios extra de ese bloque en vez de su mini-quiz.
+function openPracticeQuiz(lesson, block, bank) {
+  const preguntas = block ? (bank ? block.practiceBank : block.miniQuiz) : lesson.quizQuestions;
   if (!preguntas || !preguntas.length) return;
+
   const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
   let round, redo, idx, results, failedQs, skillAgg, answered = 0;
   _dismissGuard = () => answered > 0; // confirmar antes de salir si ya se respondio algo
