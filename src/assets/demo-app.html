@@ -4936,11 +4936,13 @@ function practiceItems(lesson) {
     name: 'Quiz final',
     qs: lesson.quizQuestions.length,
     done: isQuizCompleted(lesson.id),
+    hechas: isQuizCompleted(lesson.id) ? lesson.quizQuestions.length : 0,
     // Mismo criterio que onLessonQuizTap: el final se abre con todos los
     // mini-quizzes hechos, no antes.
     open: abierta && (isLessonCompleted(lesson.id) || allMiniQuizzesDone(lesson)),
     final: true,
   });
+
   return items;
 }
 
