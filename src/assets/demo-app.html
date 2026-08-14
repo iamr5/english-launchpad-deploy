@@ -3224,7 +3224,43 @@ function warmDashboard() {
   if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 4000 });
   else setTimeout(go, 1500);
 }
+// La Ruta es el "home": antes de las lecciones va un saludo con el nombre del
+// onboarding y un resumen de por dónde va el alumno. Todo son datos reales que
+// ya se calculan para Mi progreso; aquí sólo se resumen.
+function homeGreeting() {
+  const prof = (typeof loadProfile === 'function' && loadProfile()) || {};
+  const nombre = prof.name ? escapeHtml(prof.name) : '';
+  const total = allLessons.length;
+  const hechas = allLessons.filter(l => isLessonCompleted(l.id)).length;
+  const pct = total ? Math.round((hechas / total) * 100) : 0;
+  const racha = streakDays();
+  const xp = totalXp();
+  const C = 2 * Math.PI * 26;
+  return `<div class="home-hi">
+    <div class="hh-top">
+      <div class="hh-txt">
+        <b>¡Hola${nombre ? ', ' + nombre : ''}! Qué bueno verte de vuelta :)</b>
+        <small>${hechas === 0 ? 'Empecemos por tu primera lección.' : `Llevas ${hechas} de ${total} lecciones. Sigamos donde lo dejaste.`}</small>
+      </div>
+      <div class="hh-ring">
+        <svg width="62" height="62" viewBox="0 0 62 62" aria-hidden="true">
+          <circle class="track" cx="31" cy="31" r="26"/>
+          <circle class="prog" cx="31" cy="31" r="26"
+                  stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - pct / 100)).toFixed(1)}"/>
+        </svg>
+        <span class="hh-pct">${pct}%</span>
+      </div>
+    </div>
+    <div class="hh-stats">
+      <span class="hh-st"><b>${hechas}/${total}</b><i>lecciones</i></span>
+      <span class="hh-st"><b>${racha}</b><i>días de racha</i></span>
+      <span class="hh-st"><b>${fmtXp(xp)}</b><i>XP</i></span>
+    </div>
+  </div>`;
+}
+
 function renderCourse() {
+
   show('course');
   precacheModuleBgs(); // warm the module backdrops while on the modules list
   document.getElementById('course-title').innerHTML = brandHTML();
