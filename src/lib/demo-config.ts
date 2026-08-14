@@ -497,7 +497,7 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
   // no tiene teñido de uno que lo guardó con la forma antigua (`tint`).
   mascot: { pack: "ozito" },
   // `goal` vacío conserva el anillo de progreso; con emoji o URL, lo sustituye.
-  icons: { streak: "/demo-assets/streak.svg", goal: "", dashboard: "📊" },
+  icons: { streak: "/demo-assets/streak.svg", goal: "", dashboard: "/demo-assets/stats.svg" },
   copy: {
     audience: "estudiante",
     dashboardCta: "Ver mi panel de progreso",
