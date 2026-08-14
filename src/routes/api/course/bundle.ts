@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getCourse, getPlacement } from "@/lib/course-data.server";
+import { getCourse, getPlacement, getPractice } from "@/lib/course-data.server";
 import { verifyCourseToken } from "@/lib/course-token";
 
 // El contenido del curso. Antes vivía en public/ y se bajaba entero con una sola
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/api/course/bundle")({
         }
 
         return Response.json(
-          { course: getCourse(), placement: getPlacement() },
+          { course: getCourse(), placement: getPlacement(), practice: getPractice() },
           {
             headers: {
               // Que no se quede en ninguna caché intermedia: cada visita pasa

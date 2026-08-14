@@ -2540,7 +2540,21 @@ async function loadCourse() {
   window.PLACEMENT_ITEMS = data.placement || [];
   course = applyTokens(data.course);
   allLessons = course.modules.flatMap(m => m.lessons);
+  attachPracticeBank(data.practice || {});
 }
+
+// Banco de práctica: ejercicios extra por bloque de teoría, escritos aparte del
+// curso para no engordar la lección. Se cuelgan del bloque como `practiceBank`.
+// La lección sigue usando su miniQuiz de siempre; la pestaña Práctica ofrece
+// además todo el banco, que es donde vive el grueso de los ejercicios.
+function attachPracticeBank(bank) {
+  const items = applyTokens(bank) || {};
+  course.modules.forEach(m => m.lessons.forEach(l => (l.contentBlocks || []).forEach(b => {
+    const extra = items[b.id];
+    if (extra && extra.length) b.practiceBank = extra;
+  })));
+}
+
 
 // WIPED: una vez que el usuario pide "Borrar TODO", ninguna escritura tardía
 // (guardado diferido, cronómetro) puede resucitar el progreso viejo.
@@ -4888,6 +4902,17 @@ function practiceItems(lesson) {
       open: abierta && i <= last,
       final: false,
     });
+    // Los ejercicios extra del banco de práctica de esa misma teoría. No son
+    // parte de la lección: no la desbloquean ni la bloquean, se hacen aparte.
+    if (b.practiceBank && b.practiceBank.length) items.push({
+      bi: i,
+      bank: true,
+      name: (n ? `Teoría ${n}` : (b.title || 'Sección')) + ' · práctica extra',
+      qs: b.practiceBank.length,
+      done: isMiniQuizCompleted(lesson.id, b.id + '-bank'),
+      open: true,
+      final: false,
+    });
   });
   if (lesson.quizQuestions && lesson.quizQuestions.length) items.push({
     bi: -1,
@@ -4901,6 +4926,7 @@ function practiceItems(lesson) {
   });
   return items;
 }
+
 
 // Se repinta en cada entrada: lo hecho cambia a medida que avanza la ruta.
 // Aquí NO se filtra por desbloqueo: Práctica es un cuaderno de ejercicios y se
@@ -4922,7 +4948,8 @@ function renderPractice() {
           <span class="pr-les-c">${hechos}/${items.length}</span></div>
         <div class="pr-list">` +
         items.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
-            data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}">
+            data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}" data-bank="${q.bank ? 1 : 0}">
+
             <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
             <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
             <span class="pr-q-go">${arrowFwd(20, 'currentColor', 2.6)}</span>
@@ -4946,7 +4973,8 @@ function renderPractice() {
   el.querySelectorAll('.pr-q').forEach(b => b.onclick = () => {
     const lesson = allLessons[+b.getAttribute('data-l')];
     const bi = +b.getAttribute('data-b');
-    if (lesson) openPracticeQuiz(lesson, bi >= 0 ? lesson.contentBlocks[bi] : null);
+    if (lesson) openPracticeQuiz(lesson, bi >= 0 ? lesson.contentBlocks[bi] : null,
+      b.getAttribute('data-bank') === '1');
   });
 }
 
@@ -4964,9 +4992,11 @@ function practiceRefresh(cambio) {
 }
 
 // `block` = el bloque cuyo mini-quiz se practica; null = el quiz final.
-function openPracticeQuiz(lesson, block) {
-  const preguntas = block ? block.miniQuiz : lesson.quizQuestions;
+// `bank` = se practican los ejercicios extra de ese bloque en vez de su mini-quiz.
+function openPracticeQuiz(lesson, block, bank) {
+  const preguntas = block ? (bank ? block.practiceBank : block.miniQuiz) : lesson.quizQuestions;
   if (!preguntas || !preguntas.length) return;
+
   const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
   let round, redo, idx, results, failedQs, skillAgg, answered = 0;
   _dismissGuard = () => answered > 0; // confirmar antes de salir si ya se respondio algo
@@ -5011,9 +5041,10 @@ function openPracticeQuiz(lesson, block) {
     touchDay(); // pasar un quiz es actividad del dia, se entre por donde se entre
     // Practicar algo que aun no estaba superado SI cuenta: seria raro aprobarlo
     // aqui y que la ruta siguiera diciendo que te falta.
-    const nuevo = block ? !isMiniQuizCompleted(lesson.id, block.id) : !isQuizCompleted(lesson.id);
+    const marca = block ? (bank ? block.id + '-bank' : block.id) : null;
+    const nuevo = block ? !isMiniQuizCompleted(lesson.id, marca) : !isQuizCompleted(lesson.id);
     if (nuevo) {
-      if (block) markMiniQuizCompleted(lesson, block.id);
+      if (block) markMiniQuizCompleted(lesson, marca);
       // Las destrezas del panel se graban con la PRIMERA vez que se supera el
       // final. Una repeticion no las reescribe: practicar no puede empeorar una
       // nota que ya te habias sacado.
@@ -5022,10 +5053,12 @@ function openPracticeQuiz(lesson, block) {
     practiceRefresh(nuevo);  // la lista de detras queda al dia antes de enseñar el resultado
     _dismissGuard = null;    // ya esta guardado: salir de la hoja no pierde nada
     result('check', '#2E7D1A', 'ok', '¡Bien hecho!',
-      nuevo ? (block ? 'Sección superada. Ya cuenta en tu ruta.' : '¡Lección completada! Ya cuenta en tu ruta.')
+      nuevo ? (bank ? 'Tanda superada. Vuelve por otra cuando quieras.'
+                    : (block ? 'Sección superada. Ya cuenta en tu ruta.' : '¡Lección completada! Ya cuenta en tu ruta.'))
             : 'Ronda limpia. Vuelve cuando quieras.',
       'green', 'Continuar', closeOverlay);
   }
+
   function showRedo(failed) {
     const one = failed.length === 1;
     result('refresh', '#5C5159', 'no', 'Repasemos',
@@ -5037,11 +5070,15 @@ function openPracticeQuiz(lesson, block) {
     // fallos) y aqui solo estas repitiendo algo que ya abriste.
     result('refresh', '#5C5159', 'no', 'Casi lo tienes',
       'Fallaste otra vez. Repite el quiz completo cuando quieras.',
-      'blue', 'Reintentar', () => startRound(shuffle(preguntas), false));
+      'blue', 'Reintentar', () => startRound(tanda(), false));
   }
+  // El banco de una teoría trae muchos más ejercicios de los que se pueden hacer
+  // de una sentada: cada entrada saca una tanda corta y distinta.
+  function tanda() { const s = shuffle(preguntas); return bank ? s.slice(0, 10) : s; }
   sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
-  startRound(shuffle(preguntas), false);
+  startRound(tanda(), false);
 }
+
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // SHEETS / DIALOGS

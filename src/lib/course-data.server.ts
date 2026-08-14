@@ -24,7 +24,11 @@ type Lesson = {
 type Module = { id: string; title: string; description?: string; lessons: Lesson[] };
 export type Course = { modules: Module[]; [k: string]: unknown };
 
-const cache = bundle as { course: Course; placement: unknown[] };
+const cache = bundle as {
+  course: Course;
+  placement: unknown[];
+  practice?: Record<string, unknown[]>;
+};
 
 /** El curso ya armado (evaluado en build). */
 function build() {
@@ -44,6 +48,16 @@ export function getCourse(): Course {
 export function getPlacement(): unknown[] {
   return build().placement;
 }
+
+/**
+ * El banco de práctica: ejercicios extra indexados por id de bloque de teoría.
+ * No viven dentro del curso porque no son parte de la lección — la lección toma
+ * una muestra y la pestaña Práctica los sirve todos.
+ */
+export function getPractice(): Record<string, unknown[]> {
+  return build().practice || {};
+}
+
 
 /**
  * Sólo el esqueleto: módulos y lecciones con su título y duración, sin una línea

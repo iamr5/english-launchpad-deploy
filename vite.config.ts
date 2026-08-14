@@ -26,7 +26,14 @@ function courseContentPlugin() {
     "data_modulo4.js",
     "data_modulo5.js",
     "placement_items.js",
+    // Banco de práctica: ejercicios extra por bloque de teoría. Se cargan aquí
+    // por lo mismo que el curso — el runtime de Workers no evalúa código suelto.
+    "practice_bank_m1m2.js",
+    "practice_bank_m3.js",
+    "practice_bank_m4.js",
+    "practice_bank_m5.js",
   ];
+
   return {
     name: "course-content",
     resolveId(id: string) {
@@ -39,13 +46,14 @@ function courseContentPlugin() {
         .map((f) => {
           const p = path.join(dir, f);
           this.addWatchFile(p);
-          return fs.readFileSync(p, "utf8");
+          return fs.existsSync(p) ? fs.readFileSync(p, "utf8") : "";
         })
         .join("\n;\n");
       const run = new Function(
         "window",
-        `${src}\n;return { course: typeof COURSE_DATA !== "undefined" ? COURSE_DATA : window.COURSE_DATA, placement: window.PLACEMENT_ITEMS || [] };`,
+        `${src}\n;return { course: typeof COURSE_DATA !== "undefined" ? COURSE_DATA : window.COURSE_DATA, placement: window.PLACEMENT_ITEMS || [], practice: window.PRACTICE_BANK || {} };`,
       );
+
       const out = run({}) as { course?: { modules?: unknown[] } };
       if (!out?.course?.modules?.length) {
         throw new Error("El contenido del curso no se pudo evaluar en build.");
