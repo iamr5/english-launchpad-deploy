@@ -2798,6 +2798,8 @@ async function loadCourse() {
   allLessons = course.modules.flatMap(m => m.lessons);
   attachPracticeIndex(data.practiceIndex || {});
   VOCAB = data.vocabIndex || [];
+  SPEAKING_INDEX = data.speakingIndex || {};
+
 }
 
 // Banco de práctica: ejercicios extra por bloque de teoría, escritos aparte del
