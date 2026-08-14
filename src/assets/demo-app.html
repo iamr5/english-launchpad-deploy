@@ -4951,7 +4951,7 @@ function renderPractice() {
             data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}" data-bank="${q.bank ? 1 : 0}">
 
             <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
-            <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
+            <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'}${q.bank ? ' · tandas de 10' : ''} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
             <span class="pr-q-go">${arrowFwd(20, 'currentColor', 2.6)}</span>
           </button>`).join('') +
         `</div></div>`;
