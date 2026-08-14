@@ -315,7 +315,7 @@ const QUIZ_CSS = `
 .qz .fb-line.ok strong { color:var(--okDark); }
 .qz .fb-line.no strong { color:#B3261E; }
 .qz .btn { width:100%; border:none; border-radius:18px; padding:14px; font-family:inherit; font-size:18px;
-  font-weight:700; color:#fff; cursor:pointer; min-height:52px; margin-top:auto;
+  font-weight:700; color:#fff; cursor:pointer; min-height:52px; margin-top:auto; background:var(--ok); --lip:var(--okDark);
   transition:transform .12s ease, box-shadow .12s ease; }
 .qz .btn:disabled { opacity:.45; cursor:default; box-shadow:none; }
 .qz .btn:not(:disabled) { box-shadow:0 4px 0 var(--lip), 0 6px 14px rgba(0,0,0,.16); }
