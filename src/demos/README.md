@@ -24,7 +24,7 @@ nada configurado se ve exactamente como el demo genérico.
     "spinner": "#0F5B8C"
   },
   "mascot": { "pack": "ozito" },
-  "icons": { "streak": "🔥", "goal": "", "dashboard": "📊" },
+  "icons": { "streak": "/demo-assets/streak.svg", "goal": "", "dashboard": "📊" },
   "copy": { "audience": "estudiante" },
   "map": { "backgrounds": [null, null, "https://…/mapa3.png", null, null] }
 }

@@ -612,6 +612,8 @@
     font-family: inherit; font-size: 15px; font-weight: 800; color: var(--ink); cursor: pointer;
     display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
   .streak-chip:active { background: var(--card); }
+  img.sc-em { width: 19px; height: 19px; display: block; flex: 0 0 auto; }
+  .pg-flame img.fl { width: 28px; height: 28px; }
   .pg-hero { cursor: default; }
   .pg-hero .pg-row { display: flex; align-items: center; gap: 16px; }
   .pg-ring { position: relative; width: 104px; height: 104px; flex: 0 0 auto; }
@@ -844,7 +846,7 @@
   <!-- COURSE (entry screen — the single-course landing was removed as redundant) -->
   <section id="screen-course" class="screen active">
     <div class="appbar"><img class="appbar-en" src="head.png" alt=""><div class="title" id="course-title"></div>
-      <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()">🔥<b id="streak-n">0</b></button>
+      <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()"><img class="sc-em" src="/demo-assets/streak.svg" alt="" aria-hidden="true"><b id="streak-n">0</b></button>
     </div>
     <div class="scroll"><div class="pad" id="course-body"></div></div>
     <div class="course-foot" id="course-foot"></div>
@@ -1639,7 +1641,7 @@ function renderProgress() {
         <h2 class="pg-hello">¡Hola, ${escapeHtml(name)}!</h2>
         <div class="pg-sub" style="margin-bottom:0">Sigamos con tu inglés 👋</div>
       </div>
-      <div class="pg-flame"><span class="fl">🔥</span><div class="txt"><b>${streak}</b><span>días de racha</span></div></div>
+      <div class="pg-flame"><img class="fl" src="/demo-assets/streak.svg" alt="" aria-hidden="true"><div class="txt"><b>${streak}</b><span>días de racha</span></div></div>
     </div>
   </div>
 
