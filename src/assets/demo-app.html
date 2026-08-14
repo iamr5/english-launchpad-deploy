@@ -5092,13 +5092,14 @@ function openFinalQuiz(lesson, mod) {
 // `open` = se puede hacer ya; los que no, ni se listan.
 function practiceItems(lesson) {
   const blocks = lesson.contentBlocks;
-  const abierta = isLessonUnlocked(lesson.id);
-  const last = lastUnlockedBlockIndex(lesson);
   const items = [];
   blocks.forEach((b, i) => {
     if (!(b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length)) return;
     const n = teoriaNumber(blocks, i);
-    const hechoMq = isMiniQuizCompleted(lesson.id, b.id);
+    // Estado del CUADERNO, no de la ruta: una sección superada en la lección
+    // sigue apareciendo como pendiente aquí hasta que se practique aquí, y al
+    // revés practicarla aquí no la marca en la ruta.
+    const hechoMq = isPracticeDone(lesson.id, b.id);
     items.push({
       bi: i,
       // El mismo nombre que lleva la seccion dentro de la leccion. Inventarle uno
@@ -5106,12 +5107,10 @@ function practiceItems(lesson) {
       name: n ? `Teoría ${n}` : (b.title || `Sección ${items.length + 1}`),
       qs: b.miniQuiz.length,
       done: hechoMq,
-      // Ejercicios superados de esta fila. Un quiz de la ruta es todo o nada:
+      // Ejercicios superados de esta fila. Un quiz completo es todo o nada:
       // al aprobarlo cuentan sus preguntas, antes no cuenta ninguna.
       hechas: hechoMq ? b.miniQuiz.length : 0,
-      // Mismo criterio que el cuerpo de la leccion: el mini-quiz esta disponible
-      // en cuanto su bloque esta desbloqueado.
-      open: abierta && i <= last,
+      open: true,
       final: false,
     });
     // Los ejercicios extra del banco de práctica de esa misma teoría. No son
@@ -5121,7 +5120,7 @@ function practiceItems(lesson) {
       bank: true,
       name: (n ? `Teoría ${n}` : (b.title || 'Sección')) + ' · práctica extra',
       qs: b.bankN,
-      done: isMiniQuizCompleted(lesson.id, b.id + '-bank'),
+      done: isPracticeDone(lesson.id, b.id + '-bank'),
       // El banco sale en tandas: cuentan los ejercicios hechos, no la fila.
       hechas: Math.min(bankDoneCount(lesson.id, b.id + '-bank'), b.bankN),
 
@@ -5134,16 +5133,15 @@ function practiceItems(lesson) {
     bi: -1,
     name: 'Quiz final',
     qs: lesson.quizQuestions.length,
-    done: isQuizCompleted(lesson.id),
-    hechas: isQuizCompleted(lesson.id) ? lesson.quizQuestions.length : 0,
-    // Mismo criterio que onLessonQuizTap: el final se abre con todos los
-    // mini-quizzes hechos, no antes.
-    open: abierta && (isLessonCompleted(lesson.id) || allMiniQuizzesDone(lesson)),
+    done: isPracticeDone(lesson.id, 'final'),
+    hechas: isPracticeDone(lesson.id, 'final') ? lesson.quizQuestions.length : 0,
+    open: true,
     final: true,
   });
 
   return items;
 }
+
 
 
 // La pestaña Práctica es una BIBLIOTECA: cada lección es un "libro" con su
