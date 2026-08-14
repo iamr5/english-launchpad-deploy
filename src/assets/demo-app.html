@@ -1168,6 +1168,9 @@
     transition: transform .1s ease; }
   .ob-opt:active { transform: translateY(1px); }
   .ob-opt .em { font-size: 27px; flex: 0 0 auto; }
+  /* Iconos propios (SVG) dentro de los mismos huecos que ocupaban los emojis */
+  .ob-opt .em img { display: block; width: 32px; height: 32px; }
+  .ob-point.big .em img { display: block; width: 38px; height: 38px; }
   .ob-opt small { display: block; font-size: 13.5px; font-weight: 600; color: var(--muted2); }
   .ob-opt.sel { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 10%, transparent); color: var(--blue); box-shadow: 0 2px 0 color-mix(in srgb, var(--blue) 45%, transparent); }
   .ob-opt.sel small { color: var(--blue); opacity: .75; }
@@ -2229,17 +2232,17 @@
         <!-- 4 · payoff (lo que lograrás) -->
         <div class="ob-step" data-step="4">
           <div class="ob-points">
-            <div class="ob-point big plain p1"><span class="em">💬</span><div><b>Conversa con confianza</b><small>Practica conversación y comprensión relajadamente</small></div></div>
-            <div class="ob-point big plain p2"><span class="em">🔤</span><div><b>Expande tu vocabulario</b><small>Palabras comunes y frases útiles</small></div></div>
-            <div class="ob-point big plain p3"><span class="em">⏰</span><div><b>Crea un hábito de aprendizaje</b><small>Recordatorios, misiones y una racha que cuidar</small></div></div>
+            <div class="ob-point big plain p1"><span class="em"><img src="/demo-assets/ob-speech.svg" alt="" aria-hidden="true"></span><div><b>Conversa con confianza</b><small>Practica conversación y comprensión relajadamente</small></div></div>
+            <div class="ob-point big plain p2"><span class="em"><img src="/demo-assets/ob-words.svg" alt="" aria-hidden="true"></span><div><b>Expande tu vocabulario</b><small>Palabras comunes y frases útiles</small></div></div>
+            <div class="ob-point big plain p3"><span class="em"><img src="/demo-assets/ob-goal.svg" alt="" aria-hidden="true"></span><div><b>Crea un hábito de aprendizaje</b><small>Recordatorios, misiones y una racha que cuidar</small></div></div>
           </div>
         </div>
         <!-- 5 · meta diaria (tap para avanzar) -->
         <div class="ob-step" data-step="5">
           <div class="ob-opts">
-            <button class="ob-opt" data-goal="15"><span class="em">⚡</span><span>15 min al día<small>Calentando</small></span></button>
-            <button class="ob-opt" data-goal="30"><span class="em">🔥</span><span>30 min al día<small>Decidido</small></span></button>
-            <button class="ob-opt" data-goal="60"><span class="em">🚀</span><span>1 hora al día<small>Imparable</small></span></button>
+            <button class="ob-opt" data-goal="15"><span class="em"><img src="/demo-assets/ob-thunder.svg" alt="" aria-hidden="true"></span><span>15 min al día<small>Calentando</small></span></button>
+            <button class="ob-opt" data-goal="30"><span class="em"><img src="/demo-assets/streak.svg" alt="" aria-hidden="true"></span><span>30 min al día<small>Decidido</small></span></button>
+            <button class="ob-opt" data-goal="60"><span class="em"><img src="/demo-assets/ob-rocket.svg" alt="" aria-hidden="true"></span><span>1 hora al día<small>Imparable</small></span></button>
           </div>
         </div>
         <!-- 6 · listo -->
