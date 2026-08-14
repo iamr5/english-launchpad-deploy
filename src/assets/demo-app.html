@@ -6212,8 +6212,359 @@ function openPracticeQuiz(lesson, block, bank) {
 }
 
 
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// SPEAKING — hablar en voz alta, A1 → C1
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//
+// Dos motores, y el ejercicio decide cuál:
+//
+//   · repetir / leer  → el navegador reconoce la voz y se compara palabra por
+//     palabra con la frase modelo. No sale nada del dispositivo, no cuesta nada.
+//   · habla libre     → se graba un WAV corto y lo evalúa la IA
+//     (/api/course/speaking-eval): transcribe, puntúa y aconseja.
+//
+// La evaluación con IA tiene tope diario por alumno (SP_AI_MAX). Pasado el tope
+// el ejercicio NO se bloquea: cae al reconocimiento del navegador.
+
+let SPEAKING_INDEX = {};      // { 'modulo-1': 10, … } — sólo cuántos hay
+const SPEAKING_BANK = {};     // los ejercicios ya descargados, por módulo
+const _spPend = {};
+const SP_AI_MAX = 20;         // evaluaciones con IA por alumno y día
+
+function fetchSpeaking(modId) {
+  if (SPEAKING_BANK[modId]) return Promise.resolve(SPEAKING_BANK[modId]);
+  if (_spPend[modId]) return _spPend[modId];
+  const url = '/api/course/speaking?t=' + encodeURIComponent(DEMO.courseToken || '')
+    + '&ids=' + encodeURIComponent(modId);
+  _spPend[modId] = fetch(url, { credentials: 'same-origin' })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('speaking ' + r.status)))
+    .then(j => {
+      const items = ((j.speaking || {})[modId] || []).map(q => Object.assign({ type: 'speaking' }, q));
+      SPEAKING_BANK[modId] = items;
+      return items;
+    })
+    .catch(e => { delete _spPend[modId]; throw e; });
+  return _spPend[modId];
+}
+
+// Cuota de IA del día. Se guarda aparte del progreso: es un contador de gasto,
+// no de aprendizaje, y "Borrar TODO" no debería regalar evaluaciones.
+function spAiLeft() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('sp-ai') || '{}');
+    if (raw.d !== hoyISO()) return SP_AI_MAX;
+    return Math.max(0, SP_AI_MAX - (raw.n || 0));
+  } catch (e) { return SP_AI_MAX; }
+}
+function spAiSpend() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('sp-ai') || '{}');
+    const n = raw.d === hoyISO() ? (raw.n || 0) + 1 : 1;
+    localStorage.setItem('sp-ai', JSON.stringify({ d: hoyISO(), n }));
+  } catch (e) {}
+}
+
+// ---- reconocimiento del navegador (coste cero) ----
+function spRecognizer() {
+  const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!R) return null;
+  const r = new R();
+  r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3;
+  return r;
+}
+const spNorm = s => String(s || '').toLowerCase().replace(/[^a-z0-9' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+
+// Compara lo dicho con la frase modelo, palabra por palabra y en orden. Devuelve
+// qué palabras se reconocieron y el porcentaje de acierto.
+function spCompare(target, heard) {
+  const t = spNorm(target).split(' ').filter(Boolean);
+  const h = spNorm(heard).split(' ').filter(Boolean);
+  const hits = new Array(t.length).fill(false);
+  let j = 0;
+  for (let i = 0; i < t.length; i++) {
+    const k = h.indexOf(t[i], j);
+    if (k !== -1) { hits[i] = true; j = k + 1; }
+  }
+  // Segunda pasada: palabras dichas fuera de orden también cuentan.
+  const sobrantes = h.slice();
+  for (let i = 0; i < t.length; i++) {
+    if (hits[i]) continue;
+    const k = sobrantes.indexOf(t[i]);
+    if (k !== -1) { hits[i] = true; sobrantes.splice(k, 1); }
+  }
+  const ok = hits.filter(Boolean).length;
+  return { hits, pct: t.length ? Math.round(ok / t.length * 100) : 0, words: t };
+}
+
+// ---- grabación (WAV completo, no fragmentos de MediaRecorder) ----
+async function spRecorder() {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const source = ctx.createMediaStreamSource(stream);
+  const node = ctx.createScriptProcessor(4096, 1, 1);
+  const pcm = [];
+  node.onaudioprocess = e => pcm.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  source.connect(node); node.connect(ctx.destination);
+  return {
+    async stop() {
+      stream.getTracks().forEach(t => t.stop());
+      node.disconnect(); source.disconnect();
+      const rate = ctx.sampleRate;
+      await ctx.close();
+      return spWav(pcm, rate);
+    },
+  };
+}
+// PCM → WAV mono 16 kHz, 16 bits. Bajar a 16 kHz recorta el archivo a un tercio
+// sin que la transcripción pierda nada.
+function spWav(chunks, rate) {
+  let n = 0; chunks.forEach(c => n += c.length);
+  const all = new Float32Array(n);
+  let o = 0; chunks.forEach(c => { all.set(c, o); o += c.length; });
+  const paso = Math.max(1, Math.round(rate / 16000));
+  const out = new Int16Array(Math.floor(all.length / paso));
+  for (let i = 0; i < out.length; i++) {
+    const v = Math.max(-1, Math.min(1, all[i * paso]));
+    out[i] = v < 0 ? v * 0x8000 : v * 0x7FFF;
+  }
+  const sr = Math.round(rate / paso);
+  const buf = new ArrayBuffer(44 + out.length * 2), dv = new DataView(buf);
+  const txt = (p, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(p + i, s.charCodeAt(i)); };
+  txt(0, 'RIFF'); dv.setUint32(4, 36 + out.length * 2, true); txt(8, 'WAVE');
+  txt(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+  dv.setUint32(24, sr, true); dv.setUint32(28, sr * 2, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
+  txt(36, 'data'); dv.setUint32(40, out.length * 2, true);
+  new Int16Array(buf, 44).set(out);
+  return new Blob([buf], { type: 'audio/wav' });
+}
+
+async function spEvaluate(blob, q) {
+  const fd = new FormData();
+  fd.append('audio', blob, 'recording.wav');
+  fd.append('level', q.level || 'A2');
+  if (q.task) fd.append('task', q.task);
+  if (q.target) fd.append('target', q.target);
+  const r = await fetch('/api/course/speaking-eval?t=' + encodeURIComponent(DEMO.courseToken || ''), {
+    method: 'POST', body: fd, credentials: 'same-origin',
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error(j.error || 'eval'), { code: j.error });
+  spAiSpend();
+  return j;
+}
+
+function micSvg(size) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>`;
+}
+
+// El ejercicio hablado. Misma firma que el resto de tipos: lo pinta renderQuiz.
+function renderSpeaking(host, q, onCorrect, onIncorrect) {
+  const libre = q.mode === 'free';
+  const local = !libre && !!spRecognizer();
+  const kicker = libre ? 'Habla libremente' : (q.mode === 'read' ? 'Lee en voz alta' : 'Repite en voz alta');
+
+  host.innerHTML = `<div class="q-kicker">${kicker}</div>
+    <div class="q-question">${escapeHtml(q.prompt || '')}</div>
+    ${libre
+      ? `<div class="sp-task">${escapeHtml(q.task || '')}</div>`
+      : `<div class="sp-target" id="sp-t">${escapeHtml(q.target || '')}</div>
+         <button class="btn ghost" id="sp-listen" type="button" style="margin-top:10px">Escuchar el modelo</button>`}
+    <div class="sp-row">
+      <button class="sp-mic" id="sp-mic" type="button" aria-label="Grabar">${micSvg(30)}</button>
+      <div class="sp-hint" id="sp-hint">${escapeHtml(q.hint || (libre ? 'Toca el micrófono y habla unos segundos.' : 'Toca el micrófono y di la frase.'))}</div>
+    </div>
+    <div id="sp-fb"></div>`;
+
+  const listen = document.getElementById('sp-listen');
+  if (listen) listen.onclick = () => speak(q.target, null, null, 0.85, true);
+
+  const mic = document.getElementById('sp-mic');
+  const hint = document.getElementById('sp-hint');
+  const fb = document.getElementById('sp-fb');
+  let grabando = false, rec = null, recog = null, cerrado = false;
+
+  function ondas() { fb.innerHTML = '<div class="sp-wave">' + Array.from({ length: 14 }, (_, i) =>
+    `<i style="animation-delay:${(i % 7) * .07}s"></i>`).join('') + '</div>'; }
+
+  function terminar(ok, html) {
+    if (cerrado) return; cerrado = true;
+    grabando = false; mic.classList.remove('rec'); mic.disabled = true;
+    fb.innerHTML = html;
+    const b = document.getElementById('sp-next');
+    if (b) b.onclick = () => (ok ? onCorrect() : onIncorrect());
+  }
+
+  function tarjetaLocal(cmp, heard) {
+    const pintado = cmp.words.map((w, i) => `<span class="w ${cmp.hits[i] ? 'ok' : 'bad'}">${escapeHtml(w)}</span>`).join(' ');
+    const ok = cmp.pct >= 70;
+    const t = document.getElementById('sp-t');
+    if (t) t.innerHTML = pintado;
+    const fallos = cmp.words.filter((w, i) => !cmp.hits[i]).slice(0, 4);
+    terminar(ok,
+      `<div class="sp-score"><div><b>${cmp.pct}%</b><span>Acierto</span></div></div>
+       <div class="sp-said">Te escuchamos: <i>“${escapeHtml(heard || '—')}”</i></div>
+       ${fallos.length ? `<div class="sp-advice">Repasa: <b>${fallos.map(escapeHtml).join(', ')}</b>. Escucha el modelo y vuelve a intentarlo.</div>` : ''}
+       <div class="sp-note">Corregido en tu propio dispositivo, sin enviar el audio.</div>
+       <button class="btn ${ok ? 'green' : 'amber'}" id="sp-next" style="margin-top:12px">${ok ? '¡Bien dicho!' : 'Continuar'}</button>`);
+  }
+
+  function tarjetaIA(j) {
+    const ok = !!j.passed;
+    const malas = (j.problemWords || []).slice(0, 4);
+    terminar(ok,
+      `<div class="sp-score">
+        <div><b>${j.pronunciation ?? '–'}</b><span>Pronunciación</span></div>
+        <div><b>${j.fluency ?? '–'}</b><span>Fluidez</span></div>
+        <div><b>${j.grammar ?? '–'}</b><span>Gramática</span></div>
+      </div>
+      <div class="sp-said">Te escuchamos: <i>“${escapeHtml(j.transcript || '')}”</i></div>
+      <div class="sp-advice"><b>${escapeHtml(j.headline || '')}</b><br>${escapeHtml(j.advice || '')}
+        ${j.betterVersion ? `<br><br>Mejor así: <i>${escapeHtml(j.betterVersion)}</i>` : ''}
+        ${malas.length ? `<br><br>Ojo con: <b>${malas.map(escapeHtml).join(', ')}</b>` : ''}</div>
+      <button class="btn ${ok ? 'green' : 'amber'}" id="sp-next" style="margin-top:12px">Continuar</button>`);
+  }
+
+  // --- camino 1: el navegador escucha, nada sale del móvil ---
+  function arrancarLocal() {
+    recog = spRecognizer();
+    let dicho = '';
+    recog.onresult = e => {
+      for (let i = 0; i < e.results.length; i++) dicho += ' ' + e.results[i][0].transcript;
+    };
+    recog.onerror = () => { grabando = false; mic.classList.remove('rec'); fb.innerHTML = '';
+      hint.textContent = 'No te escuchamos. Revisa el micrófono e inténtalo otra vez.'; };
+    recog.onend = () => {
+      if (cerrado || !grabando) return;
+      grabando = false; mic.classList.remove('rec');
+      tarjetaLocal(spCompare(q.target, dicho), dicho.trim());
+    };
+    recog.start();
+    grabando = true; mic.classList.add('rec'); hint.textContent = 'Te escuchamos… toca otra vez al terminar.';
+    ondas();
+  }
+
+  // --- camino 2: se graba y lo evalúa la IA ---
+  async function arrancarIA() {
+    try {
+      rec = await spRecorder();
+    } catch (e) {
+      hint.textContent = 'Necesitamos permiso para usar el micrófono.';
+      return;
+    }
+    grabando = true; mic.classList.add('rec');
+    hint.textContent = 'Grabando… toca otra vez cuando termines.';
+    ondas();
+  }
+  async function pararIA() {
+    grabando = false; mic.classList.remove('rec'); mic.disabled = true;
+    fb.innerHTML = '<div class="sp-said">Escuchando lo que dijiste…</div>';
+    try {
+      const blob = await rec.stop();
+      if (blob.size < 4096) throw Object.assign(new Error('vacío'), { code: 'empty_audio' });
+      tarjetaIA(await spEvaluate(blob, q));
+    } catch (e) {
+      mic.disabled = false;
+      const motivo = e.code === 'empty_audio' || e.code === 'no_speech'
+        ? 'No se oyó nada. Acércate al micrófono y vuelve a intentarlo.'
+        : e.code === 'no_credits' || e.code === 'rate_limited'
+          ? 'La corrección con IA no está disponible ahora mismo. Puedes seguir practicando.'
+          : 'No pudimos evaluar el audio. Inténtalo de nuevo.';
+      fb.innerHTML = `<div class="sp-advice">${motivo}</div>
+        <button class="btn ghost" id="sp-next" style="margin-top:10px">Saltar este</button>`;
+      const b = document.getElementById('sp-next');
+      if (b) b.onclick = () => { cerrado = true; onIncorrect(); };
+    }
+  }
+
+  const usaIA = libre || !local;
+  if (usaIA && spAiLeft() <= 0 && !local) {
+    fb.innerHTML = `<div class="sp-advice">Has usado tus ${SP_AI_MAX} correcciones con IA de hoy.
+      Mañana vuelven a estar disponibles; mientras tanto puedes practicar repitiendo el modelo en voz alta.</div>
+      <button class="btn ghost" id="sp-next" style="margin-top:10px">Continuar</button>`;
+    mic.disabled = true;
+    const b = document.getElementById('sp-next');
+    if (b) b.onclick = () => onCorrect();
+    return;
+  }
+
+  mic.onclick = () => {
+    if (cerrado) return;
+    if (!grabando) return usaIA ? arrancarIA() : arrancarLocal();
+    if (usaIA) return pararIA();
+    try { recog.stop(); } catch (e) {}
+  };
+}
+
+// La estantería de Speaking dentro de la biblioteca de práctica: un nivel por
+// tarjeta, y al tocarla corre una tanda de 5 ejercicios hablados.
+function speakingShelfHTML() {
+  const mods = (course && course.modules) || [];
+  const tarjetas = mods.map((mod, mi) => {
+    const n = SPEAKING_INDEX[mod.id] || 0;
+    if (!n) return '';
+    const nivel = mod.level || PR_CEFR[mi] || ('M' + (mi + 1));
+    return `<button class="sp-lvl" type="button" data-sp="${mi}">
+      <b style="color:${modAccent(mi)}">${escapeHtml(nivel)}</b>
+      <span>${n} ejercicios</span></button>`;
+  }).join('');
+  if (!tarjetas) return '';
+  return `<div class="sp-shelf">
+    <div class="sp-shelf-h"><span class="sp-mic-badge" style="color:var(--blue)">${micSvg(17)}</span>
+      <b>Speaking</b></div>
+    <small>Habla en voz alta y recibe corrección. Al repetir frases te corrige tu propio dispositivo;
+      en las respuestas libres te escucha nuestro tutor y te dice qué mejorar.</small>
+    <div class="sp-levels">${tarjetas}</div>
+  </div>`;
+}
+
+function openSpeakingRun(mi) {
+  const mod = course.modules[mi];
+  if (!mod) return;
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  sheet.innerHTML = `<div class="handle"></div><div class="center-col" style="padding:34px 0">
+    <div class="pr-spin"></div><div class="result-sub">Preparando tu práctica de speaking…</div></div>`;
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+
+  fetchSpeaking(mod.id).then(items => {
+    if (!items.length) { closeOverlay(); return toast('Todavía no hay speaking en este nivel.'); }
+    const round = shuffle(items.slice()).slice(0, 5);
+    let idx = 0, results = [], answered = 0;
+    _dismissGuard = () => answered > 0;
+
+    function step() {
+      sheet.classList.remove('result');
+      sheet.innerHTML = `<div class="handle"></div>
+        <div class="q-top"><div class="segs" id="sp-segs"></div><span class="q-counter" id="sp-counter"></span></div>
+        <div class="quiz-host" id="sp-host"></div>`;
+      const pintado = renderQuiz(document.getElementById('sp-host'), round[idx],
+        () => { answered++; results[idx] = true; avanzar(); },
+        () => { answered++; results[idx] = false; avanzar(); });
+      if (!pintado) { round.splice(idx, 1); return round.length ? step() : (closeOverlay(), toast('Esa tanda tuvo un problema.')); }
+      quizProgress(document.getElementById('sp-segs'), document.getElementById('sp-counter'), round.length, idx, results);
+    }
+    function avanzar() { if (idx < round.length - 1) { idx++; step(); } else fin(); }
+    function fin() {
+      touchDay();
+      const bien = results.filter(Boolean).length;
+      _dismissGuard = null;
+      sheet.classList.add('result');
+      sheet.innerHTML = `<div class="handle"></div><div class="center-col">
+        <div class="result-icon ok">${icon('check', 40, '#2E7D1A')}</div>
+        <div class="result-title">Practicaste tu speaking</div>
+        <div class="result-sub">${bien} de ${round.length} bien dichas. Hablar es lo que más rápido mejora: vuelve mañana.</div>
+        <button class="btn green" id="sp-done">Continuar</button></div>`;
+      document.getElementById('sp-done').onclick = closeOverlay;
+    }
+    step();
+  }, e => { console.error('[speaking]', e); closeOverlay(); toast('No se pudo cargar el speaking. Inténtalo de nuevo.'); });
+}
+
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // SHEETS / DIALOGS
+
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 let _dismissGuard = null; // when set, returns true if dismissing the sheet needs confirmation
 function closeOverlay() {
