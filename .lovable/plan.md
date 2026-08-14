@@ -1,50 +1,42 @@
-# Ofuscar el código del curso en el navegador
+# Diálogos legibles + celebraciones mágicas al terminar un quiz
 
-## Qué se puede y qué no
+## 1. Texto con varios personajes: formato de diálogo
 
-Conviene decirlo claro antes de tocar nada: todo lo que el navegador pinta, el visitante lo tiene. La ofuscación no cierra la puerta, sube mucho el coste de llevarse el curso: el HTML deja de ser legible, las funciones dejan de tener nombres reconocibles y copiar y pegar la plantilla deja de servir. Un atacante decidido y con tiempo puede seguir extrayendo contenido; uno normal, no.
+Hoy toda la pregunta se pinta como un único bloque en negrita de 23px (`.q-question`), así que un texto tipo
+`Lee: "Rosa: ... Milagros: ... Luis: ..." — ¿Quién no está convencido?` sale como un muro de texto.
 
-Lo que ya está hecho hoy y ayuda: el contenido del curso no viaja en la página. Sale por `/api/course/bundle`, `/api/course/practice` y `/api/course/vocab`, todas con un pase firmado que caduca a las 6 horas, se emite dentro de la página y tiene límite de peticiones por IP. La página en sí, en cambio, se sirve tal cual: 418 KB de HTML con todo el JavaScript legible y comentado dentro.
+Cambio: separar visualmente **el pasaje** de **la pregunta**.
 
-## Lo que haremos
+```text
+┌─ pasaje (tarjeta suave, texto normal 16px) ──────────┐
+│  ROSA     Good afternoon, everyone. Today I will …   │
+│  MILAGROS Moreover, it is widely accepted that …     │
+│  LUIS     On the contrary, I firmly believe …        │
+│  ROSA     That's an interesting question. …          │
+└──────────────────────────────────────────────────────┘
+¿Quién no está convencido de que la tendencia sea clara?   ← pregunta (negrita, como hoy)
+```
 
-**1. Ofuscar la plantilla del curso en el momento de compilar**
+Detalles:
+- Cada intervención en su propia línea, con el nombre del hablante como etiqueta pequeña en mayúsculas y color de marca; se alternan sutilmente los fondos para distinguir turnos.
+- Si el pasaje no tiene hablantes (narración larga entre comillas), se muestra igual como tarjeta de lectura en peso normal, con la pregunta debajo en negrita.
+- Si no hay pasaje, todo queda exactamente como está hoy.
+- Aplica a todos los tipos de quiz (opción múltiple, escucha, detección de error, escritura) y en todos los lugares donde se usan: ruta, examen final, práctica, mini-quiz del landing.
 
-La app del alumno (`demo-app.html`) y el panel (`demo-dashboard.html`) pasarán por un proceso automático antes de publicarse:
+## 2. Celebraciones al completar un quiz
 
-- El JavaScript se comprime y se renombra: variables y funciones pasan a nombres de una letra, se eliminan comentarios y saltos de línea.
-- Los textos internos (nombres de campos, URLs de las APIs, mensajes) se codifican y se reconstruyen en ejecución, para que buscar en el código no dé pistas.
-- Se añade control de flujo enredado y código señuelo, de modo que "des-ofuscar" automáticamente no devuelva algo legible.
-- El HTML pierde comentarios y sangrado.
+Hoy hay una sola pantalla de victoria (Boti + confeti). Se añaden **4 variantes** que se eligen al azar sin repetir la anterior:
 
-Esto ocurre solo al compilar. En desarrollo el archivo sigue legible y editable como hasta hoy, así que no complica el trabajo posterior.
+1. **Confeti** (la actual, retocada).
+2. **Estelar**: destellos y estrellas que salen desde la mascota con un anillo de luz que se expande.
+3. **Fuegos artificiales**: dos o tres estallidos escalonados detrás de la tarjeta de resultados.
+4. **Sellos de XP**: la XP y la racha entran con un "golpe" de sello y ondas doradas, con la mascota rebotando.
 
-**2. Endurecer la entrega del contenido**
+Comunes a todas: la mascota completa entra con rebote, los chips de XP/racha aparecen escalonados, y todo respeta la preferencia de "menos movimiento" (se degrada a una entrada simple).
 
-- Un pase por visita en lugar de uno reutilizable: se vincula a la sesión del navegador y a un identificador aleatorio, para que un pase copiado a otro equipo no sirva.
-- Bajar el TTL del pase de 6 horas a algo más ajustado (2 h) y recortar el tope de peticiones por hora del volcado completo.
-- Marca invisible por sesión en las respuestas del contenido, para poder identificar de qué visita salió un volcado si aparece copiado.
-- Cabeceras `X-Robots-Tag: noindex` y `Cache-Control: no-store` en todo lo que sirve contenido del curso, para que no quede cacheado ni indexado.
+## Notas técnicas
 
-**3. Molestias razonables en la interfaz del demo**
-
-Selección de texto y menú contextual desactivados dentro del curso, y bloqueo del arrastre de imágenes. No detendrá a nadie con conocimientos, pero sí el "copiar y pegar" masivo. Se deja fuera del panel y de las presentaciones, donde estorbaría.
-
-## Alcance
-
-Se aplica a las páginas del curso: `/<demo>`, `/<demo>/dashboard`, `/<demo>/padres` y `/democip`. Las presentaciones comerciales y el landing de preinscripción no llevan contenido del curso, así que se quedan como están (solo se les quita comentarios y espacios).
-
-## Detalle técnico
-
-- Añadir `javascript-obfuscator` y `html-minifier-terser` como dependencias de desarrollo.
-- Nuevo plugin de Vite (junto a `courseContentPlugin` en `vite.config.ts`) que intercepta las importaciones `?raw` de `src/assets/demo-app.html` y `demo-dashboard.html`. En `build` extrae los bloques `<script>` sin `src`, los pasa por el ofuscador (preset medio: `stringArray`, `stringArrayEncoding: base64`, `controlFlowFlattening` parcial, `identifierNamesGenerator: mangled`, sin `debugProtection` para no romper móviles), minifica el HTML y devuelve el resultado. En `serve` devuelve el archivo intacto.
-- Medir el coste: el preset elegido suele añadir 30–60 % de peso y algo de tiempo de arranque. Si el arranque en móvil se degrada de forma perceptible, se baja `controlFlowFlattening` a 0 y se conserva solo el renombrado más el `stringArray`.
-- `src/lib/course-token.ts`: pasar el payload a `slug.exp.nonce`, bajar `TTL_MS` a 2 h y devolver el nonce en la verificación; `src/lib/demo-page.ts` inyecta el nonce junto al pase; los tres endpoints de `src/routes/api/course/` lo comprueban y lo usan como clave de recuento en lugar de solo la IP.
-- Recordatorio de configuración: definir `COURSE_TOKEN_SECRET` como secreto del proyecto. Sin él, la firma usa un valor fijo que está en el repositorio y el pase deja de ser imprevisible.
-
-## Verificación
-
-- Compilar y comprobar que `/democip` arranca, hace el test de ubicación, abre una lección, una tanda de práctica y un tema de vocabulario.
-- Ver el código fuente de la página publicada y confirmar que no hay nombres ni comentarios legibles.
-- Comprobar que un pase de otra sesión es rechazado por los tres endpoints.
-- Medir el tiempo hasta la primera pantalla antes y después, en móvil.
+- `src/assets/demo-app.html`: nuevo helper `questionHTML(q)` que parsea el enunciado (`Lee:`/`Escucha:` + comillas + ` — ` prompt) y devuelve `.q-passage` + `.q-question`; se sustituye en los 4 renderers (`renderMC`, orden/escucha, detección de error, writing) y en el mini-quiz.
+- Nuevos estilos `.q-passage`, `.qp-line`, `.qp-who` con tokens existentes (`--line`, `--muted`, color de marca). Sin colores hardcodeados nuevos.
+- `lessonCelebration()` pasa a elegir una de 4 funciones de efecto (`fxConfetti`, `fxStars`, `fxFireworks`, `fxStamp`), guardando la última usada para no repetir; keyframes CSS nuevos, sin librerías extra.
+- Sin cambios en datos ni en el backend; el contenido del banco se queda igual.
