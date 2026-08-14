@@ -409,6 +409,27 @@
   .vd-bar { height: 8px; border-radius: 999px; background: var(--gray); overflow: hidden; margin: 0 2px 15px; }
   .vd-bar i { display: block; height: 100%; border-radius: 999px; background: var(--blue);
     transition: width .25s ease; }
+  /* El examen del tema. Va arriba, pegado a la barra, porque es la otra cosa que
+     se puede hacer con un tema —escucharlo o comprobarlo— y al final de la
+     rejilla nadie lo encontraria despues de sesenta fichas. Mismo relieve de
+     boton que las fichas: aqui todo lo que se ve se toca. */
+  .vd-exam { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px;
+    padding: 10px 12px; margin: 0 2px 15px; cursor: pointer; font-family: inherit;
+    -webkit-tap-highlight-color: transparent; }
+  .vd-exam:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .vd-exam-ic { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--blue) 12%, transparent); color: var(--blue); }
+  .vd-exam-ic svg { display: block; }
+  .vd-exam-t { flex: 1 1 auto; min-width: 0; }
+  .vd-exam-t b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+  .vd-exam-t small { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted2); }
+  /* Aprobado sigue siendo pulsable: repetir un examen es practicar, igual que en
+     la ruta el quiz completado se vuelve a abrir. */
+  .vd-exam.done { border-color: #BFE6B0; background: #F6FCF3; }
+  .vd-exam.done .vd-exam-ic { background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green); }
+  .vchip-ex { display: block; margin-top: 2px; color: var(--greenDark); }
   /* Fichitas: pequeñas y de tres en tres. Una palabra no necesita una fila
      entera, y en rejilla se abarca el tema de un vistazo. */
   .vd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 9px; }
@@ -3357,7 +3378,7 @@ function renderVocabIndice(el) {
           <span class="vchip-n">${escapeHtml(c.n)}</span>
           <span class="vchip-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
                 aria-valuenow="${pc}" aria-label="${h} de ${c.w.length} escuchadas"><i style="width:${pc}%"></i></span>
-          <span class="vchip-c">${h}/${c.w.length}</span>
+          <span class="vchip-c">${h}/${c.w.length}${isExamPassed(si, ci) ? '<b class="vchip-ex">examen ✓</b>' : ''}</span>
         </button>`;
       }).join('') + `</div></div>`;
   });
@@ -3373,12 +3394,18 @@ const VS_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 function renderVocabTema(el) {
   const chip = VOCAB[VOPEN.si].chips[VOPEN.ci];
   const h = chipHeard(chip), pc = Math.round(h / chip.w.length * 100);
+  const examOk = isExamPassed(VOPEN.si, VOPEN.ci);
   el.innerHTML = `<div class="vd-top">
       <button class="vd-back" onclick="closeVocabChip()" aria-label="Volver a los temas"></button>
       <div class="vd-t"><b>${chip.e} ${escapeHtml(chip.n)}</b>
         <small id="vd-sub">${h} de ${chip.w.length} escuchadas</small></div>
     </div>
     <div class="vd-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pc}"><i style="width:${pc}%"></i></div>
+    <button class="vd-exam${examOk ? ' done' : ''}" onclick="openVocabExam(${VOPEN.si}, ${VOPEN.ci})">
+      <span class="vd-exam-ic">${examOk ? checkBold(19, '#3FAA24', 3.2) : playIcon(15, '#1CB0F6')}</span>
+      <span class="vd-exam-t"><b>${examOk ? 'Examen aprobado' : 'Hacer el examen'}</b>
+        <small>${chip.w.length} ${chip.w.length === 1 ? 'pregunta' : 'preguntas'}, una por palabra</small></span>
+    </button>
     <div class="vd-grid">` +
     chip.w.map(([en, es]) => `<button class="vcard${isHeard(en) ? ' heard' : ''}" data-w="${escapeHtml(en)}">
         <span class="vcard-ic">${VS_SPEAKER}</span>
