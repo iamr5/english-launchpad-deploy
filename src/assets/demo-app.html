@@ -4953,24 +4953,28 @@ function practiceItems(lesson) {
 function renderPractice() {
   const el = document.getElementById('practice-body');
   if (!el || !course) return;
+  // Se cuentan EJERCICIOS, no filas: una fila puede ser un quiz de 10 preguntas
+  // o una teoría con 40 de práctica extra, y decir "2 de 377" no dice nada.
+  const num = n => n.toLocaleString('es-PE');
   let hechosTot = 0, totales = 0, cuerpo = '';
   course.modules.forEach((mod, mi) => {
     let lecciones = '';
     mod.lessons.forEach(lesson => {
       const items = practiceItems(lesson);
       if (!items.length) return;
-      totales += items.length;
-      const hechos = items.filter(q => q.done).length;
+      const preguntas = items.reduce((a, q) => a + q.qs, 0);
+      const hechos = items.reduce((a, q) => a + (q.hechas || 0), 0);
+      totales += preguntas;
       hechosTot += hechos;
       lecciones += `<div class="pr-les">
         <div class="pr-les-h"><span class="pr-les-t">${escapeHtml(lessonName(lesson))}</span>
-          <span class="pr-les-c">${hechos}/${items.length}</span></div>
+          <span class="pr-les-c">${num(hechos)}/${num(preguntas)}</span></div>
         <div class="pr-list">` +
         items.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
             data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}" data-bank="${q.bank ? 1 : 0}">
 
             <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
-            <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'}${q.bank ? ' · tandas de 10' : ''} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
+            <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${num(q.qs)} ${q.qs === 1 ? 'ejercicio' : 'ejercicios'}${q.bank ? ' · tandas de 10' : ''} · ${q.bank ? `${num(q.hechas || 0)} superado${(q.hechas || 0) === 1 ? '' : 's'}` : (q.done ? 'Superado' : 'Pendiente')}</small></span>
             <span class="pr-q-go">${arrowFwd(20, 'currentColor', 2.6)}</span>
           </button>`).join('') +
         `</div></div>`;
@@ -4983,9 +4987,10 @@ function renderPractice() {
   el.innerHTML = `<div class="pr-intro">
       <b>Tu cuaderno de ejercicios</b>
       <small>Aquí están todos los ejercicios del curso, abiertos desde el primer día. No hace falta haber hecho la lección: puedes responder por tu cuenta, en el orden que quieras y las veces que quieras. No hay nota ni penalidad — lo que aciertes suma en tu ruta.</small>
-      <span class="pr-count">${hechosTot} de ${totales} ejercicios superados</span>
+      <span class="pr-count">${num(hechosTot)} de ${num(totales)} ejercicios superados</span>
     </div>` + (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
       <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
+
 
   // Indices en vez de ids en el HTML: asi no hay que escapar nada para meterlo
   // en un atributo.
