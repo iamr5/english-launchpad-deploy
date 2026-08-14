@@ -21,6 +21,8 @@ export type VocabChip = {
   w: VocabWord[];
   /** «¿para qué se usa?»: palabra inglesa → [uso correcto, 3 usos falsos]. */
   u?: Record<string, string[]>;
+  /** Definición corta en español: palabra inglesa → una frase. */
+  d?: Record<string, string>;
 };
 export type VocabSection = { s: string; chips: VocabChip[] };
 export type VocabPack = { n: string; e: string; secs: VocabSection[] };
@@ -90,11 +92,14 @@ const porId = (() => {
 
 /** Las palabras (y sus ítems de «¿para qué se usa?») de unos pocos temas. */
 export function getVocabTopics(ids: string[]) {
-  const out: Record<string, { w: VocabWord[]; u: Record<string, string[]> }> = {};
+  const out: Record<
+    string,
+    { w: VocabWord[]; u: Record<string, string[]>; d: Record<string, string> }
+  > = {};
   const mapa = porId();
   for (const id of ids.slice(0, 10)) {
     const c = mapa.get(id);
-    if (c) out[id] = { w: c.w, u: c.u || {} };
+    if (c) out[id] = { w: c.w, u: c.u || {}, d: c.d || {} };
   }
   return out;
 }
