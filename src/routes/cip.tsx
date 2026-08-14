@@ -57,26 +57,27 @@ const METRICS = [
 
 const BENEFITS = [
   {
-    e: "/demo-assets/clock.svg",
-    t: "15 minutos al día",
+    e: "/demo-assets/ob-thunder.svg",
+    t: "20 minutos al día",
     d: "Microlecciones pensadas para agendas de ingeniero: entras, practicas y sigues con tu día.",
   },
   {
-    e: "/demo-assets/settings.svg",
+    e: "/demo-assets/ob-words.svg",
     t: "Inglés técnico de verdad",
     d: "Vocabulario de matemáticas, programación, construcción, energía y calidad, no frases de turista.",
   },
   {
-    e: "/demo-assets/dart.svg",
+    e: "/demo-assets/ob-goal.svg",
     t: "Empiezas en tu nivel",
     d: "Un test de ubicación de 40 preguntas te coloca en A1, A2, B1, B2 o C1 desde el primer día.",
   },
   {
-    e: "/demo-assets/stats.svg",
+    e: "/demo-assets/streak.svg",
     t: "Progreso medible",
     d: "Racha, XP y niveles. Tú y el Colegio ven el avance real, no la asistencia.",
   },
 ];
+
 
 type Quiz = {
   q: string;
@@ -283,9 +284,13 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
           <h1 className="title">
             Habla inglés en 1 año,
             <br />
-            <span className="acc">quince minutos al día</span>
+            <span className="acc">veinte minutos al día</span>
           </h1>
+          <p className="mt-4 text-sm font-semibold text-white/70">
+            87 horas de curso ÷ 5 días por semana = 20 min al día durante 12 meses.
+          </p>
           <p className="lede mt-5 text-white/85">{brand.phrase}</p>
+
           <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
             <EmailForm id="hero" cta="Quiero mi cupo" />
           </div>
