@@ -8,7 +8,7 @@ import { verifyCourseToken } from "@/lib/course-token";
 //   1. /v1/audio/transcriptions  — qué dijo exactamente (openai/gpt-4o-transcribe)
 //   2. /v1/responses             — qué tan bien lo dijo (openai/gpt-5.6-sol)
 //
-// El audio no se guarda en ningún sitio: entra, se transcribe y se descarta.
+// Esta ruta evalúa y descarta su copia; el cliente autenticado guarda la misma toma mediante speaking-attempts.
 //
 // En el piloto debug se usa para todos los modos y se compara con el resultado
 // local. El mismo WAV alimenta ambos análisis; nunca se vuelve a grabar.
