@@ -1170,6 +1170,8 @@
   .ob-opt .em { font-size: 27px; flex: 0 0 auto; }
   /* Iconos propios (SVG) dentro de los mismos huecos que ocupaban los emojis */
   .ob-opt .em img { display: block; width: 32px; height: 32px; }
+  .ob-opt[data-mot] .em img { width: 42px; height: 42px; }
+  .ob-opt[data-mot] .em img[src*="/ob-globe.svg"] { width: 32px; height: 32px; }
   .ob-opt .em img[src*="/streak.svg"] { width: 24px; height: 24px; }
   .ob-point.big .em img { display: block; width: 38px; height: 38px; }
   .ob-sum .ob-chip .em img { display: block; width: 32px; height: 32px; margin: 0 auto; }
@@ -6910,9 +6912,10 @@ function plRender() {
   if (PL.state === 'intro') {
     const total = (window.PLACEMENT_ITEMS || []).length || 40;
     host.innerHTML = `<div class="ob-points">
-      <div class="ob-point plain"><span class="em"><img src="/demo-assets/clock.svg" alt="" aria-hidden="true"></span><div><b>Unos 8 minutos</b><small>Hasta ${total} preguntas — termina antes si ya ubicamos tu nivel</small></div></div>
-      <div class="ob-point plain"><span class="em"><img src="/demo-assets/ob-goal.svg" alt="" aria-hidden="true"></span><div><b>Ubicamos tu nivel</b><small>De A1 a C1, según el marco MCER</small></div></div>
-      <div class="ob-point plain"><span class="em"><img src="/demo-assets/ob-speech.svg" alt="" aria-hidden="true"></span><div><b>Sin presión</b><small>Si no sabes, pasa a la siguiente</small></div></div>
+      <div class="ob-point big plain p1"><span class="em"><img src="/demo-assets/clock.svg" alt="" aria-hidden="true"></span><div><b>Unos 8 minutos</b><small>Hasta ${total} preguntas — termina antes si ya ubicamos tu nivel</small></div></div>
+      <div class="ob-point big plain p2"><span class="em"><img src="/demo-assets/ob-goal.svg" alt="" aria-hidden="true"></span><div><b>Ubicamos tu nivel</b><small>De A1 a C1, según el marco MCER</small></div></div>
+      <div class="ob-point big plain p3"><span class="em"><img src="/demo-assets/ob-speech.svg" alt="" aria-hidden="true"></span><div><b>Sin presión</b><small>Si no sabes, pasa a la siguiente</small></div></div>
+
 
     </div>`;
     return;
