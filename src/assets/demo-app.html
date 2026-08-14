@@ -380,8 +380,19 @@
   .vocab-intro .vi-count { display: inline-block; margin-top: 9px; font-size: 12px; font-weight: 800;
     letter-spacing: .3px; color: var(--amberInk); background: #FDF0D5;
     border-radius: 999px; padding: 5px 11px; }
+  /* Buscador del índice: con 180+ temas, bajar a rueda deja de ser navegar. */
+  .vbuscar { width: 100%; box-sizing: border-box; margin: 0 0 16px; padding: 11px 14px;
+    font: inherit; font-size: 15px; color: var(--ink); background: #fff;
+    border: 2px solid var(--line); border-radius: 14px; -webkit-appearance: none; }
+  .vbuscar:focus { outline: none; border-color: var(--accent); }
+  .vocab-vacio { padding: 26px 4px; text-align: center; color: var(--muted); font-size: 14px; }
   .vsec { margin-bottom: 22px; }
-  .vsec-h { margin: 0 2px 10px; font-size: 17px; font-weight: 800; color: var(--ink); }
+  .vsec-h { margin: 0 2px 10px; font-size: 17px; font-weight: 800; color: var(--ink);
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  /* Los temas de un banco por carrera se distinguen a simple vista. */
+  .vsec-esp { font-size: 10px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, #fff);
+    border-radius: 999px; padding: 3px 8px; }
   .vsec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 10px; }
   /* Borde inferior grueso: el mismo relieve de boton que ya usan las tarjetas
      de la ruta, para que la ficha se lea como algo que se toca. */
@@ -2119,18 +2130,11 @@
      Abierto suelto, sin servidor, el marcador se queda tal cual y la pagina
      funciona sin mascota. -->
 <!--MASCOT-SCRIPTS-->
-<!-- La biblioteca de Vocabulary. Va aparte y no incrustada porque esta pagina se
-     sirve con `no-store`: lo que viva dentro se redescarga entero en cada
-     visita. Suelto lo cachea el navegador, y es el trozo que mas pesa y menos
-     cambia. Sin `defer` ni `async` a proposito: tiene que haber definido
-     window.VOCAB antes de que corra el script de abajo.
-     Al editar vocab.js hay que subir el ?v= o quedaran copias viejas en cache. -->
-<script src="vocab.js?v=2"></script>
-<!-- Los items de "¿para que se usa?" del examen de vocabulario. Aparte de
-     vocab.js porque son otra cosa (texto escrito a mano, no la biblioteca) y
-     porque cambian por su cuenta. Mismo trato: sin defer, y subir el ?v= al
-     editarlo. -->
-<script src="vocab-quiz.js?v=1"></script>
+<!-- La biblioteca de Vocabulary ya no viaja como archivo suelto (vocab.js): son
+     8.000+ palabras y varios MB. Ahora vive en el servidor (src/content/vocab)
+     y llega en dos pasos — su indice con /api/course/bundle, y las palabras de
+     cada tema con /api/course/vocab al abrirlo. -->
+
 <!-- El contenido del curso ya no viaja como archivos sueltos: se pide a
      /api/course/bundle con el pase que trae la pagina. Asi no se lo lleva nadie
      con una sola peticion, y guardar el HTML no guarda las lecciones. -->
@@ -2563,13 +2567,20 @@ let allLessons = [];
 // pintar nada; el resto del codigo usa  desde dentro de funciones, que
 // para entonces ya esta cargado.
 async function loadCourse() {
-  const r = await fetch('/api/course/bundle?t=' + encodeURIComponent(DEMO.courseToken || ''), { credentials: 'same-origin' });
+  // Los bancos de vocabulario especializado de este demo (ingeniería, turismo…)
+  // se piden aquí: el índice llega ya con sus temas dentro.
+  const vp = (DEMO.vocab && DEMO.vocab.packs || []).join(',');
+  const vmax = (DEMO.vocab && DEMO.vocab.nivelMax) || '';
+  const r = await fetch('/api/course/bundle?t=' + encodeURIComponent(DEMO.courseToken || '')
+    + (vp ? '&vpacks=' + encodeURIComponent(vp) : '')
+    + (vmax ? '&vmax=' + encodeURIComponent(vmax) : ''), { credentials: 'same-origin' });
   if (!r.ok) throw new Error('curso '+ r.status);
   const data = await r.json();
   window.PLACEMENT_ITEMS = data.placement || [];
   course = applyTokens(data.course);
   allLessons = course.modules.flatMap(m => m.lessons);
   attachPracticeIndex(data.practiceIndex || {});
+  VOCAB = data.vocabIndex || [];
 }
 
 // Banco de práctica: ejercicios extra por bloque de teoría, escritos aparte del
@@ -3468,38 +3479,67 @@ function showHomeTab(tab) {
   if (cual === 'practice') renderPractice();
 }
 
-// CONTENIDO DE ARRANQUE. La biblioteca entera vive en demo-assets/vocab.js, que
-// se carga en una etiqueta aparte mas arriba. No esta aqui a proposito: esta
-// pagina se sirve con `no-store`, asi que lo que se incruste en ella se
-// redescarga en cada visita, y el vocabulario es la parte que mas pesa y menos
-// cambia. Como archivo suelto lo cachea el navegador.
-// Ahi estan tambien las reglas para editarlo (nada de ingles repetido, español
-// latino neutro, texto que pueda leer el TTS).
-// El respaldo `|| []` es por si la peticion del archivo falla: la pestaña sale
-// vacia, que es feo, pero el resto de la app arranca igual.
-const VOCAB = window.VOCAB || [];
-// Los usos escritos a mano para el tercer tipo de pregunta del examen (ver
-// demo-assets/vocab-quiz.js). Sin el archivo, ese tipo simplemente no sale y el
-// examen se hace con los otros dos.
-const VOCAB_USE = window.VOCAB_USE || {};
+// LA BIBLIOTECA. Ya no viaja entera con la página: son 8.000+ palabras y
+// bajarlas de golpe congelaba la pestaña. Lo que llega en el arranque es sólo el
+// ÍNDICE —secciones, temas y cuántas palabras tiene cada uno, unos pocos KB— y
+// las palabras de un tema se piden a /api/course/vocab al abrirlo.
+//
+// Forma del índice: [{ s, esp?, chips:[{ id, n, e, lvl, c }] }]. `esp` es el
+// nombre del banco especializado (ingeniería, turismo…) cuando la sección viene
+// de uno de ellos; las secciones sin `esp` son el banco general.
+let VOCAB = [];
+// Temas ya descargados: id -> { w:[[en,es,lvl?]], u:{en:[uso, f1, f2, f3]} }.
+const VDATA = {};
+const _vPend = {};
+
+function fetchVocabTopic(id) {
+  if (VDATA[id]) return Promise.resolve(VDATA[id]);
+  if (_vPend[id]) return _vPend[id];
+  const url = '/api/course/vocab?t=' + encodeURIComponent(DEMO.courseToken || '')
+    + '&ids=' + encodeURIComponent(id);
+  _vPend[id] = fetch(url, { credentials: 'same-origin' })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('vocab ' + r.status)))
+    .then(j => {
+      const t = (j.topics || {})[id];
+      if (!t) throw new Error('vocab vacío');
+      VDATA[id] = { w: t.w || [], u: t.u || {} };
+      delete _vPend[id];
+      return VDATA[id];
+    }, e => { delete _vPend[id]; throw e; });
+  return _vPend[id];
+}
 
 // Escuchada o no. Nada mas: cuantas veces le has dado al play no dice que la
 // palabra sea tuya, y una barra que se llena sola con repeticiones lo estaria
 // afirmando. Esto solo mide cobertura — que has pasado por ella.
 function vocabHeard() { return PROGRESS['__vocab'] = PROGRESS['__vocab'] || {}; }
 function isHeard(en) { return !!vocabHeard()[en]; }
-function chipHeard(chip) { return chip.w.filter(p => isHeard(p[0])).length; }
+// Cuántas lleva escuchadas cada tema. Se guarda aparte porque el índice pinta
+// las barras sin tener las palabras delante: contarlas exigiría bajar la
+// biblioteca entera, que es justo lo que se quitó.
+function vocabCounts() { return PROGRESS['__vocabN'] = PROGRESS['__vocabN'] || {}; }
+function chipHeard(chip) {
+  const d = VDATA[chip.id];
+  if (d) return d.w.filter(p => isHeard(p[0])).length;
+  return vocabCounts()[chip.id] || 0;
+}
 function vocabTotals() {
-  let heard = 0, total = 0;
-  VOCAB.forEach(sec => sec.chips.forEach(c => { total += c.w.length; heard += chipHeard(c); }));
-  return { heard, total };
+  let heard = 0, total = 0, temas = 0;
+  VOCAB.forEach(sec => sec.chips.forEach(c => { total += c.c; temas++; heard += chipHeard(c); }));
+  return { heard, total, temas };
 }
 
 // Dos vistas dentro de la MISMA pestaña: el indice de temas y el tema abierto.
 // Se navega en el sitio, con flecha de volver, en vez de abrir una hoja encima:
 // asi la pestaña se comporta como una pantalla y no como un dialogo.
-let VOPEN = null;    // {si, ci} del tema abierto, o null en el indice
+let VOPEN = null;    // id del tema abierto, o null en el indice
 let VSCROLL = 0;     // scroll del indice, para devolverlo tal cual al volver
+let VFILTRO = '';    // texto del buscador del indice
+
+function vocabChip(id) {
+  for (const sec of VOCAB) { const c = sec.chips.find(x => x.id === id); if (c) return { sec, chip: c }; }
+  return null;
+}
 
 function renderVocab() {
   const el = document.getElementById('vocab-body');
@@ -3507,13 +3547,22 @@ function renderVocab() {
   if (VOPEN) renderVocabTema(el); else renderVocabIndice(el);
 }
 
-function openVocabChip(si, ci) {
-  if (!VOCAB[si] || !VOCAB[si].chips[ci]) return;
+function openVocabChip(id) {
+  const found = vocabChip(id);
+  if (!found) return;
   const sc = document.querySelector('#screen-course .scroll');
   VSCROLL = sc ? sc.scrollTop : 0;
-  VOPEN = { si, ci };
+  VOPEN = id;
   renderVocab();
   if (sc) sc.scrollTop = 0;           // el tema empieza por arriba
+  if (!VDATA[id]) fetchVocabTopic(id).then(
+    () => { if (VOPEN === id) renderVocab(); },
+    (e) => {
+      console.error('[vocab]', e);
+      if (VOPEN !== id) return;
+      VOPEN = null; renderVocab();
+      toast('No se pudieron cargar las palabras. Inténtalo de nuevo.');
+    });
 }
 
 function closeVocabChip() {
@@ -3525,29 +3574,49 @@ function closeVocabChip() {
   if (sc) sc.scrollTop = VSCROLL;
 }
 
-// Se repinta en cada entrada: las barras dependen del progreso.
-function renderVocabIndice(el) {
-  const t = vocabTotals();
-  let html = `<div class="vocab-intro">
-      <b>Tu biblioteca de palabras</b>
-      <small>Elige un tema y escucha sus palabras. La barra marca cuántas ya escuchaste.</small>
-      <span class="vi-count">${t.heard} de ${t.total} escuchadas</span>
-    </div>`;
-  VOCAB.forEach((sec, si) => {
-    html += `<div class="vsec"><div class="vsec-h">${escapeHtml(sec.s)}</div><div class="vsec-grid">` +
-      sec.chips.map((c, ci) => {
-        const h = chipHeard(c), pc = Math.round(h / c.w.length * 100);
-        return `<button class="vchip${h === c.w.length ? ' full' : ''}" id="vchip-${si}-${ci}"
-                onclick="openVocabChip(${si}, ${ci})">
+function filtrarVocab(v) {
+  VFILTRO = v || '';
+  const el = document.getElementById('vocab-body');
+  const cont = el && el.querySelector('#vsecs');
+  if (cont) cont.innerHTML = vocabSecsHtml();
+}
+
+function vocabSecsHtml() {
+  const q = wNorm(VFILTRO);
+  let html = '';
+  VOCAB.forEach((sec) => {
+    const chips = q
+      ? sec.chips.filter(c => wNorm(c.n).includes(q) || wNorm(sec.s).includes(q) || wNorm(sec.esp || '').includes(q))
+      : sec.chips;
+    if (!chips.length) return;
+    const titulo = sec.esp ? `${escapeHtml(sec.esp)} · ${escapeHtml(sec.s)}` : escapeHtml(sec.s);
+    html += `<div class="vsec"><div class="vsec-h">${titulo}${sec.esp ? '<b class="vsec-esp">especializado</b>' : ''}</div><div class="vsec-grid">` +
+      chips.map((c) => {
+        const h = chipHeard(c), pc = Math.round(h / c.c * 100);
+        return `<button class="vchip${h === c.c ? ' full' : ''}" id="vchip-${c.id}"
+                onclick="openVocabChip('${c.id}')">
           <span class="vchip-e">${c.e}</span>
           <span class="vchip-n">${escapeHtml(c.n)}</span>
           <span class="vchip-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                aria-valuenow="${pc}" aria-label="${h} de ${c.w.length} escuchadas"><i style="width:${pc}%"></i></span>
-          <span class="vchip-c">${h}/${c.w.length}${isExamPassed(si, ci) ? '<b class="vchip-ex">examen ✓</b>' : ''}</span>
+                aria-valuenow="${pc}" aria-label="${h} de ${c.c} escuchadas"><i style="width:${pc}%"></i></span>
+          <span class="vchip-c">${h}/${c.c}${isExamPassed(c.id) ? '<b class="vchip-ex">examen ✓</b>' : ''}</span>
         </button>`;
       }).join('') + `</div></div>`;
   });
-  el.innerHTML = html;
+  return html || `<div class="vocab-vacio">Ningún tema se llama así.</div>`;
+}
+
+// Se repinta en cada entrada: las barras dependen del progreso.
+function renderVocabIndice(el) {
+  const t = vocabTotals();
+  el.innerHTML = `<div class="vocab-intro">
+      <b>Tu biblioteca de palabras</b>
+      <small>${prNum(t.temas)} temas · ${prNum(t.total)} palabras. Elige uno, escucha sus palabras y hazte su examen.</small>
+      <span class="vi-count">${prNum(t.heard)} de ${prNum(t.total)} escuchadas</span>
+    </div>
+    <input class="vbuscar" type="search" placeholder="Buscar un tema…" value="${escapeHtml(VFILTRO)}"
+           aria-label="Buscar un tema" oninput="filtrarVocab(this.value)">
+    <div id="vsecs">${vocabSecsHtml()}</div>`;
 }
 
 const VS_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
@@ -3557,22 +3626,33 @@ const VS_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 // El tema abierto: la flecha para subir un nivel y sus palabras en fichas.
 function renderVocabTema(el) {
-  const chip = VOCAB[VOPEN.si].chips[VOPEN.ci];
-  const h = chipHeard(chip), pc = Math.round(h / chip.w.length * 100);
-  const examOk = isExamPassed(VOPEN.si, VOPEN.ci);
-  el.innerHTML = `<div class="vd-top">
+  const found = vocabChip(VOPEN);
+  if (!found) { VOPEN = null; return renderVocabIndice(el); }
+  const chip = found.chip, datos = VDATA[chip.id];
+  const cabecera = `<div class="vd-top">
       <button class="vd-back" onclick="closeVocabChip()" aria-label="Volver a los temas"></button>
       <div class="vd-t"><b>${chip.e} ${escapeHtml(chip.n)}</b>
-        <small id="vd-sub">${h} de ${chip.w.length} escuchadas</small></div>
-    </div>
-    <div class="vd-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pc}"><i style="width:${pc}%"></i></div>
-    <button class="vd-exam${examOk ? ' done' : ''}" onclick="openVocabExam(${VOPEN.si}, ${VOPEN.ci})">
+        <small id="vd-sub">${chip.c} palabras</small></div>
+    </div>`;
+  // Mientras llegan sus palabras, la cabecera ya está puesta: nunca una pantalla
+  // en blanco, sólo el tema cargándose.
+  if (!datos) {
+    el.innerHTML = cabecera + `<div class="center-col" style="padding:34px 0">
+      <div class="pr-spin"></div><div class="result-sub">Cargando las palabras…</div></div>`;
+    return;
+  }
+  const h = chipHeard(chip), pc = Math.round(h / datos.w.length * 100);
+  const examOk = isExamPassed(chip.id);
+  el.innerHTML = cabecera.replace('id="vd-sub">' + chip.c + ' palabras',
+      'id="vd-sub">' + h + ' de ' + datos.w.length + ' escuchadas') +
+    `<div class="vd-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pc}"><i style="width:${pc}%"></i></div>
+    <button class="vd-exam${examOk ? ' done' : ''}" onclick="openVocabExam('${chip.id}')">
       <span class="vd-exam-ic">${examOk ? checkBold(19, '#3FAA24', 3.2) : playIcon(15, '#1CB0F6')}</span>
       <span class="vd-exam-t"><b>${examOk ? 'Examen aprobado' : 'Hacer el examen'}</b>
-        <small>${chip.w.length} ${chip.w.length === 1 ? 'pregunta' : 'preguntas'}, una por palabra</small></span>
+        <small>${datos.w.length} ${datos.w.length === 1 ? 'pregunta' : 'preguntas'}, una por palabra</small></span>
     </button>
     <div class="vd-grid">` +
-    chip.w.map(([en, es]) => `<button class="vcard${isHeard(en) ? ' heard' : ''}" data-w="${escapeHtml(en)}">
+    datos.w.map(([en, es]) => `<button class="vcard${isHeard(en) ? ' heard' : ''}" data-w="${escapeHtml(en)}">
         <span class="vcard-ic">${VS_SPEAKER}</span>
         <span class="vcard-en">${escapeHtml(en)}</span>
         <span class="vcard-es">${escapeHtml(es)}</span>
@@ -3592,14 +3672,16 @@ function vocabSay(card) {
   // reconoce como palabra. interrupt: pulsar otra palabra mientras suena una
   // significa "quiero esta", no "callate".
   speak(en, null, () => card.classList.remove('speaking'), 0.85, true);
-  if (!VOPEN) return;
+  if (!VOPEN || !VDATA[VOPEN]) return;
   // Solo la cabecera del tema: repintar la rejilla entera con cada toque
   // cortaria la animacion de la ficha que se acaba de pulsar. El indice se
   // recalcula solo al volver.
-  const chip = VOCAB[VOPEN.si].chips[VOPEN.ci];
-  const h = chipHeard(chip), pc = Math.round(h / chip.w.length * 100);
+  const total = VDATA[VOPEN].w.length;
+  const h = VDATA[VOPEN].w.filter(p => isHeard(p[0])).length, pc = Math.round(h / total * 100);
+  // El conteo del tema se guarda: el índice pinta su barra sin las palabras.
+  vocabCounts()[VOPEN] = h; saveProgress(PROGRESS);
   const sub = document.getElementById('vd-sub');
-  if (sub) sub.textContent = `${h} de ${chip.w.length} escuchadas`;
+  if (sub) sub.textContent = `${h} de ${total} escuchadas`;
   const bar = document.querySelector('#vocab-body .vd-bar');
   if (bar) { bar.setAttribute('aria-valuenow', pc); const f = bar.querySelector('i'); if (f) f.style.width = pc + '%'; }
 }
@@ -3612,7 +3694,7 @@ function vocabSay(card) {
 // cada palabra tiene hasta tres posibles y se sortea una en cada intento:
 //   A · escuchar y elegir el español      (mc con audio)
 //   B · escuchar y escribirla en ingles   (writing con audio)
-//   C · ¿para que se usa?                 (mc, solo si esta escrita en vocab-quiz.js)
+//   C · ¿para que se usa?                 (mc, solo si el tema trae ese dato)
 // El motor no es nuevo: son las mismas piezas del quiz de la ruta —renderQuiz,
 // quizProgress, la hoja y las dos vueltas de openMiniQuiz—. Aqui solo se
 // fabrican los items.
@@ -3620,59 +3702,64 @@ function vocabSay(card) {
 // Aprobados, por tema. Aparte de __vocab a proposito: esa barra mide "escuchada"
 // y no puede empezar a significar tambien "dominada".
 function vocabExams() { return PROGRESS['__vocabExam'] = PROGRESS['__vocabExam'] || {}; }
-function examKey(si, ci) { return si + '-' + ci; }
-function isExamPassed(si, ci) { return !!vocabExams()[examKey(si, ci)]; }
+function isExamPassed(id) { return !!vocabExams()[id]; }
 
 // Dos palabras del mismo tema pueden compartir traduccion. Ahi "¿como se dice X
 // en ingles?" tiene dos respuestas buenas y el corrector solo acepta una, asi
 // que esas palabras se quedan sin el tipo B.
-function esUnicoEnTema(chip, es) {
+function esUnicoEnTema(words, es) {
   const k = wNorm(es);
-  return chip.w.filter(p => wNorm(p[1]) === k).length === 1;
+  return words.filter(p => wNorm(p[1]) === k).length === 1;
 }
 
 // Los distractores salen del MISMO tema: es lo que hace que la pregunta valga
-// algo —elegir entre cuatro colores, no entre un color y tres animales—. Solo
-// si el tema se queda corto se completan con el resto de la seccion.
-function vocabDistractors(en, es, chip, sec, n) {
+// algo —elegir entre cuatro colores, no entre un color y tres animales—. Como
+// los demas temas de la seccion ya no estan descargados, si el tema se queda
+// corto se completan con los temas que si esten en memoria.
+function vocabDistractors(en, es, words, n) {
   const vistos = new Set([wNorm(es)]);
   const pool = [];
   const add = (list) => (list || []).forEach(p => {
     const k = wNorm(p[1]);
     if (p[0] !== en && !vistos.has(k)) { vistos.add(k); pool.push(p[1]); }
   });
-  add(chip.w);
-  if (pool.length < n) (sec.chips || []).forEach(c => { if (c !== chip) add(c.w); });
+  add(words);
+  if (pool.length < n) Object.values(VDATA).forEach(d => { if (d.w !== words) add(d.w); });
   return shuffle(pool).slice(0, n);
 }
 
 // Devuelve un item en el formato exacto que ya entiende renderQuiz.
-function vocabItem(pair, chip, sec) {
-  const en = pair[0], es = pair[1], use = VOCAB_USE[en];
+function vocabItem(pair, words, usos) {
+  const en = pair[0], es = pair[1], use = usos[en];
   const tipos = ['mc'];
   // El dictado es para palabras y frases cortas: escribir de oido "Excuse me,
   // where is the bathroom?" no mide vocabulario, mide paciencia.
-  if (en.split(/\s+/).length <= 3 && esUnicoEnTema(chip, es)) tipos.push('writing');
-  if (use && use.q && use.d && use.d.length >= 3) tipos.push('use');
+  if (en.split(/\s+/).length <= 3 && esUnicoEnTema(words, es)) tipos.push('writing');
+  if (use && use.length >= 4) tipos.push('use');
   const t = tipos[Math.floor(Math.random() * tipos.length)];
   if (t === 'writing') return { type: 'writing', audio: en, question: `¿Cómo se dice «${es}» en inglés?`, accepted: [en] };
   if (t === 'use') {
-    const opts = shuffle([use.q].concat(use.d.slice(0, 3)));
-    return { type: 'mc', question: `¿Para qué se usa «${en}»?`, options: opts, correctIndex: opts.indexOf(use.q) };
+    const opts = shuffle(use.slice(0, 4));
+    return { type: 'mc', question: `¿Para qué se usa «${en}»?`, options: opts, correctIndex: opts.indexOf(use[0]) };
   }
-  const opts = shuffle([es].concat(vocabDistractors(en, es, chip, sec, 3)));
+  const opts = shuffle([es].concat(vocabDistractors(en, es, words, 3)));
   return { type: 'mc', audio: en, question: '¿Qué significa esta palabra?', options: opts, correctIndex: opts.indexOf(es) };
 }
 
-function vocabExamRound(chip, sec) { return shuffle(chip.w.map(p => vocabItem(p, chip, sec))); }
+// Un examen no puede tener 70 preguntas: en los temas grandes se sortean 15.
+const VEXAM_MAX = 15;
+function vocabExamRound(words, usos) {
+  return shuffle(words.map(p => vocabItem(p, words, usos))).slice(0, VEXAM_MAX);
+}
 
 // La hoja es la del mini-quiz de la ruta, con su barra segmentada, su banner y
 // su repaso: se falla una, se repasa al final; se vuelve a fallar, se repite el
 // examen entero. Lo unico propio es de donde salen las preguntas y que se
 // guarda al aprobar.
-function openVocabExam(si, ci) {
-  const sec = VOCAB[si], chip = sec && sec.chips[ci];
-  if (!chip || !chip.w.length) return;
+function openVocabExam(id) {
+  const datos = VDATA[id];
+  if (!datos || !datos.w.length) return;
+  const words = datos.w, usos = datos.u || {};
   const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
   let round, redo, idx, correct, results, failedQs, answered = 0;
   _dismissGuard = () => answered > 0;   // ya contestaste algo: preguntar antes de salir
@@ -3704,11 +3791,12 @@ function openVocabExam(si, ci) {
     document.getElementById('mq-action').onclick = onAction;
   }
   function pass() {
+    const found = vocabChip(id), chip = found ? found.chip : { e: '', n: '' };
     result('check', '#2E7D1A', 'ok', '¡Examen aprobado!',
-      `${chip.e} ${escapeHtml(chip.n)} — ${chip.w.length} ${chip.w.length === 1 ? 'palabra' : 'palabras'}`,
+      `${chip.e} ${escapeHtml(chip.n)} — ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'}`,
       'green', 'Continuar', () => {
         stopSpeak(); closeOverlay();
-        vocabExams()[examKey(si, ci)] = { p: 1, ts: Date.now() };
+        vocabExams()[id] = { p: 1, ts: Date.now() };
         touchDay(); saveProgress(PROGRESS);
         renderVocab();
       });
@@ -3722,10 +3810,10 @@ function openVocabExam(si, ci) {
   function showFail() {
     result('refresh', '#5C5159', 'no', 'Casi lo tienes',
       'Fallaste otra vez. Repite el examen completo para aprobarlo.',
-      'blue', 'Reintentar', () => { stopSpeak(); startRound(vocabExamRound(chip, sec), false); });
+      'blue', 'Reintentar', () => { stopSpeak(); startRound(vocabExamRound(words, usos), false); });
   }
   sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
-  startRound(vocabExamRound(chip, sec), false);
+  startRound(vocabExamRound(words, usos), false);
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

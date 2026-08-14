@@ -462,6 +462,18 @@ export type DemoConfig = {
     share: boolean;
     dashboard: boolean;
   };
+
+  /**
+   * La pestaña Vocabulario. El banco general lo tienen todos los demos; aquí se
+   * eligen los bancos especializados por carrera o sector que además se le
+   * añaden (ingeniería, turismo, salud…). Cada tema trae sus propios quizzes.
+   */
+  vocab?: {
+    /** Claves de los bancos especializados encendidos: ["ingenieria", …]. */
+    packs?: string[];
+    /** Tope de nivel MCER: "B1" oculta los temas por encima. Vacío = todos. */
+    nivelMax?: string;
+  };
 };
 
 /** Lo que ve un demo que no configura nada. Es exactamente el aspecto actual. */
@@ -494,6 +506,7 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
   },
   map: {},
   features: { placement: true, share: true, dashboard: true },
+  vocab: { packs: [], nivelMax: "" },
 };
 
 /** Slugs que ya usa la app y que por tanto no puede tomar un demo. */
@@ -641,3 +654,17 @@ export async function getDemoConfig(slug: string): Promise<DemoConfig | null> {
   cache.set(slug, { at: Date.now(), cfg });
   return cfg;
 }
+
+/**
+ * Los bancos de vocabulario especializado que se pueden encender en un demo.
+ * Aquí sólo está el nombre con el que se muestran en el panel: las palabras
+ * viven en src/content/vocab/packs.js y las sirve el servidor.
+ */
+export const VOCAB_PACKS: { key: string; n: string; e: string; d: string }[] = [
+  { key: "ingenieria", n: "Ingeniería", e: "⚙️", d: "Matemáticas, programación, construcción, energía, calidad." },
+  { key: "turismo", n: "Turismo y hotelería", e: "🧳", d: "Recepción, agencias, guías, restaurante, aeropuerto." },
+  { key: "salud", n: "Salud", e: "🩺", d: "Consulta, síntomas, farmacia, enfermería, urgencias." },
+  { key: "negocios", n: "Negocios y finanzas", e: "💼", d: "Reuniones, ventas, contabilidad, banca, comercio." },
+  { key: "derecho", n: "Derecho", e: "⚖️", d: "Contratos, tribunales, laboral, propiedad, cumplimiento." },
+  { key: "educacion", n: "Educación", e: "🎓", d: "Aula, evaluación, universidad, investigación, tutoría." },
+];

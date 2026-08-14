@@ -26,6 +26,7 @@ import {
   fontStack,
   fontsHref,
   shadeHex,
+  VOCAB_PACKS,
 } from "@/lib/demo-config";
 import { BUILT_IN_PACKS, packAsset, packChoices, packInfo } from "@/lib/mascot-packs";
 import { Button } from "@/components/ui/button";
@@ -1328,6 +1329,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <TabsTrigger value="panel">Panel</TabsTrigger>
               <TabsTrigger value="mascota">Mascota</TabsTrigger>
               <TabsTrigger value="textos">Textos</TabsTrigger>
+              <TabsTrigger value="vocabulario">Vocabulario</TabsTrigger>
               <TabsTrigger value="mapa">Mapa</TabsTrigger>
             </TabsList>
 
@@ -1563,6 +1565,47 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 onChange={upd("meta.image")}
               />
             </TabsContent>
+
+            <TabsContent value="vocabulario" className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Todos los demos traen la biblioteca general de vocabulario. Aquí eliges qué bancos
+                especializados se le suman: aparecen como secciones propias dentro de la pestaña
+                Vocabulario y cada tema trae sus quizzes.
+              </p>
+              {VOCAB_PACKS.map((p) => {
+                const activos = (get(cfg, "vocab.packs", [] as string[]) || []) as string[];
+                const on = activos.includes(p.key);
+                return (
+                  <label
+                    key={p.key}
+                    className="flex items-start gap-3 cursor-pointer rounded-lg border p-3"
+                  >
+                    <Switch
+                      className="mt-0.5"
+                      checked={on}
+                      onCheckedChange={(v) =>
+                        upd("vocab.packs")(
+                          v ? [...activos, p.key] : activos.filter((k) => k !== p.key),
+                        )
+                      }
+                    />
+                    <span className="leading-tight">
+                      <span className="text-sm">
+                        {p.e} {p.n}
+                      </span>
+                      <span className="block text-xs text-muted-foreground">{p.d}</span>
+                    </span>
+                  </label>
+                );
+              })}
+              <Field
+                label="Tope de nivel (opcional)"
+                hint="A1, A2, B1, B2 o C1. Vacío = se muestran todos los temas."
+                value={get(cfg, "vocab.nivelMax")}
+                onChange={upd("vocab.nivelMax")}
+              />
+            </TabsContent>
+
 
             <TabsContent value="splash" className="space-y-4">
               <label className="flex items-start gap-3 cursor-pointer rounded-lg border p-3">

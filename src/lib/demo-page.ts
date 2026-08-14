@@ -333,6 +333,9 @@ async function inject(
     splash: cfg.splash,
     map: cfg.map,
     features: cfg.features,
+    // Bancos de vocabulario especializado encendidos para este demo. La app los
+    // manda en la petición del contenido; el índice llega ya con ellos dentro.
+    vocab: cfg.vocab,
     // Las metas del panel. Viajan tal cual: la plantilla rellena los huecos con
     // los valores de fábrica, así que no hay que normalizarlas aquí — y hacerlo
     // en dos sitios es la forma segura de que acaben discrepando.

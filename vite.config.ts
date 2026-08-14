@@ -63,6 +63,38 @@ function courseContentPlugin() {
   };
 }
 
+// La biblioteca de vocabulario. Mismo motivo que el curso: son scripts de
+// navegador (definen window.VOCAB_GENERAL y window.VOCAB_PACKS) y se evalúan
+// aquí, en build, porque Workers no permite `new Function` en caliente.
+function vocabContentPlugin() {
+  const VIRTUAL = "virtual:vocab-content";
+  const RESOLVED = "\0" + VIRTUAL;
+  const files = ["general.js", "packs.js"];
+
+  return {
+    name: "vocab-content",
+    resolveId(id: string) {
+      return id === VIRTUAL ? RESOLVED : undefined;
+    },
+    load(this: { addWatchFile: (f: string) => void }, id: string) {
+      if (id !== RESOLVED) return undefined;
+      const dir = path.resolve(import.meta.dirname, "src/content/vocab");
+      const src = files
+        .map((f) => {
+          const p = path.join(dir, f);
+          this.addWatchFile(p);
+          return fs.existsSync(p) ? fs.readFileSync(p, "utf8") : "";
+        })
+        .join("\n;\n");
+      const run = new Function(
+        "window",
+        `${src}\n;return { general: window.VOCAB_GENERAL || [], packs: window.VOCAB_PACKS || {} };`,
+      );
+      return `export default ${JSON.stringify(run({}))};`;
+    },
+  };
+}
+
 export default defineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
@@ -70,7 +102,7 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    plugins: [courseContentPlugin()],
+    plugins: [courseContentPlugin(), vocabContentPlugin()],
     resolve: {
       alias: {
         "entities/lib/decode.js": path.resolve(
