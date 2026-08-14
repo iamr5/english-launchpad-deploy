@@ -5737,7 +5737,8 @@ function renderWriting(host, q, onCorrect, onIncorrect) {
 function renderQuiz(host, q, onCorrect, onIncorrect) {
   clearAutoNext(host);
   try {
-    if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
+    if (q.type === 'speaking') renderSpeaking(host, q, onCorrect, onIncorrect);
+    else if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
     else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
     else if (q.type === 'writing') renderWriting(host, q, onCorrect, onIncorrect);
     else renderTap(host, q, onCorrect, onIncorrect);
@@ -6048,10 +6049,12 @@ function renderPracticeLibrary(el) {
       <span class="pr-sub">Llevas ${prNum(totHechas)} ejercicios practicados</span>
 
     </div>
+    ${speakingShelfHTML()}
     <div class="pr-chips">${chips.join('')}</div>` +
     (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
       <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
 
+  el.querySelectorAll('.sp-lvl').forEach(b => b.onclick = () => openSpeakingRun(+b.getAttribute('data-sp')));
   el.querySelectorAll('.pr-chip').forEach(b => b.onclick = () => {
     PRACTICE_FILTER = +b.getAttribute('data-m');
     renderPractice();
