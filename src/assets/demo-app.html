@@ -4283,12 +4283,21 @@ function renderVocabIndice(el) {
     </button>`;
   }
   const fil = [['todos', 'Todos'], ['curso', 'En curso'], ['nuevos', 'Sin empezar'], ['listos', 'Dominados']];
+  // La capa profesional va arriba del todo: es lo que distingue a este curso.
+  const e4e = e4eHay() ? `<button class="e4e-card" onclick="openE4E()">
+      ${iconSvg('settings', 'vico big')}
+      <span><b>English for Engineering</b>
+        <small>Elige tu especialidad y practica el inglés de tu trabajo: vocabulario técnico y situaciones reales.</small></span>
+      <span class="e4e-go">Entrar</span>
+    </button>` : '';
   el.innerHTML = `<div class="vocab-intro">
       <b>Tu biblioteca de palabras</b>
       <small>${prNum(t.temas)} temas · ${prNum(t.total)} palabras. Cada tema va en tandas de diez, con su examen al final de cada tanda.</small>
       <span class="vi-count">${prNum(t.heard)} de ${prNum(t.total)} escuchadas</span>
     </div>
+    ${e4e}
     ${sigue}
+
     <input class="vbuscar" type="search" placeholder="Buscar un tema…" value="${escapeHtml(VFILTRO)}"
            aria-label="Buscar un tema" oninput="filtrarVocab(this.value)">
     <div class="vfil">${fil.map(([k, n]) => `<button data-f="${k}" class="${VFILTER === k ? 'on' : ''}" onclick="vocabFiltro('${k}')">${n}</button>`).join('')}</div>
