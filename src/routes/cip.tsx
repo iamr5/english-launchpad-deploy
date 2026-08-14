@@ -731,8 +731,8 @@ function FinalCta({ brand }: { brand: { institution: string } }) {
         <p className="eyebrow text-white/75">Última llamada</p>
         <h2 className="head text-white">Firma y pásala</h2>
         <p className="lede mx-auto mt-3 text-white/90">
-          Diez segundos tuyos para que el {brand.institution} pueda lanzar, en un mes, la plataforma
-          de inglés de todos los colegiados: A1 a C1, con inglés técnico incluido.
+          Diez segundos tuyos para que el {brand.institution} pueda lanzar la plataforma de inglés de
+          todos los colegiados: A1 a C1, con inglés técnico incluido.
 
         </p>
         <div
