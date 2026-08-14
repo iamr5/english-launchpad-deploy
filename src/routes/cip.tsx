@@ -423,17 +423,25 @@ function LiveDemo() {
         <p className="mt-2 text-slate-600">
           La app real del Colegio de Ingenieros. Toca y recórrela.
         </p>
+        {/* El demo se pinta a 500×923 y se reduce a 0,78 (como un ctrl+− sólo
+            aquí): entra el mismo marco de 390×720, pero el contenido respira. */}
         <div ref={ref} className="mx-auto mt-8 w-full max-w-[390px]">
-          <div className="overflow-hidden rounded-[2rem] border-8 border-slate-900 shadow-2xl">
+          <div className="relative h-[720px] overflow-hidden rounded-[2rem] border-8 border-slate-900 shadow-2xl">
             {on ? (
               <iframe
                 src="/democip"
                 title="Demo del curso del CIP"
-                className="block h-[720px] w-full border-0"
+                className="block border-0"
                 loading="lazy"
+                style={{
+                  width: 480,
+                  height: 886,
+                  transform: "scale(0.78)",
+                  transformOrigin: "top left",
+                }}
               />
             ) : (
-              <div className="flex h-[720px] items-center justify-center bg-slate-100 text-slate-400">
+              <div className="flex h-full items-center justify-center bg-slate-100 text-slate-400">
                 Cargando demo…
               </div>
             )}
@@ -441,6 +449,53 @@ function LiveDemo() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ------------------------------------------------------------ mascota entera */
+
+/** Boti completo (cuerpo, brazos, piernas) con su animación real, no el icono. */
+function BotiFull() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let live = true;
+    const SRC = "/demo-assets/mascots/boti/boti.js";
+
+    function mount() {
+      const w = window as unknown as { Boti?: { mount: (el: Element, o?: object) => void } };
+      if (!live || !ref.current || !w.Boti) return;
+      w.Boti.mount(ref.current, { shadow: true, track: true, interactive: true });
+    }
+
+    if ((window as unknown as { Boti?: unknown }).Boti) {
+      mount();
+      return () => {
+        live = false;
+      };
+    }
+
+    let s = document.querySelector<HTMLScriptElement>(`script[src="${SRC}"]`);
+    if (!s) {
+      s = document.createElement("script");
+      s.src = SRC;
+      s.async = true;
+      document.head.appendChild(s);
+    }
+    s.addEventListener("load", mount);
+    return () => {
+      live = false;
+      s?.removeEventListener("load", mount);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      aria-label="Boti, la mascota del programa"
+      className="relative w-[260px] drop-shadow-2xl"
+      style={{ aspectRatio: "757.6 / 1139.5" }}
+    />
   );
 }
 
