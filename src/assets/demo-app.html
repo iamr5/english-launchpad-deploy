@@ -4942,14 +4942,15 @@ function practiceItems(lesson) {
     });
     // Los ejercicios extra del banco de práctica de esa misma teoría. No son
     // parte de la lección: no la desbloquean ni la bloquean, se hacen aparte.
-    if (b.practiceBank && b.practiceBank.length) items.push({
+    if (b.bankN) items.push({
       bi: i,
       bank: true,
       name: (n ? `Teoría ${n}` : (b.title || 'Sección')) + ' · práctica extra',
-      qs: b.practiceBank.length,
+      qs: b.bankN,
       done: isMiniQuizCompleted(lesson.id, b.id + '-bank'),
       // El banco sale en tandas: cuentan los ejercicios hechos, no la fila.
-      hechas: Math.min(bankDoneCount(lesson.id, b.id + '-bank'), b.practiceBank.length),
+      hechas: Math.min(bankDoneCount(lesson.id, b.id + '-bank'), b.bankN),
+
       open: true,
       final: false,
     });
