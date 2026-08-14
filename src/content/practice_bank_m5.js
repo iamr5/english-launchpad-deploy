@@ -22,7 +22,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Resumir mentalmente cada frase del reporte."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-1-teoria-1-pb-2",
@@ -35,7 +36,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Preguntas antes de leer para tener un objetivo."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-1-teoria-1-pb-3",
@@ -61,11 +63,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Ignorar las palabras que no conoces para no perder tiempo."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-1-teoria-1-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "To",
     "get",
@@ -86,7 +90,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-1-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "used",
@@ -103,7 +108,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-1-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "She",
     "always",
@@ -119,7 +125,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-1-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Is",
     "important",
@@ -134,7 +141,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-1-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "We",
     "need",
@@ -157,7 +165,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-1-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "After",
     "read",
@@ -175,7 +184,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-1-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "don't",
@@ -191,7 +201,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-1-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Scanning",
     "is",
@@ -210,7 +221,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-1-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "main",
@@ -704,11 +716,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "La fecha de publicación del estudio."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-1-teoria-2-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "In",
     "recent",
@@ -724,7 +738,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-2-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "author",
@@ -742,7 +757,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-2-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "To",
     "illustrate,",
@@ -759,7 +775,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-2-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "A",
     "2018",
@@ -779,7 +796,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-2-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Try",
     "to",
@@ -796,7 +814,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-2-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "report",
@@ -816,7 +835,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-2-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "My",
     "colleague",
@@ -1254,7 +1274,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-teoria-2-pb-36",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "study",
@@ -1282,7 +1303,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Sugerir implicaciones futuras"
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-2-teoria-1-pb-2",
@@ -1308,7 +1330,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Cuatro capítulos fundamentales"
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-2-teoria-1-pb-4",
@@ -1321,11 +1344,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Desarrollar ideas con citas extensas"
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-2-teoria-1-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "introduction",
@@ -1343,7 +1368,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-1-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "conclusion",
@@ -1360,7 +1386,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-1-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Every",
     "paragraph",
@@ -1378,7 +1405,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-1-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "must",
@@ -1396,7 +1424,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-1-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "My",
     "report",
@@ -1412,7 +1441,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-1-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "This",
     "essay",
@@ -1428,7 +1458,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-1-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "development",
@@ -1444,7 +1475,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-1-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "According",
     "to",
@@ -1464,7 +1496,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-1-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "She",
     "don't",
@@ -1914,7 +1947,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "It is believed that..."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-2-teoria-2-pb-2",
@@ -1940,7 +1974,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "You can see the evidence."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-2-teoria-2-pb-4",
@@ -1957,7 +1992,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-2-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "report",
@@ -1974,7 +2010,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-2-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "It",
     "is",
@@ -1998,7 +2035,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-2-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "We",
     "think",
@@ -2013,7 +2051,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-2-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "methodology",
@@ -2032,7 +2071,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-2-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Significant",
     "outcomes",
@@ -2049,7 +2089,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-2-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "evidence",
@@ -2063,7 +2104,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-2-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "team",
@@ -2080,7 +2122,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-teoria-2-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "new",
@@ -2463,7 +2506,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Traducir cada oración al español antes de continuar."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-1-errores-pb-2",
@@ -2506,7 +2550,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-errores-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "It's",
     "important",
@@ -2525,7 +2570,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-errores-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Don't",
     "get",
@@ -2545,7 +2591,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-errores-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Look",
     "for",
@@ -2564,7 +2611,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-errores-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "need",
@@ -2588,7 +2636,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-errores-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "If",
     "a",
@@ -2611,7 +2660,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-errores-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "It's",
     "better",
@@ -2635,7 +2685,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-errores-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "To",
     "understand",
@@ -2659,7 +2710,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-1-errores-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "robot",
@@ -3124,7 +3176,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "kids",
@@ -3141,7 +3194,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "company",
@@ -3159,7 +3213,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "A",
     "study",
@@ -3176,7 +3231,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "project",
@@ -3191,7 +3247,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Many",
     "people",
@@ -3207,7 +3264,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "report",
@@ -3223,7 +3281,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "This",
     "paper",
@@ -3240,7 +3299,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "We",
     "got",
@@ -3256,7 +3316,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "government",
@@ -3272,7 +3333,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-2-errores-pb-14",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "research",
@@ -3775,7 +3837,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "solo se usan en discursos formales o académicos."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-3-teoria-1-pb-2",
@@ -3788,7 +3851,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Repetir mentalmente lo que el hablante acaba de decir."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-3-teoria-1-pb-3",
@@ -3818,7 +3882,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "key",
@@ -3834,7 +3899,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "must",
@@ -3851,7 +3917,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "To",
     "infer",
@@ -3871,7 +3938,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Linking",
     "words",
@@ -3889,7 +3957,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "She",
     "is",
@@ -3905,7 +3974,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Actually",
     "I",
@@ -3920,7 +3990,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "said",
@@ -3939,7 +4010,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "speaker",
@@ -3957,7 +4029,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "When",
     "you",
@@ -3978,7 +4051,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-1-pb-14",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Is",
     "important",
@@ -4431,7 +4505,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Escribir oraciones completas y gramaticalmente correctas."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-3-teoria-2-pb-2",
@@ -4444,7 +4519,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Ignorar los nombres y fechas, solo enfocarse en la gramática."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-3-teoria-2-pb-3",
@@ -4470,11 +4546,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Neozelandés"
    ],
    "correctIndex": 3,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-3-teoria-2-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "I",
     "always",
@@ -4495,7 +4573,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-2-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "should",
@@ -4515,7 +4594,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-2-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "We",
     "need",
@@ -4537,7 +4617,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-2-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "professor",
@@ -4554,7 +4635,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-2-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "They",
     "have",
@@ -4573,7 +4655,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-2-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "have",
@@ -4591,7 +4674,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-2-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Don't",
     "write",
@@ -4610,7 +4694,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-2-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "manager",
@@ -4627,7 +4712,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-teoria-2-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "She",
     "hears",
@@ -5114,7 +5200,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Ignorar las palabras importantes que no conocemos."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-3-errores-pb-2",
@@ -5140,7 +5227,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Memorizar todo el vocabulario nuevo."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-3-errores-pb-4",
@@ -5157,7 +5245,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-errores-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "should",
@@ -5177,7 +5266,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-errores-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "context",
@@ -5194,7 +5284,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-errores-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Is",
     "important",
@@ -5210,7 +5301,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-errores-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Focus",
     "in",
@@ -5224,7 +5316,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-errores-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "No",
     "focus",
@@ -5240,7 +5333,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-errores-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "goal",
@@ -5256,7 +5350,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-3-errores-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "It's",
     "a",
@@ -5763,7 +5858,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "I",
     "firmly",
@@ -5781,7 +5877,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "This",
     "evidence",
@@ -5796,7 +5893,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "It",
     "is",
@@ -5814,7 +5912,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Good",
     "afternoon",
@@ -5832,7 +5931,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Let's",
     "begin",
@@ -5847,7 +5947,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "According",
     "at",
@@ -5864,7 +5965,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "That's",
     "an",
@@ -5886,7 +5988,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Therefore",
     ",",
@@ -5907,7 +6010,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "In",
     "additional",
@@ -5924,7 +6028,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-1-pb-14",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "In",
     "conclude",
@@ -6327,7 +6432,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-errores-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "That's",
     "a",
@@ -6349,7 +6455,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-errores-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "I'm",
     "sorry,",
@@ -6370,7 +6477,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-errores-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "To",
     "start,",
@@ -6390,7 +6498,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-errores-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "speaker",
@@ -6408,7 +6517,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-errores-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "After",
     "introducing",
@@ -6830,7 +6940,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Una pregunta retórica"
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-5-teoria-2-pb-2",
@@ -6869,11 +6980,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "El inicio y el final de tu ensayo."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-5-teoria-2-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "lecture",
@@ -6888,7 +7001,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-2-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "A",
     "integrated",
@@ -6903,7 +7017,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-2-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "In",
     "the",
@@ -6921,7 +7036,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-2-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "This",
     "structure",
@@ -6937,7 +7053,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-2-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "response",
@@ -6953,7 +7070,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-2-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "need",
@@ -6968,7 +7086,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-2-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "On",
     "the",
@@ -6990,7 +7109,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-2-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Your",
     "conclusion",
@@ -7006,7 +7126,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-2-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "professor's",
@@ -7455,7 +7576,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Para saber qué vocabulario buscar después."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-5-teoria-1-pb-2",
@@ -7494,11 +7616,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Porque no es profesional escribir mucho."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-5-teoria-1-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "must",
@@ -7516,7 +7640,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "read",
@@ -7531,7 +7656,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "It's",
     "important",
@@ -7549,7 +7675,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "audio",
@@ -7567,7 +7694,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Use",
     "abbreviations",
@@ -7586,7 +7714,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "must",
@@ -7601,7 +7730,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "order",
@@ -7617,7 +7747,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Don't",
     "try",
@@ -7632,7 +7763,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Take",
     "notes",
@@ -7649,7 +7781,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-teoria-1-pb-14",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Reading",
     "the",
@@ -8109,7 +8242,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Let",
     "me",
@@ -8125,7 +8259,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Thank",
     "you",
@@ -8144,7 +8279,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "I",
     "agree",
@@ -8164,7 +8300,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "In",
     "conclusion",
@@ -8185,7 +8322,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Let",
     "me",
@@ -8204,7 +8342,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Thank",
     "you",
@@ -8226,7 +8365,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "I",
     "agree",
@@ -8245,7 +8385,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "In",
     "conclusion",
@@ -8265,7 +8406,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-4-teoria-2-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Good",
     "morning",
@@ -8670,7 +8812,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Decidir si es formal o informal."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-6-teoria-1-pb-2",
@@ -8696,7 +8839,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Escribir una conclusión general."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-6-teoria-1-pb-4",
@@ -8713,7 +8857,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "essay",
@@ -8736,7 +8881,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Your",
     "letter",
@@ -8751,7 +8897,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Always",
     "close",
@@ -8767,7 +8914,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "She",
     "always",
@@ -8783,7 +8931,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "writing",
@@ -8799,7 +8948,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "needs",
@@ -8817,7 +8967,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "They",
     "lose",
@@ -8835,7 +8986,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Is",
     "important",
@@ -8853,7 +9005,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-13",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "My",
     "boss",
@@ -9315,7 +9468,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-1-pb-39",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Your",
     "essay",
@@ -9348,7 +9502,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Dar opiniones abstractas."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-6-teoria-2-pb-2",
@@ -9374,7 +9529,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Preguntas de tipo 'sí/no'."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-6-teoria-2-pb-4",
@@ -9387,11 +9543,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "No pedir aclaraciones."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-6-teoria-2-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Well,",
     "I",
@@ -9408,7 +9566,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-2-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "need",
@@ -9423,7 +9582,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-2-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "She",
     "always",
@@ -9440,7 +9600,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-2-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "teacher",
@@ -9456,7 +9617,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-2-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "From",
     "my",
@@ -9473,7 +9635,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-2-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "doesn't",
@@ -9488,7 +9651,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-2-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "In",
     "conclusion,",
@@ -9505,7 +9669,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-teoria-2-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "It's",
     "important",
@@ -9906,7 +10071,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Hacer una síntesis del tema."
    ],
    "correctIndex": 0,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-5-errores-pb-2",
@@ -9919,7 +10085,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Escribir en mayúsculas para resaltar ideas importantes."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-5-errores-pb-3",
@@ -9932,7 +10099,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Presentar una perspectiva equilibrada."
    ],
    "correctIndex": 1,
-   "skill": "reading"
+   "skill": "reading",
+   "needsContext": true
   },
   {
    "id": "modulo5-5-errores-pb-4",
@@ -9949,7 +10117,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-errores-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "never",
@@ -9967,7 +10136,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-errores-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "student",
@@ -9985,7 +10155,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-errores-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Is",
     "important",
@@ -10006,7 +10177,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-errores-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "examiner",
@@ -10026,7 +10198,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-errores-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "My",
     "notes",
@@ -10045,7 +10218,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-errores-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "didn't",
@@ -10063,7 +10237,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-errores-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "report",
@@ -10083,7 +10258,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-5-errores-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "must",
@@ -10585,7 +10761,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "El autor del estudio."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-7-teoria-1-pb-3",
@@ -10611,11 +10788,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Solo una línea de postura."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-7-teoria-1-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "scientific",
@@ -10632,7 +10811,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-1-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Governments",
     "must",
@@ -10647,7 +10827,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-1-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Efficient",
     "transit",
@@ -10662,7 +10843,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-1-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "decline",
@@ -10678,7 +10860,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-1-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "We",
     "need",
@@ -10694,7 +10877,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-1-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "report",
@@ -10709,7 +10893,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-1-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "must",
@@ -10724,7 +10909,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-1-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "This",
     "fact",
@@ -11137,7 +11323,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-errores-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "I",
     "am",
@@ -11157,7 +11344,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-errores-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "should",
@@ -11175,7 +11363,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-errores-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "First",
     ",",
@@ -11579,7 +11768,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-errores-pb-29",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "To",
     "conclude",
@@ -11598,7 +11788,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-6-errores-pb-30",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "We",
     "must",
@@ -11666,11 +11857,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Un pronóstico del tiempo."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-7-teoria-2-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "On",
     "the",
@@ -11686,7 +11879,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-2-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "economy",
@@ -11700,7 +11894,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-2-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Inflation",
     "keep",
@@ -11715,7 +11910,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-2-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "This",
     "report",
@@ -11731,7 +11927,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-teoria-2-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Her",
     "opinion",
@@ -12201,7 +12398,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Evitar leer la pregunta más de una vez."
    ],
    "correctIndex": 1,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-7-errores-pb-2",
@@ -12227,7 +12425,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Preguntarle al examinador directamente."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-7-errores-pb-4",
@@ -12240,11 +12439,13 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
     "Pedir un descanso inmediatamente."
    ],
    "correctIndex": 2,
-   "skill": "teoria"
+   "skill": "teoria",
+   "needsContext": true
   },
   {
    "id": "modulo5-7-errores-pb-5",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "The",
     "key",
@@ -12262,7 +12463,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-errores-pb-6",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "She",
     "has",
@@ -12279,7 +12481,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-errores-pb-7",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "You",
     "must",
@@ -12296,7 +12499,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-errores-pb-8",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "Please,",
     "explain",
@@ -12311,7 +12515,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-errores-pb-9",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "We",
     "need",
@@ -12328,7 +12533,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-errores-pb-10",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "He",
     "lost",
@@ -12346,7 +12552,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-errores-pb-11",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "They",
     "need",
@@ -12362,7 +12569,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-errores-pb-12",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "We",
     "should",
@@ -12821,7 +13029,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
   },
   {
    "id": "modulo5-7-errores-pb-37",
-   "type": "tap","question":"Toca la palabra incorrecta:",
+   "type": "tap",
+   "question": "Toca la palabra incorrecta:",
    "sentenceTokens": [
     "It's",
     "essential",
