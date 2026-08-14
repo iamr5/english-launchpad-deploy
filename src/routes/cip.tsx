@@ -14,33 +14,34 @@ export const Route = createFileRoute("/cip")({
   loader: () => getCipBrand(),
   head: () => ({
     meta: [
-      { title: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP" },
+      { title: "Inglés para los ingenieros del Perú · Preinscripción CIP" },
       {
         name: "description",
         content:
-          "Todavía no existe: se activa si somos suficientes. Deja tu correo y pásale la voz a tus colegas para que el Colegio de Ingenieros lance su plataforma de inglés técnico en un mes.",
+          "Inglés completo de A1 a C1 (MCER), con inglés técnico de ingeniería incluido. Todavía no existe: se activa si somos suficientes. Deja tu correo y pásale la voz a tus colegas.",
       },
       { property: "og:type", content: "website" },
       {
         property: "og:title",
-        content: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP",
+        content: "Inglés para los ingenieros del Perú · Preinscripción CIP",
       },
       {
         property: "og:description",
         content:
-          "La plataforma está construida: 45 microlecciones A1–C1, 8.127 ejercicios y 779 términos de ingeniería. Falta la demanda. Preinscríbete y comparte.",
+          "Curso completo A1–C1 con marca del Colegio: 45 microlecciones, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Falta la demanda. Preinscríbete y comparte.",
       },
       { property: "og:image", content: "https://aprendoenglish.com/social-preview.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
-        content: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP",
+        content: "Inglés para los ingenieros del Perú · Preinscripción CIP",
       },
       {
         name: "twitter:description",
-        content: "Se activa si somos suficientes. Deja tu correo y pásale la voz a tu colega.",
+        content: "Inglés A1–C1 con inglés técnico incluido. Deja tu correo y pásale la voz.",
       },
       { name: "twitter:image", content: "https://aprendoenglish.com/social-preview.jpg" },
+
     ],
     links: [
       { rel: "icon", href: "/head.png", type: "image/png" },
@@ -59,7 +60,16 @@ const METRICS = [
   { n: "45", l: "microlecciones A1 → C1" },
   { n: "8.127", l: "ejercicios de práctica" },
   { n: "11.040", l: "palabras de vocabulario" },
-  { n: "779", l: "términos de ingeniería" },
+  { n: "779", l: "de ellas, de ingeniería" },
+];
+
+/** Etiquetas cortas bajo el titular: qué incluye el programa. */
+const BADGES = [
+  "Niveles A1 a C1 (MCER)",
+  "Incluye inglés técnico",
+  "Test de ubicación",
+  "Certificado por nivel",
+  "Con la marca del CIP",
 ];
 
 /** Capturas reales de la plataforma (tomadas del demo del CIP). */
@@ -72,7 +82,7 @@ const SHOTS = [
   {
     img: "/cip/app-nivel.webp",
     t: "Tu ruta completa, de A1 a C1",
-    d: "Cinco niveles del marco europeo (MCER) encadenados. Ves dónde estás y cuánto falta para el siguiente.",
+    d: "Los cinco niveles del Marco Común Europeo (MCER) encadenados: gramática, lectura, escucha y escritura.",
   },
   {
     img: "/cip/app-ruta.webp",
@@ -81,8 +91,8 @@ const SHOTS = [
   },
   {
     img: "/cip/app-vocab.webp",
-    t: "Vocabulario técnico de ingeniería",
-    d: "197 temas en tandas de diez con examen, definición en español y 779 términos propios de ingeniería.",
+    t: "Vocabulario general y de ingeniería",
+    d: "197 temas en tandas de diez con examen y definición en español; 779 de esas palabras son términos de ingeniería.",
   },
 ];
 
@@ -90,7 +100,7 @@ const TECH = [
   {
     e: "/demo-assets/ob-goal.svg",
     t: "Ubicación automática",
-    d: "Motor adaptativo: el test corta apenas tiene evidencia suficiente de tu nivel.",
+    d: "Motor adaptativo: el test corta apenas tiene evidencia suficiente de tu nivel del MCER.",
   },
   {
     e: "/demo-assets/ob-words.svg",
@@ -108,6 +118,7 @@ const TECH = [
     d: "Corre en el navegador del celular o la computadora. 20 minutos al día bastan para avanzar.",
   },
 ];
+
 
 const STEPS = [
   {
@@ -196,6 +207,16 @@ const PAGE_CSS = `
 .cipp .shot img{ display:block; width:100%; height:auto; }
 .cipp .badge{ display:inline-block; border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:800;
   letter-spacing:.14em; text-transform:uppercase; }
+
+/* etiquetas de «qué incluye», bajo el titular */
+.cipp .badges{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+.cipp .badges li{ display:inline-flex; align-items:center; gap:7px; border-radius:999px;
+  padding:6px 12px 6px 10px; font-size:12.5px; font-weight:700; letter-spacing:.01em;
+  color:#eef2fb; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18); }
+.cipp .badges li::before{ content:""; width:6px; height:6px; border-radius:50%;
+  background:var(--cip); box-shadow:0 0 0 3px color-mix(in srgb,var(--cip) 30%,transparent); }
+
+
 
 /* burbuja de Boti */
 .cipp .bubble{ position:relative; background:#fff; color:var(--ink); border-radius:18px;
@@ -359,12 +380,19 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
           <h1 className="title">
             Que todos los ingenieros del Perú
             <br />
-            <span className="acc">aprendan inglés técnico</span>
+            <span className="acc">hablen inglés</span>
           </h1>
           <p className="lede mt-5 text-white/85">
-            La plataforma ya está construida, con la marca del Colegio y vocabulario de ingeniería.
-            Falta una sola cosa: demostrar que los colegiados la quieren. Tu correo es esa prueba.
+            Un curso de inglés completo, de cero a nivel avanzado, con la marca del Colegio — y con
+            inglés técnico de ingeniería incluido. Ya está construido. Falta una sola cosa: demostrar
+            que los colegiados lo quieren. Tu correo es esa prueba.
           </p>
+          <ul className="badges">
+            {BADGES.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
+
 
           <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
             <EmailForm id="hero" cta="Firmar mi preinscripción" />
@@ -480,8 +508,9 @@ function LiveDemo() {
         <p className="eyebrow text-[var(--cip)]">Sin maquetas</p>
         <h2 className="head">Este es el curso, tal cual</h2>
         <p className="lede mx-auto mt-3 text-[var(--ink-2)]">
-          Ábrelo y recórrelo completo: test de ubicación, ruta de niveles, vocabulario técnico y
-          panel de progreso.
+          Ábrelo y recórrelo completo: test de ubicación, ruta A1–C1, vocabulario general y de
+          ingeniería, y panel de progreso.
+
         </p>
 
         <div className="mx-auto mt-8 w-full max-w-[390px]">
@@ -543,7 +572,7 @@ function ShareButtons({ compact = false }: { compact?: boolean }) {
   const [copied, setCopied] = useState(false);
   const url = "https://aprendoenglish.com/cip";
   const msg =
-    "Colega ingeniero: el CIP puede darnos inglés técnico a todos los colegiados. Solo falta que seamos suficientes. Firma aquí: ";
+    "Colega ingeniero: el CIP puede darnos inglés de A1 a C1, con inglés técnico incluido, a todos los colegiados. Solo falta que seamos suficientes. Firma aquí: ";
 
   const wa = `https://wa.me/?text=${encodeURIComponent(msg + url + "?utm_source=whatsapp")}`;
   const li = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url + "?utm_source=linkedin")}`;
@@ -614,9 +643,10 @@ function Share() {
             Qué le dices
           </p>
           <p className="mt-4 text-[15.5px] font-semibold leading-relaxed text-[var(--ink-2)]">
-            «Colega, el Colegio puede darnos inglés técnico a todos los colegiados, con la
-            plataforma ya construida. Sólo falta que seamos suficientes. Firma acá, toma diez
-            segundos.»
+            «Colega, el Colegio puede darnos inglés completo —de A1 a C1, con inglés técnico
+            incluido— a todos los colegiados, con la plataforma ya construida. Sólo falta que
+            seamos suficientes. Firma acá, toma diez segundos.»
+
           </p>
         </div>
       </div>
@@ -680,9 +710,10 @@ function BotiFull() {
   return (
     <div className="flex flex-col items-center">
       <div className="bubble mb-4">
-        ¡Hola! Soy <b>Boti</b>. Si tus colegas firman, te acompaño hasta que hables inglés de
-        ingeniero.
+        ¡Hola! Soy <b>Boti</b>. Si tus colegas firman, te acompaño desde tu primer &quot;hello&quot;
+        hasta que hables inglés de ingeniero.
       </div>
+
       <div
         ref={ref}
         aria-label="Boti, la mascota del programa"
@@ -701,7 +732,8 @@ function FinalCta({ brand }: { brand: { institution: string } }) {
         <h2 className="head text-white">Firma y pásala</h2>
         <p className="lede mx-auto mt-3 text-white/90">
           Diez segundos tuyos para que el {brand.institution} pueda lanzar, en un mes, la plataforma
-          de inglés técnico de todos los colegiados.
+          de inglés de todos los colegiados: A1 a C1, con inglés técnico incluido.
+
         </p>
         <div
           className="card mx-auto mt-8 max-w-xl p-4 text-left"

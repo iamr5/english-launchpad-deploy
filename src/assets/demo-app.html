@@ -388,6 +388,40 @@
     border: 2px solid var(--line); border-radius: 14px; -webkit-appearance: none; }
   .vbuscar:focus { outline: none; border-color: var(--accent); }
   .vocab-vacio { padding: 26px 4px; text-align: center; color: var(--muted); font-size: 14px; }
+
+  /* ===== English for Engineering =====
+     Capa profesional encima del inglés general: el alumno elige su(s)
+     especialidad(es) y ve sólo el vocabulario y las situaciones de su rama. */
+  .e4e-card { display: flex; align-items: center; gap: 12px; width: 100%; box-sizing: border-box;
+    margin: 0 0 16px; padding: 14px; text-align: left; cursor: pointer;
+    background: linear-gradient(135deg, #123B63, #1B5C93); color: #fff;
+    border: none; border-radius: 18px; box-shadow: 0 4px 0 #0C2942; font: inherit; }
+  .e4e-card:active { transform: translateY(2px); box-shadow: 0 2px 0 #0C2942; }
+  .e4e-card b { display: block; font-size: 16px; font-weight: 800; }
+  .e4e-card small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.35; color: #D6E7F7; }
+  .e4e-card .e4e-go { margin-left: auto; font-size: 12px; font-weight: 800; letter-spacing: .3px;
+    background: rgba(255,255,255,.16); border-radius: 999px; padding: 6px 11px; white-space: nowrap; }
+  .e4e-top { display: flex; align-items: center; gap: 10px; margin: 2px 2px 14px; }
+  .e4e-top b { display: block; font-size: 19px; font-weight: 800; color: var(--ink); }
+  .e4e-top small { display: block; margin-top: 2px; font-size: 13px; line-height: 1.4; color: var(--muted); }
+  .e4e-back { width: 34px; height: 34px; flex: 0 0 34px; border-radius: 10px; border: 2px solid var(--line);
+    background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C5159' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='M15 18l-6-6 6-6'/></svg>") center/18px no-repeat; }
+  .e4e-h { margin: 20px 2px 10px; font-size: 13px; font-weight: 800; letter-spacing: .5px;
+    text-transform: uppercase; color: var(--muted); }
+  .e4e-specs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .e4e-specs button { font: inherit; font-size: 13px; font-weight: 800; color: var(--ink);
+    background: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 8px 13px; cursor: pointer; }
+  .e4e-specs button.on { color: #fff; background: var(--blue); border-color: var(--blue); }
+  .e4e-hint { margin: 10px 2px 0; font-size: 12.5px; line-height: 1.4; color: var(--muted); }
+  .e4e-sit { display: flex; align-items: center; gap: 12px; width: 100%; box-sizing: border-box;
+    margin-bottom: 10px; padding: 13px; text-align: left; font: inherit; cursor: pointer;
+    background: #fff; border: 2px solid var(--line); border-radius: 16px; }
+  .e4e-sit b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); }
+  .e4e-sit small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
+  .e4e-sit .e4e-n { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 50%; display: grid;
+    place-items: center; font-size: 13px; font-weight: 800; color: #123B63; background: #DDF4FF; }
+  .e4e-sit .e4e-ok { flex: 0 0 auto; font-size: 11px; font-weight: 800; color: #2E7D1A; }
+
   .vsec { margin-bottom: 22px; }
   .vsec-h { margin: 0 2px 10px; font-size: 17px; font-weight: 800; color: var(--ink);
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -3888,16 +3922,21 @@ function vocabChip(id) {
 function renderVocab() {
   const el = document.getElementById('vocab-body');
   if (!el) return;
-  if (VOPEN) renderVocabTema(el); else renderVocabIndice(el);
+  if (VE4E) renderE4E(el); else if (VOPEN) renderVocabTema(el); else renderVocabIndice(el);
 }
+
+
+let VE4E_BACK = false;  // se entró al tema desde English for Engineering
 
 function openVocabChip(id, tanda) {
   const found = vocabChip(id);
   if (!found) return;
   const sc = document.querySelector('#screen-course .scroll');
   if (!VOPEN) VSCROLL = sc ? sc.scrollTop : 0;
+  VE4E_BACK = VE4E; VE4E = false;
   VOPEN = id;
   VTANDA = (typeof tanda === 'number') ? tanda : null;
+
   PROGRESS['__vocabLast'] = id; saveProgress(PROGRESS);
   renderVocab();
   if (sc) sc.scrollTop = 0;           // el tema empieza por arriba
@@ -3922,7 +3961,9 @@ function abrirTanda(i) {
 function closeVocabChip() {
   if (VTANDA !== null) { VTANDA = null; renderVocab(); return; }
   VOPEN = null;
+  if (VE4E_BACK) { VE4E_BACK = false; VE4E = true; }
   renderVocab();
+
   // Se vuelve al punto exacto del indice: bajar otra vez hasta el tema que
   // acabas de cerrar es el tipo de trabajo que nadie deberia repetir.
   const sc = document.querySelector('#screen-course .scroll');
@@ -3955,6 +3996,223 @@ function toggleVsec(nombre) {
     if (h) h.setAttribute('aria-expanded', VABIERTAS[k] ? 'true' : 'false');
   }
 }
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// ENGLISH FOR ENGINEERING — capa profesional sobre el inglés general
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// No es un curso aparte: es una vista que filtra el banco de ingeniería que ya
+// existe por la especialidad del colegiado, y le añade situaciones reales de
+// trabajo (correo, reunión, charla de seguridad, lectura técnica) armadas con
+// el mismo motor de quizzes de toda la app.
+
+let VE4E = false;   // true mientras se está dentro de English for Engineering
+
+// Ramas del CIP → temas del banco de ingeniería. Un tema puede estar en varias:
+// la física y las unidades le sirven a todos.
+const E4E_SPECS = [
+  { id: 'civil', n: 'Civil / Obra', chips: ['inge-construccion-y-obra', 'inge-materiales-y-estructuras', 'inge-planos-y-diseno'] },
+  { id: 'mecanica', n: 'Mecánica', chips: ['inge-mecanica-y-maquinas', 'inge-materiales-y-estructuras', 'inge-fisica-y-unidades'] },
+  { id: 'electrica', n: 'Eléctrica / Electrónica', chips: ['inge-electrica-y-electronica', 'inge-fisica-y-unidades'] },
+  { id: 'sistemas', n: 'Sistemas / Software', chips: ['inge-programacion-y-software', 'inge-datos-y-bases-de-datos'] },
+  { id: 'industrial', n: 'Industrial', chips: ['inge-calidad-y-mantenimiento', 'inge-gestion-de-proyectos', 'inge-seguridad-industrial'] },
+  { id: 'minas', n: 'Minas / Energía', chips: ['inge-seguridad-industrial', 'inge-mecanica-y-maquinas', 'inge-fisica-y-unidades'] },
+];
+
+// Lo que necesita cualquier ingeniero, sin importar la rama.
+const E4E_TRONCO = ['inge-gestion-de-proyectos', 'inge-seguridad-industrial', 'inge-fisica-y-unidades'];
+
+// Situaciones reales: cada una es una ronda corta con el motor de siempre.
+const E4E_SITS = [
+  {
+    id: 'email', n: 'Escribir un correo al proveedor',
+    d: 'Pedir una cotización, un plazo y una ficha técnica sin sonar brusco.',
+    qs: [
+      { type: 'mc', question: 'Vas a pedir una cotización por correo. ¿Cómo abres?', options: ['Could you please send us a quotation for the following items?', 'Send me the price now.', 'I want prices.', 'Give quotation fast.'], correctIndex: 0 },
+      { type: 'mc', question: '¿Cómo pides el plazo de entrega?', options: ['What is your lead time for delivery?', 'When you bring things?', 'How much time you take?', 'Delivery when?'], correctIndex: 0 },
+      { type: 'writing', question: 'Escribe: «Adjunto encontrará las especificaciones técnicas.»', accepted: ['Please find attached the technical specifications.', 'Attached you will find the technical specifications.', 'Please find the technical specifications attached.'] },
+      { type: 'mc', question: '¿Cómo cierras pidiendo respuesta pronta, con cortesía?', options: ['We look forward to your reply.', 'Answer me quickly.', 'Reply now please.', 'I wait your answer today.'], correctIndex: 0 },
+    ],
+  },
+  {
+    id: 'reunion', n: 'Reunión de obra / avance semanal',
+    d: 'Reportar avance, avisar de un retraso y pedir una decisión.',
+    qs: [
+      { type: 'mc', question: 'Reportas el avance de la semana. ¿Cuál suena profesional?', options: ["We're currently 15% behind schedule on the foundation works.", 'The work is slow, sorry.', 'We do less than plan.', 'Foundation is late much.'], correctIndex: 0 },
+      { type: 'mc', question: '¿Cómo explicas la causa del retraso?', options: ['The delay was caused by a shortage of materials on site.', 'No materials, so late.', 'Because materials there are not.', 'Materials problem make delay.'], correctIndex: 0 },
+      { type: 'writing', question: 'Escribe: «Necesitamos su aprobación antes del viernes.»', accepted: ['We need your approval before Friday.', 'We need your approval by Friday.'] },
+      { type: 'mc', question: 'No entendiste un dato en la llamada. ¿Qué dices?', options: ['Sorry, could you repeat the figure for the concrete volume?', 'What? Again.', 'Repeat please the number, I not hear.', 'Say again that.'], correctIndex: 0 },
+    ],
+  },
+  {
+    id: 'seguridad', n: 'Charla de seguridad (toolbox talk)',
+    d: 'Dar una instrucción clara y reportar un incidente sin ambigüedad.',
+    qs: [
+      { type: 'mc', question: 'Instrucción obligatoria de EPP en obra:', options: ['Hard hats and safety boots must be worn at all times.', 'Please use the helmet if you want.', 'Helmet is good idea here.', 'You can wear boots maybe.'], correctIndex: 0 },
+      { type: 'mc', question: '«Riesgo de caída de objetos» en un letrero:', options: ['Danger: falling objects', 'Careful things fall', 'Attention objects down', 'Warning: objects are falling down now'], correctIndex: 0 },
+      { type: 'writing', question: 'Escribe: «Reporte cualquier incidente de inmediato.»', accepted: ['Report any incident immediately.', 'Report any incidents immediately.'] },
+      { type: 'mc', question: 'Antes de intervenir un tablero eléctrico, el procedimiento es:', options: ['lockout / tagout', 'close and open', 'switch off later', 'power control system'], correctIndex: 0 },
+    ],
+  },
+  {
+    id: 'lectura', n: 'Leer una ficha técnica',
+    d: 'Entender tolerancias, unidades y advertencias de un manual en inglés.',
+    qs: [
+      { type: 'mc', question: '«Torque the bolts to 45 N·m ± 5%» significa:', options: ['Ajusta los pernos a 45 N·m con una tolerancia de 5%', 'Ajusta los pernos cada 45 minutos', 'Usa 45 pernos con 5% de holgura', 'Afloja los pernos 45 N·m'], correctIndex: 0 },
+      { type: 'mc', question: '«Failure to comply may void the warranty» significa:', options: ['Incumplir puede anular la garantía', 'La falla se cubre con garantía', 'Cumplir extiende la garantía', 'La garantía obliga a reparar la falla'], correctIndex: 0 },
+      { type: 'mc', question: 'En un plano, «scale 1:50» quiere decir:', options: ['1 unidad del plano equivale a 50 reales', '50 unidades del plano equivalen a 1 real', 'El plano mide 50 cm', 'Hay 50 vistas del plano'], correctIndex: 0 },
+      { type: 'writing', question: 'Escribe: «El material debe cumplir la norma.»', accepted: ['The material must comply with the standard.', 'The material must meet the standard.'] },
+    ],
+  },
+];
+
+function e4eState() { return PROGRESS['__e4e'] = PROGRESS['__e4e'] || { specs: {}, sits: {} }; }
+function e4eSpecOn(id) { return !!e4eState().specs[id]; }
+function e4eSitOk(id) { return !!e4eState().sits[id]; }
+
+/** Los temas de ingeniería que existen de verdad en este demo. */
+function e4eChipsDisponibles() {
+  const out = {};
+  VOCAB.forEach(sec => sec.chips.forEach(c => { if (/^inge-/.test(c.id)) out[c.id] = { sec, chip: c }; }));
+  return out;
+}
+function e4eHay() { return Object.keys(e4eChipsDisponibles()).length > 0; }
+
+/** Temas a mostrar: los de las ramas elegidas, o el tronco común si no eligió. */
+function e4eChipsElegidos() {
+  const disp = e4eChipsDisponibles();
+  const st = e4eState();
+  const ids = [];
+  E4E_SPECS.forEach(s => { if (st.specs[s.id]) s.chips.forEach(id => { if (!ids.includes(id)) ids.push(id); }); });
+  const base = ids.length ? ids : E4E_TRONCO;
+  return base.filter(id => disp[id]).map(id => disp[id]);
+}
+
+function openE4E() {
+  const sc = document.querySelector('#screen-course .scroll');
+  VSCROLL = sc ? sc.scrollTop : 0;
+  VE4E = true; VOPEN = null; VTANDA = null;
+  renderVocab();
+  if (sc) sc.scrollTop = 0;
+}
+function closeE4E() {
+  VE4E = false;
+  renderVocab();
+  const sc = document.querySelector('#screen-course .scroll');
+  if (sc) sc.scrollTop = VSCROLL;
+}
+function e4eToggleSpec(id) {
+  const st = e4eState();
+  if (st.specs[id]) delete st.specs[id]; else st.specs[id] = 1;
+  saveProgress(PROGRESS);
+  renderVocab();
+}
+
+function renderE4E(el) {
+  const st = e4eState();
+  const elegidos = e4eChipsElegidos();
+  const nSpecs = Object.keys(st.specs).length;
+  const palabras = elegidos.reduce((a, f) => a + f.chip.c, 0);
+  el.innerHTML = `<div class="e4e-top">
+      <button class="e4e-back" onclick="closeE4E()" aria-label="Volver"></button>
+      <div><b>English for Engineering</b>
+        <small>Sobre el mismo inglés general: el vocabulario y las situaciones de tu especialidad.</small></div>
+    </div>
+    <div class="e4e-h">Tu especialidad</div>
+    <div class="e4e-specs">${E4E_SPECS.map(s =>
+      `<button class="${st.specs[s.id] ? 'on' : ''}" aria-pressed="${st.specs[s.id] ? 'true' : 'false'}"
+        onclick="e4eToggleSpec('${s.id}')">${escapeHtml(s.n)}</button>`).join('')}</div>
+    <p class="e4e-hint">${nSpecs
+      ? 'Puedes marcar más de una. Abajo verás sólo los temas de esas ramas.'
+      : 'Elige una o varias. Mientras tanto ves el tronco común: lo que necesita cualquier ingeniero.'}</p>
+
+    <div class="e4e-h">Vocabulario de tu rama${palabras ? ` · ${prNum(palabras)} palabras` : ''}</div>
+    ${elegidos.length
+      ? elegidos.map(f => {
+          const c = f.chip, h = chipHeard(c), pc = Math.round(h / c.c * 100);
+          const tn = tandasDe(c.c), tok = tandasOkN(c.id);
+          return `<button class="vrow${tok >= tn ? ' full' : ''}" onclick="openVocabChip('${c.id}')">
+            ${iconSvg(iconTema(c.n, f.sec.s, f.sec.esp))}
+            <span class="vrow-t"><b>${escapeHtml(c.n)}</b>
+              <span class="vrow-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pc}"><i style="width:${pc}%"></i></span>
+              <span class="vrow-c">${h}/${c.c} palabras · ${tok}/${tn} ${tn === 1 ? 'tanda' : 'tandas'}</span>
+            </span>
+            <span class="vt-go">${V_ARROW}</span>
+          </button>`;
+        }).join('')
+      : `<div class="vocab-vacio">Este demo aún no trae el banco de ingeniería.</div>`}
+
+    <div class="e4e-h">Situaciones reales de trabajo</div>
+    ${E4E_SITS.map((s, i) => `<button class="e4e-sit" onclick="openE4ESit('${s.id}')">
+        <span class="e4e-n">${i + 1}</span>
+        <span><b>${escapeHtml(s.n)}</b><small>${escapeHtml(s.d)}</small></span>
+        ${e4eSitOk(s.id) ? '<span class="e4e-ok">✓ hecho</span>' : ''}
+      </button>`).join('')}
+    <p class="e4e-hint">Cada situación son ${E4E_SITS[0].qs.length} ejercicios con el mismo motor de la ruta:
+      fallas una, la repasas al final.</p>`;
+}
+
+/** Una situación, con la hoja y las dos vueltas del mini-quiz de siempre. */
+function openE4ESit(id) {
+  const sit = E4E_SITS.find(s => s.id === id);
+  if (!sit) return;
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  let round, redo, idx, results, failedQs, answered = 0;
+  _dismissGuard = () => answered > 0;
+  function startRound(qs, isRedo) { round = qs; redo = isRedo; idx = 0; results = []; failedQs = []; step(); }
+  function step() {
+    sheet.classList.remove('result');
+    sheet.innerHTML = `<div class="handle"></div>
+      <div class="q-top"><div class="segs" id="mq-segs"></div><span class="q-counter" id="mq-counter"></span></div>
+      <div class="quiz-host" id="mq-host"></div>`;
+    const pintado = renderQuiz(document.getElementById('mq-host'), round[idx],
+      () => { answered++; results[idx] = true; advance(); },
+      () => { answered++; results[idx] = false; failedQs.push(round[idx]); advance(); });
+    if (!pintado) return skipBroken();
+    quizProgress(document.getElementById('mq-segs'), document.getElementById('mq-counter'), round.length, idx, results);
+  }
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { closeOverlay(); toast('Esa situación tuvo un problema. Prueba con otra.'); return; }
+    if (idx >= round.length) return finish();
+    step();
+  }
+  function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
+  function finish() {
+    if (!failedQs.length) return pass();
+    if (redo) return showFail();
+    return showRedo(failedQs.slice());
+  }
+  function result(iconName, iconColor, cls, title, sub, btnCls, btnLabel, onAction) {
+    sheet.classList.add('result');
+    sheet.innerHTML = `<div class="handle"></div><div class="center-col">
+      <div class="result-icon ${cls}">${icon(iconName, cls === 'ok' ? 40 : 38, iconColor)}</div>
+      <div class="result-title">${title}</div>
+      <div class="result-sub">${sub}</div>
+      <button class="btn ${btnCls}" id="mq-action">${btnLabel}</button>
+      </div>`;
+    document.getElementById('mq-action').onclick = onAction;
+  }
+  function pass() {
+    result('check', '#2E7D1A', 'ok', '¡Situación resuelta!', escapeHtml(sit.n), 'green', 'Continuar', () => {
+      stopSpeak(); closeOverlay();
+      e4eState().sits[sit.id] = 1; touchDay(); saveProgress(PROGRESS);
+      renderVocab();
+    });
+  }
+  function showRedo(failed) {
+    const one = failed.length === 1;
+    result('refresh', '#5C5159', 'no', 'Repasemos',
+      `Fallaste ${failed.length} ${one ? 'ejercicio' : 'ejercicios'}.`,
+      'amber', `Repasar${one ? '' : ` (${failed.length})`}`, () => { stopSpeak(); startRound(shuffle(failed), true); });
+  }
+  function showFail() {
+    result('refresh', '#5C5159', 'no', 'Casi lo tienes', 'Repite la situación completa.',
+      'blue', 'Reintentar', () => { stopSpeak(); startRound(sit.qs.slice(), false); });
+  }
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+  startRound(sit.qs.slice(), false);
+}
+
 
 // Un tema pasa el filtro segun su estado, que es el mismo que pinta su fila.
 function chipEstado(c) {
@@ -4025,12 +4283,21 @@ function renderVocabIndice(el) {
     </button>`;
   }
   const fil = [['todos', 'Todos'], ['curso', 'En curso'], ['nuevos', 'Sin empezar'], ['listos', 'Dominados']];
+  // La capa profesional va arriba del todo: es lo que distingue a este curso.
+  const e4e = e4eHay() ? `<button class="e4e-card" onclick="openE4E()">
+      ${iconSvg('ingenieria', 'vico big')}
+      <span><b>English for Engineering</b>
+        <small>Elige tu especialidad y practica el inglés de tu trabajo: vocabulario técnico y situaciones reales.</small></span>
+      <span class="e4e-go">Entrar</span>
+    </button>` : '';
   el.innerHTML = `<div class="vocab-intro">
       <b>Tu biblioteca de palabras</b>
       <small>${prNum(t.temas)} temas · ${prNum(t.total)} palabras. Cada tema va en tandas de diez, con su examen al final de cada tanda.</small>
       <span class="vi-count">${prNum(t.heard)} de ${prNum(t.total)} escuchadas</span>
     </div>
+    ${e4e}
     ${sigue}
+
     <input class="vbuscar" type="search" placeholder="Buscar un tema…" value="${escapeHtml(VFILTRO)}"
            aria-label="Buscar un tema" oninput="filtrarVocab(this.value)">
     <div class="vfil">${fil.map(([k, n]) => `<button data-f="${k}" class="${VFILTER === k ? 'on' : ''}" onclick="vocabFiltro('${k}')">${n}</button>`).join('')}</div>
