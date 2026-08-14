@@ -10,7 +10,7 @@ export async function speakingUserClient(request: Request) {
   const token = authorization.slice(7);
   if (token.split(".").length !== 3) return null;
   const url = process.env["SUPABASE_URL"];
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
+  const key = process.env["SUPABASE_ANON_KEY"] ?? process.env["SUPABASE_PUBLISHABLE_KEY"];
   if (!url || !key) throw new Error("backend_unavailable");
   const client = createClient<Database>(url, key, {
     global: { headers: { Authorization: `Bearer ${token}` } },
