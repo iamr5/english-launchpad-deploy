@@ -461,10 +461,12 @@ function LiveDemo() {
         <p className="mt-2 text-slate-600">
           La app real del Colegio de Ingenieros. Toca y recórrela.
         </p>
-        {/* El demo se pinta a 500×923 y se reduce a 0,78 (como un ctrl+− sólo
-            aquí): entra el mismo marco de 390×720, pero el contenido respira. */}
+        {/* El demo se pinta más grande y se reduce a 0,9 (como un ctrl+− sólo
+            aquí). Las medidas son el hueco interior del marco dividido entre
+            0,9, así el lienzo cubre exactamente el alto y no queda franja
+            blanca abajo. */}
         <div ref={ref} className="mx-auto mt-8 w-full max-w-[390px]">
-          <div className="relative h-[720px] overflow-hidden rounded-[2rem] border-8 border-slate-900 shadow-2xl">
+          <div className="relative h-[720px] overflow-hidden rounded-[2rem] border-8 border-slate-900 bg-[#f4f4f6] shadow-2xl">
             {on ? (
               <iframe
                 src="/democip"
@@ -472,10 +474,9 @@ function LiveDemo() {
                 className="block border-0"
                 loading="lazy"
                 style={{
-                  width: 434,
-                  height: 800,
+                  width: 416,
+                  height: 783,
                   transform: "scale(0.9)",
-
                   transformOrigin: "top left",
                 }}
               />
