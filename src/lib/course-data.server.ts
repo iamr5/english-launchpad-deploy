@@ -53,10 +53,27 @@ export function getPlacement(): unknown[] {
  * El banco de práctica: ejercicios extra indexados por id de bloque de teoría.
  * No viven dentro del curso porque no son parte de la lección — la lección toma
  * una muestra y la pestaña Práctica los sirve todos.
+ *
+ * Los ejercicios marcados `needsContext` se quedan fuera: sólo se pueden
+ * responder recordando el bloque de teoría, y en Práctica se entra sin haber
+ * leído nada. Se filtran aquí, una vez, para que ni el índice ni las tandas los
+ * vean.
  */
+let filtrado: Record<string, unknown[]> | null = null;
 export function getPractice(): Record<string, unknown[]> {
-  return build().practice || {};
+  if (filtrado) return filtrado;
+  const crudo = build().practice || {};
+  const out: Record<string, unknown[]> = {};
+  for (const k of Object.keys(crudo)) {
+    const items = (crudo[k] || []).filter(
+      (q) => !(q as { needsContext?: boolean })?.needsContext,
+    );
+    if (items.length) out[k] = items;
+  }
+  filtrado = out;
+  return out;
 }
+
 
 /**
  * Sólo cuántos ejercicios tiene cada bloque de teoría. Con esto la app pinta los
