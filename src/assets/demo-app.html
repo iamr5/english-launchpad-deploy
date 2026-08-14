@@ -3922,8 +3922,9 @@ function vocabChip(id) {
 function renderVocab() {
   const el = document.getElementById('vocab-body');
   if (!el) return;
-  if (VOPEN) renderVocabTema(el); else renderVocabIndice(el);
+  if (VE4E) renderE4E(el); else if (VOPEN) renderVocabTema(el); else renderVocabIndice(el);
 }
+
 
 function openVocabChip(id, tanda) {
   const found = vocabChip(id);
