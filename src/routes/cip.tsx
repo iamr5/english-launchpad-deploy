@@ -284,9 +284,13 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
           <h1 className="title">
             Habla inglés en 1 año,
             <br />
-            <span className="acc">quince minutos al día</span>
+            <span className="acc">veinte minutos al día</span>
           </h1>
+          <p className="mt-4 text-sm font-semibold text-white/70">
+            87 horas de curso ÷ 5 días por semana = 20 min al día durante 12 meses.
+          </p>
           <p className="lede mt-5 text-white/85">{brand.phrase}</p>
+
           <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
             <EmailForm id="hero" cta="Quiero mi cupo" />
           </div>
