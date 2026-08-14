@@ -5256,18 +5256,12 @@ function renderPracticeShelf(el, lesson) {
 }
 
 
-// Aprobar aqui puede mover la ruta (desbloquea la siguiente seccion, o la
-// siguiente leccion), asi que se repinta entera — pero se vuelve a Práctica, que
-// es donde esta el alumno, y al mismo punto de la lista. Todo dentro del mismo
-// turno de JS: el salto a la ruta no llega a pintarse.
-function practiceRefresh(cambio) {
-  if (!cambio) { renderPractice(); return; }
-  const sc = document.querySelector('#screen-course .scroll');
-  const top = sc ? sc.scrollTop : 0;
-  renderCourse();
-  showHomeTab('practice');
-  if (sc) sc.scrollTop = top;
+// Aqui NO se toca la ruta: practicar no desbloquea ni completa nada, asi que
+// basta con repintar la propia pestaña.
+function practiceRefresh() {
+  renderPractice();
 }
+
 
 // `block` = el bloque cuyo mini-quiz se practica; null = el quiz final.
 // `bank` = se practican los ejercicios extra de ese bloque en vez de su mini-quiz.
