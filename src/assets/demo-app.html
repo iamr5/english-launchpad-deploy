@@ -6230,7 +6230,7 @@ function openPracticeQuiz(lesson, block, bank) {
 // La evaluación con IA tiene tope diario por alumno (SP_AI_MAX). Pasado el tope
 // el ejercicio NO se bloquea: cae al reconocimiento del navegador.
 
-let SPEAKING_INDEX = {};      // { 'modulo-1': 10, … } — sólo cuántos hay
+var SPEAKING_INDEX = {}; // var: se asigna al llegar el bundle, antes de este punto      // { 'modulo-1': 10, … } — sólo cuántos hay
 const SPEAKING_BANK = {};     // los ejercicios ya descargados, por módulo
 const _spPend = {};
 const SP_AI_MAX = 20;         // evaluaciones con IA por alumno y día
