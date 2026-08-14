@@ -94,14 +94,27 @@ const SAMPLE: Quiz[] = [
   },
 ];
 
+/** Versión oscurecida de un color hex, para el «labio» inferior de los botones. */
+function darken(hex: string, amount = 0.22) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+  if (!m) return "rgba(0,0,0,.28)";
+  const n = parseInt(m[1]!, 16);
+  const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) =>
+    Math.max(0, Math.round(c * (1 - amount))),
+  );
+  return `rgb(${ch[0]},${ch[1]},${ch[2]})`;
+}
+
 function CipLanding() {
   const b = Route.useLoaderData();
 
   const vars = {
     "--cip": b.accent,
     "--cta": b.button,
+    "--ctaLip": darken(b.button),
     "--hi": b.highlight,
   } as React.CSSProperties;
+
 
   return (
     <main
@@ -290,7 +303,9 @@ const QUIZ_CSS = `
   display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; }
 .qz .opt:disabled { cursor:default; }
 .qz .opt .opt-ic { flex:0 0 22px; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+.qz .opt.sel { border-color:var(--cta); background:color-mix(in srgb, var(--cta) 10%, transparent); }
 .qz .opt.correct { background:color-mix(in srgb, var(--ok) 12%, transparent); border-color:var(--ok); color:var(--okDark); }
+
 .qz .opt.wrong { background:rgba(244,67,54,.08); border-color:var(--red); color:#B3261E; }
 .qz .fb-slot { min-height:64px; margin:14px 2px 2px; display:flex; align-items:flex-start; overflow:hidden; }
 .qz .fb-line { font-size:15px; font-weight:700; line-height:1.4; text-align:left; }
@@ -307,6 +322,7 @@ const QUIZ_CSS = `
 
 function SampleQuiz() {
   const [i, setI] = useState(0);
+  const [sel, setSel] = useState<number | null>(null);
   const [picked, setPicked] = useState<number | null>(null);
   const [marks, setMarks] = useState<("done" | "fail")[]>([]);
   const q = SAMPLE[i]!;
@@ -316,15 +332,22 @@ function SampleQuiz() {
 
   function choose(k: number) {
     if (done) return;
-    setPicked(k);
-    setMarks((m) => [...m, k === q.ok ? "done" : "fail"]);
+    setSel(k);
+  }
+
+  function confirm() {
+    if (sel === null) return;
+    setPicked(sel);
+    setMarks((m) => [...m, sel === q.ok ? "done" : "fail"]);
   }
 
   function next() {
     if (last) return;
     setI(i + 1);
     setPicked(null);
+    setSel(null);
   }
+
 
   return (
     <section className="bg-slate-50 px-5 py-14">
@@ -361,7 +384,15 @@ function SampleQuiz() {
                 type="button"
                 disabled={done}
                 onClick={() => choose(k)}
-                className={`opt ${done && k === q.ok ? "correct" : done && k === picked ? "wrong" : ""}`}
+                className={`opt ${
+                  done && k === q.ok
+                    ? "correct"
+                    : done && k === picked
+                      ? "wrong"
+                      : !done && k === sel
+                        ? "sel"
+                        : ""
+                }`}
               >
                 <span>{o}</span>
                 <span className="opt-ic">
@@ -383,15 +414,18 @@ function SampleQuiz() {
           <button
             type="button"
             className="btn"
-            disabled={!done}
-            onClick={next}
-            style={{ background: "var(--cta)", ["--lip" as string]: "rgba(0,0,0,.28)" }}
+            disabled={sel === null || (done && last)}
+            onClick={done ? next : confirm}
+            style={{ background: "var(--cta)", ["--lip" as string]: "var(--ctaLip)" }}
           >
             {!done
-              ? "Elige una opción"
+              ? sel === null
+                ? "Elige una opción"
+                : "Confirmar"
               : last
                 ? "Y así hay 8.127 ejercicios más"
                 : "Siguiente ejercicio"}
+
           </button>
         </div>
       </div>
@@ -434,9 +468,10 @@ function LiveDemo() {
                 className="block border-0"
                 loading="lazy"
                 style={{
-                  width: 480,
-                  height: 886,
-                  transform: "scale(0.78)",
+                  width: 434,
+                  height: 800,
+                  transform: "scale(0.9)",
+
                   transformOrigin: "top left",
                 }}
               />
