@@ -5077,7 +5077,7 @@ function openPracticeQuiz(lesson, block, bank) {
     // El banco no es todo o nada: cada tanda limpia suma sus ejercicios al total
     // del cuaderno, hasta agotar los que tiene esa teoría.
     if (bank) addBankDone(lesson, marca, tandaN, preguntas.length);
-    practiceRefresh(nuevo || bank);  // la lista de detras queda al dia antes de enseñar el resultado
+    practiceRefresh(nuevo);  // la lista de detras queda al dia antes de enseñar el resultado
 
     _dismissGuard = null;    // ya esta guardado: salir de la hoja no pierde nada
     result('check', '#2E7D1A', 'ok', '¡Bien hecho!',
