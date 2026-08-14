@@ -5338,29 +5338,26 @@ function openPracticeQuiz(lesson, block, bank) {
   }
   function pass() {
     touchDay(); // pasar un quiz es actividad del dia, se entre por donde se entre
-    // Practicar algo que aun no estaba superado SI cuenta: seria raro aprobarlo
-    // aqui y que la ruta siguiera diciendo que te falta.
+    // El cuaderno no convalida la ruta: lo que se supera aqui se anota SOLO en el
+    // registro de practica. Ni desbloquea secciones, ni completa lecciones, ni
+    // reescribe las destrezas del panel.
     const marca = block ? (bank ? block.id + '-bank' : block.id) : null;
-    const nuevo = block ? !isMiniQuizCompleted(lesson.id, marca) : !isQuizCompleted(lesson.id);
-    if (nuevo) {
-      if (block) markMiniQuizCompleted(lesson, marca);
-      // Las destrezas del panel se graban con la PRIMERA vez que se supera el
-      // final. Una repeticion no las reescribe: practicar no puede empeorar una
-      // nota que ya te habias sacado.
-      else { lp(lesson.id).skillErr = skillAgg; markQuizCompleted(lesson.id); }
-    }
+    const clave = prKey(block, bank);
+    const nuevo = !isPracticeDone(lesson.id, clave);
+    if (nuevo) markPracticeDone(lesson.id, clave);
     // El banco no es todo o nada: cada tanda limpia suma sus ejercicios al total
     // del cuaderno, hasta agotar los que tiene esa teoría.
     if (bank) addBankDone(lesson, marca, tandaN, preguntas.length);
-    practiceRefresh(nuevo);  // la lista de detras queda al dia antes de enseñar el resultado
+    practiceRefresh();  // la lista de detras queda al dia antes de enseñar el resultado
 
     _dismissGuard = null;    // ya esta guardado: salir de la hoja no pierde nada
     result('check', '#2E7D1A', 'ok', '¡Bien hecho!',
-      nuevo ? (bank ? 'Tanda superada. Vuelve por otra cuando quieras.'
-                    : (block ? 'Sección superada. Ya cuenta en tu ruta.' : '¡Lección completada! Ya cuenta en tu ruta.'))
-            : 'Ronda limpia. Vuelve cuando quieras.',
+      bank ? 'Tanda superada. Vuelve por otra cuando quieras.'
+           : (nuevo ? 'Practicado. Esto no cambia tu ruta: es tu cuaderno.'
+                    : 'Ronda limpia. Vuelve cuando quieras.'),
       'green', 'Continuar', closeOverlay);
   }
+
 
   function showRedo(failed) {
     const one = failed.length === 1;
