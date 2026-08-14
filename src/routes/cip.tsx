@@ -208,6 +208,16 @@ const PAGE_CSS = `
 .cipp .badge{ display:inline-block; border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:800;
   letter-spacing:.14em; text-transform:uppercase; }
 
+/* etiquetas de «qué incluye», bajo el titular */
+.cipp .badges{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+.cipp .badges li{ display:inline-flex; align-items:center; gap:7px; border-radius:999px;
+  padding:6px 12px 6px 10px; font-size:12.5px; font-weight:700; letter-spacing:.01em;
+  color:#eef2fb; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18); }
+.cipp .badges li::before{ content:""; width:6px; height:6px; border-radius:50%;
+  background:var(--cip); box-shadow:0 0 0 3px color-mix(in srgb,var(--cip) 30%,transparent); }
+
+
+
 /* burbuja de Boti */
 .cipp .bubble{ position:relative; background:#fff; color:var(--ink); border-radius:18px;
   padding:14px 16px; font-size:15px; font-weight:600; line-height:1.4; box-shadow:var(--shadow-sm);
