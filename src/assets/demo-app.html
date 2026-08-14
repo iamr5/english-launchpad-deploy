@@ -1253,6 +1253,8 @@
   .debug-fab.mq { bottom: 130px; }
   .debug-fab.undo { bottom: 182px; }
   .debug-fab.wipe { bottom: 234px; }
+  .debug-fab.speaking { bottom: 286px; }
+  .debug-fab.speaking.on { background: var(--ok, #3FAA24); opacity: 1; border-style: solid; }
   /* The FABs are above the quiz overlay/sheet (z-index:50) and pinned
      bottom-right — exactly where the quiz's Confirmar/Siguiente button sits. Hide
      them whenever a sheet (mini-quiz, cierre, dialog) or the final-quiz screen is
@@ -2387,6 +2389,9 @@
 <button class="debug-fab wipe" title="Borrar TODO (progreso + perfil) y ver el onboarding" aria-label="Borrar todos los datos" onclick="resetAllData()">
   <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
 </button>
+<button class="debug-fab speaking" id="debug-speaking" title="Activar Speaking" aria-label="Activar Speaking" onclick="toggleDebugSpeaking()">
+  <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21H8v2h8v-2h-3v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+</button>
 
 <!-- Mascota. El servidor sustituye este marcador por el pack que use el demo:
      'ozito' (capas SVG + CSS) o 'boti' (SVG + resortes en JS). Ver
@@ -2425,7 +2430,9 @@ const CFG = {
                            kind: 'robot guía', fullName: 'Boti', headIcon: 'mascots/boti/boti_head.svg',
                            artboard: { width: 757.6, height: 1139.5 } },
   map: DEMO.map || {},
+  features: Object.assign({ placement: true, share: true, dashboard: true, speaking: false }, DEMO.features || {}),
 };
+let DEBUG_SPEAKING = false;
 
 // Un icono puede ser un emoji o una imagen subida. iconHTML() decide cual.
 function iconHTML(v, cls) {
@@ -3421,9 +3428,17 @@ document.addEventListener('click', (e) => {
   if (_dbgTaps >= 7) {
     _dbgTaps = 0;
     const on = document.body.classList.toggle('debug-fabs');
+    if (!on && DEBUG_SPEAKING) { DEBUG_SPEAKING = false; renderPractice(); }
     toast(on ? 'Modo debug activado' : 'Modo debug desactivado');
   }
 });
+function toggleDebugSpeaking() {
+  DEBUG_SPEAKING = !DEBUG_SPEAKING;
+  const b = document.getElementById('debug-speaking');
+  if (b) { b.classList.toggle('on', DEBUG_SPEAKING); b.title = DEBUG_SPEAKING ? 'Desactivar Speaking' : 'Activar Speaking'; }
+  renderPractice();
+  toast(DEBUG_SPEAKING ? 'Speaking de prueba activado' : 'Speaking oculto');
+}
 
 function pbar(progress, completed, color) {
   const pct = Math.round(progress * 100);
@@ -6504,6 +6519,7 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
 // La estantería de Speaking dentro de la biblioteca de práctica: un nivel por
 // tarjeta, y al tocarla corre una tanda de 5 ejercicios hablados.
 function speakingShelfHTML() {
+  if (!DEBUG_SPEAKING) return '';
   const mods = (course && course.modules) || [];
   const tarjetas = mods.map((mod, mi) => {
     const n = SPEAKING_INDEX[mod.id] || 0;
@@ -6524,6 +6540,7 @@ function speakingShelfHTML() {
 }
 
 function openSpeakingRun(mi) {
+  if (!DEBUG_SPEAKING) return;
   const mod = course.modules[mi];
   if (!mod) return;
   const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
