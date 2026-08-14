@@ -3961,7 +3961,9 @@ function abrirTanda(i) {
 function closeVocabChip() {
   if (VTANDA !== null) { VTANDA = null; renderVocab(); return; }
   VOPEN = null;
+  if (VE4E_BACK) { VE4E_BACK = false; VE4E = true; }
   renderVocab();
+
   // Se vuelve al punto exacto del indice: bajar otra vez hasta el tema que
   // acabas de cerrar es el tipo de trabajo que nadie deberia repetir.
   const sc = document.querySelector('#screen-course .scroll');
