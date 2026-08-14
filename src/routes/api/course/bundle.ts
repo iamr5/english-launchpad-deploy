@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getCourse, getPlacement, getPractice } from "@/lib/course-data.server";
+import { getCourse, getPlacement, getPracticeIndex } from "@/lib/course-data.server";
 import { verifyCourseToken } from "@/lib/course-token";
 
 // El contenido del curso. Antes vivía en public/ y se bajaba entero con una sola
@@ -45,7 +45,10 @@ export const Route = createFileRoute("/api/course/bundle")({
         }
 
         return Response.json(
-          { course: getCourse(), placement: getPlacement(), practice: getPractice() },
+          // El banco NO viaja aquí: son ~2 MB y bloqueaban el arranque. Sólo su índice
+          // (cuántos ejercicios tiene cada teoría); los ejercicios salen por
+          // /api/course/practice cuando el alumno abre esa tanda.
+          { course: getCourse(), placement: getPlacement(), practiceIndex: getPracticeIndex() },
           {
             headers: {
               // Que no se quede en ninguna caché intermedia: cada visita pasa

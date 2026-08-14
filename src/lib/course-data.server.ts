@@ -58,6 +58,30 @@ export function getPractice(): Record<string, unknown[]> {
   return build().practice || {};
 }
 
+/**
+ * Sólo cuántos ejercicios tiene cada bloque de teoría. Con esto la app pinta los
+ * totales del cuaderno sin bajarse los ~2 MB del banco en el arranque: los
+ * ejercicios se piden cuando el alumno abre esa tanda.
+ */
+export function getPracticeIndex(): Record<string, number> {
+  const out: Record<string, number> = {};
+  const bank = getPractice();
+  for (const k of Object.keys(bank)) {
+    const n = (bank[k] || []).length;
+    if (n) out[k] = n;
+  }
+  return out;
+}
+
+/** Los ejercicios de unos pocos bloques de teoría, para servirlos bajo demanda. */
+export function getPracticeFor(ids: string[]): Record<string, unknown[]> {
+  const bank = getPractice();
+  const out: Record<string, unknown[]> = {};
+  for (const id of ids.slice(0, 20)) if (bank[id]) out[id] = bank[id];
+  return out;
+}
+
+
 
 /**
  * Sólo el esqueleto: módulos y lecciones con su título y duración, sin una línea
