@@ -39,6 +39,8 @@ import { Route as ApiPublicPreinscripcionRouteImport } from './routes/api/public
 import { Route as ApiDemosMetasRouteImport } from './routes/api/demos/metas'
 import { Route as ApiDemosInvalidateRouteImport } from './routes/api/demos/invalidate'
 import { Route as ApiCourseVocabRouteImport } from './routes/api/course/vocab'
+import { Route as ApiCourseSpeakingEvalRouteImport } from './routes/api/course/speaking-eval'
+import { Route as ApiCourseSpeakingRouteImport } from './routes/api/course/speaking'
 import { Route as ApiCoursePracticeRouteImport } from './routes/api/course/practice'
 import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
@@ -193,6 +195,16 @@ const ApiCourseVocabRoute = ApiCourseVocabRouteImport.update({
   path: '/api/course/vocab',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCourseSpeakingEvalRoute = ApiCourseSpeakingEvalRouteImport.update({
+  id: '/api/course/speaking-eval',
+  path: '/api/course/speaking-eval',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCourseSpeakingRoute = ApiCourseSpeakingRouteImport.update({
+  id: '/api/course/speaking',
+  path: '/api/course/speaking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCoursePracticeRoute = ApiCoursePracticeRouteImport.update({
   id: '/api/course/practice',
   path: '/api/course/practice',
@@ -243,6 +255,8 @@ export interface FileRoutesByFullPath {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/course/practice': typeof ApiCoursePracticeRoute
+  '/api/course/speaking': typeof ApiCourseSpeakingRoute
+  '/api/course/speaking-eval': typeof ApiCourseSpeakingEvalRoute
   '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
@@ -278,6 +292,8 @@ export interface FileRoutesByTo {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/course/practice': typeof ApiCoursePracticeRoute
+  '/api/course/speaking': typeof ApiCourseSpeakingRoute
+  '/api/course/speaking-eval': typeof ApiCourseSpeakingEvalRoute
   '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
@@ -315,6 +331,8 @@ export interface FileRoutesById {
   '/api/brand/$': typeof ApiBrandSplatRoute
   '/api/course/bundle': typeof ApiCourseBundleRoute
   '/api/course/practice': typeof ApiCoursePracticeRoute
+  '/api/course/speaking': typeof ApiCourseSpeakingRoute
+  '/api/course/speaking-eval': typeof ApiCourseSpeakingEvalRoute
   '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
@@ -352,6 +370,8 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/course/practice'
+    | '/api/course/speaking'
+    | '/api/course/speaking-eval'
     | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
@@ -387,6 +407,8 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/course/practice'
+    | '/api/course/speaking'
+    | '/api/course/speaking-eval'
     | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
@@ -423,6 +445,8 @@ export interface FileRouteTypes {
     | '/api/brand/$'
     | '/api/course/bundle'
     | '/api/course/practice'
+    | '/api/course/speaking'
+    | '/api/course/speaking-eval'
     | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
@@ -457,6 +481,8 @@ export interface RootRouteChildren {
   ApiBrandSplatRoute: typeof ApiBrandSplatRoute
   ApiCourseBundleRoute: typeof ApiCourseBundleRoute
   ApiCoursePracticeRoute: typeof ApiCoursePracticeRoute
+  ApiCourseSpeakingRoute: typeof ApiCourseSpeakingRoute
+  ApiCourseSpeakingEvalRoute: typeof ApiCourseSpeakingEvalRoute
   ApiCourseVocabRoute: typeof ApiCourseVocabRoute
   ApiDemosInvalidateRoute: typeof ApiDemosInvalidateRoute
   ApiDemosMetasRoute: typeof ApiDemosMetasRoute
@@ -677,6 +703,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCourseVocabRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/course/speaking-eval': {
+      id: '/api/course/speaking-eval'
+      path: '/api/course/speaking-eval'
+      fullPath: '/api/course/speaking-eval'
+      preLoaderRoute: typeof ApiCourseSpeakingEvalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/course/speaking': {
+      id: '/api/course/speaking'
+      path: '/api/course/speaking'
+      fullPath: '/api/course/speaking'
+      preLoaderRoute: typeof ApiCourseSpeakingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/course/practice': {
       id: '/api/course/practice'
       path: '/api/course/practice'
@@ -749,6 +789,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiBrandSplatRoute: ApiBrandSplatRoute,
   ApiCourseBundleRoute: ApiCourseBundleRoute,
   ApiCoursePracticeRoute: ApiCoursePracticeRoute,
+  ApiCourseSpeakingRoute: ApiCourseSpeakingRoute,
+  ApiCourseSpeakingEvalRoute: ApiCourseSpeakingEvalRoute,
   ApiCourseVocabRoute: ApiCourseVocabRoute,
   ApiDemosInvalidateRoute: ApiDemosInvalidateRoute,
   ApiDemosMetasRoute: ApiDemosMetasRoute,
