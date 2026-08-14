@@ -53,6 +53,7 @@ import {
   saveMascot,
   type SavedMascot,
 } from "@/lib/mascot-library";
+import { PreinscripcionesPanel } from "@/components/preinscripciones-panel";
 
 import {
   arteAntiguo,
@@ -1331,6 +1332,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               <TabsTrigger value="textos">Textos</TabsTrigger>
               <TabsTrigger value="vocabulario">Vocabulario</TabsTrigger>
               <TabsTrigger value="mapa">Mapa</TabsTrigger>
+              <TabsTrigger value="preinscripciones">Preinscripciones</TabsTrigger>
             </TabsList>
 
             <div className="mb-5">
@@ -2180,6 +2182,13 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                   }}
                 />
               ))}
+            </TabsContent>
+
+            <TabsContent value="preinscripciones" className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Correos recogidos por el landing de preinscripción (/cip).
+              </p>
+              <PreinscripcionesPanel />
             </TabsContent>
           </Tabs>
 

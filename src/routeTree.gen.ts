@@ -20,6 +20,7 @@ import { Route as PresentacionAjeRouteImport } from './routes/presentacion-aje'
 import { Route as PresentacionRouteImport } from './routes/presentacion'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
+import { Route as CipPresentacionRouteImport } from './routes/cip-presentacion'
 import { Route as CipRouteImport } from './routes/cip'
 import { Route as AutonomaPresentacionRouteImport } from './routes/autonoma-presentacion'
 import { Route as ApavitPresentacionRouteImport } from './routes/apavit-presentacion'
@@ -96,6 +97,11 @@ const LoginRoute = LoginRouteImport.update({
 const DemoDashboardRoute = DemoDashboardRouteImport.update({
   id: '/demo-dashboard',
   path: '/demo-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CipPresentacionRoute = CipPresentacionRouteImport.update({
+  id: '/cip-presentacion',
+  path: '/cip-presentacion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CipRoute = CipRouteImport.update({
@@ -217,6 +223,7 @@ export interface FileRoutesByFullPath {
   '/apavit-presentacion': typeof ApavitPresentacionRoute
   '/autonoma-presentacion': typeof AutonomaPresentacionRoute
   '/cip': typeof CipRoute
+  '/cip-presentacion': typeof CipPresentacionRoute
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
@@ -251,6 +258,7 @@ export interface FileRoutesByTo {
   '/apavit-presentacion': typeof ApavitPresentacionRoute
   '/autonoma-presentacion': typeof AutonomaPresentacionRoute
   '/cip': typeof CipRoute
+  '/cip-presentacion': typeof CipPresentacionRoute
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
@@ -287,6 +295,7 @@ export interface FileRoutesById {
   '/apavit-presentacion': typeof ApavitPresentacionRoute
   '/autonoma-presentacion': typeof AutonomaPresentacionRoute
   '/cip': typeof CipRoute
+  '/cip-presentacion': typeof CipPresentacionRoute
   '/demo-dashboard': typeof DemoDashboardRoute
   '/login': typeof LoginRoute
   '/presentacion': typeof PresentacionRoute
@@ -323,6 +332,7 @@ export interface FileRouteTypes {
     | '/apavit-presentacion'
     | '/autonoma-presentacion'
     | '/cip'
+    | '/cip-presentacion'
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
@@ -357,6 +367,7 @@ export interface FileRouteTypes {
     | '/apavit-presentacion'
     | '/autonoma-presentacion'
     | '/cip'
+    | '/cip-presentacion'
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
@@ -392,6 +403,7 @@ export interface FileRouteTypes {
     | '/apavit-presentacion'
     | '/autonoma-presentacion'
     | '/cip'
+    | '/cip-presentacion'
     | '/demo-dashboard'
     | '/login'
     | '/presentacion'
@@ -428,6 +440,7 @@ export interface RootRouteChildren {
   ApavitPresentacionRoute: typeof ApavitPresentacionRoute
   AutonomaPresentacionRoute: typeof AutonomaPresentacionRoute
   CipRoute: typeof CipRoute
+  CipPresentacionRoute: typeof CipPresentacionRoute
   DemoDashboardRoute: typeof DemoDashboardRoute
   LoginRoute: typeof LoginRoute
   PresentacionRoute: typeof PresentacionRoute
@@ -529,6 +542,13 @@ declare module '@tanstack/react-router' {
       path: '/demo-dashboard'
       fullPath: '/demo-dashboard'
       preLoaderRoute: typeof DemoDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cip-presentacion': {
+      id: '/cip-presentacion'
+      path: '/cip-presentacion'
+      fullPath: '/cip-presentacion'
+      preLoaderRoute: typeof CipPresentacionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cip': {
@@ -712,6 +732,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApavitPresentacionRoute: ApavitPresentacionRoute,
   AutonomaPresentacionRoute: AutonomaPresentacionRoute,
   CipRoute: CipRoute,
+  CipPresentacionRoute: CipPresentacionRoute,
   DemoDashboardRoute: DemoDashboardRoute,
   LoginRoute: LoginRoute,
   PresentacionRoute: PresentacionRoute,
