@@ -9531,8 +9531,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No es fácil.\"",
    "accepted": [
-    "It's not easy.",
-    "It is not easy."
+    "It's not easy."
    ],
    "hint": "Usa la contracción para 'it is'.",
    "reject": [
@@ -9571,8 +9570,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No es un buen momento.\"",
    "accepted": [
-    "It's not a good time.",
-    "It is not a good time."
+    "It's not a good time."
    ],
    "hint": "Recuerda la contracción para 'it is'.",
    "reject": [
@@ -9631,8 +9629,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es un día ajetreado.\"",
    "accepted": [
-    "It's a busy day.",
-    "It is a busy day."
+    "It's a busy day."
    ],
    "hint": "Contracción de 'it is'.",
    "reject": [
@@ -17103,8 +17100,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No me gusta este video.\"",
    "accepted": [
-    "I don't like this video.",
-    "I do not like this video."
+    "I don't like this video."
    ],
    "hint": "Usa 'don't like'.",
    "reject": [
@@ -17180,8 +17176,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No es un buen video.\"",
    "accepted": [
-    "It's not a good video.",
-    "It is not a good video."
+    "It's not a good video."
    ],
    "hint": "Recuerda la negación.",
    "reject": [
@@ -19553,8 +19548,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Yo no tengo ovejas.\"",
    "accepted": [
-    "I don't have any sheep.",
-    "I do not have any sheep."
+    "I don't have any sheep."
    ],
    "hint": "Recuerda 'any' en negaciones y 'sheep' (sonido SH).",
    "reject": [
@@ -19612,8 +19606,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos no tienen barcos.\"",
    "accepted": [
-    "They don't have any ships.",
-    "They do not have any ships."
+    "They don't have any ships."
    ],
    "hint": "Recuerda el uso de 'any' en negaciones.",
    "reject": [
@@ -20751,8 +20744,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es un problema real.\"",
    "accepted": [
-    "It's a real problem.",
-    "It is a real problem."
+    "It's a real problem."
    ],
    "hint": "El adjetivo va antes del sustantivo.",
    "reject": [
@@ -23321,8 +23313,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No me gusta su vibra (de él).\"",
    "accepted": [
-    "I don't like his vibe.",
-    "I do not like his vibe."
+    "I don't like his vibe."
    ],
    "hint": "Usa 'don't' para la negación con 'like'.",
    "reject": [
@@ -23417,8 +23408,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Yo no hablo español mejor que tú.\"",
    "accepted": [
-    "I don't speak Spanish better than you.",
-    "I do not speak Spanish better than you."
+    "I don't speak Spanish better than you."
    ],
    "hint": "Usa 'don't' para negar el verbo 'speak'.",
    "reject": [
@@ -24222,8 +24212,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Hola, no soy de aquí... ¿y tú?\"",
    "accepted": [
-    "Hi, I'm not from here... what about you?",
-    "Hi, I am not from here... what about you?"
+    "Hi, I'm not from here... what about you?"
    ],
    "hint": "Usa la contracción para 'I am'.",
    "reject": [
@@ -24347,8 +24336,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"De hecho, estoy esperando a alguien.\"",
    "accepted": [
-    "Actually, I'm waiting for someone.",
-    "Actually, I am waiting for someone."
+    "Actually, I'm waiting for someone."
    ],
    "hint": "Usa 'actually' para 'de hecho'.",
    "reject": [
@@ -25103,8 +25091,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No satures de emojis.\"",
    "accepted": [
-    "Don't overuse emojis.",
-    "Do not overuse emojis."
+    "Don't overuse emojis."
    ],
    "hint": "Usa el verbo 'overuse' para 'saturar'.",
    "reject": [
@@ -25949,8 +25936,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Me disculpo, pero no puedo.\"",
    "accepted": [
-    "I'm sorry, but I can't.",
-    "I am sorry, but I can't."
+    "I'm sorry, but I can't."
    ],
    "hint": "Usa la forma corta 'can't' para 'no puedo'.",
    "reject": [
@@ -28172,8 +28158,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Yo no vivo en la capital.\"",
    "accepted": [
-    "I do not live in the capital.",
-    "I don't live in the capital."
+    "I do not live in the capital."
    ],
    "hint": "Usa 'do not' o 'don't' para negaciones en presente simple.",
    "reject": [
@@ -28317,8 +28302,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"(Ahora) no estoy usando la computadora.\"",
    "accepted": [
-    "I am not using the computer now.",
-    "I'm not using the computer now."
+    "I am not using the computer now."
    ],
    "hint": "Negación en presente continuo.",
    "reject": [
@@ -29544,8 +29528,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estoy estudiando para el examen ahora.\"",
    "accepted": [
-    "I am studying for the exam now.",
-    "I'm studying for the exam now."
+    "I am studying for the exam now."
    ],
    "hint": "Recuerda el 'am' y el '-ing'.",
    "reject": [
@@ -29643,8 +29626,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos no creen esa historia.\"",
    "accepted": [
-    "They do not believe that story.",
-    "They don't believe that story."
+    "They do not believe that story."
    ],
    "hint": "El verbo 'creer' es de estado, usa el presente simple.",
    "reject": [
@@ -32554,8 +32536,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No voy a llamar al cliente.\"",
    "accepted": [
-    "I am not going to call the client.",
-    "I'm not going to call the client."
+    "I am not going to call the client."
    ],
    "hint": "Cuidado con la negación.",
    "reject": [
@@ -32615,8 +32596,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Va a nevar mañana.\"",
    "accepted": [
-    "It is going to snow tomorrow.",
-    "It's going to snow tomorrow."
+    "It is going to snow tomorrow."
    ],
    "hint": "Usa 'it' para el clima.",
    "reject": [
@@ -32655,8 +32635,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Voy a estudiar para el examen.\"",
    "accepted": [
-    "I am going to study for the exam.",
-    "I'm going to study for the exam."
+    "I am going to study for the exam."
    ],
    "hint": "El examen es 'the exam'.",
    "reject": [
@@ -32756,8 +32735,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Voy a visitar a mis abuelos.\"",
    "accepted": [
-    "I am going to visit my grandparents.",
-    "I'm going to visit my grandparents."
+    "I am going to visit my grandparents."
    ],
    "hint": "Los abuelos son 'grandparents'.",
    "reject": [
@@ -34827,8 +34805,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estoy tan feliz como tú.\"",
    "accepted": [
-    "I am as happy as you.",
-    "I'm as happy as you."
+    "I am as happy as you."
    ],
    "hint": "Usa 'happy' y la estructura de igualdad.",
    "reject": [
@@ -35975,9 +35952,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "question": "Escríbelo en inglés: \"Es la distancia más lejana al aeropuerto.\"",
    "accepted": [
     "It is the farthest distance to the airport.",
-    "It's the farthest distance to the airport.",
-    "It is the furthest distance to the airport.",
-    "It's the furthest distance to the airport."
+    "It is the furthest distance to the airport."
    ],
    "hint": "Usa 'the farthest' o 'the furthest'.",
    "reject": [
@@ -36076,8 +36051,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es lo mejor que puedo hacer.\"",
    "accepted": [
-    "It is the best I can do.",
-    "It's the best I can do."
+    "It is the best I can do."
    ],
    "hint": "Usa el superlativo de 'good'.",
    "reject": [
@@ -36426,8 +36400,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es la ciudad más bonita del mundo.\"",
    "accepted": [
-    "It is the most beautiful city in the world.",
-    "It's the most beautiful city in the world."
+    "It is the most beautiful city in the world."
    ],
    "hint": "Usa 'the most' para adjetivos largos.",
    "reject": [
@@ -36529,8 +36502,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es el café más caro de la cafetería.\"",
    "accepted": [
-    "It is the most expensive coffee in the cafeteria.",
-    "It's the most expensive coffee in the cafeteria."
+    "It is the most expensive coffee in the cafeteria."
    ],
    "hint": "Usa 'the most' para adjetivos largos. Para lugares, usa 'in'.",
    "reject": [
@@ -40025,8 +39997,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos no disfrutan la lluvia.\"",
    "accepted": [
-    "They don't enjoy the rain.",
-    "They do not enjoy the rain."
+    "They don't enjoy the rain."
    ],
    "hint": "No hay verbo de acción aquí, solo el sustantivo 'rain'.",
    "reject": [
@@ -45881,8 +45852,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No tienen ningún descuento.\"",
    "accepted": [
-    "They don't have any discounts.",
-    "They do not have any discounts."
+    "They don't have any discounts."
    ],
    "hint": "Usa 'don't' y 'any' en negaciones.",
    "reject": [
@@ -46528,8 +46498,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Me queda flojo.\"",
    "accepted": [
-    "It's too loose.",
-    "It is too loose."
+    "It's too loose."
    ],
    "hint": "Usa 'too' para 'demasiado'.",
    "reject": [
@@ -46568,8 +46537,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Me puede envolver esto para regalo?\"",
    "accepted": [
-    "Could you gift-wrap it?",
-    "Could you gift wrap it?"
+    "Could you gift-wrap it?"
    ],
    "hint": "Usa el verbo compuesto 'gift-wrap'.",
    "reject": [
@@ -50742,8 +50710,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Está a nombre de [tu nombre].\"",
    "accepted": [
-    "It's under [Your Name].",
-    "It is under [Your Name]."
+    "It's under [Your Name]."
    ],
    "hint": "Recuerda la contracción.",
    "reject": [

@@ -3324,8 +3324,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No estoy acostumbrado a levantarme tan temprano.\"",
    "accepted": [
-    "I am not used to waking up so early.",
-    "I'm not used to waking up so early."
+    "I am not used to waking up so early."
    ],
    "hint": "Usa 'so early' para 'tan temprano'.",
    "reject": [
@@ -5895,8 +5894,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Si hace frío, me pongo un abrigo.\"",
    "accepted": [
-    "If it's cold, I put on a coat.",
-    "If it is cold, I put on a coat."
+    "If it's cold, I put on a coat."
    ],
    "hint": "Ponerse es 'put on'. Abrigo es 'coat'.",
    "reject": [
@@ -10184,8 +10182,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No tengo una computadora nueva.\"",
    "accepted": [
-    "I don't have a new computer.",
-    "I do not have a new computer."
+    "I don't have a new computer."
    ],
    "hint": "Usa 'don't have'.",
    "reject": [
@@ -11265,8 +11262,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos no tienen conflicto.\"",
    "accepted": [
-    "They don't have conflict.",
-    "They do not have conflict."
+    "They don't have conflict."
    ],
    "hint": "Recuerda la negación del Presente Simple.",
    "reject": [
@@ -11424,8 +11420,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos no confían en nadie.\"",
    "accepted": [
-    "They don't trust anyone.",
-    "They do not trust anyone."
+    "They don't trust anyone."
    ],
    "hint": "Cuidado con la doble negación en inglés.",
    "reject": [
@@ -11918,8 +11913,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Hola a todos, ha pasado mucho tiempo desde la última vez que hablamos.\"",
    "accepted": [
-    "Hello there, it's been ages since we last talked.",
-    "Hello there! It's been ages since we last talked."
+    "Hello there, it's been ages since we last talked."
    ],
    "hint": "Usa 'Hello there' como saludo general y la contracción de 'it has'.",
    "reject": [
@@ -14615,8 +14609,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Puesto que está lloviendo, nos quedaremos en casa.\"",
    "accepted": [
-    "Since it's raining, we will stay home.",
-    "Since it is raining, we will stay home."
+    "Since it's raining, we will stay home."
    ],
    "hint": "Usa 'since'.",
    "reject": [
@@ -14635,8 +14628,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Terminamos el trabajo; por lo tanto, podemos irnos.\"",
    "accepted": [
-    "We finished the work; therefore, we can leave.",
-    "We finished the work, therefore, we can leave."
+    "We finished the work; therefore, we can leave."
    ],
    "hint": "Usa 'therefore'.",
    "reject": [
@@ -14778,8 +14770,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Hubo una emergencia; por lo tanto, el plan cambió.\"",
    "accepted": [
-    "There was an emergency; therefore, the plan changed.",
-    "There was an emergency, therefore, the plan changed."
+    "There was an emergency; therefore, the plan changed."
    ],
    "hint": "Usa 'therefore'.",
    "reject": [
@@ -14798,8 +14789,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Compré un café, así que estoy más despierto ahora.\"",
    "accepted": [
-    "I bought a coffee, so I am more awake now.",
-    "I bought a coffee, so I'm more awake now."
+    "I bought a coffee, so I am more awake now."
    ],
    "hint": "Usa 'so'.",
    "reject": [
@@ -15308,8 +15298,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es una enfermedad mortal.\"",
    "accepted": [
-    "It's a deadly disease.",
-    "It is a deadly disease."
+    "It's a deadly disease."
    ],
    "hint": "Usa 'deadly' para 'mortal'.",
    "reject": [
@@ -15390,8 +15379,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es importante capturar lo más importante.\"",
    "accepted": [
-    "It's important to capture the most important information.",
-    "It is important to capture the most important information."
+    "It's important to capture the most important information."
    ],
    "hint": "Usa 'information' para 'lo más importante'.",
    "reject": [
@@ -16021,8 +16009,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La fecha límite es apretada, sin embargo, lo lograremos.\"",
    "accepted": [
-    "The deadline is tight; however, we will achieve it.",
-    "The deadline is tight. However, we will achieve it."
+    "The deadline is tight; however, we will achieve it."
    ],
    "hint": "Recuerda la puntuación con 'however'.",
    "reject": [
@@ -16101,8 +16088,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La economía es inestable; sin embargo, las inversiones continúan.\"",
    "accepted": [
-    "The economy is unstable; however, investments continue.",
-    "The economy is unstable. However, investments continue."
+    "The economy is unstable; however, investments continue."
    ],
    "hint": "Puntuación correcta para 'however'.",
    "reject": [
@@ -16181,8 +16167,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No me gusta el frío; sin embargo, tengo que viajar al sur.\"",
    "accepted": [
-    "I don't like the cold; however, I have to travel south.",
-    "I don't like the cold. However, I have to travel south."
+    "I don't like the cold; however, I have to travel south."
    ],
    "hint": "Usa 'however' para introducir un contraste.",
    "reject": [
@@ -16654,8 +16639,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Yo espero con ganas irme de viaje.\"",
    "accepted": [
-    "I am looking forward to going on a trip.",
-    "I'm looking forward to going on a trip."
+    "I am looking forward to going on a trip."
    ],
    "hint": "Usa 'I'm looking forward to...' seguido de gerundio.",
    "reject": [
@@ -17469,8 +17453,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No mezcles tiempos verbales sin motivo.\"",
    "accepted": [
-    "Don't mix verb tenses without reason.",
-    "Do not mix verb tenses without reason."
+    "Don't mix verb tenses without reason."
    ],
    "hint": "Usa la contracción para 'do not'.",
    "reject": [

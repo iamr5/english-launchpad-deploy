@@ -2365,8 +2365,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés — registro académico: \"La hipótesis no se comprobó, sin embargo, los datos son útiles.\"",
    "accepted": [
-    "The hypothesis was not proven; however, the data are useful.",
-    "The hypothesis was not proven. However, the data are useful."
+    "The hypothesis was not proven; however, the data are useful."
    ],
    "hint": "Usa un conector de contraste. Recuerda que 'data' es plural.",
    "reject": [
@@ -2468,8 +2467,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés — registro académico: \"Los hallazgos muestran una tendencia, mientras que la hipótesis no se valida.\"",
    "accepted": [
-    "The findings show a trend, whereas the hypothesis is not validated.",
-    "The findings show a trend; whereas the hypothesis is not validated."
+    "The findings show a trend, whereas the hypothesis is not validated."
    ],
    "hint": "Usa el conector avanzado para contraste.",
    "reject": [
@@ -4409,8 +4407,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es importante inferir la intención del orador.\"",
    "accepted": [
-    "It's important to infer the speaker's intention.",
-    "It is important to infer the speaker's intention."
+    "It's important to infer the speaker's intention."
    ],
    "hint": "Usa contracción si prefieres. 'Orador' se dice 'speaker'.",
    "reject": [
@@ -4472,8 +4469,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él dijo: 'Hace un poco de frío aquí.'\"",
    "accepted": [
-    "He said, \"It's a bit chilly in here.\"",
-    "He said, \"It is a bit chilly in here.\""
+    "He said, \"It's a bit chilly in here.\""
    ],
    "hint": "Usa la frase del ejemplo. Recuerda las comillas.",
    "reject": [
@@ -5102,8 +5098,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es importante capturar las fechas.\"",
    "accepted": [
-    "It's important to capture the dates.",
-    "It is important to capture the dates."
+    "It's important to capture the dates."
    ],
    "hint": "Usa 'capture' para 'capturar'.",
    "reject": [
@@ -5142,8 +5137,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No quiero perder el hilo.\"",
    "accepted": [
-    "I don't want to lose the thread.",
-    "I do not want to lose the thread."
+    "I don't want to lose the thread."
    ],
    "hint": "Usa la expresión 'lose the thread'.",
    "reject": [
@@ -5306,8 +5300,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es vital capturar los nombres.\"",
    "accepted": [
-    "It's vital to capture the names.",
-    "It is vital to capture the names."
+    "It's vital to capture the names."
    ],
    "hint": "Usa 'vital' para 'vital'.",
    "reject": [
@@ -5326,8 +5319,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No intentes escribir todo.\"",
    "accepted": [
-    "Don't try to write everything.",
-    "Do not try to write everything."
+    "Don't try to write everything."
    ],
    "hint": "Usa 'everything' para 'todo'.",
    "reject": [
@@ -5765,8 +5757,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es un error común enfocarse solo en la palabra exacta.\"",
    "accepted": [
-    "It's a common error to focus only on the exact word.",
-    "It is a common error to focus only on the exact word."
+    "It's a common error to focus only on the exact word."
    ],
    "hint": "Usa 'It's a...' para iniciar la frase.",
    "reject": [
@@ -5887,8 +5878,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No es necesario entender cada palabra.\"",
    "accepted": [
-    "It's not necessary to understand every word.",
-    "It is not necessary to understand every word."
+    "It's not necessary to understand every word."
    ],
    "hint": "Empieza con 'It's not...'",
    "reject": [
@@ -7099,8 +7089,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No seas descortés.\"",
    "accepted": [
-    "Don't be impolite.",
-    "Do not be impolite."
+    "Don't be impolite."
    ],
    "hint": "Usa la forma negativa del imperativo de 'to be'.",
    "reject": [
@@ -10165,8 +10154,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Podría repetir eso, por favor?\"",
    "accepted": [
-    "Could you repeat that, please?",
-    "Could you repeat that please?"
+    "Could you repeat that, please?"
    ],
    "hint": "Es una forma educada de pedir aclaración.",
    "reject": [
@@ -10185,8 +10173,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es importante administrar el tiempo durante el examen.\"",
    "accepted": [
-    "It is important to manage time during the exam.",
-    "It's important to manage time during the exam."
+    "It is important to manage time during the exam."
    ],
    "hint": "Usa 'manage' para administrar.",
    "reject": [
@@ -10225,8 +10212,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Siempre pide aclaración si no entiendes la pregunta.\"",
    "accepted": [
-    "Always ask for clarification if you don't understand the question.",
-    "Always ask for clarification if you do not understand the question."
+    "Always ask for clarification if you don't understand the question."
    ],
    "hint": "Usa 'ask for clarification'.",
    "reject": [
@@ -10245,8 +10231,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Debes introducir el tema, añadir detalles y concluir.\"",
    "accepted": [
-    "You should introduce the topic, add details, and conclude.",
-    "You should introduce the topic, add details and conclude."
+    "You should introduce the topic, add details, and conclude."
    ],
    "hint": "Usa los verbos 'introduce', 'add' y 'conclude'.",
    "reject": [
@@ -10812,8 +10797,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es un error común olvidar integrar ambas fuentes.\"",
    "accepted": [
-    "It's a common mistake to forget to integrate both sources.",
-    "It is a common mistake to forget to integrate both sources."
+    "It's a common mistake to forget to integrate both sources."
    ],
    "hint": "Recuerda la contracción de 'it is' y el infinitivo después de 'forget'.",
    "reject": [
@@ -10892,8 +10876,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No tomes apuntes desordenados.\"",
    "accepted": [
-    "Don't take disorganized notes.",
-    "Do not take disorganized notes."
+    "Don't take disorganized notes."
    ],
    "hint": "Recuerda la contracción y el adjetivo para 'desordenados'.",
    "reject": [
@@ -10974,8 +10957,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es mejor usar listas o columnas.\"",
    "accepted": [
-    "It's better to use lists or columns.",
-    "It is better to use lists or columns."
+    "It's better to use lists or columns."
    ],
    "hint": "Recuerda la contracción de 'it is'.",
    "reject": [
@@ -10994,8 +10976,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No olvides el texto al escuchar la charla.\"",
    "accepted": [
-    "Don't forget the text when listening to the lecture.",
-    "Do not forget the text when listening to the lecture."
+    "Don't forget the text when listening to the lecture."
    ],
    "hint": "Usa 'when listening to'.",
    "reject": [
@@ -13164,8 +13145,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No pierdas la calma en estas situaciones.\"",
    "accepted": [
-    "Don't lose your calm in these situations.",
-    "Do not lose your calm in these situations."
+    "Don't lose your calm in these situations."
    ],
    "hint": "Usa 'calm' o 'composure' para 'calma'.",
    "reject": [
@@ -13308,8 +13288,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No dejes que los nervios te afecten.\"",
    "accepted": [
-    "Don't let nerves affect you.",
-    "Do not let nerves affect you."
+    "Don't let nerves affect you."
    ],
    "hint": "Para 'nervios', usa 'nerves'.",
    "reject": [
@@ -13410,8 +13389,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No confundas los términos clave.\"",
    "accepted": [
-    "Don't confuse the key terms.",
-    "Do not confuse the key terms."
+    "Don't confuse the key terms."
    ],
    "hint": "Usa 'key terms' para 'términos clave'.",
    "reject": [

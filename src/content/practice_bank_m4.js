@@ -4972,8 +4972,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El producto es caro; sin embargo, es de buena calidad.\"",
    "accepted": [
-    "The product is expensive; however, it is good quality.",
-    "The product is expensive; however, it's good quality."
+    "The product is expensive; however, it is good quality."
    ],
    "hint": "Usa punto y coma antes de 'however' y coma después. No olvides el sujeto 'it'.",
    "reject": [
@@ -9510,8 +9509,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No intentes entender cada palabra.\"",
    "accepted": [
-    "Don't try to understand every word.",
-    "Do not try to understand every word."
+    "Don't try to understand every word."
    ],
    "hint": "Recuerda la negación del imperativo y la palabra para 'cada'.",
    "reject": [
@@ -9631,8 +9629,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No necesitas conocer esa palabra.\"",
    "accepted": [
-    "You don't need to know that word.",
-    "You do not need to know that word."
+    "You don't need to know that word."
    ],
    "hint": "Recuerda 'don't need to + verbo'.",
    "reject": [
@@ -9712,8 +9709,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es mejor comprender la idea general.\"",
    "accepted": [
-    "It's better to understand the general idea.",
-    "It is better to understand the general idea."
+    "It's better to understand the general idea."
    ],
    "hint": "Usa 'It's better to + verbo'.",
    "reject": [
@@ -9732,8 +9728,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No te quedes atascado en cada término.\"",
    "accepted": [
-    "Don't get stuck on every term.",
-    "Do not get stuck on every term."
+    "Don't get stuck on every term."
    ],
    "hint": "Usa 'get stuck on' para 'quedarse atascado en'.",
    "reject": [
@@ -12711,8 +12706,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Sí, estoy de acuerdo porque es una buena idea.\"",
    "accepted": [
-    "Yes, I agree because it's a good idea.",
-    "Yes, I agree because it is a good idea."
+    "Yes, I agree because it's a good idea."
    ],
    "hint": "No uses 'is' solo. Combina 'it' con 'is'.",
    "reject": [
@@ -12789,8 +12783,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No rellenes con sonidos vacíos.\"",
    "accepted": [
-    "Don't fill with empty sounds.",
-    "Do not fill with empty sounds."
+    "Don't fill with empty sounds."
    ],
    "hint": "Usa 'empty sounds' para referirte a 'sonidos vacíos'.",
    "reject": [
@@ -12809,8 +12802,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es mejor no cortar la conversación bruscamente.\"",
    "accepted": [
-    "It's better not to cut the conversation short.",
-    "It is better not to cut the conversation short."
+    "It's better not to cut the conversation short."
    ],
    "hint": "Usa 'short' para 'bruscamente/de golpe' en este contexto.",
    "reject": [
@@ -12850,8 +12842,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No hables demasiado bajo.\"",
    "accepted": [
-    "Don't speak too low.",
-    "Do not speak too low."
+    "Don't speak too low."
    ],
    "hint": "Usa 'too low' para 'demasiado bajo'.",
    "reject": [
@@ -13485,8 +13476,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Entonces, básicamente, lo que estoy diciendo es que necesitamos un plan B.\"",
    "accepted": [
-    "So basically, what I'm saying is we need a Plan B.",
-    "So basically, what I am saying is we need a Plan B."
+    "So basically, what I'm saying is we need a Plan B."
    ],
    "hint": "Usa 'So basically, what I'm saying is...' para resumir.",
    "reject": [
@@ -15207,8 +15197,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él ha ido a la oficina, por lo tanto no está aquí.\"",
    "accepted": [
-    "He has gone to the office, therefore he is not here.",
-    "He has gone to the office; therefore, he is not here."
+    "He has gone to the office, therefore he is not here."
    ],
    "hint": "Usa 'gone' y un conector para indicar consecuencia.",
    "reject": [
@@ -15268,8 +15257,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ha llovido mucho, sin embargo, el campo está seco.\"",
    "accepted": [
-    "It has rained a lot, however, the field is dry.",
-    "It has rained a lot; however, the field is dry."
+    "It has rained a lot, however, the field is dry."
    ],
    "hint": "Usa 'however' para contraste.",
    "reject": [
@@ -15352,8 +15340,7 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La información es importante, además, es confidencial.\"",
    "accepted": [
-    "The information is important; also, it is confidential.",
-    "The information is important, also, it is confidential."
+    "The information is important; also, it is confidential."
    ],
    "hint": "Usa 'also' para añadir información.",
    "reject": [
