@@ -372,30 +372,47 @@
   .vocab-intro .vi-count { display: inline-block; margin-top: 9px; font-size: 12px; font-weight: 800;
     letter-spacing: .3px; color: var(--amberInk); background: #FDF0D5;
     border-radius: 999px; padding: 5px 11px; }
-  .vg { margin-bottom: 20px; }
-  .vg-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 2px 9px; }
-  .vg-h h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--ink); }
-  .vg-h span { font-size: 12px; font-weight: 800; color: var(--muted2); }
-  .vg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .vsec { margin-bottom: 22px; }
+  .vsec-h { margin: 0 2px 10px; font-size: 17px; font-weight: 800; color: var(--ink); }
+  .vsec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 10px; }
   /* Borde inferior grueso: el mismo relieve de boton que ya usan las tarjetas
      de la ruta, para que la ficha se lea como algo que se toca. */
-  .vw { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 94px;
-    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px;
-    padding: 11px 6px 9px; cursor: pointer; font-family: inherit; text-align: center;
+  .vchip { display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 18px;
+    padding: 12px 13px 11px; cursor: pointer; font-family: inherit; text-align: left;
     -webkit-tap-highlight-color: transparent; }
-  .vw:active { transform: translateY(2px); border-bottom-width: 2px; }
-  .vw-en { font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.15; overflow-wrap: anywhere; }
-  .vw-es { font-size: 12px; font-weight: 700; color: var(--muted2); line-height: 1.2;
-    overflow-wrap: anywhere; margin-bottom: 9px; }
-  /* margin-top:auto pega la barra abajo: las fichas tienen alturas distintas
-     segun lo larga que sea la palabra, y si no, las barras salen escalonadas.
+  .vchip:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .vchip-e { font-size: 21px; line-height: 1.1; }
+  .vchip-n { font-size: 14px; font-weight: 800; color: var(--ink); line-height: 1.2;
+    overflow-wrap: anywhere; margin-bottom: 10px; }
+  /* margin-top:auto pega la barra abajo: los nombres ocupan una o dos lineas y
+     si no, las barras de una misma fila salen escalonadas.
      El <span> es la via y la <i> el relleno. */
-  .vw-bar { display: block; margin-top: auto; width: 100%; height: 8px;
+  .vchip-bar { display: block; margin-top: auto; width: 100%; height: 8px;
     border-radius: 999px; background: var(--gray); overflow: hidden; }
-  .vw-bar i { display: block; height: 100%; border-radius: 999px; background: var(--amber);
+  .vchip-bar i { display: block; height: 100%; border-radius: 999px; background: var(--blue);
     transition: width .25s ease; }
-  .vw.done { border-color: #F3D08A; background: #FFFCF4; }
-  .vw.speaking { border-color: var(--blue); }
+  .vchip-c { margin-top: 5px; font-size: 11px; font-weight: 800; color: var(--muted2); }
+  .vchip.full { border-color: #A5E0FB; background: #F5FCFF; }
+
+  /* La hoja de un tema: la lista de palabras, cada una con su boton de escuchar. */
+  .vs-sub { text-align: center; font-size: 13px; font-weight: 700; color: var(--muted2);
+    margin: -8px 0 14px; }
+  .vs-list { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain;
+    display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; }
+  .vs-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;
+    background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 10px 12px;
+    cursor: pointer; font-family: inherit; text-align: left;
+    -webkit-tap-highlight-color: transparent; }
+  .vs-row b { display: block; font-size: 16px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+  .vs-row small { display: block; font-size: 13px; font-weight: 700; color: var(--muted2); line-height: 1.3; }
+  /* Escuchada = un tinte, no una palomita: es "ya pasaste por aquí", no "lo sabes". */
+  .vs-row.heard { border-color: #A5E0FB; background: #F5FCFF; }
+  .vs-ic { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%;
+    background: var(--canvas); color: var(--blue); display: grid; place-items: center; }
+  .vs-row.heard .vs-ic { background: #DDF4FF; }
+  .vs-row.speaking .vs-ic { background: var(--blue); color: #fff; }
+  .vs-ic svg { width: 18px; height: 18px; }
   .course-foot .foot-done { display: flex; align-items: center; justify-content: center; gap: 8px;
     font-weight: 700; color: var(--muted2); padding: 10px 0; }
 
@@ -3137,101 +3154,201 @@ function showHomeTab(tab) {
 
 // CONTENIDO DE ARRANQUE. El curso no trae listas de palabras por ningun lado
 // —sus bloques son teoria, titulo, resumen, mision, intro y cierre—, asi que
-// esto va escrito a mano y agrupado por tema, con el vocabulario practico que
-// pide un curso "para moverte". Es el sitio a reemplazar cuando exista la lista
-// de verdad: cambiando SOLO este arreglo cambia toda la pantalla.
-// Formato: [ingles, español].
+// esto va escrito a mano. Es el sitio a reemplazar cuando exista la lista de
+// verdad: cambiando SOLO este arreglo cambia toda la pantalla.
+// Dos niveles: seccion (Basicos, Viaje…) y dentro los temas, que son las fichas
+// que se ven al entrar. La palabra vive un nivel mas abajo, en la hoja.
+// Formato de cada palabra: [ingles, español].
 const VOCAB = [
-  { g: 'Saludos y cortesía', w: [
-    ['hello', 'hola'], ['goodbye', 'adiós'], ['please', 'por favor'],
-    ['thank you', 'gracias'], ['sorry', 'perdón'], ['excuse me', 'disculpe'],
-    ['yes', 'sí'], ['no', 'no'], ['nice to meet you', 'mucho gusto'] ] },
-  { g: 'Números y tiempo', w: [
-    ['one', 'uno'], ['two', 'dos'], ['three', 'tres'],
-    ['today', 'hoy'], ['tomorrow', 'mañana'], ['yesterday', 'ayer'],
-    ['morning', 'la mañana'], ['night', 'noche'], ['hour', 'hora'] ] },
-  { g: 'En la calle', w: [
-    ['street', 'calle'], ['left', 'izquierda'], ['right', 'derecha'],
-    ['near', 'cerca'], ['far', 'lejos'], ['bus', 'bus'],
-    ['ticket', 'boleto'], ['map', 'mapa'], ['where', 'dónde'] ] },
-  { g: 'Comida', w: [
-    ['water', 'agua'], ['bread', 'pan'], ['chicken', 'pollo'],
-    ['rice', 'arroz'], ['coffee', 'café'], ['bill', 'la cuenta'],
-    ['menu', 'carta'], ['hungry', 'con hambre'], ['delicious', 'delicioso'] ] },
-  { g: 'Trabajo y estudio', w: [
-    ['work', 'trabajo'], ['meeting', 'reunión'], ['email', 'correo'],
-    ['help', 'ayuda'], ['question', 'pregunta'], ['answer', 'respuesta'],
-    ['to learn', 'aprender'], ['easy', 'fácil'], ['difficult', 'difícil'] ] },
+  { s: 'Básicos', chips: [
+    { n: 'Saludos y cortesía', e: '👋', w: [
+      ['hello', 'hola'], ['goodbye', 'adiós'], ['please', 'por favor'],
+      ['thank you', 'gracias'], ['sorry', 'perdón'], ['excuse me', 'disculpe'],
+      ['yes', 'sí'], ['no', 'no'], ['nice to meet you', 'mucho gusto'] ] },
+    { n: 'Números y tiempo', e: '🔢', w: [
+      ['one', 'uno'], ['two', 'dos'], ['three', 'tres'],
+      ['today', 'hoy'], ['tomorrow', 'mañana'], ['yesterday', 'ayer'],
+      ['morning', 'la mañana'], ['night', 'noche'], ['hour', 'hora'] ] },
+    { n: 'En la calle', e: '🧭', w: [
+      ['street', 'calle'], ['left', 'izquierda'], ['right', 'derecha'],
+      ['near', 'cerca'], ['far', 'lejos'], ['bus', 'bus'],
+      ['ticket', 'boleto'], ['map', 'mapa'], ['corner', 'esquina'] ] },
+    { n: 'Comida', e: '🍽️', w: [
+      ['water', 'agua'], ['bread', 'pan'], ['chicken', 'pollo'],
+      ['rice', 'arroz'], ['coffee', 'café'], ['bill', 'la cuenta'],
+      ['menu', 'carta'], ['hungry', 'con hambre'], ['delicious', 'delicioso'] ] },
+    { n: 'Trabajo y estudio', e: '💼', w: [
+      ['work', 'trabajo'], ['meeting', 'reunión'], ['email', 'correo'],
+      ['help', 'ayuda'], ['question', 'pregunta'], ['answer', 'respuesta'],
+      ['to learn', 'aprender'], ['easy', 'fácil'], ['difficult', 'difícil'] ] },
+  ] },
+  { s: 'Viaje', chips: [
+    { n: 'En el aeropuerto', e: '✈️', w: [
+      ['airport', 'aeropuerto'], ['flight', 'vuelo'], ['luggage', 'equipaje'],
+      ['passport', 'pasaporte'], ['gate', 'puerta de embarque'], ['boarding pass', 'pase de abordar'],
+      ['delayed', 'retrasado'], ['arrival', 'llegada'], ['departure', 'salida'],
+      ['suitcase', 'maleta'] ] },
+    { n: 'Hotel', e: '🏨', w: [
+      ['room', 'habitación'], ['key', 'llave'], ['bed', 'cama'],
+      ['towel', 'toalla'], ['booking', 'reserva'], ['floor', 'piso'],
+      ['elevator', 'ascensor'], ['to check in', 'registrarse'],
+      ['to check out', 'dejar la habitación'], ['front desk', 'recepción'] ] },
+    { n: 'Transporte', e: '🚌', w: [
+      ['train', 'tren'], ['taxi', 'taxi'], ['car', 'carro'],
+      ['plane', 'avión'], ['station', 'estación'], ['stop', 'paradero'],
+      ['driver', 'conductor'], ['to drive', 'manejar'], ['road', 'carretera'],
+      ['traffic', 'tráfico'] ] },
+  ] },
+  { s: 'Vida diaria', chips: [
+    { n: 'Casa y objetos', e: '🏠', w: [
+      ['house', 'casa'], ['door', 'puerta'], ['window', 'ventana'],
+      ['table', 'mesa'], ['chair', 'silla'], ['phone', 'celular'],
+      ['keys', 'llaves'], ['bag', 'bolso'], ['clothes', 'ropa'],
+      ['shoes', 'zapatos'] ] },
+    { n: 'Compras y dinero', e: '💳', w: [
+      ['money', 'dinero'], ['price', 'precio'], ['cheap', 'barato'],
+      ['expensive', 'caro'], ['to buy', 'comprar'], ['to pay', 'pagar'],
+      ['cash', 'efectivo'], ['card', 'tarjeta'], ['change', 'vuelto'],
+      ['receipt', 'boleta'] ] },
+    { n: 'Salud y cuerpo', e: '🩺', w: [
+      ['head', 'cabeza'], ['hand', 'mano'], ['foot', 'pie'],
+      ['pain', 'dolor'], ['doctor', 'doctor'], ['medicine', 'medicina'],
+      ['sick', 'enfermo'], ['tired', 'cansado'], ['hospital', 'hospital'],
+      ['to rest', 'descansar'] ] },
+  ] },
+  { s: 'Personas y trato', chips: [
+    { n: 'Familia', e: '👨‍👩‍👧', w: [
+      ['family', 'familia'], ['mother', 'mamá'], ['father', 'papá'],
+      ['brother', 'hermano'], ['sister', 'hermana'], ['son', 'hijo'],
+      ['daughter', 'hija'], ['friend', 'amigo'], ['neighbor', 'vecino'],
+      ['child', 'niño'] ] },
+    { n: 'Sentimientos', e: '😊', w: [
+      ['happy', 'feliz'], ['sad', 'triste'], ['angry', 'molesto'],
+      ['scared', 'asustado'], ['nervous', 'nervioso'], ['calm', 'tranquilo'],
+      ['excited', 'emocionado'], ['bored', 'aburrido'], ['proud', 'orgulloso'],
+      ['worried', 'preocupado'] ] },
+    { n: 'Describir', e: '📏', w: [
+      ['big', 'grande'], ['small', 'pequeño'], ['new', 'nuevo'],
+      ['old', 'viejo'], ['hot', 'caliente'], ['cold', 'frío'],
+      ['fast', 'rápido'], ['slow', 'lento'], ['beautiful', 'bonito'],
+      ['strong', 'fuerte'] ] },
+  ] },
+  { s: 'Palabras que enlazan', chips: [
+    { n: 'Verbos esenciales', e: '⚡', w: [
+      ['to be', 'ser o estar'], ['to have', 'tener'], ['to do', 'hacer'],
+      ['to go', 'ir'], ['to want', 'querer'], ['to need', 'necesitar'],
+      ['to know', 'saber'], ['to say', 'decir'], ['to see', 'ver'],
+      ['to come', 'venir'], ['to give', 'dar'], ['to take', 'tomar'] ] },
+    { n: 'Preguntas', e: '❓', w: [
+      ['what', 'qué'], ['who', 'quién'], ['when', 'cuándo'],
+      ['where', 'dónde'], ['why', 'por qué'], ['how', 'cómo'],
+      ['how much', 'cuánto'], ['which', 'cuál'], ['whose', 'de quién'] ] },
+    { n: 'Conectores', e: '🔗', w: [
+      ['and', 'y'], ['but', 'pero'], ['because', 'porque'],
+      ['also', 'también'], ['then', 'luego'], ['now', 'ahora'],
+      ['always', 'siempre'], ['never', 'nunca'], ['maybe', 'quizás'],
+      ['very', 'muy'] ] },
+  ] },
 ];
 
-// Cuantas escuchas llenan la barra de una palabra. La barra mide PRACTICA, no
-// dominio: hoy lo unico medible es cuantas veces la ha trabajado. Cuando el
-// vocabulario tenga sus propios ejercicios, esto pasa a leer aciertos.
-const VOCAB_TARGET = 4;
-function vocabCounts() { return PROGRESS['__vocab'] = PROGRESS['__vocab'] || {}; }
-function vocabMastery(en) { return Math.min(1, (vocabCounts()[en] || 0) / VOCAB_TARGET); }
+// Escuchada o no. Nada mas: cuantas veces le has dado al play no dice que la
+// palabra sea tuya, y una barra que se llena sola con repeticiones lo estaria
+// afirmando. Esto solo mide cobertura — que has pasado por ella.
+function vocabHeard() { return PROGRESS['__vocab'] = PROGRESS['__vocab'] || {}; }
+function isHeard(en) { return !!vocabHeard()[en]; }
+function chipHeard(chip) { return chip.w.filter(p => isHeard(p[0])).length; }
+function vocabTotals() {
+  let heard = 0, total = 0;
+  VOCAB.forEach(sec => sec.chips.forEach(c => { total += c.w.length; heard += chipHeard(c); }));
+  return { heard, total };
+}
 
-// Se repinta en cada entrada: las barras dependen del progreso y quedarse con
-// la primera version las congelaria.
+// Se repinta en cada entrada: las barras dependen del progreso.
 function renderVocab() {
   const el = document.getElementById('vocab-body');
   if (!el) return;
-  const total = VOCAB.reduce((s, g) => s + g.w.length, 0);
-  const hechas = VOCAB.reduce((s, g) => s + g.w.filter(p => vocabMastery(p[0]) >= 1).length, 0);
+  const t = vocabTotals();
   let html = `<div class="vocab-intro">
       <b>Tu biblioteca de palabras</b>
-      <small>Toca una palabra para escucharla. La barra se llena a medida que la practicas.</small>
-      <span class="vi-count">${hechas} de ${total} dominadas</span>
+      <small>Elige un tema y escucha sus palabras. La barra marca cuántas ya escuchaste.</small>
+      <span class="vi-count">${t.heard} de ${t.total} escuchadas</span>
     </div>`;
-  VOCAB.forEach(grupo => {
-    const listas = grupo.w.filter(p => vocabMastery(p[0]) >= 1).length;
-    html += `<div class="vg">
-      <div class="vg-h"><h3>${escapeHtml(grupo.g)}</h3><span>${listas}/${grupo.w.length}</span></div>
-      <div class="vg-grid">` +
-      grupo.w.map(([en, es]) => {
-        const m = Math.round(vocabMastery(en) * 100);
-        return `<button class="vw${m >= 100 ? ' done' : ''}" data-w="${escapeHtml(en)}">
-          <span class="vw-en">${escapeHtml(en)}</span>
-          <span class="vw-es">${escapeHtml(es)}</span>
-          <span class="vw-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                aria-valuenow="${m}" aria-label="Practicada al ${m}%"><i style="width:${m}%"></i></span>
+  VOCAB.forEach((sec, si) => {
+    html += `<div class="vsec"><div class="vsec-h">${escapeHtml(sec.s)}</div><div class="vsec-grid">` +
+      sec.chips.map((c, ci) => {
+        const h = chipHeard(c), pc = Math.round(h / c.w.length * 100);
+        return `<button class="vchip${h === c.w.length ? ' full' : ''}" id="vchip-${si}-${ci}"
+                onclick="openVocabChip(${si}, ${ci})">
+          <span class="vchip-e">${c.e}</span>
+          <span class="vchip-n">${escapeHtml(c.n)}</span>
+          <span class="vchip-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                aria-valuenow="${pc}" aria-label="${h} de ${c.w.length} escuchadas"><i style="width:${pc}%"></i></span>
+          <span class="vchip-c">${h}/${c.w.length}</span>
         </button>`;
-      }).join('') +
-      `</div></div>`;
+      }).join('') + `</div></div>`;
   });
   el.innerHTML = html;
-  el.querySelectorAll('.vw').forEach(b => b.onclick = () => vocabTap(b));
 }
 
-// Escuchar cuenta como practicar. Se repinta SOLO esta ficha y no la pantalla
-// entera: repintarla devolveria el scroll arriba con cada toque.
-function vocabTap(btn) {
-  const en = btn.getAttribute('data-w');
+// La hoja con las palabras del tema. Reusa el overlay del resto de la app en vez
+// de traer otro: mismo gesto para cerrar (tocar fuera o arrastrar) y una sola
+// hoja que mantener.
+let VCHIP = null;
+function openVocabChip(si, ci) {
+  const sec = VOCAB[si]; if (!sec) return;
+  const chip = sec.chips[ci]; if (!chip) return;
+  VCHIP = { si, ci };
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  if (!overlay || !sheet) return;
+  sheet.classList.add('result');   // altura segun contenido, no el 80% del quiz
+  sheet.innerHTML = `<div class="handle"></div>
+    <h3>${chip.e} ${escapeHtml(chip.n)}</h3>
+    <div class="vs-sub" id="vs-sub">${chipHeard(chip)} de ${chip.w.length} escuchadas</div>
+    <div class="vs-list">` +
+    chip.w.map(([en, es]) => `<button class="vs-row${isHeard(en) ? ' heard' : ''}" data-w="${escapeHtml(en)}">
+        <span class="vs-t"><b>${escapeHtml(en)}</b><small>${escapeHtml(es)}</small></span>
+        <span class="vs-ic">${VS_SPEAKER}</span>
+      </button>`).join('') +
+    `</div>
+    <button class="btn blue" onclick="closeOverlay()">Listo</button>`;
+  sheet.querySelectorAll('.vs-row').forEach(r => r.onclick = () => vocabSay(r));
+  sheet.dataset.dismissible = 'true';
+  overlay.classList.add('active');
+}
+const VS_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/>' +
+  '<path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+// Escuchar marca la palabra. Una sola vez: volver a darle no suma nada, porque
+// no hay nada mas que sumar.
+function vocabSay(row) {
+  const en = row.getAttribute('data-w');
   if (!en) return;
-  const c = vocabCounts();
-  if ((c[en] || 0) < VOCAB_TARGET) { c[en] = (c[en] || 0) + 1; saveProgress(PROGRESS); }
-  const m = Math.round(vocabMastery(en) * 100);
-  const bar = btn.querySelector('.vw-bar'), fill = btn.querySelector('.vw-bar i');
-  if (fill) fill.style.width = m + '%';
-  if (bar) { bar.setAttribute('aria-valuenow', m); bar.setAttribute('aria-label', 'Practicada al ' + m + '%'); }
-  btn.classList.toggle('done', m >= 100);
-  btn.classList.add('speaking');
+  if (!isHeard(en)) { vocabHeard()[en] = 1; saveProgress(PROGRESS); }
+  row.classList.add('heard', 'speaking');
   // 0.85 y no el 0.45 del quiz: una palabra suelta a esa velocidad no se
   // reconoce como palabra.
-  speak(en, null, () => btn.classList.remove('speaking'), 0.85);
-  // Los contadores de cabecera y de grupo se quedarian viejos; se recalculan
-  // sin tocar el resto del arbol.
-  const total = VOCAB.reduce((s, g) => s + g.w.length, 0);
-  const hechas = VOCAB.reduce((s, g) => s + g.w.filter(p => vocabMastery(p[0]) >= 1).length, 0);
-  const cnt = document.querySelector('#vocab-body .vi-count');
-  if (cnt) cnt.textContent = `${hechas} de ${total} dominadas`;
-  const grupo = VOCAB.find(g => g.w.some(p => p[0] === en));
-  const caja = btn.closest('.vg');
-  if (grupo && caja) {
-    const listas = grupo.w.filter(p => vocabMastery(p[0]) >= 1).length;
-    const sp = caja.querySelector('.vg-h span');
-    if (sp) sp.textContent = `${listas}/${grupo.w.length}`;
+  speak(en, null, () => row.classList.remove('speaking'), 0.85);
+  if (!VCHIP) return;
+  const chip = VOCAB[VCHIP.si].chips[VCHIP.ci];
+  const h = chipHeard(chip), pc = Math.round(h / chip.w.length * 100);
+  const sub = document.getElementById('vs-sub');
+  if (sub) sub.textContent = `${h} de ${chip.w.length} escuchadas`;
+  // La ficha de detras se actualiza en el sitio: repintar la pantalla entera
+  // con la hoja abierta perderia el scroll al cerrarla.
+  const btn = document.getElementById(`vchip-${VCHIP.si}-${VCHIP.ci}`);
+  if (btn) {
+    const bar = btn.querySelector('.vchip-bar'), fill = btn.querySelector('.vchip-bar i');
+    if (fill) fill.style.width = pc + '%';
+    if (bar) { bar.setAttribute('aria-valuenow', pc); bar.setAttribute('aria-label', `${h} de ${chip.w.length} escuchadas`); }
+    const c = btn.querySelector('.vchip-c');
+    if (c) c.textContent = `${h}/${chip.w.length}`;
+    btn.classList.toggle('full', h === chip.w.length);
   }
+  const t = vocabTotals();
+  const tot = document.querySelector('#vocab-body .vi-count');
+  if (tot) tot.textContent = `${t.heard} de ${t.total} escuchadas`;
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
