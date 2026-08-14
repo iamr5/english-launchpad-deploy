@@ -422,7 +422,6 @@ function SampleQuiz() {
             className="btn"
             disabled={!done && sel === null}
             onClick={done ? next : confirm}
-            style={{ background: "var(--cta)", ["--lip" as string]: "var(--ctaLip)" }}
           >
             {!done
               ? sel === null
