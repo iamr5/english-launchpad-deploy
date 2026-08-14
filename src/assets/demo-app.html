@@ -6513,11 +6513,17 @@ function placementReveal(lvl, onDone, stats) {
     // el veredicto entra encima mientras ellas todavía se están yendo.
     // La insignia que corresponde al nivel elegido NO sale disparada: se queda
     // en su órbita y el veredicto aparece exactamente ahí, viajando luego al centro
-    // como si la propia insignia hubiera sido la elegida.
+    // como si la propia insignia hubiera sido la elegida. Su posición se lee en
+    // pantalla (getBoundingClientRect) para respetar la rotación lenta del anillo.
     const chosenIdx = Math.max(0, Math.min(LV.length - 1, lvl | 0));
     const chosenBadge = badges[chosenIdx];
-    const chosenX = chosenBadge ? (parseFloat(chosenBadge.dataset.x) || 0) : 0;
-    const chosenY = chosenBadge ? (parseFloat(chosenBadge.dataset.y) || 0) : 0;
+    let chosenX = 0, chosenY = 0;
+    if (chosenBadge && stage) {
+      const stageRect = stage.getBoundingClientRect();
+      const badgeRect = chosenBadge.getBoundingClientRect();
+      chosenX = badgeRect.left + badgeRect.width / 2 - (stageRect.left + stageRect.width / 2);
+      chosenY = badgeRect.top + badgeRect.height / 2 - (stageRect.top + stageRect.height / 2);
+    }
     badges.forEach((b, i) => {
       if (i === chosenIdx) return; // la elegida se desvanece en su sitio al final
       setTimeout(() => b.classList.add('gone'), Math.round(i * 85 * F));
@@ -6533,7 +6539,7 @@ function placementReveal(lvl, onDone, stats) {
       if (chosenBadge) chosenBadge.classList.add('chosen');
       stage.insertAdjacentHTML('beforeend',
         `<div class="s-wave"></div><div class="s-wave w2"></div>` +
-        `<div class="s-final" style="--fx:${chosenX}px;--fy:${chosenY}px">${target}</div>` +
+        `<div class="s-final" style="--fx:${chosenX.toFixed(1)}px;--fy:${chosenY.toFixed(1)}px">${target}</div>` +
         (cabeza ? `<img class="s-boti cheer" src="${cabeza}" alt="" aria-hidden="true" style="position:absolute;left:50%;bottom:-6px;width:64px;height:64px;margin-left:-32px;z-index:3">` : ''));
       const f = document.createElement('div'); f.className = 's-flash';
       el.appendChild(f); setTimeout(() => f.remove(), 1250);
