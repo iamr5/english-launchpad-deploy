@@ -468,9 +468,10 @@ function LiveDemo() {
                 className="block border-0"
                 loading="lazy"
                 style={{
-                  width: 480,
-                  height: 886,
-                  transform: "scale(0.78)",
+                  width: 434,
+                  height: 800,
+                  transform: "scale(0.9)",
+
                   transformOrigin: "top left",
                 }}
               />
