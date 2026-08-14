@@ -2540,20 +2540,44 @@ async function loadCourse() {
   window.PLACEMENT_ITEMS = data.placement || [];
   course = applyTokens(data.course);
   allLessons = course.modules.flatMap(m => m.lessons);
-  attachPracticeBank(data.practice || {});
+  attachPracticeIndex(data.practiceIndex || {});
 }
 
 // Banco de práctica: ejercicios extra por bloque de teoría, escritos aparte del
-// curso para no engordar la lección. Se cuelgan del bloque como `practiceBank`.
-// La lección sigue usando su miniQuiz de siempre; la pestaña Práctica ofrece
-// además todo el banco, que es donde vive el grueso de los ejercicios.
-function attachPracticeBank(bank) {
-  const items = applyTokens(bank) || {};
+// curso para no engordar la lección.
+//
+// En el arranque NO viajan los ejercicios, sólo cuántos tiene cada teoría
+// (`bankN`): son 5.678 y bajarlos de golpe eran ~2 MB que dejaban la pantalla
+// en blanco. Con el conteo ya se pintan los totales del cuaderno; los ejercicios
+// se piden con `fetchBank` cuando el alumno abre esa tanda.
+function attachPracticeIndex(index) {
+  const conteos = index || {};
   course.modules.forEach(m => m.lessons.forEach(l => (l.contentBlocks || []).forEach(b => {
-    const extra = items[b.id];
-    if (extra && extra.length) b.practiceBank = extra;
+    const n = conteos[b.id];
+    if (n) b.bankN = n;
   })));
 }
+
+// Trae (una sola vez por bloque) los ejercicios del banco de esa teoría.
+const _bankPend = {};
+function fetchBank(block) {
+  if (!block || !block.bankN) return Promise.resolve(null);
+  if (block.practiceBank) return Promise.resolve(block.practiceBank);
+  if (_bankPend[block.id]) return _bankPend[block.id];
+  const url = '/api/course/practice?t=' + encodeURIComponent(DEMO.courseToken || '')
+    + '&ids=' + encodeURIComponent(block.id);
+  _bankPend[block.id] = fetch(url, { credentials: 'same-origin' })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('banco ' + r.status)))
+    .then(j => {
+      const items = applyTokens((j.practice || {})[block.id] || []);
+      block.practiceBank = items;
+      block.bankN = items.length || block.bankN;
+      return items;
+    })
+    .catch(e => { delete _bankPend[block.id]; throw e; });
+  return _bankPend[block.id];
+}
+
 
 
 // WIPED: una vez que el usuario pide "Borrar TODO", ninguna escritura tardía
