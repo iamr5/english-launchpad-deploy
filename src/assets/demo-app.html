@@ -6430,18 +6430,23 @@ async function spSaveAttempt(blob, q, attemptNo, durationMs, localResult, aiResu
 function renderSpeaking(host, q, onCorrect, onIncorrect) {
   const libre = ['free', 'guided', 'dialogue'].includes(q.mode);
   const kicker = libre ? 'Habla libremente' : (q.mode === 'read' ? 'Lee en voz alta' : 'Repite en voz alta');
-  let grabando = false, rec = null, recog = null, cerrado = false, attemptNo = 0, beganAt = 0;
-  let localText = '', recognitionDone = Promise.resolve();
-  let audioUrl = '';
+  let rec = null, recog = null, cerrado = false, attemptNo = 0, beganAt = 0;
+  let localText = '', recognitionDone = Promise.resolve(), grabando = false, procesando = false;
+  let audioUrl = '', micListo = false;
 
-  host.innerHTML = `<div class="q-kicker">${kicker} · piloto paralelo</div>
-    <div class="q-question">${escapeHtml(q.prompt || '')}</div>
-    ${libre ? `<div class="sp-task">${escapeHtml(q.task || '')}</div>`
-      : `<div class="sp-target" id="sp-t">${escapeHtml(q.target || '')}</div>
+  const consigna = libre ? (q.taskEs || q.promptEs || q.task || '') : (q.promptEs || q.prompt || '');
+  const glosas = (q.gloss || []).slice(0, 8);
+
+  host.innerHTML = `<div class="q-kicker">${kicker}</div>
+    <div class="q-question">${escapeHtml(consigna)}</div>
+    ${q.prompt && q.promptEs ? `<div class="sp-en">${escapeHtml(libre ? (q.task || q.prompt) : q.prompt)}</div>` : ''}
+    ${libre ? '' : `<div class="sp-target" id="sp-t">${escapeHtml(q.target || '')}</div>
+         <div class="sp-trad"><b>Significa:</b> ${escapeHtml(q.es || q.modelEs || '')}</div>
+         ${glosas.length ? `<div class="sp-gloss">${glosas.map(g => `<span><b>${escapeHtml(g.w)}</b> ${escapeHtml(g.es)}</span>`).join('')}</div>` : ''}
          <button class="btn blue" id="sp-listen" type="button" style="margin-top:10px">Escuchar el modelo</button>`}
     <div class="sp-row">
-      <button class="sp-mic" id="sp-mic" type="button" aria-label="Permitir micrófono y grabar">${micSvg(30)}</button>
-      <div class="sp-hint" id="sp-hint">Toca el micrófono. Primero pediremos permiso; la grabación empieza sólo cuando esté listo.</div>
+      <button class="sp-mic" id="sp-mic" type="button" aria-label="Mantener pulsado para hablar">${micSvg(30)}</button>
+      <div class="sp-hint" id="sp-hint">Mantén pulsado el micrófono mientras hablas y suéltalo al terminar.</div>
     </div><div id="sp-fb"></div>`;
 
   const listen = document.getElementById('sp-listen');
@@ -6449,18 +6454,33 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
   const mic = document.getElementById('sp-mic'), hint = document.getElementById('sp-hint'), fb = document.getElementById('sp-fb');
   function ondas() { fb.innerHTML = '<div class="sp-wave">' + Array.from({ length: 14 }, (_, i) => `<i style="animation-delay:${(i % 7) * .07}s"></i>`).join('') + '</div>'; }
   function cleanupAudio() { if (audioUrl) { URL.revokeObjectURL(audioUrl); audioUrl = ''; } }
+  function reposo(txt) { grabando = false; procesando = false; mic.classList.remove('rec'); mic.disabled = false; hint.textContent = txt; }
+
+  // El permiso se resuelve antes de grabar nada: nunca se evalúa una toma vacía.
+  async function pedirPermiso() {
+    mic.disabled = true; hint.textContent = 'Esperando tu permiso para usar el micrófono…';
+    try { await spMicReady(); micListo = true; reposo('Listo. Ahora mantén pulsado el micrófono mientras hablas.'); }
+    catch (e) { reposo('No pudimos usar el micrófono. Permite el acceso en tu navegador y vuelve a intentarlo.'); }
+  }
 
   async function startAttempt() {
-    mic.disabled = true; hint.textContent = 'Esperando permiso del micrófono…'; fb.innerHTML = '';
+    if (cerrado || grabando || procesando) return;
+    if (!micListo) return pedirPermiso();
+    grabando = true; fb.innerHTML = '';
     try { rec = await spRecorder(); }
-    catch (e) { mic.disabled = false; hint.textContent = 'No pudimos acceder al micrófono. Permite el acceso en tu navegador y vuelve a tocarlo.'; return; }
-    attemptNo++; beganAt = Date.now(); localText = ''; grabando = true; mic.disabled = false; mic.classList.add('rec');
-    hint.textContent = 'Grabando… habla ahora y toca otra vez al terminar.'; ondas();
+    catch (e) { micListo = false; return reposo('Perdimos el micrófono. Tócalo para volver a darle permiso.'); }
+    if (!grabando) { try { await rec.stop(); } catch (e) {} return; } // soltó antes de arrancar
+    attemptNo++; beganAt = Date.now(); localText = '';
+    mic.classList.add('rec'); hint.textContent = 'Grabando… suelta el botón cuando termines de hablar.'; ondas();
     const localStarted = Date.now();
     recog = spRecognizer();
     if (recog) {
       recognitionDone = new Promise(resolve => {
-        recog.onresult = e => { for (let i = 0; i < e.results.length; i++) localText += ' ' + e.results[i][0].transcript; };
+        recog.onresult = e => {
+          for (let i = e.resultIndex; i < e.results.length; i++) {
+            if (e.results[i].isFinal) localText += ' ' + e.results[i][0].transcript;
+          }
+        };
         recog.onerror = () => resolve(); recog.onend = () => resolve();
         try { recog.start(); } catch (e) { resolve(); }
       }).then(() => Date.now() - localStarted);
@@ -6468,8 +6488,19 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
   }
 
   async function stopAttempt() {
-    grabando = false; mic.classList.remove('rec'); mic.disabled = true;
-    hint.textContent = 'Comparando el reconocimiento local con la IA…'; fb.innerHTML = '<div class="sp-said">Procesando la misma toma por los dos caminos…</div>';
+    if (!grabando) return;
+    const dur = Date.now() - beganAt;
+    grabando = false; mic.classList.remove('rec');
+    if (!rec) return reposo('Mantén pulsado el micrófono mientras hablas.');
+    if (dur < 500) {
+      try { await rec.stop(); } catch (e) {}
+      try { if (recog) recog.stop(); } catch (e) {}
+      fb.innerHTML = '';
+      return reposo('Fue muy corto: mantén pulsado el botón durante toda tu respuesta.');
+    }
+    procesando = true; mic.disabled = true;
+    hint.textContent = 'Comparando el reconocimiento local con la IA…';
+    fb.innerHTML = '<div class="sp-said">Procesando la misma toma por los dos caminos…</div>';
     try { if (recog) recog.stop(); } catch (e) {}
     try {
       const blobPromise = rec.stop();
@@ -6482,14 +6513,13 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
       const localResult = { transcript: localText.trim(), score: cmp.pct, latencyMs: localLatency,
         differences: (cmp.words || []).filter((w, i) => !cmp.hits[i]) };
       const ai = await spEvaluate(blob, q);
-      const saved = await spSaveAttempt(blob, q, attemptNo, Date.now() - beganAt, localResult, ai).catch(() => ({ saved: false, reason: 'save_failed' }));
+      const saved = await spSaveAttempt(blob, q, attemptNo, dur, localResult, ai).catch(() => ({ saved: false, reason: 'save_failed' }));
+      procesando = false;
       showComparison(cmp, localResult, ai, saved);
     } catch (e) {
-      mic.disabled = false;
       const reason = e.code === 'empty_audio' || e.code === 'no_speech' ? 'No se oyó una respuesta completa.' : 'No pudimos terminar la comparación.';
-      fb.innerHTML = `<div class="sp-advice">${reason} No perderás el ejercicio: vuelve a intentarlo.</div>
-        <button class="btn blue" id="sp-retry" style="margin-top:10px">Volver a grabar</button>`;
-      document.getElementById('sp-retry').onclick = () => { fb.innerHTML = ''; hint.textContent = 'Toca el micrófono cuando estés listo.'; mic.disabled = false; };
+      fb.innerHTML = `<div class="sp-advice">${reason} No perderás el ejercicio: vuelve a intentarlo.</div>`;
+      reposo('Mantén pulsado el micrófono y repítelo cuando estés listo.');
     }
   }
 
@@ -6498,6 +6528,10 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
     const localMiss = (localResult.differences || []).slice(0, 6);
     const review = (ai.problemWords || []).slice(0, 6);
     const metrics = ai.metrics || {};
+    if (q.target) {
+      const t = document.getElementById('sp-t');
+      if (t) t.innerHTML = (cmp.words || []).map((w, i) => `<span class="w ${cmp.hits[i] ? 'ok' : 'bad'}">${escapeHtml(w)}</span>`).join(' ');
+    }
     fb.innerHTML = `<audio id="sp-playback" controls src="${audioUrl}" style="width:100%;margin:12px 0"></audio>
       <div class="sp-note">Escúchate y compárate con el modelo antes de continuar.</div>
       <div class="sp-score">
@@ -6515,15 +6549,24 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
       ${ok ? `<button class="btn green" id="sp-next" style="margin-top:12px">Continuar</button>`
         : `<button class="btn amber" id="sp-retry" style="margin-top:12px">Reintentar hasta lograrlo</button>`}`;
     if (ok) {
-      cerrado = true; document.getElementById('sp-next').onclick = () => { cleanupAudio(); onCorrect(); };
+      cerrado = true; mic.disabled = true;
+      document.getElementById('sp-next').onclick = () => { cleanupAudio(); onCorrect(); };
     } else {
-      mic.disabled = false;
-      document.getElementById('sp-retry').onclick = () => { cleanupAudio(); fb.innerHTML = ''; hint.textContent = 'Escucha el modelo y toca el micrófono para volver a grabar.'; };
+      reposo('Escucha el modelo y mantén pulsado el micrófono para volver a grabar.');
+      document.getElementById('sp-retry').onclick = () => {
+        cleanupAudio(); fb.innerHTML = '';
+        if (q.target) { const t = document.getElementById('sp-t'); if (t) t.textContent = q.target; }
+        reposo('Mantén pulsado el micrófono mientras hablas.');
+      };
     }
   }
 
-  mic.onclick = () => { if (cerrado) return; if (!grabando) startAttempt(); else stopAttempt(); };
+  // Pulsar y mantener: quien decide cuándo termina la toma es el alumno.
+  mic.addEventListener('pointerdown', e => { e.preventDefault(); try { mic.setPointerCapture(e.pointerId); } catch (err) {} startAttempt(); });
+  ['pointerup', 'pointercancel'].forEach(ev => mic.addEventListener(ev, e => { e.preventDefault(); stopAttempt(); }));
+  mic.addEventListener('contextmenu', e => e.preventDefault());
 }
+
 
 // La estantería de Speaking dentro de la biblioteca de práctica: un nivel por
 // tarjeta, y al tocarla corre una tanda de 5 ejercicios hablados.
