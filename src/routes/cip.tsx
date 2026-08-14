@@ -265,64 +265,134 @@ function Benefits() {
 
 /* ------------------------------------------------------------ quiz de muestra */
 
+/**
+ * El mismo quiz que ve el alumno en la app: barra segmentada arriba, pregunta a
+ * la izquierda, pastillas de opción con hueco fijo para el icono, franja de
+ * feedback de alto fijo y botón anclado abajo. Nada de esto cambia de tamaño al
+ * responder: el alto de la tarjeta y de cada zona está reservado de antemano.
+ */
+const QUIZ_CSS = `
+.qz { --ink:#3C3C3C; --muted:#8C8C8C; --line:#E5E5E5; --blue:#1CB0F6; --ok:#3FAA24;
+  --okDark:#2E7D1A; --red:#F44336; }
+.qz .q-top { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.qz .segs { display:flex; gap:5px; flex:1 1 auto; }
+.qz .seg { flex:1; height:5px; border-radius:3px; background:var(--line); transition:background .3s; }
+.qz .seg.done { background:var(--ok); }
+.qz .seg.fail { background:var(--red); }
+.qz .seg.now { background:#FF9600; }
+.qz .q-counter { font-size:13px; font-weight:800; color:var(--muted); flex:0 0 auto; min-width:36px; text-align:right; }
+.qz .q-kicker { font-size:12px; font-weight:800; letter-spacing:1px; color:var(--muted); text-transform:uppercase; margin:0 0 10px; }
+.qz .q-question { font-size:23px; font-weight:800; text-align:left; color:var(--ink); line-height:1.3;
+  margin:0 0 22px; min-height:60px; }
+.qz .q-options { display:flex; flex-direction:column; gap:11px; }
+.qz .opt { border:2px solid var(--line); background:#fff; border-radius:16px; color:var(--ink);
+  padding:16px 18px; font-size:17px; font-weight:700; text-align:left; cursor:pointer; font-family:inherit;
+  display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; }
+.qz .opt:disabled { cursor:default; }
+.qz .opt .opt-ic { flex:0 0 22px; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+.qz .opt.correct { background:color-mix(in srgb, var(--ok) 12%, transparent); border-color:var(--ok); color:var(--okDark); }
+.qz .opt.wrong { background:rgba(244,67,54,.08); border-color:var(--red); color:#B3261E; }
+.qz .fb-slot { min-height:64px; margin:14px 2px 2px; display:flex; align-items:flex-start; overflow:hidden; }
+.qz .fb-line { font-size:15px; font-weight:700; line-height:1.4; text-align:left; }
+.qz .fb-line strong { display:block; font-size:16px; font-weight:800; }
+.qz .fb-line.ok strong { color:var(--okDark); }
+.qz .fb-line.no strong { color:#B3261E; }
+.qz .btn { width:100%; border:none; border-radius:18px; padding:14px; font-family:inherit; font-size:18px;
+  font-weight:700; color:#fff; cursor:pointer; min-height:52px; margin-top:auto;
+  transition:transform .12s ease, box-shadow .12s ease; }
+.qz .btn:disabled { opacity:.45; cursor:default; box-shadow:none; }
+.qz .btn:not(:disabled) { box-shadow:0 4px 0 var(--lip), 0 6px 14px rgba(0,0,0,.16); }
+.qz .btn:not(:disabled):active { transform:translateY(2px); box-shadow:0 2px 0 var(--lip), 0 3px 8px rgba(0,0,0,.14); }
+`;
+
 function SampleQuiz() {
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
+  const [marks, setMarks] = useState<("done" | "fail")[]>([]);
   const q = SAMPLE[i]!;
+  const done = picked !== null;
+  const right = picked === q.ok;
+  const last = i === SAMPLE.length - 1;
+
+  function choose(k: number) {
+    if (done) return;
+    setPicked(k);
+    setMarks((m) => [...m, k === q.ok ? "done" : "fail"]);
+  }
+
+  function next() {
+    if (last) return;
+    setI(i + 1);
+    setPicked(null);
+  }
 
   return (
     <section className="bg-slate-50 px-5 py-14">
+      <style dangerouslySetInnerHTML={{ __html: QUIZ_CSS }} />
       <div className="mx-auto max-w-2xl">
         <h2 className="text-center text-3xl font-black">Pruébalo ahora mismo</h2>
         <p className="mt-2 text-center text-slate-600">
           Tres ejercicios reales del curso. Así se siente cada día.
         </p>
 
-        <div className="mt-7 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-          <div className="mb-3 text-xs font-bold text-slate-400">
-            Ejercicio {i + 1} de {SAMPLE.length}
-          </div>
-          <p className="text-xl font-semibold">{q.q}</p>
-          <div className="mt-4 grid gap-2">
-            {q.opts.map((o, k) => {
-              const done = picked !== null;
-              const good = k === q.ok;
-              const bg = !done ? "" : good ? "#dcfce7" : k === picked ? "#fee2e2" : "";
-              const bd = !done ? "#e2e8f0" : good ? "#16a34a" : k === picked ? "#dc2626" : "#e2e8f0";
-              return (
-                <button
-                  key={o}
-                  onClick={() => picked === null && setPicked(k)}
-                  className="rounded-xl border-2 px-4 py-3 text-left font-medium transition"
-                  style={{ background: bg, borderColor: bd }}
-                >
-                  {o}
-                </button>
-              );
-            })}
+        {/* Alto fijo: la tarjeta no crece ni encoge al responder o avanzar. */}
+        <div className="qz mt-7 flex h-[620px] flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg sm:h-[600px]">
+          <div className="q-top">
+            <div className="segs">
+              {SAMPLE.map((_, k) => (
+                <div
+                  key={k}
+                  className={`seg ${marks[k] ?? (k === i ? "now" : "")}`}
+                />
+              ))}
+            </div>
+            <div className="q-counter">
+              {i + 1}/{SAMPLE.length}
+            </div>
           </div>
 
-          {picked !== null && (
-            <div className="mt-4 rounded-xl bg-slate-100 p-4 text-sm">
-              <strong>{picked === q.ok ? "¡Correcto!" : "Casi."}</strong> {q.tip}
-              {i < SAMPLE.length - 1 ? (
-                <button
-                  onClick={() => {
-                    setI(i + 1);
-                    setPicked(null);
-                  }}
-                  className="mt-3 block w-full rounded-xl py-3 font-bold text-white"
-                  style={{ background: "var(--cta)" }}
-                >
-                  Siguiente ejercicio
-                </button>
-              ) : (
-                <p className="mt-3 font-semibold">
-                  Y así hay 8.127 más, con corrección al instante.
-                </p>
-              )}
-            </div>
-          )}
+          <p className="q-kicker">Elige la opción correcta</p>
+          <p className="q-question">{q.q}</p>
+
+          <div className="q-options">
+            {q.opts.map((o, k) => (
+              <button
+                key={o}
+                type="button"
+                disabled={done}
+                onClick={() => choose(k)}
+                className={`opt ${done && k === q.ok ? "correct" : done && k === picked ? "wrong" : ""}`}
+              >
+                <span>{o}</span>
+                <span className="opt-ic">
+                  {done && k === q.ok ? "✓" : done && k === picked ? "✕" : ""}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div className="fb-slot">
+            {done && (
+              <p className={`fb-line ${right ? "ok" : "no"}`}>
+                <strong>{right ? "¡Correcto!" : "Casi."}</strong>
+                {q.tip}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="button"
+            className="btn"
+            disabled={!done}
+            onClick={next}
+            style={{ background: "var(--cta)", ["--lip" as string]: "rgba(0,0,0,.28)" }}
+          >
+            {!done
+              ? "Elige una opción"
+              : last
+                ? "Y así hay 8.127 ejercicios más"
+                : "Siguiente ejercicio"}
+          </button>
         </div>
       </div>
     </section>
