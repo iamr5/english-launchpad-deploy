@@ -470,6 +470,124 @@
   .vcard.heard .vcard-ic { color: var(--blue); }
   .vcard.speaking { border-color: var(--blue); }
   .vcard.speaking .vcard-ic { color: var(--blue); }
+
+  /* ===== Vocabulario v2: índice plegable, tandas de 10 y definiciones =====
+     Con 247 temas, una rejilla plana de fichas grandes es una pared. Ahora la
+     sección se pliega, el tema se lee en filas y las palabras se parten en
+     tandas de diez con su examen: cada pantalla tiene principio y final. */
+  .vico { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 13px;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--accent) 12%, #fff); color: var(--accent); }
+  .vico svg { display: block; width: 23px; height: 23px; }
+  .vico.big { width: 46px; height: 46px; border-radius: 16px; }
+  .vico.big svg { width: 28px; height: 28px; }
+
+  /* Filtros del índice. Cuatro estados, no un menú: se ven todos a la vez. */
+  .vfil { display: flex; gap: 7px; margin: 0 0 15px; overflow-x: auto; padding-bottom: 2px;
+    scrollbar-width: none; }
+  .vfil::-webkit-scrollbar { display: none; }
+  .vfil button { flex: 0 0 auto; font: inherit; font-size: 12.5px; font-weight: 800;
+    color: var(--muted2); background: #fff; border: 2px solid var(--line);
+    border-radius: 999px; padding: 7px 13px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; }
+  .vfil button.on { color: #fff; background: var(--accent); border-color: var(--accent); }
+
+  /* Continuar donde quedaste. */
+  .vsigue { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 18px;
+    padding: 11px 13px; margin: 0 0 16px; cursor: pointer; font-family: inherit;
+    -webkit-tap-highlight-color: transparent; }
+  .vsigue:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .vsigue-t { flex: 1 1 auto; min-width: 0; }
+  .vsigue-t b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.2;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vsigue-t small { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted2); }
+  .vsigue-go { flex: 0 0 auto; font-size: 12px; font-weight: 800; color: var(--accent); }
+
+  /* Sección plegable. */
+  .vsec { margin-bottom: 11px; border: 2px solid var(--line); border-radius: 18px;
+    background: #fff; overflow: hidden; }
+  .vsec-h { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    padding: 11px 13px; background: none; border: none; cursor: pointer; font-family: inherit;
+    -webkit-tap-highlight-color: transparent; }
+  .vsec-ht { flex: 1 1 auto; min-width: 0; }
+  .vsec-ht b { display: block; font-size: 15.5px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+  .vsec-ht small { display: block; margin-top: 3px; font-size: 11.5px; font-weight: 700; color: var(--muted2); }
+  .vsec-bar { display: block; margin-top: 6px; width: 100%; height: 6px; border-radius: 999px;
+    background: var(--gray); overflow: hidden; }
+  .vsec-bar i { display: block; height: 100%; border-radius: 999px; background: var(--blue); }
+  .vsec-esp { display: inline-block; margin-left: 6px; font-size: 9.5px; font-weight: 800;
+    letter-spacing: .5px; text-transform: uppercase; color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, #fff); border-radius: 999px; padding: 2px 7px;
+    vertical-align: 2px; }
+  .vsec-ch { flex: 0 0 auto; width: 20px; height: 20px; color: var(--muted2);
+    transition: transform .18s ease; }
+  .vsec.open .vsec-ch { transform: rotate(180deg); }
+  .vsec-body { border-top: 2px solid var(--line); padding: 8px; display: none; }
+  .vsec.open .vsec-body { display: block; }
+
+  /* Fila de tema: entra el triple de temas por pantalla que la ficha grande. */
+  .vrow { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    background: #fff; border: 2px solid transparent; border-radius: 14px; padding: 8px 8px;
+    cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+  .vrow + .vrow { margin-top: 2px; }
+  .vrow:active { background: var(--canvas); }
+  .vrow-t { flex: 1 1 auto; min-width: 0; }
+  .vrow-t b { display: block; font-size: 14.5px; font-weight: 800; color: var(--ink); line-height: 1.2;
+    overflow-wrap: anywhere; }
+  .vrow-bar { display: block; margin-top: 6px; width: 100%; height: 6px; border-radius: 999px;
+    background: var(--gray); overflow: hidden; }
+  .vrow-bar i { display: block; height: 100%; border-radius: 999px; background: var(--blue);
+    transition: width .25s ease; }
+  .vrow-c { display: block; margin-top: 4px; font-size: 11px; font-weight: 800; color: var(--muted2); }
+  .vrow-ok { color: var(--okDark); }
+  .vrow.full .vico { background: color-mix(in srgb, var(--ok) 14%, #fff); color: var(--okDark); }
+
+  /* Tandas de diez. */
+  .vt-intro { margin: 0 2px 12px; font-size: 12.5px; font-weight: 700; line-height: 1.45; color: var(--muted); }
+  .vt-card { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px;
+    padding: 10px 12px; margin: 0 2px 9px; cursor: pointer; font-family: inherit;
+    -webkit-tap-highlight-color: transparent; }
+  .vt-card:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .vt-n { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; font-size: 14px; font-weight: 800;
+    color: var(--blue); background: color-mix(in srgb, var(--blue) 12%, transparent); }
+  .vt-t { flex: 1 1 auto; min-width: 0; }
+  .vt-t b { display: block; font-size: 14.5px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+  .vt-t small { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted2); }
+  .vt-card.done { border-color: #BFE6B0; background: #F6FCF3; }
+  .vt-card.done .vt-n { color: var(--okDark); background: color-mix(in srgb, var(--ok) 14%, transparent); }
+  .vt-go { flex: 0 0 auto; color: var(--muted2); width: 18px; height: 18px; }
+
+  /* Palabra en fila, con su definición desplegable debajo. */
+  .vw { width: 100%; text-align: left; background: #fff; border: 2px solid var(--line);
+    border-bottom-width: 3px; border-radius: 15px; padding: 10px 12px; margin: 0 2px 8px;
+    cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent;
+    display: block; }
+  .vw:active { transform: translateY(1px); border-bottom-width: 2px; }
+  .vw-top { display: flex; align-items: center; gap: 11px; }
+  .vw-ic { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; color: var(--gray);
+    background: var(--canvas); }
+  .vw-ic svg { display: block; width: 20px; height: 20px; }
+  .vw-t { flex: 1 1 auto; min-width: 0; }
+  .vw-t b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.2;
+    overflow-wrap: anywhere; }
+  .vw-t small { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 700; color: var(--muted2);
+    overflow-wrap: anywhere; }
+  .vw-ch { flex: 0 0 auto; width: 18px; height: 18px; color: var(--muted2); transition: transform .18s ease; }
+  .vw.open .vw-ch { transform: rotate(180deg); }
+  .vw-def { display: none; margin-top: 9px; padding-top: 9px; border-top: 2px dashed var(--line);
+    font-size: 12.5px; font-weight: 600; line-height: 1.5; color: var(--muted); }
+  .vw.open .vw-def { display: block; }
+  .vw-def b { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .5px;
+    text-transform: uppercase; color: var(--muted2); margin-bottom: 3px; }
+  .vw-def p { margin: 0 0 8px; }
+  .vw-def p:last-child { margin-bottom: 0; }
+  .vw.heard { border-color: #A5E0FB; }
+  .vw.heard .vw-ic { color: var(--blue); background: #EAF7FE; }
+  .vw.speaking .vw-ic { color: #fff; background: var(--blue); }
   .course-foot .foot-done { display: flex; align-items: center; justify-content: center; gap: 8px;
     font-weight: 700; color: var(--muted2); padding: 10px 0; }
 
@@ -3505,7 +3623,7 @@ function showHomeTab(tab) {
 // nombre del banco especializado (ingeniería, turismo…) cuando la sección viene
 // de uno de ellos; las secciones sin `esp` son el banco general.
 let VOCAB = [];
-// Temas ya descargados: id -> { w:[[en,es,lvl?]], u:{en:[uso, f1, f2, f3]} }.
+// Temas ya descargados: id -> { w:[[en,es,lvl?]], u:{en:[uso, f1, f2, f3]}, d:{en:definición} }.
 const VDATA = {};
 const _vPend = {};
 
@@ -3519,7 +3637,7 @@ function fetchVocabTopic(id) {
     .then(j => {
       const t = (j.topics || {})[id];
       if (!t) throw new Error('vocab vacío');
-      VDATA[id] = { w: t.w || [], u: t.u || {} };
+      VDATA[id] = { w: t.w || [], u: t.u || {}, d: t.d || {} };
       delete _vPend[id];
       return VDATA[id];
     }, e => { delete _vPend[id]; throw e; });
@@ -3549,9 +3667,155 @@ function vocabTotals() {
 // Dos vistas dentro de la MISMA pestaña: el indice de temas y el tema abierto.
 // Se navega en el sitio, con flecha de volver, en vez de abrir una hoja encima:
 // asi la pestaña se comporta como una pantalla y no como un dialogo.
+// ===== Iconos del vocabulario =====
+// Cuarenta iconos dibujados en el idioma de las mascotas: trazo grueso, esquinas
+// redondas, color plano heredado de la marca. Sustituyen a los 189 emojis del
+// sistema, que cambiaban de dibujo en cada teléfono y no eran nuestros. Cada
+// tema apunta a una familia (iconTema), no a un dibujo propio: 40 piezas
+// coherentes valen más que 247 sueltas.
+const VICON = {
+  saludos: '<rect x="2.6" y="4" width="18.8" height="13" rx="5.2"/><path d="M8.4 17v4l4.2-4"/><circle cx="9" cy="10.4" r="1.15" fill="currentColor" stroke="none"/><circle cx="15" cy="10.4" r="1.15" fill="currentColor" stroke="none"/>',
+  familia: '<circle cx="8" cy="7.6" r="3.1"/><circle cx="17" cy="9.2" r="2.3"/><path d="M2.8 19.4c0-3 2.3-5.2 5.2-5.2s5.2 2.2 5.2 5.2"/><path d="M15 19.4c.2-2.3 1.2-3.6 2.9-3.6s2.7 1.3 2.9 3.6"/>',
+  cuerpo: '<circle cx="12" cy="4.8" r="2.6"/><path d="M12 7.6v7.2"/><path d="M6.8 10.6h10.4"/><path d="M12 14.8 9 20.6"/><path d="m12 14.8 3 5.8"/>',
+  ropa: '<path d="M8.6 3.4 5 5.4 3.4 9l3.1 1.5V19.6a1.4 1.4 0 0 0 1.4 1.4h8a1.4 1.4 0 0 0 1.4-1.4V10.5L20.6 9 19 5.4l-3.6-2a3.5 3.5 0 0 1-6.8 0Z"/>',
+  casa: '<path d="M3.6 10.6 12 3.6l8.4 7v8.8a1.6 1.6 0 0 1-1.6 1.6H5.2a1.6 1.6 0 0 1-1.6-1.6Z"/><path d="M9.4 21v-5.6h5.2V21"/>',
+  cocina: '<path d="M4 9.2h16v4.6a5.4 5.4 0 0 1-5.4 5.4H9.4A5.4 5.4 0 0 1 4 13.8Z"/><path d="M4 11.4H2.4"/><path d="M20 11.4h1.6"/><path d="M9.4 6.4c0-1.2 1.4-1.4 1.4-2.8M14 6.4c0-1.2 1.4-1.4 1.4-2.8"/>',
+  comida: '<path d="M5.4 3v5.4a2 2 0 0 0 4 0V3"/><path d="M7.4 8.4V21"/><path d="M17 3c-1.7 1.1-2.5 3.1-2.5 5.6 0 1.7.8 2.6 2.5 2.6s2.5-.9 2.5-2.6C19.5 6.1 18.7 4.1 17 3Z"/><path d="M17 11.2V21"/>',
+  bebidas: '<path d="M6 7.2h12l-1.3 12a2.1 2.1 0 0 1-2.1 1.9H9.4a2.1 2.1 0 0 1-2.1-1.9Z"/><path d="m9.2 7.2 4-4.4"/><path d="M6.6 12.4h10.8"/>',
+  frutas: '<path d="M12 7.4C9 5.4 4.4 7.2 4.4 11.8c0 4.2 3.2 9 5.4 9 1 0 1.3-.6 2.2-.6s1.2.6 2.2.6c2.2 0 5.4-4.8 5.4-9 0-4.6-4.6-6.4-7.6-4.4Z"/><path d="M12 7.4V4.2"/><path d="M12.2 5c1.4-1.8 3.4-1.9 3.4-1.9s0 2-1.7 2.7"/>',
+  restaurante: '<path d="M3.4 19.4h17.2"/><path d="M5 19.4a7 7 0 0 1 14 0"/><path d="M12 12.4v-2"/><circle cx="12" cy="8.6" r="1.4"/>',
+  compras: '<path d="M5.2 8h13.6l-1.1 11.8a1.7 1.7 0 0 1-1.7 1.6H8a1.7 1.7 0 0 1-1.7-1.6Z"/><path d="M9 8.6V6.2a3 3 0 0 1 6 0v2.4"/>',
+  dinero: '<rect x="2.4" y="6.4" width="15.2" height="9.4" rx="2.8"/><circle cx="10" cy="11.1" r="2.4"/><path d="M21.6 9.6v7.8a2.2 2.2 0 0 1-2.2 2.2H7"/>',
+  ciudad: '<rect x="3" y="8.4" width="7" height="12.4" rx="1.8"/><rect x="13" y="3.2" width="8" height="17.6" rx="1.8"/><path d="M6 12h1M6 16h1M16.2 7.2h2M16.2 11.2h2M16.2 15.2h2"/>',
+  transporte: '<rect x="3" y="3.6" width="18" height="12.8" rx="3.4"/><path d="M3 11h18"/><circle cx="7.4" cy="19.2" r="1.7"/><circle cx="16.6" cy="19.2" r="1.7"/><path d="M7 7.4h3M14 7.4h3"/>',
+  viaje: '<rect x="2.8" y="7" width="18.4" height="13" rx="3.4"/><path d="M8.8 7V5.2a2 2 0 0 1 2-2h2.4a2 2 0 0 1 2 2V7"/><path d="M9 11v5M15 11v5"/>',
+  hotel: '<path d="M3 20.4v-9.2"/><path d="M3 16.2h18v4.2"/><path d="M21 16.2v-3.6a2.6 2.6 0 0 0-2.6-2.6H10v6.2"/><circle cx="6.6" cy="12.6" r="1.9"/>',
+  playa: '<circle cx="12" cy="8.4" r="3.8"/><path d="M12 2.2v1.4M12 13.2v1.4M5.6 8.4H4.2M19.8 8.4h-1.4M7.3 3.7l1 1M15.7 12.1l1 1"/><path d="M2.6 19c2 0 2 1.6 4 1.6s2-1.6 4-1.6 2 1.6 4 1.6 2-1.6 4-1.6"/>',
+  naturaleza: '<path d="m2.4 19.4 6.4-10.6 4.2 6.6"/><path d="m11.6 19.4 4.6-7 5.4 7z"/><circle cx="6.6" cy="5.4" r="2.2"/>',
+  animales: '<circle cx="6.8" cy="8.4" r="2"/><circle cx="12" cy="6.2" r="2"/><circle cx="17.2" cy="8.4" r="2"/><path d="M12 11.2c-3.4 0-5.9 2.4-5.9 5 0 2 1.6 3 3.4 3 1.2 0 1.7-.6 2.5-.6s1.3.6 2.5.6c1.8 0 3.4-1 3.4-3 0-2.6-2.5-5-5.9-5Z"/>',
+  clima: '<circle cx="7.6" cy="7.6" r="2.8"/><path d="M7.6 2.4v1.3M2.4 7.6h1.3M3.9 3.9l.9.9"/><path d="M8.6 19.4h8.8a3.4 3.4 0 0 0 .3-6.8 5 5 0 0 0-9.4 1.1 3 3 0 0 0 .3 5.7Z"/>',
+  tiempo: '<rect x="3" y="4.8" width="18" height="16.2" rx="3.4"/><path d="M3 10.2h18M8 3v3.6M16 3v3.6"/><circle cx="12" cy="15.4" r="1.5" fill="currentColor" stroke="none"/>',
+  numeros: '<rect x="3" y="3" width="18" height="18" rx="5.4"/><path d="M8.4 9.4 10.4 8v8"/><path d="M13.6 9.4c1.6-1.4 3.8-.4 3.8 1.2 0 1.9-3.6 2.5-3.6 4.8h3.8"/>',
+  colores: '<path d="M12 3.2a8.8 8.8 0 0 0 0 17.6c1.4 0 2-1 1.6-2-.5-1.3.4-2.4 1.8-2.4h2.4a3.7 3.7 0 0 0 3.7-3.7C21.5 7.5 17.3 3.2 12 3.2Z"/><circle cx="8" cy="9.2" r="1.2" fill="currentColor" stroke="none"/><circle cx="12.6" cy="7.2" r="1.2" fill="currentColor" stroke="none"/><circle cx="6.8" cy="14" r="1.2" fill="currentColor" stroke="none"/>',
+  escuela: '<path d="M12 3.6 2.6 8.2 12 12.8l9.4-4.6z"/><path d="M6.6 10.8V16c0 1.8 2.6 3.2 5.4 3.2s5.4-1.4 5.4-3.2v-5.2"/><path d="M21.4 8.6v5.6"/>',
+  oficina: '<rect x="2.6" y="6.8" width="18.8" height="13.4" rx="3.4"/><path d="M8.8 6.8V5.4A2.4 2.4 0 0 1 11.2 3h1.6a2.4 2.4 0 0 1 2.4 2.4v1.4"/><path d="M2.6 12.4h18.8"/>',
+  profesiones: '<path d="M4 15.4a8 8 0 0 1 16 0"/><path d="M2.8 15.4h18.4"/><path d="M9.6 7.8V5.6A1.5 1.5 0 0 1 11.1 4h1.8a1.5 1.5 0 0 1 1.5 1.6v2.2"/><path d="M4.4 19.2h15.2"/>',
+  tecnologia: '<rect x="3" y="4.6" width="18" height="11.6" rx="2.8"/><path d="M1.8 19.6h20.4"/>',
+  internet: '<circle cx="12" cy="12" r="8.6"/><path d="M3.4 12h17.2"/><path d="M12 3.4c2.5 2.4 3.8 5.4 3.8 8.6s-1.3 6.2-3.8 8.6c-2.5-2.4-3.8-5.4-3.8-8.6S9.5 5.8 12 3.4Z"/>',
+  salud: '<path d="M12 20.6S3.4 15.4 3.4 9.6a4.7 4.7 0 0 1 8.6-2.7 4.7 4.7 0 0 1 8.6 2.7c0 5.8-8.6 11-8.6 11Z"/><path d="M6.6 11.4h2.8l1.4-2.4 2 4.6 1.3-2.2h3.3"/>',
+  deporte: '<circle cx="12" cy="12" r="8.6"/><path d="m12 4.2 3.2 5.4-3.2 2.6-3.2-2.6z"/><path d="M3.8 10.4 8.8 9.6M20.2 10.4l-5-.8M6.6 18.8l2.4-4.6M17.4 18.8 15 14.2"/>',
+  musica: '<path d="M9.2 17.8V6.2l10-2.2v11.6"/><circle cx="6.6" cy="18" r="2.6"/><circle cx="16.6" cy="15.8" r="2.6"/>',
+  cine: '<rect x="2.8" y="9" width="18.4" height="11.4" rx="2.8"/><path d="m3.4 9 2.4-4.4 16.6.6-1.8 3.8"/><path d="m9.4 4.7 2 4.1M15 5l2 4"/>',
+  emociones: '<circle cx="12" cy="12" r="8.6"/><circle cx="9" cy="10" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1.2" fill="currentColor" stroke="none"/><path d="M8.2 14.2c2 2 5.6 2 7.6 0"/>',
+  verbos: '<path d="M13.6 2.6 5 13.4h5.6L9.6 21.4 19 9.8h-5.6z"/>',
+  adjetivos: '<path d="m12 3 2.5 5.7 6.2.6-4.7 4.1 1.4 6.1L12 16.2 6.6 19.5 8 13.4 3.3 9.3l6.2-.6z"/>',
+  conectores: '<path d="M10.2 13.6a4.2 4.2 0 0 0 6 0l2.6-2.6a4.2 4.2 0 0 0-6-6l-1.4 1.4"/><path d="M13.8 10.4a4.2 4.2 0 0 0-6 0L5.2 13a4.2 4.2 0 0 0 6 6l1.4-1.4"/>',
+  ingenieria: '<circle cx="12" cy="12" r="3.3"/><path d="M12 2.6v2.7M12 18.7v2.7M2.6 12h2.7M18.7 12h2.7M5.3 5.3l1.9 1.9M16.8 16.8l1.9 1.9M18.7 5.3l-1.9 1.9M7.2 16.8l-1.9 1.9"/>',
+  derecho: '<path d="M12 5.4v15.2M7.4 20.6h9.2"/><path d="M3.6 8.2h16.8"/><path d="M3.6 8.2 1.6 13a2.9 2.9 0 0 0 4 0z"/><path d="m20.4 8.2 2 4.8a2.9 2.9 0 0 1-4 0z"/><circle cx="12" cy="4.4" r="1.5"/>',
+  negocios: '<path d="M3.2 20.4h17.6"/><path d="M6.6 17.4v-5M11 17.4V8.6M15.4 17.4v-3.2M19.8 17.4V4.6"/>',
+  turismo: '<rect x="2.6" y="6.6" width="18.8" height="13" rx="3.6"/><circle cx="12" cy="13.2" r="3.6"/><path d="M8.6 6.6 10 3.8h4l1.4 2.8"/>',
+};
+const VICON_DEF = 'colores';
+
+function iconSvg(name, cls) {
+  const d = VICON[name] || VICON[VICON_DEF];
+  return `<span class="${cls || 'vico'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg></span>`;
+}
+
+// El tema se resuelve por su nombre: una regla por familia, en orden. La primera
+// que encaja gana, así que lo específico va antes que lo general.
+const VICON_REGLAS = [
+  ['saludos', ['saludo', 'despedida', 'cortesia', 'presentarse', 'small talk', 'muletilla', 'disculpa', 'telefon', 'pedir y ofrecer', 'preguntas frecuentes', 'trato con el paciente', 'atencion al cliente']],
+  ['familia', ['familia', 'pariente', 'gente cercana', 'amistad', 'relaciones', 'etapas de la vida', 'yo y mi gente', 'vecindario', 'recursos humanos', 'relacion con las familias', 'derecho de familia']],
+  ['cuerpo', ['cuerpo', 'anatomia', 'aspecto fisico', 'signos vitales']],
+  ['ropa', ['ropa', 'calzado', 'accesorio', 'tallas', 'housekeeping']],
+  ['casa', ['casa', 'mueble', 'decoracion', 'quehacer', 'limpieza', 'alquiler', 'mudanza', 'herramientas del hogar', 'el baño', 'el bano', 'aparatos']],
+  ['cocina', ['cocina', 'cocinar', 'despensa', 'receta', 'panaderia', 'postre']],
+  ['comida', ['comida', 'plato', 'carne', 'pescado', 'sabor', 'textura', 'alimentacion']],
+  ['bebidas', ['bebida']],
+  ['frutas', ['fruta', 'verdura', 'mercado', 'planta', 'arbol']],
+  ['restaurante', ['restaurante', 'bar', 'banquete']],
+  ['compras', ['compra', 'tienda', 'reclamo', 'devolucion', 'venta', 'marketing']],
+  ['dinero', ['dinero', 'banco', 'pago', 'precio', 'ahorro', 'inversion', 'finanza', 'contabilidad', 'sueldo', 'cambio']],
+  ['ciudad', ['ciudad', 'calle', 'direcciones', 'lugares', 'tramite', 'gestion escolar', 'patrimonio', 'construccion', 'obra']],
+  ['transporte', ['transporte', 'carro', 'carretera', 'traslado', 'logistica', 'cadena de suministro']],
+  ['viaje', ['viaje', 'equipaje', 'documento', 'aeropuerto', 'avion', 'reserva', 'horario', 'agencia', 'comercio internacional']],
+  ['hotel', ['hotel', 'recepcion', 'habitacion', 'sueño', 'sueno', 'descanso']],
+  ['playa', ['playa', 'montaña', 'montana', 'paseo', 'aventura', 'vacacion']],
+  ['naturaleza', ['naturaleza', 'paisaje', 'geografia', 'medio ambiente', 'reciclaje', 'espacio', 'astronomia', 'granja']],
+  ['animales', ['animal', 'mascota', 'ave', 'insecto', 'bicho', 'reptil', 'anfibio']],
+  ['clima', ['clima', 'tiempo extremo']],
+  ['tiempo', ['dias de la semana', 'mes', 'fecha', 'la hora', 'tiempo', 'estacion', 'rutina', 'frecuencia', 'planificacion', 'horario']],
+  ['numeros', ['numero', 'cantidad', 'orden', 'medida', 'matematica', 'calculo', 'unidades', 'dosis', 'kpi', 'evaluacion', 'calificacion', 'examenes y notas', 'estadistic']],
+  ['colores', ['color', 'forma', 'arte', 'museo', 'manualidad', 'planos', 'diseño', 'diseno']],
+  ['escuela', ['escuela', 'clase', 'aula', 'salon', 'estudio', 'materia', 'carrera', 'academico', 'didactica', 'metodologia', 'educativ', 'investigacion', 'necesidades educativas', 'convivencia', 'disciplina', 'libro', 'lectura']],
+  ['oficina', ['oficina', 'reunion', 'presentacion', 'correo', 'mensaje', 'documento', 'contrato', 'acuerdo', 'negociar', 'estrategia', 'emprender', 'equipo', 'proyecto']],
+  ['profesiones', ['profesion', 'oficio', 'buscar trabajo', 'trabajo', 'seguridad industrial', 'enfermeria', 'cuidado']],
+  ['tecnologia', ['computadora', 'celular', 'app', 'software', 'programacion', 'problemas tecnicos', 'archivo', 'tecnologia', 'base de datos', 'datos', 'inteligencia artificial', 'electric', 'electronic', 'mecanica', 'maquina', 'material', 'estructura', 'calidad', 'mantenimiento', 'fisica', 'ciencia', 'laboratorio']],
+  ['internet', ['internet', 'redes', 'videollamada', 'seguridad digital', 'en linea', 'online']],
+  ['salud', ['salud', 'medico', 'doctor', 'sintoma', 'dolencia', 'farmacia', 'medicina', 'emergencia', 'triaje', 'cirugia', 'quirofano', 'diagnostic', 'prevencion']],
+  ['deporte', ['deporte', 'gimnasio', 'ejercicio', 'juego', 'videojuego', 'pasatiempo', 'hobbie', 'ocio']],
+  ['musica', ['musica', 'instrumento', 'fiesta', 'celebracion', 'evento']],
+  ['cine', ['cine', 'serie', 'pelicula']],
+  ['emociones', ['emocion', 'sentimiento', 'animo', 'personalidad', 'caracter', 'gusto', 'preferencia', 'salud mental', 'describir personas']],
+  ['verbos', ['verbo', 'accion', 'frasal']],
+  ['adjetivos', ['adjetivo', 'adverbio', 'describir', 'matiz', 'preciso', 'idiomatic', 'collocation', 'falso', 'confunden', 'registro', 'tono', 'prefijo', 'sufijo', 'formal']],
+  ['conectores', ['conector', 'enlaz', 'pronombre', 'posesivo', 'preposicion', 'pregunta', 'acuerdo', 'desacuerdo', 'opinar', 'argumentar', 'discurso', 'gramatica']],
+  ['ingenieria', ['ingenieria']],
+  ['derecho', ['derecho', 'juzgado', 'proceso', 'delito', 'penal', 'prueba', 'testigo', 'apelacion', 'recurso', 'latinismo', 'legal', 'propiedad', 'bienes', 'sociedades', 'laboral']],
+  ['negocios', ['negocio', 'empresa']],
+  ['turismo', ['turismo', 'tour', 'guia', 'cultura']],
+];
+
+const _vIconCache = {};
+function iconTema(nombre, seccion, esp) {
+  const k = (nombre || '') + '|' + (seccion || '') + '|' + (esp || '');
+  if (_vIconCache[k]) return _vIconCache[k];
+  // Dos pasadas: primero el NOMBRE del tema y sólo si no encaja, la sección. Si
+  // no, «Frutas» dentro de «Comida» acabaría con el icono del tenedor y todos
+  // los temas de una sección se verían iguales.
+  // La clave encaja por principio de palabra: si no, «pasatiempos» se llevaría el
+  // icono del reloj por contener «tiempo».
+  const busca = (txt) => {
+    const t = ' ' + txt + ' ';
+    for (const [ic, claves] of VICON_REGLAS) if (claves.some((c) => t.includes(' ' + c))) return ic;
+    return '';
+  };
+  const hit = busca(wNorm(nombre || '')) || busca(wNorm([seccion, esp].filter(Boolean).join(' ')));
+  return (_vIconCache[k] = hit || VICON_DEF);
+}
+
+const V_CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" ' +
+  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+const V_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" ' +
+  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// ESTADO DE LA PESTAÑA
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Tres vistas dentro de la MISMA pestaña: el índice de temas, el tema abierto
+// con sus tandas, y una tanda con sus diez palabras. Se navega en el sitio, con
+// flecha de volver, en vez de abrir hojas encima.
 let VOPEN = null;    // id del tema abierto, o null en el indice
+let VTANDA = null;   // índice de la tanda abierta dentro del tema, o null
 let VSCROLL = 0;     // scroll del indice, para devolverlo tal cual al volver
 let VFILTRO = '';    // texto del buscador del indice
+let VFILTER = 'todos';
+const VABIERTAS = {}; // secciones desplegadas: nombre -> true
+
+// Diez. Ni el tema de 75 palabras se come de una sentada ni el de 12 merece un
+// examen final único: se avanza de diez en diez y cada diez hay una prueba.
+const VTANDA_N = 10;
+function tandasDe(total) { return Math.max(1, Math.ceil(total / VTANDA_N)); }
+function tandaRango(i, total) {
+  const a = i * VTANDA_N;
+  return [a, Math.min(a + VTANDA_N, total)];
+}
+function vocabTandas() { return PROGRESS['__vocabTanda'] = PROGRESS['__vocabTanda'] || {}; }
+function tandasOk(id) { return vocabTandas()[id] || {}; }
+function tandaOk(id, i) { return !!tandasOk(id)[i]; }
+function tandasOkN(id) { return Object.keys(tandasOk(id)).length; }
 
 function vocabChip(id) {
   for (const sec of VOCAB) { const c = sec.chips.find(x => x.id === id); if (c) return { sec, chip: c }; }
@@ -3564,12 +3828,14 @@ function renderVocab() {
   if (VOPEN) renderVocabTema(el); else renderVocabIndice(el);
 }
 
-function openVocabChip(id) {
+function openVocabChip(id, tanda) {
   const found = vocabChip(id);
   if (!found) return;
   const sc = document.querySelector('#screen-course .scroll');
-  VSCROLL = sc ? sc.scrollTop : 0;
+  if (!VOPEN) VSCROLL = sc ? sc.scrollTop : 0;
   VOPEN = id;
+  VTANDA = (typeof tanda === 'number') ? tanda : null;
+  PROGRESS['__vocabLast'] = id; saveProgress(PROGRESS);
   renderVocab();
   if (sc) sc.scrollTop = 0;           // el tema empieza por arriba
   if (!VDATA[id]) fetchVocabTopic(id).then(
@@ -3577,12 +3843,21 @@ function openVocabChip(id) {
     (e) => {
       console.error('[vocab]', e);
       if (VOPEN !== id) return;
-      VOPEN = null; renderVocab();
+      VOPEN = null; VTANDA = null; renderVocab();
       toast('No se pudieron cargar las palabras. Inténtalo de nuevo.');
     });
 }
 
+function abrirTanda(i) {
+  VTANDA = i;
+  renderVocab();
+  const sc = document.querySelector('#screen-course .scroll');
+  if (sc) sc.scrollTop = 0;
+}
+
+// Volver sube un nivel: de la tanda al tema, del tema al índice.
 function closeVocabChip() {
+  if (VTANDA !== null) { VTANDA = null; renderVocab(); return; }
   VOPEN = null;
   renderVocab();
   // Se vuelve al punto exacto del indice: bajar otra vez hasta el tema que
@@ -3598,41 +3873,104 @@ function filtrarVocab(v) {
   if (cont) cont.innerHTML = vocabSecsHtml();
 }
 
+function vocabFiltro(f) {
+  VFILTER = f;
+  const el = document.getElementById('vocab-body');
+  if (!el) return;
+  el.querySelectorAll('.vfil button').forEach(b => b.classList.toggle('on', b.dataset.f === f));
+  const cont = el.querySelector('#vsecs');
+  if (cont) cont.innerHTML = vocabSecsHtml();
+}
+
+function toggleVsec(nombre) {
+  const k = String(nombre);
+  if (VABIERTAS[k]) delete VABIERTAS[k]; else VABIERTAS[k] = true;
+  const el = document.getElementById('vsec-' + wNorm(k).replace(/\s+/g, '-'));
+  if (el) {
+    el.classList.toggle('open', !!VABIERTAS[k]);
+    const h = el.querySelector('.vsec-h');
+    if (h) h.setAttribute('aria-expanded', VABIERTAS[k] ? 'true' : 'false');
+  }
+}
+
+// Un tema pasa el filtro segun su estado, que es el mismo que pinta su fila.
+function chipEstado(c) {
+  const h = chipHeard(c);
+  if (tandasOkN(c.id) >= tandasDe(c.c) || isExamPassed(c.id)) return 'listos';
+  if (h > 0 || tandasOkN(c.id) > 0) return 'curso';
+  return 'nuevos';
+}
+
 function vocabSecsHtml() {
   const q = wNorm(VFILTRO);
   let html = '';
   VOCAB.forEach((sec) => {
-    const chips = q
-      ? sec.chips.filter(c => wNorm(c.n).includes(q) || wNorm(sec.s).includes(q) || wNorm(sec.esp || '').includes(q))
-      : sec.chips;
+    let chips = sec.chips;
+    if (q) chips = chips.filter(c => wNorm(c.n).includes(q) || wNorm(sec.s).includes(q) || wNorm(sec.esp || '').includes(q));
+    if (VFILTER !== 'todos') chips = chips.filter(c => chipEstado(c) === VFILTER);
     if (!chips.length) return;
-    const titulo = sec.esp ? `${escapeHtml(sec.esp)} · ${escapeHtml(sec.s)}` : escapeHtml(sec.s);
-    html += `<div class="vsec"><div class="vsec-h">${titulo}${sec.esp ? '<b class="vsec-esp">especializado</b>' : ''}</div><div class="vsec-grid">` +
+    const key = (sec.esp ? sec.esp + ' ' : '') + sec.s;
+    const abierta = !!VABIERTAS[key] || !!q;
+    const palabras = chips.reduce((a, c) => a + c.c, 0);
+    const oidas = chips.reduce((a, c) => a + chipHeard(c), 0);
+    const pcs = palabras ? Math.round(oidas / palabras * 100) : 0;
+    html += `<div class="vsec${abierta ? ' open' : ''}" id="vsec-${wNorm(key).replace(/\s+/g, '-')}">
+      <button class="vsec-h" aria-expanded="${abierta ? 'true' : 'false'}" onclick="toggleVsec(${JSON.stringify(key).replace(/"/g, '&quot;')})">
+        ${iconSvg(iconTema(sec.s, '', sec.esp))}
+        <span class="vsec-ht">
+          <b>${escapeHtml(sec.esp ? sec.esp + ' · ' + sec.s : sec.s)}${sec.esp ? '<i class="vsec-esp">especializado</i>' : ''}</b>
+          <small>${chips.length} ${chips.length === 1 ? 'tema' : 'temas'} · ${prNum(palabras)} palabras</small>
+          <span class="vsec-bar"><i style="width:${pcs}%"></i></span>
+        </span>
+        <span class="vsec-ch">${V_CHEVRON}</span>
+      </button>
+      <div class="vsec-body">` +
       chips.map((c) => {
         const h = chipHeard(c), pc = Math.round(h / c.c * 100);
-        return `<button class="vchip${h === c.c ? ' full' : ''}" id="vchip-${c.id}"
-                onclick="openVocabChip('${c.id}')">
-          <span class="vchip-e">${c.e}</span>
-          <span class="vchip-n">${escapeHtml(c.n)}</span>
-          <span class="vchip-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                aria-valuenow="${pc}" aria-label="${h} de ${c.c} escuchadas"><i style="width:${pc}%"></i></span>
-          <span class="vchip-c">${h}/${c.c}${isExamPassed(c.id) ? '<b class="vchip-ex">examen ✓</b>' : ''}</span>
+        const tn = tandasDe(c.c), tok = tandasOkN(c.id);
+        const listo = tok >= tn;
+        return `<button class="vrow${listo ? ' full' : ''}" id="vchip-${c.id}" onclick="openVocabChip('${c.id}')">
+          ${iconSvg(iconTema(c.n, sec.s, sec.esp))}
+          <span class="vrow-t">
+            <b>${escapeHtml(c.n)}</b>
+            <span class="vrow-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                  aria-valuenow="${pc}" aria-label="${h} de ${c.c} escuchadas"><i style="width:${pc}%"></i></span>
+            <span class="vrow-c">${h}/${c.c} palabras · ${tok}/${tn} ${tn === 1 ? 'tanda' : 'tandas'}${listo ? ' <b class="vrow-ok">✓ completo</b>' : ''}</span>
+          </span>
+          <span class="vt-go">${V_ARROW}</span>
         </button>`;
       }).join('') + `</div></div>`;
   });
-  return html || `<div class="vocab-vacio">Ningún tema se llama así.</div>`;
+  return html || `<div class="vocab-vacio">Ningún tema encaja con eso.</div>`;
 }
 
 // Se repinta en cada entrada: las barras dependen del progreso.
 function renderVocabIndice(el) {
   const t = vocabTotals();
+  const lastId = PROGRESS['__vocabLast'];
+  const last = lastId ? vocabChip(lastId) : null;
+  let sigue = '';
+  if (last) {
+    const c = last.chip, tn = tandasDe(c.c);
+    let prox = 0; while (prox < tn && tandaOk(c.id, prox)) prox++;
+    const done = prox >= tn;
+    sigue = `<button class="vsigue" onclick="openVocabChip('${c.id}'${done ? '' : ', ' + prox})">
+      ${iconSvg(iconTema(c.n, last.sec.s, last.sec.esp), 'vico big')}
+      <span class="vsigue-t"><b>${escapeHtml(c.n)}</b>
+        <small>${done ? 'Tema completo · repásalo cuando quieras' : 'Sigue en la tanda ' + (prox + 1) + ' de ' + tn}</small></span>
+      <span class="vsigue-go">Continuar</span>
+    </button>`;
+  }
+  const fil = [['todos', 'Todos'], ['curso', 'En curso'], ['nuevos', 'Sin empezar'], ['listos', 'Dominados']];
   el.innerHTML = `<div class="vocab-intro">
       <b>Tu biblioteca de palabras</b>
-      <small>${prNum(t.temas)} temas · ${prNum(t.total)} palabras. Elige uno, escucha sus palabras y hazte su examen.</small>
+      <small>${prNum(t.temas)} temas · ${prNum(t.total)} palabras. Cada tema va en tandas de diez, con su examen al final de cada tanda.</small>
       <span class="vi-count">${prNum(t.heard)} de ${prNum(t.total)} escuchadas</span>
     </div>
+    ${sigue}
     <input class="vbuscar" type="search" placeholder="Buscar un tema…" value="${escapeHtml(VFILTRO)}"
            aria-label="Buscar un tema" oninput="filtrarVocab(this.value)">
+    <div class="vfil">${fil.map(([k, n]) => `<button data-f="${k}" class="${VFILTER === k ? 'on' : ''}" onclick="vocabFiltro('${k}')">${n}</button>`).join('')}</div>
     <div id="vsecs">${vocabSecsHtml()}</div>`;
 }
 
@@ -3641,64 +3979,107 @@ const VS_SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   '<path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/>' +
   '<path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-// El tema abierto: la flecha para subir un nivel y sus palabras en fichas.
+// El tema abierto: cabecera, barra y sus tandas. Dentro de una tanda, sus diez
+// palabras y el examen de esas diez.
 function renderVocabTema(el) {
   const found = vocabChip(VOPEN);
-  if (!found) { VOPEN = null; return renderVocabIndice(el); }
+  if (!found) { VOPEN = null; VTANDA = null; return renderVocabIndice(el); }
   const chip = found.chip, datos = VDATA[chip.id];
-  const cabecera = `<div class="vd-top">
-      <button class="vd-back" onclick="closeVocabChip()" aria-label="Volver a los temas"></button>
-      <div class="vd-t"><b>${chip.e} ${escapeHtml(chip.n)}</b>
-        <small id="vd-sub">${chip.c} palabras</small></div>
+  const ico = iconTema(chip.n, found.sec.s, found.sec.esp);
+  const cabecera = (sub) => `<div class="vd-top">
+      <button class="vd-back" onclick="closeVocabChip()" aria-label="Volver"></button>
+      ${iconSvg(ico, 'vico big')}
+      <div class="vd-t" style="margin-left:10px"><b>${escapeHtml(chip.n)}</b>
+        <small id="vd-sub">${sub}</small></div>
     </div>`;
   // Mientras llegan sus palabras, la cabecera ya está puesta: nunca una pantalla
   // en blanco, sólo el tema cargándose.
   if (!datos) {
-    el.innerHTML = cabecera + `<div class="center-col" style="padding:34px 0">
+    el.innerHTML = cabecera(chip.c + ' palabras') + `<div class="center-col" style="padding:34px 0">
       <div class="pr-spin"></div><div class="result-sub">Cargando las palabras…</div></div>`;
     return;
   }
-  const h = chipHeard(chip), pc = Math.round(h / datos.w.length * 100);
+  const total = datos.w.length;
+  const h = chipHeard(chip), pc = Math.round(h / total * 100);
+  const tn = tandasDe(total);
+
+  if (VTANDA !== null) {
+    const i = Math.max(0, Math.min(VTANDA, tn - 1));
+    const [a, b] = tandaRango(i, total);
+    const palabras = datos.w.slice(a, b);
+    const ok = tandaOk(chip.id, i);
+    el.innerHTML = cabecera(`Tanda ${i + 1} de ${tn} · palabras ${a + 1}–${b}`) +
+      `<div class="vt-intro">Toca cada palabra para escucharla y leer su definición en español. Cuando las tengas, hazte el examen de estas ${palabras.length}.</div>` +
+      palabras.map(([en, es]) => vocabWordHtml(en, es, datos)).join('') +
+      `<button class="vd-exam${ok ? ' done' : ''}" onclick="openVocabExam('${chip.id}', ${i})">
+        <span class="vd-exam-ic">${ok ? checkBold(19, '#3FAA24', 3.2) : playIcon(15, '#1CB0F6')}</span>
+        <span class="vd-exam-t"><b>${ok ? 'Tanda aprobada · repetir examen' : 'Examinarme de estas ' + palabras.length}</b>
+          <small>${palabras.length} ${palabras.length === 1 ? 'pregunta' : 'preguntas'}, una por palabra</small></span>
+      </button>`;
+    el.querySelectorAll('.vw').forEach(c => c.onclick = () => vocabSay(c));
+    return;
+  }
+
+  const tok = tandasOkN(chip.id);
   const examOk = isExamPassed(chip.id);
-  el.innerHTML = cabecera.replace('id="vd-sub">' + chip.c + ' palabras',
-      'id="vd-sub">' + h + ' de ' + datos.w.length + ' escuchadas') +
+  const todasOk = tok >= tn;
+  el.innerHTML = cabecera(`${h} de ${total} escuchadas · ${tok}/${tn} ${tn === 1 ? 'tanda' : 'tandas'}`) +
     `<div class="vd-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pc}"><i style="width:${pc}%"></i></div>
-    <button class="vd-exam${examOk ? ' done' : ''}" onclick="openVocabExam('${chip.id}')">
+    <div class="vt-intro">Este tema va en ${tn} ${tn === 1 ? 'tanda' : 'tandas'} de diez palabras. Cada una termina con su propio examen.</div>` +
+    Array.from({ length: tn }, (_, i) => {
+      const [a, b] = tandaRango(i, total);
+      const ok = tandaOk(chip.id, i);
+      const oidas = datos.w.slice(a, b).filter(p => isHeard(p[0])).length;
+      return `<button class="vt-card${ok ? ' done' : ''}" onclick="abrirTanda(${i})">
+        <span class="vt-n">${ok ? '✓' : i + 1}</span>
+        <span class="vt-t"><b>Tanda ${i + 1} · palabras ${a + 1}–${b}</b>
+          <small>${ok ? 'Aprobada' : oidas + ' de ' + (b - a) + ' escuchadas'}</small></span>
+        <span class="vt-go">${V_ARROW}</span>
+      </button>`;
+    }).join('') +
+    `<button class="vd-exam${examOk ? ' done' : ''}"${todasOk ? '' : ' disabled style="opacity:.55"'} onclick="openVocabExam('${chip.id}')">
       <span class="vd-exam-ic">${examOk ? checkBold(19, '#3FAA24', 3.2) : playIcon(15, '#1CB0F6')}</span>
-      <span class="vd-exam-t"><b>${examOk ? 'Examen aprobado' : 'Hacer el examen'}</b>
-        <small>${datos.w.length} ${datos.w.length === 1 ? 'pregunta' : 'preguntas'}, una por palabra</small></span>
-    </button>
-    <div class="vd-grid">` +
-    datos.w.map(([en, es]) => `<button class="vcard${isHeard(en) ? ' heard' : ''}" data-w="${escapeHtml(en)}">
-        <span class="vcard-ic">${VS_SPEAKER}</span>
-        <span class="vcard-en">${escapeHtml(en)}</span>
-        <span class="vcard-es">${escapeHtml(es)}</span>
-      </button>`).join('') +
-    `</div>`;
-  el.querySelectorAll('.vcard').forEach(c => c.onclick = () => vocabSay(c));
+      <span class="vd-exam-t"><b>${examOk ? 'Examen final aprobado' : 'Examen final del tema'}</b>
+        <small>${todasOk ? 'Todas las palabras del tema, 15 preguntas' : 'Se abre al aprobar las ' + tn + ' tandas'}</small></span>
+    </button>`;
 }
 
-// Escuchar marca la palabra. Una sola vez: volver a darle no suma nada, porque
-// no hay nada mas que sumar.
+// Una palabra: audio arriba, y su definición en español debajo cuando se abre.
+function vocabWordHtml(en, es, datos) {
+  const def = (datos.d || {})[en] || '';
+  const uso = ((datos.u || {})[en] || [])[0] || '';
+  return `<button class="vw${isHeard(en) ? ' heard' : ''}" data-w="${escapeHtml(en)}">
+    <span class="vw-top">
+      <span class="vw-ic">${VS_SPEAKER}</span>
+      <span class="vw-t"><b>${escapeHtml(en)}</b><small>${escapeHtml(es)}</small></span>
+      <span class="vw-ch">${V_CHEVRON}</span>
+    </span>
+    <span class="vw-def">
+      ${def ? `<p><b>Qué significa</b>${escapeHtml(def)}</p>` : `<p><b>Qué significa</b>${escapeHtml(es)}</p>`}
+      ${uso ? `<p><b>Para qué se usa</b>${escapeHtml(uso)}</p>` : ''}
+    </span>
+  </button>`;
+}
+
+// Escuchar marca la palabra y abre su definición. Una sola vez cuenta: volver a
+// darle no suma nada, porque no hay nada mas que sumar.
 function vocabSay(card) {
   const en = card.getAttribute('data-w');
   if (!en) return;
   if (!isHeard(en)) { vocabHeard()[en] = 1; saveProgress(PROGRESS); }
   card.classList.add('heard', 'speaking');
+  card.classList.toggle('open');
   // 0.85 y no el 0.45 del quiz: una palabra suelta a esa velocidad no se
   // reconoce como palabra. interrupt: pulsar otra palabra mientras suena una
   // significa "quiero esta", no "callate".
   speak(en, null, () => card.classList.remove('speaking'), 0.85, true);
   if (!VOPEN || !VDATA[VOPEN]) return;
-  // Solo la cabecera del tema: repintar la rejilla entera con cada toque
-  // cortaria la animacion de la ficha que se acaba de pulsar. El indice se
-  // recalcula solo al volver.
+  // Solo la cabecera del tema: repintar la lista entera con cada toque cortaria
+  // la animacion de la ficha que se acaba de pulsar.
   const total = VDATA[VOPEN].w.length;
   const h = VDATA[VOPEN].w.filter(p => isHeard(p[0])).length, pc = Math.round(h / total * 100);
   // El conteo del tema se guarda: el índice pinta su barra sin las palabras.
   vocabCounts()[VOPEN] = h; saveProgress(PROGRESS);
-  const sub = document.getElementById('vd-sub');
-  if (sub) sub.textContent = `${h} de ${total} escuchadas`;
   const bar = document.querySelector('#vocab-body .vd-bar');
   if (bar) { bar.setAttribute('aria-valuenow', pc); const f = bar.querySelector('i'); if (f) f.style.width = pc + '%'; }
 }
@@ -3773,10 +4154,17 @@ function vocabExamRound(words, usos) {
 // su repaso: se falla una, se repasa al final; se vuelve a fallar, se repite el
 // examen entero. Lo unico propio es de donde salen las preguntas y que se
 // guarda al aprobar.
-function openVocabExam(id) {
+function openVocabExam(id, tanda) {
   const datos = VDATA[id];
   if (!datos || !datos.w.length) return;
-  const words = datos.w, usos = datos.u || {};
+  // Con `tanda` el examen es de esas diez palabras y nada mas: la prueba llega
+  // pegada a lo que acabas de estudiar, no ochenta palabras despues. Sin ella es
+  // el examen final del tema, que solo se abre cuando todas las tandas pasaron.
+  const esTanda = typeof tanda === 'number';
+  const total = datos.w.length;
+  const rango = esTanda ? tandaRango(tanda, total) : [0, total];
+  const words = datos.w.slice(rango[0], rango[1]), usos = datos.u || {};
+  if (!esTanda && tandasOkN(id) < tandasDe(total)) return;
   const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
   let round, redo, idx, correct, results, failedQs, answered = 0;
   _dismissGuard = () => answered > 0;   // ya contestaste algo: preguntar antes de salir
@@ -3817,12 +4205,23 @@ function openVocabExam(id) {
     document.getElementById('mq-action').onclick = onAction;
   }
   function pass() {
-    const found = vocabChip(id), chip = found ? found.chip : { e: '', n: '' };
-    result('check', '#2E7D1A', 'ok', '¡Examen aprobado!',
-      `${chip.e} ${escapeHtml(chip.n)} — ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'}`,
+    const found = vocabChip(id), chip = found ? found.chip : { n: '' };
+    const tn = tandasDe(total);
+    const ultima = esTanda && tandasOkN(id) + (tandaOk(id, tanda) ? 0 : 1) >= tn;
+    result('check', '#2E7D1A', 'ok', esTanda ? `¡Tanda ${tanda + 1} aprobada!` : '¡Examen aprobado!',
+      esTanda
+        ? `${escapeHtml(chip.n)} — palabras ${rango[0] + 1}–${rango[1]}${ultima ? '. Ya puedes hacer el examen final del tema.' : ''}`
+        : `${escapeHtml(chip.n)} — ${words.length} ${words.length === 1 ? 'palabra' : 'palabras'}`,
       'green', 'Continuar', () => {
         stopSpeak(); closeOverlay();
-        vocabExams()[id] = { p: 1, ts: Date.now() };
+        if (esTanda) {
+          vocabTandas()[id] = Object.assign(tandasOk(id), { [tanda]: 1 });
+          // Aprobada la tanda, se sigue con la siguiente: el alumno no tiene que
+          // volver a la lista para saber por donde iba.
+          VTANDA = (tanda + 1 < tn && !tandaOk(id, tanda + 1)) ? tanda + 1 : null;
+        } else {
+          vocabExams()[id] = { p: 1, ts: Date.now() };
+        }
         touchDay(); saveProgress(PROGRESS);
         renderVocab();
       });
