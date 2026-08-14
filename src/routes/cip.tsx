@@ -572,7 +572,7 @@ function ShareButtons({ compact = false }: { compact?: boolean }) {
   const [copied, setCopied] = useState(false);
   const url = "https://aprendoenglish.com/cip";
   const msg =
-    "Colega ingeniero: el CIP puede darnos inglés técnico a todos los colegiados. Solo falta que seamos suficientes. Firma aquí: ";
+    "Colega ingeniero: el CIP puede darnos inglés de A1 a C1, con inglés técnico incluido, a todos los colegiados. Solo falta que seamos suficientes. Firma aquí: ";
 
   const wa = `https://wa.me/?text=${encodeURIComponent(msg + url + "?utm_source=whatsapp")}`;
   const li = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url + "?utm_source=linkedin")}`;
