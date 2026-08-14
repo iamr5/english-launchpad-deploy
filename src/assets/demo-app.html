@@ -2141,7 +2141,21 @@
   .sp-gloss span { padding: 5px 9px; border-radius: 999px; border: 2px solid var(--line);
     background: #fff; font-size: 11.5px; font-weight: 700; color: var(--muted); }
   .sp-gloss b { color: var(--ink); font-weight: 900; }
-  .sp-mic { touch-action: none; user-select: none; -webkit-user-select: none; }
+  .sp-mic { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  .sp-timer { margin-top: 4px; font-size: 13px; font-weight: 900; color: #C1373A; font-variant-numeric: tabular-nums; }
+  .sp-transcript { margin-top: 14px; padding: 14px 15px; border-radius: 15px;
+    border: 2px solid var(--line); background: #fff; }
+  .sp-transcript.vacio { border-color: color-mix(in srgb, #E5474A 45%, var(--line)); }
+  .sp-transcript .lbl, .sp-audio-row .lbl { display: block; font-size: 10.5px; font-weight: 900;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted2); margin-bottom: 6px; }
+  .sp-transcript p { margin: 0; font-size: 16px; line-height: 1.55; font-weight: 700; color: var(--ink);
+    user-select: text; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .sp-audio-row { display: flex; align-items: flex-end; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .sp-audio-row > div { flex: 1 1 220px; min-width: 0; }
+  .sp-audio-row audio { width: 100%; }
+  .sp-details { margin-top: 12px; font-size: 12px; line-height: 1.5; color: var(--muted2); font-weight: 700; }
+  .sp-details summary { cursor: pointer; font-weight: 900; color: var(--muted); }
+  .sp-details > div { margin-top: 6px; overflow-wrap: anywhere; }
   .sp-task { margin: 4px 0 2px; padding: 12px 14px; border-radius: 14px; font-size: 14px; line-height: 1.45;
     border: 2px dashed var(--line); background: #FBFAFC; color: var(--ink); font-weight: 700; }
   .sp-row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
