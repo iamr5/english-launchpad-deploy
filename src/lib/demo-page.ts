@@ -115,6 +115,7 @@ function splashHTML(cfg: DemoConfig) {
   style="--sp-from:${esc(from)};--sp-to:${esc(to)};--sp-glow:${esc(glow)}">
   <div class="sp-deco"></div>
   <div class="sp-mark">${marca}${frase}</div>
+  <div class="sp-hint">Toca para continuar</div>
 </div>`;
 }
 
