@@ -6316,8 +6316,17 @@ function spCompare(target, heard) {
 }
 
 // ---- grabación (WAV completo, no fragmentos de MediaRecorder) ----
+// El permiso se pide una sola vez y el stream queda vivo: así, al mantener
+// pulsado el botón, la grabación empieza en el mismo instante y no se pierde
+// la primera palabra esperando al navegador.
+let SP_STREAM = null;
+async function spMicReady() {
+  if (SP_STREAM && SP_STREAM.getTracks().some(t => t.readyState === 'live')) return SP_STREAM;
+  SP_STREAM = await navigator.mediaDevices.getUserMedia({ audio: true });
+  return SP_STREAM;
+}
 async function spRecorder() {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const stream = await spMicReady();
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
   const source = ctx.createMediaStreamSource(stream);
   const node = ctx.createScriptProcessor(4096, 1, 1);
@@ -6326,14 +6335,14 @@ async function spRecorder() {
   source.connect(node); node.connect(ctx.destination);
   return {
     async stop() {
-      stream.getTracks().forEach(t => t.stop());
-      node.disconnect(); source.disconnect();
+      node.disconnect(); source.disconnect(); // el stream sigue vivo para el siguiente intento
       const rate = ctx.sampleRate;
       await ctx.close();
       return spWav(pcm, rate);
     },
   };
 }
+
 // PCM → WAV mono 16 kHz, 16 bits. Bajar a 16 kHz recorta el archivo a un tercio
 // sin que la transcripción pierda nada.
 function spWav(chunks, rate) {
