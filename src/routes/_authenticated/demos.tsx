@@ -1737,7 +1737,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
               <ColorField
                 label="Botones de acción"
-                hint="Empecemos, Continuar, Empezar; y el acierto en los quizzes."
+                hint="Empecemos, Continuar, Empezar. El acierto y el error de los quizzes siguen siendo verde y rojo, no se personalizan."
                 value={get(cfg, "colors.action", "#3FAA24")}
                 onChange={upd("colors.action")}
               />
