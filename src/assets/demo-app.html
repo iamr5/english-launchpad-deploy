@@ -5070,11 +5070,15 @@ function openPracticeQuiz(lesson, block, bank) {
     // fallos) y aqui solo estas repitiendo algo que ya abriste.
     result('refresh', '#5C5159', 'no', 'Casi lo tienes',
       'Fallaste otra vez. Repite el quiz completo cuando quieras.',
-      'blue', 'Reintentar', () => startRound(shuffle(preguntas), false));
+      'blue', 'Reintentar', () => startRound(tanda(), false));
   }
+  // El banco de una teoría trae muchos más ejercicios de los que se pueden hacer
+  // de una sentada: cada entrada saca una tanda corta y distinta.
+  function tanda() { const s = shuffle(preguntas); return bank ? s.slice(0, 10) : s; }
   sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
-  startRound(shuffle(preguntas), false);
+  startRound(tanda(), false);
 }
+
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // SHEETS / DIALOGS
