@@ -1884,6 +1884,35 @@
   .pr-q.final { background: #FAFBFF; border-color: #DCE3F2; }
   .pr-empty { margin: 2px; padding: 20px 18px; background: #fff; border: 2px solid var(--line);
     border-radius: 18px; text-align: center; }
+  .pr-intro .pr-sub { display: block; margin-top: 6px; font-size: 12px; font-weight: 700; color: var(--muted2); }
+  .pr-chips { display: flex; gap: 7px; overflow-x: auto; padding: 0 2px 12px; scrollbar-width: none; }
+  .pr-chips::-webkit-scrollbar { display: none; }
+  .pr-chip { flex: 0 0 auto; padding: 7px 13px; border-radius: 999px; border: 2px solid var(--line);
+    background: #fff; font-size: 12px; font-weight: 800; color: var(--muted); cursor: pointer; }
+  .pr-chip.on { border-color: var(--blue); color: var(--blue); background: color-mix(in srgb, var(--blue) 8%, #fff); }
+  .pr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .pr-card { position: relative; display: flex; flex-direction: column; gap: 3px; text-align: left;
+    padding: 12px 12px 12px 18px; background: #fff; border: 2px solid var(--line); border-bottom-width: 4px;
+    border-radius: 16px; cursor: pointer; overflow: hidden; }
+  .pr-card:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .pr-card-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 7px; }
+  .pr-card-lvl { font-size: 11px; font-weight: 900; letter-spacing: .04em; }
+  .pr-card-t { font-size: 14px; font-weight: 800; color: var(--ink); line-height: 1.25; }
+  .pr-card-m { font-size: 11px; font-weight: 700; color: var(--muted2); }
+  .pr-card-p { font-size: 11px; font-weight: 800; color: var(--muted2); }
+  .pr-bar { display: block; height: 7px; margin: 6px 0 3px; border-radius: 999px; background: var(--line); overflow: hidden; }
+  .pr-bar i { display: block; height: 100%; border-radius: 999px; }
+  .pr-back { display: inline-flex; align-items: center; gap: 6px; margin: 0 2px 12px; padding: 7px 12px;
+    background: #fff; border: 2px solid var(--line); border-radius: 999px; font-size: 12px; font-weight: 800;
+    color: var(--muted); cursor: pointer; }
+  .pr-back svg { transform: rotate(180deg); }
+  .pr-head { margin: 0 2px 14px; padding: 13px 15px; background: #fff; border: 2px solid var(--line);
+    border-left-width: 6px; border-radius: 16px; }
+  .pr-head b { display: block; font-size: 17px; font-weight: 800; color: var(--ink); line-height: 1.25; }
+  .pr-head small { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted2); }
+  .pr-spin { width: 34px; height: 34px; margin: 0 auto 12px; border-radius: 50%;
+    border: 4px solid var(--line); border-top-color: var(--blue); animation: pr-spin 0.8s linear infinite; }
+  @keyframes pr-spin { to { transform: rotate(360deg); } }
   .pr-empty b { display: block; font-size: 16px; font-weight: 800; color: var(--ink); }
   .pr-empty small { display: block; margin-top: 5px; font-size: 13px; line-height: 1.45; color: var(--muted2); }
 
@@ -4978,6 +5007,7 @@ function practiceItems(lesson) {
 //
 // Aquí NO se filtra por desbloqueo: es un cuaderno de ejercicios y se puede
 // responder por cuenta propia, sin haber pasado la lección.
+const PR_CEFR = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 let PRACTICE_OPEN = null;   // índice en allLessons del libro abierto, o null
 let PRACTICE_FILTER = -1;   // módulo filtrado en la biblioteca, -1 = todos
 const prNum = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -5005,7 +5035,7 @@ function renderPracticeLibrary(el) {
   let totQ = 0, totEj = 0, totHechas = 0, cuerpo = '';
   const chips = [`<button class="pr-chip${PRACTICE_FILTER === -1 ? ' on' : ''}" type="button" data-m="-1">Todos</button>`];
   course.modules.forEach((mod, mi) => {
-    const nivel = mod.level || (typeof CEFR !== 'undefined' && CEFR[mi]) || ('M' + (mi + 1));
+    const nivel = mod.level || PR_CEFR[mi] || ('M' + (mi + 1));
     chips.push(`<button class="pr-chip${PRACTICE_FILTER === mi ? ' on' : ''}" type="button" data-m="${mi}">${escapeHtml(nivel)}</button>`);
     let tarjetas = '';
     mod.lessons.forEach(lesson => {
@@ -5097,6 +5127,17 @@ function practiceRefresh(cambio) {
 // `block` = el bloque cuyo mini-quiz se practica; null = el quiz final.
 // `bank` = se practican los ejercicios extra de ese bloque en vez de su mini-quiz.
 function openPracticeQuiz(lesson, block, bank) {
+  // Los ejercicios del banco no viajan en el arranque: se piden aquí, al abrir la
+  // tanda, con una hoja de "cargando" mientras llegan (nunca pantalla en blanco).
+  if (bank && block && !block.practiceBank) {
+    const ov = document.getElementById('overlay'), sh = document.getElementById('sheet');
+    sh.innerHTML = `<div class="handle"></div><div class="center-col" style="padding:34px 0">
+      <div class="pr-spin"></div><div class="result-sub">Preparando tus ejercicios…</div></div>`;
+    sh.dataset.dismissible = 'true'; ov.classList.add('active');
+    fetchBank(block).then(() => { closeOverlay(); openPracticeQuiz(lesson, block, bank); })
+      .catch(() => { closeOverlay(); toast('No se pudieron cargar los ejercicios. Inténtalo de nuevo.'); });
+    return;
+  }
   const preguntas = block ? (bank ? block.practiceBank : block.miniQuiz) : lesson.quizQuestions;
   if (!preguntas || !preguntas.length) return;
 
