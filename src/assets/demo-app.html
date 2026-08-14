@@ -4902,6 +4902,17 @@ function practiceItems(lesson) {
       open: abierta && i <= last,
       final: false,
     });
+    // Los ejercicios extra del banco de práctica de esa misma teoría. No son
+    // parte de la lección: no la desbloquean ni la bloquean, se hacen aparte.
+    if (b.practiceBank && b.practiceBank.length) items.push({
+      bi: i,
+      bank: true,
+      name: (n ? `Teoría ${n}` : (b.title || 'Sección')) + ' · práctica extra',
+      qs: b.practiceBank.length,
+      done: isMiniQuizCompleted(lesson.id, b.id + '-bank'),
+      open: true,
+      final: false,
+    });
   });
   if (lesson.quizQuestions && lesson.quizQuestions.length) items.push({
     bi: -1,
@@ -4915,6 +4926,7 @@ function practiceItems(lesson) {
   });
   return items;
 }
+
 
 // Se repinta en cada entrada: lo hecho cambia a medida que avanza la ruta.
 // Aquí NO se filtra por desbloqueo: Práctica es un cuaderno de ejercicios y se
