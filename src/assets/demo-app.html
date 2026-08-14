@@ -502,6 +502,23 @@
   .btn.disabled { background: var(--gray); color: #888; }
 
   /* Lesson content */
+  /* Columna de lectura: una línea de 90+ caracteres se lee mal, así que el
+     cuerpo de la lección va acotado y centrado. La banda de color (.g-head) se
+     queda a sangre; sólo se estrecha el texto. */
+  #lesson-body { max-width: 680px; margin: 0 auto; }
+  #lesson-body .g-head { margin-left: -19px; margin-right: -19px; }
+  @media (min-width: 720px) {
+    #lesson-body .g-head { margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
+  }
+  /* Marca dentro de la lectura: filete de acento en las secciones, viñetas y
+     citas con el color de la institución en vez de un gris de sistema. */
+  #lesson-body .sec-collap > .collap-h { border-left: 4px solid var(--accent); border-radius: 4px;
+    padding-left: 12px; }
+  #lesson-body .collap-h .sc-ic-m { color: var(--accent); }
+  #lesson-body .md blockquote { border-left: 4px solid var(--accent); }
+  #lesson-body .md ul li::marker { color: var(--accent); }
+  #lesson-body .md h2, #lesson-body .md h3 { color: var(--accent); }
+  #lesson-body .md thead th { background: color-mix(in srgb, var(--accent) 10%, #fff); }
   .block { margin-bottom: 8px; }
   .titulo h1 { font-size: 27px; font-weight: 800; margin: 0 0 2px; letter-spacing: -.3px; line-height: 1.3; }
   .titulo .tsub { font-size: 18px; font-weight: 600; color: rgba(0,0,0,.45); margin-bottom: 18px; }
@@ -1802,6 +1819,29 @@
      caminito: quien entra aquí no viene a navegar, viene a repetir un quiz.
      Clases propias (pr-*) aunque se parezcan a las de Vocabulary: son dos
      pestañas distintas y compartir clases ata el retoque de una a la otra. */
+  /* Saludo de la Ruta (home) */
+  .home-hi { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 62%, #fff));
+    color: #fff; border-radius: 20px; padding: 16px 17px 14px; margin: 2px 2px 16px;
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 26%, transparent);
+    animation: tr-rise .3s ease both; }
+  .home-hi .hh-top { display: flex; align-items: center; gap: 12px; }
+  .home-hi .hh-txt { flex: 1 1 auto; min-width: 0; }
+  .home-hi .hh-txt b { display: block; font-size: 18px; font-weight: 800; line-height: 1.25;
+    color: var(--brand-ink, #fff); }
+  .home-hi .hh-txt small { display: block; margin-top: 3px; font-size: 13px; font-weight: 600;
+    line-height: 1.35; opacity: .9; }
+  .home-hi .hh-ring { position: relative; flex: 0 0 auto; width: 62px; height: 62px; }
+  .home-hi .hh-ring svg { display: block; transform: rotate(-90deg); }
+  .home-hi .hh-ring circle { fill: none; stroke-width: 7; }
+  .home-hi .hh-ring .track { stroke: rgba(255,255,255,.28); }
+  .home-hi .hh-ring .prog { stroke: #fff; stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .home-hi .hh-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; }
+  .home-hi .hh-stats { display: flex; gap: 8px; margin-top: 13px; }
+  .home-hi .hh-st { flex: 1; background: rgba(255,255,255,.16); border-radius: 13px; padding: 7px 6px;
+    text-align: center; }
+  .home-hi .hh-st b { display: block; font-size: 16px; font-weight: 800; }
+  .home-hi .hh-st i { display: block; font-style: normal; font-size: 11px; font-weight: 700; opacity: .88; margin-top: 1px; }
   .pr-intro { margin: 2px 2px 18px; }
   .pr-intro b { display: block; font-size: 19px; font-weight: 800; color: var(--ink); }
   .pr-intro small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.4; color: var(--muted); }
