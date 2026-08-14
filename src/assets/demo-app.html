@@ -365,6 +365,8 @@
     padding: 7px 4px 6px; font-family: inherit; color: var(--muted2);
     -webkit-tap-highlight-color: transparent; }
   .tab svg { width: 27px; height: 27px; display: block; }
+  /* La mancuerna es un trazo fino; a 27px se ve más pequeña que el resto. */
+  .tab svg.tab-ico-lg { width: 32px; height: 32px; margin: -2px 0 -3px; }
   .tab .tab-lbl { font-size: 12px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; }
   .tab.on { color: var(--blue); background: #DDF4FF; border-color: #A5E0FB; }
   .tab:not(.on):active { background: var(--canvas); }
@@ -679,6 +681,10 @@
   .md th:last-child, .md td:last-child { border-right: none; }
   .md tr:last-child td { border-bottom: none; }
   .md thead th { background: rgba(255,255,255,.55); font-weight: 700; }
+  /* Cabecera de idioma: el texto a la izquierda y la banderita pegada al borde
+     derecho de la celda, no colgando de la última palabra. */
+  .md thead th .th-in { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .md thead th .th-flag { flex: 0 0 auto; width: 24px; height: 18px; display: block; border-radius: 4px; }
   .md tbody td { font-weight: 400; }
 
   .divider { height: 2px; background: var(--gray); margin: 16px 24px; }
@@ -2101,11 +2107,11 @@
            palomita) diría "examen", que es justo lo contrario. -->
       <button class="tab" type="button" role="tab" aria-selected="false"
               aria-controls="practice-body" data-tab="practice" onclick="showHomeTab('practice')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+        <svg class="tab-ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M7 8.2v7.6M4.2 10.1v3.8M17 8.2v7.6M19.8 10.1v3.8M7 12h10"/>
         </svg>
-        <span class="tab-lbl">Práctica</span>
+        <span class="tab-lbl">Practice</span>
       </button>
 
     </nav>
@@ -2595,17 +2601,19 @@ function inlineMd(s) {
   s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
   return s;
 }
+// Banderitas de marca (no emoji: el emoji se ve distinto en cada sistema y
+// aquí queremos siempre el mismo icono).
 function flagFor(header) {
   const h = header.toLowerCase();
-  if (h.includes('español')) return ' 🇪🇸';
-  if (h.includes('inglés') || h.includes('ingles')) return ' 🇬🇧';
+  if (h.includes('español')) return '<img class="th-flag" src="/demo-assets/flag-es.svg" alt="Español">';
+  if (h.includes('inglés') || h.includes('ingles')) return '<img class="th-flag" src="/demo-assets/flag-en.svg" alt="English">';
   return '';
 }
 function renderTable(lines) {
   const cells = (l) => l.split('|').map(c => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''));
   const header = cells(lines[0]);
   let html = '<table><thead><tr>';
-  header.forEach(h => { html += '<th>' + inlineMd(h) + flagFor(h) + '</th>'; });
+  header.forEach(h => { html += '<th><span class="th-in"><span>' + inlineMd(h) + '</span>' + flagFor(h) + '</span></th>'; });
   html += '</tr></thead><tbody>';
   for (let i = 2; i < lines.length; i++) {
     const row = cells(lines[i]);
