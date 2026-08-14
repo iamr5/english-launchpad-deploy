@@ -3926,13 +3926,17 @@ function renderVocab() {
 }
 
 
+let VE4E_BACK = false;  // se entró al tema desde English for Engineering
+
 function openVocabChip(id, tanda) {
   const found = vocabChip(id);
   if (!found) return;
   const sc = document.querySelector('#screen-course .scroll');
   if (!VOPEN) VSCROLL = sc ? sc.scrollTop : 0;
+  VE4E_BACK = VE4E; VE4E = false;
   VOPEN = id;
   VTANDA = (typeof tanda === 'number') ? tanda : null;
+
   PROGRESS['__vocabLast'] = id; saveProgress(PROGRESS);
   renderVocab();
   if (sc) sc.scrollTop = 0;           // el tema empieza por arriba
