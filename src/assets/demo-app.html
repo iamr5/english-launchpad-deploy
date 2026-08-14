@@ -4900,13 +4900,17 @@ function practiceItems(lesson) {
   blocks.forEach((b, i) => {
     if (!(b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length)) return;
     const n = teoriaNumber(blocks, i);
+    const hechoMq = isMiniQuizCompleted(lesson.id, b.id);
     items.push({
       bi: i,
       // El mismo nombre que lleva la seccion dentro de la leccion. Inventarle uno
       // aqui ("Mini-quiz 2") obliga a traducir mentalmente entre las dos pantallas.
       name: n ? `Teoría ${n}` : (b.title || `Sección ${items.length + 1}`),
       qs: b.miniQuiz.length,
-      done: isMiniQuizCompleted(lesson.id, b.id),
+      done: hechoMq,
+      // Ejercicios superados de esta fila. Un quiz de la ruta es todo o nada:
+      // al aprobarlo cuentan sus preguntas, antes no cuenta ninguna.
+      hechas: hechoMq ? b.miniQuiz.length : 0,
       // Mismo criterio que el cuerpo de la leccion: el mini-quiz esta disponible
       // en cuanto su bloque esta desbloqueado.
       open: abierta && i <= last,
@@ -4920,9 +4924,12 @@ function practiceItems(lesson) {
       name: (n ? `Teoría ${n}` : (b.title || 'Sección')) + ' · práctica extra',
       qs: b.practiceBank.length,
       done: isMiniQuizCompleted(lesson.id, b.id + '-bank'),
+      // El banco sale en tandas: cuentan los ejercicios hechos, no la fila.
+      hechas: Math.min(bankDoneCount(lesson.id, b.id + '-bank'), b.practiceBank.length),
       open: true,
       final: false,
     });
+
   });
   if (lesson.quizQuestions && lesson.quizQuestions.length) items.push({
     bi: -1,
