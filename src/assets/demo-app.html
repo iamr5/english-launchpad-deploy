@@ -4955,7 +4955,7 @@ function renderPractice() {
   if (!el || !course) return;
   // Se cuentan EJERCICIOS, no filas: una fila puede ser un quiz de 10 preguntas
   // o una teoría con 40 de práctica extra, y decir "2 de 377" no dice nada.
-  const num = n => n.toLocaleString('es-ES');
+  const num = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   let hechosTot = 0, totales = 0, cuerpo = '';
   course.modules.forEach((mod, mi) => {
     let lecciones = '';
