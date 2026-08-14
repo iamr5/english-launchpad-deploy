@@ -342,11 +342,15 @@ function SampleQuiz() {
   }
 
   function next() {
-    if (last) return;
+    if (last) {
+      document.getElementById("curso")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
     setI(i + 1);
     setPicked(null);
     setSel(null);
   }
+
 
 
   return (
@@ -414,7 +418,7 @@ function SampleQuiz() {
           <button
             type="button"
             className="btn"
-            disabled={sel === null || (done && last)}
+            disabled={!done && sel === null}
             onClick={done ? next : confirm}
             style={{ background: "var(--cta)", ["--lip" as string]: "var(--ctaLip)" }}
           >
@@ -451,7 +455,7 @@ function LiveDemo() {
   }, [on]);
 
   return (
-    <section className="px-5 py-14">
+    <section id="curso" className="px-5 py-14">
       <div className="mx-auto max-w-5xl text-center">
         <h2 className="text-3xl font-black">Este es el curso, sin maquetas</h2>
         <p className="mt-2 text-slate-600">
