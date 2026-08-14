@@ -94,14 +94,27 @@ const SAMPLE: Quiz[] = [
   },
 ];
 
+/** Versión oscurecida de un color hex, para el «labio» inferior de los botones. */
+function darken(hex: string, amount = 0.22) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+  if (!m) return "rgba(0,0,0,.28)";
+  const n = parseInt(m[1]!, 16);
+  const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) =>
+    Math.max(0, Math.round(c * (1 - amount))),
+  );
+  return `rgb(${ch[0]},${ch[1]},${ch[2]})`;
+}
+
 function CipLanding() {
   const b = Route.useLoaderData();
 
   const vars = {
     "--cip": b.accent,
     "--cta": b.button,
+    "--ctaLip": darken(b.button),
     "--hi": b.highlight,
   } as React.CSSProperties;
+
 
   return (
     <main
