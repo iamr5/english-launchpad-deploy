@@ -2108,6 +2108,57 @@
   .pr-empty { margin: 2px; padding: 20px 18px; background: #fff; border: 2px solid var(--line);
     border-radius: 18px; text-align: center; }
   .pr-intro .pr-sub { display: block; margin-top: 6px; font-size: 12px; font-weight: 700; color: var(--muted2); }
+
+  /* ===== Speaking: hablar en voz alta =====
+     Vive dentro de la biblioteca de práctica (su propia estantería) y usa el
+     mismo motor de quizzes: renderSpeaking() es un tipo más de ejercicio. */
+  .sp-shelf { margin: 0 2px 18px; padding: 14px 14px 12px; border: 2px solid var(--line);
+    border-bottom-width: 4px; border-radius: 18px; background: #fff; }
+  .sp-shelf-h { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+  .sp-shelf-h b { font-size: 16px; font-weight: 900; color: var(--ink); }
+  .sp-shelf small { display: block; font-size: 12px; line-height: 1.45; color: var(--muted); }
+  .sp-mic-badge { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px;
+    border-radius: 999px; background: color-mix(in srgb, var(--blue) 14%, #fff); }
+  .sp-levels { display: flex; gap: 8px; margin-top: 11px; overflow-x: auto; scrollbar-width: none; }
+  .sp-levels::-webkit-scrollbar { display: none; }
+  .sp-lvl { flex: 0 0 auto; min-width: 84px; padding: 10px 12px; border-radius: 14px; cursor: pointer;
+    border: 2px solid var(--line); border-bottom-width: 4px; background: #fff; text-align: left; }
+  .sp-lvl:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .sp-lvl b { display: block; font-size: 14px; font-weight: 900; }
+  .sp-lvl span { display: block; margin-top: 1px; font-size: 11px; font-weight: 700; color: var(--muted2); }
+
+  .sp-target { margin: 4px 0 2px; padding: 13px 14px; border-radius: 14px; border: 2px solid var(--line);
+    background: #FBFAFC; font-size: 17px; font-weight: 800; line-height: 1.4; color: var(--ink); }
+  .sp-target .w { padding: 1px 2px; border-radius: 5px; }
+  .sp-target .w.ok { background: color-mix(in srgb, #3FAA24 18%, #fff); color: #2E7D1A; }
+  .sp-target .w.bad { background: color-mix(in srgb, #E5474A 16%, #fff); color: #C1373A; }
+  .sp-task { margin: 4px 0 2px; padding: 12px 14px; border-radius: 14px; font-size: 14px; line-height: 1.45;
+    border: 2px dashed var(--line); background: #FBFAFC; color: var(--ink); font-weight: 700; }
+  .sp-row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .sp-mic { display: inline-flex; align-items: center; justify-content: center; width: 66px; height: 66px;
+    flex: 0 0 auto; border-radius: 999px; border: none; cursor: pointer; color: #fff;
+    background: var(--blue); box-shadow: 0 4px 0 color-mix(in srgb, var(--blue) 65%, #000); }
+  .sp-mic:active { transform: translateY(3px); box-shadow: none; }
+  .sp-mic[disabled] { opacity: .5; cursor: default; }
+  .sp-mic.rec { background: #E5474A; box-shadow: 0 4px 0 #A32C2E; animation: spPulse 1.1s ease-in-out infinite; }
+  @keyframes spPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  .sp-hint { font-size: 12.5px; line-height: 1.45; font-weight: 700; color: var(--muted); }
+  .sp-wave { display: flex; align-items: flex-end; gap: 3px; height: 26px; margin-top: 10px; }
+  .sp-wave i { width: 4px; border-radius: 3px; background: var(--blue); height: 6px;
+    animation: spWave .9s ease-in-out infinite; }
+  @keyframes spWave { 0%, 100% { height: 6px; opacity: .5; } 50% { height: 24px; opacity: 1; } }
+  .sp-score { display: flex; gap: 8px; margin-top: 12px; }
+  .sp-score div { flex: 1; padding: 9px 6px; border-radius: 12px; border: 2px solid var(--line);
+    text-align: center; }
+  .sp-score b { display: block; font-size: 17px; font-weight: 900; color: var(--ink); }
+  .sp-score span { font-size: 10.5px; font-weight: 800; color: var(--muted2); text-transform: uppercase; }
+  .sp-said { margin-top: 12px; font-size: 13px; line-height: 1.45; color: var(--muted); font-weight: 700; }
+  .sp-said i { color: var(--ink); font-style: italic; }
+  .sp-advice { margin-top: 10px; padding: 11px 13px; border-radius: 13px; font-size: 13px; line-height: 1.45;
+    font-weight: 700; background: color-mix(in srgb, var(--blue) 8%, #fff);
+    border: 2px solid color-mix(in srgb, var(--blue) 22%, #fff); color: var(--ink); }
+  .sp-note { margin-top: 10px; font-size: 11.5px; font-weight: 700; color: var(--muted2); }
+
   .pr-chips { display: flex; gap: 7px; overflow-x: auto; padding: 0 2px 12px; scrollbar-width: none; }
   .pr-chips::-webkit-scrollbar { display: none; }
   .pr-chip { flex: 0 0 auto; padding: 7px 13px; border-radius: 999px; border: 2px solid var(--line);
