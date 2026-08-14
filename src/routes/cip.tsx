@@ -382,7 +382,15 @@ function SampleQuiz() {
                 type="button"
                 disabled={done}
                 onClick={() => choose(k)}
-                className={`opt ${done && k === q.ok ? "correct" : done && k === picked ? "wrong" : ""}`}
+                className={`opt ${
+                  done && k === q.ok
+                    ? "correct"
+                    : done && k === picked
+                      ? "wrong"
+                      : !done && k === sel
+                        ? "sel"
+                        : ""
+                }`}
               >
                 <span>{o}</span>
                 <span className="opt-ic">
@@ -404,15 +412,18 @@ function SampleQuiz() {
           <button
             type="button"
             className="btn"
-            disabled={!done}
-            onClick={next}
-            style={{ background: "var(--cta)", ["--lip" as string]: "rgba(0,0,0,.28)" }}
+            disabled={sel === null || (done && last)}
+            onClick={done ? next : confirm}
+            style={{ background: "var(--cta)", ["--lip" as string]: "var(--ctaLip)" }}
           >
             {!done
-              ? "Elige una opción"
+              ? sel === null
+                ? "Elige una opción"
+                : "Confirmar"
               : last
                 ? "Y así hay 8.127 ejercicios más"
                 : "Siguiente ejercicio"}
+
           </button>
         </div>
       </div>
