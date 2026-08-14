@@ -411,6 +411,12 @@ export type DemoConfig = {
      * universidad habla de ciclos y una empresa, de áreas.
      */
     groupLabel?: string;
+    /**
+     * Cómo se llama el grupo en la app: «aula», «ciclo», «curso», «equipo»…
+     * Aparece en frases como «Liga de tu aula» o «Puesto en el aula». Debe
+     * coincidir con el tipo de institución.
+     */
+    groupNoun?: string;
   };
 
   map: {
@@ -503,6 +509,7 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
     dashboardCta: "Ver mi panel de progreso",
     dashboardCtaSub: "Racha, XP, niveles y logros",
     groupLabel: "Inglés · Ciclo III",
+    groupNoun: "aula",
   },
   map: {},
   features: { placement: true, share: true, dashboard: true },

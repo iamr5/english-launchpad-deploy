@@ -2110,6 +2110,14 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 onChange={upd("copy.groupLabel")}
               />
 
+              <Field
+                label="Nombre del grupo en la app"
+                hint="Cómo se llama el grupo dentro de la app: «aula», «ciclo», «curso», «equipo»… Aparece en «Liga de tu aula» y «Puesto en el aula»."
+                value={get(cfg, "copy.groupNoun")}
+                placeholder={DEFAULTS.copy.groupNoun}
+                onChange={upd("copy.groupNoun")}
+              />
+
               <details className="rounded-lg border p-3">
                 <summary className="text-sm font-medium cursor-pointer select-none">
                   Cambiar el texto del botón de progreso
