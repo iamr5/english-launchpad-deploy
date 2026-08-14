@@ -975,10 +975,45 @@
   .pg-hello { font-size: 21px; font-weight: 800; margin: 0 0 2px; }
   .pg-sub { font-size: 14.5px; font-weight: 600; color: var(--muted2); margin-bottom: 11px; }
   .pg-track { display: flex; gap: 5px; }
-  .pg-track .tk { flex: 1; text-align: center; font-size: 11px; font-weight: 800; color: var(--muted2);
+  .pg-track .tk { position: relative; overflow: hidden; flex: 1; text-align: center; font-size: 11px; font-weight: 800; color: var(--muted2);
     padding: 5px 0; border-radius: 9px; background: var(--card); border: 1.5px solid var(--line); }
   .pg-track .tk.done { background: var(--ok); border-color: var(--ok); color: #fff; }
   .pg-track .tk.now { background: var(--amber); border-color: var(--amber); color: #5A3D00; }
+  /* Nivel en curso: el relleno vive DENTRO de la casilla, así el % se lee sin
+     ocupar otra fila. */
+  .pg-track .tk.now { background: rgba(244,167,32,.20); }
+  .pg-track .tk.now > i { position: absolute; inset: 0 auto 0 0; background: var(--amber); border-radius: 8px 0 0 8px;
+    transition: width .6s ease; }
+  .pg-track .tk > span { position: relative; z-index: 1; }
+  /* Semana real: siete puntitos, uno por día. */
+  .pg-week { display: flex; gap: 6px; }
+  .pg-week .wd { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .pg-week .wd .dot { width: 100%; max-width: 34px; aspect-ratio: 1; border-radius: 12px; background: var(--gray);
+    border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; }
+  .pg-week .wd.on .dot { background: var(--ok); border-color: var(--ok); box-shadow: 0 2px 8px rgba(63,170,36,.28); }
+  .pg-week .wd.on .dot::after { content: ''; width: 9px; height: 5px; border: 2.5px solid #fff; border-top: 0; border-right: 0;
+    transform: rotate(-45deg) translateY(-1px); border-radius: 1px; }
+  .pg-week .wd i { font-style: normal; font-size: 11px; font-weight: 800; color: var(--muted2); }
+  .pg-week .wd.today .dot { border-color: var(--blue); }
+  .pg-time { display: flex; gap: 10px; margin-top: 12px; }
+  .pg-time .tt { flex: 1; background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 9px 10px; }
+  .pg-time .tt b { display: block; font-size: 16px; font-weight: 800; }
+  .pg-time .tt span { font-size: 11.5px; font-weight: 700; color: var(--muted2); }
+  /* Consejos: mismo aire que las misiones, sin casilla de check. */
+  .pg-tip { display: flex; align-items: flex-start; gap: 11px; margin-bottom: 11px; }
+  .pg-tip:last-child { margin-bottom: 0; }
+  .pg-tip .tbox { width: 38px; height: 38px; border-radius: 12px; background: var(--card); border: 1.5px solid var(--line);
+    display: flex; align-items: center; justify-content: center; font-size: 19px; flex: 0 0 auto; }
+  .pg-tip .tbox img { width: 22px; height: 22px; }
+  .pg-tip .tt { font-size: 14.5px; font-weight: 800; line-height: 1.25; }
+  .pg-tip .tt small { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted2); margin-top: 2px; }
+  /* Cabecera de reporte: marca de la institución sobre la ficha. */
+  .pg-brandbar { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+  .pg-brandbar .bb-logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 800; }
+  .pg-brandbar .bb-logo img { height: 26px; width: auto; }
+  .pg-brandbar .bb-tag { margin-left: auto; font-size: 11.5px; font-weight: 800; color: var(--muted2);
+    background: var(--card); border: 1.5px solid var(--line); border-radius: 99px; padding: 4px 10px; }
+
   .pg-band { display: flex; gap: 10px; margin-bottom: 14px; }
   .pg-chip { flex: 1; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 11px 8px;
     text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.05); animation: tr-rise .3s ease both; }
