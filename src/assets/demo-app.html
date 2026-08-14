@@ -2246,8 +2246,17 @@ function computeSummary() {
   const daysThisWeek = days.filter(ds => new Date(ds + 'T00:00:00') >= wa).length;
   const tmap = PROGRESS['__time'] || {};
   const weekSecs = Object.keys(tmap).filter(ds => new Date(ds + 'T00:00:00') >= wa).reduce((s, k) => s + (tmap[k] || 0), 0);
+  // Patron de los ultimos siete dias, de hace 6 a hoy: un '1' por dia con
+  // practica. El panel dibuja QUE dias entro, no cuantos, y repartir el
+  // recuento a ojo seria inventarse el calendario de la semana.
+  let weekPattern = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - i);
+    weekPattern += days.indexOf(dayKey(d)) >= 0 ? '1' : '0';
+  }
   return {
     name: prof.name || '', goal: prof.goal || 15,
+    weekPattern: weekPattern, xp: totalXp(),
     levelIdx: ai, level: LEVEL[ai],
     streak: streakDays(), daysThisWeek: daysThisWeek,
     todayMin: Math.floor((tmap[dayKey()] || 0) / 60),
@@ -2823,12 +2832,20 @@ function showSpinner(on) {
     el.hidden = true;
   }
 }
-// El panel de progreso del demo vive en /<slug>/dashboard.
+// El panel de progreso del demo vive en /<slug>/padres.
 function openDashboard() {
+  // El resumen se reescribe justo antes de salir: el panel lo lee de
+  // localStorage, y si el alumno acaba de terminar una leccion tiene que verla
+  // contada al llegar, no en la proxima visita.
+  try { saveSummary(); } catch (e) {}
   // El slug va en la ruta, no en un query param: asi el panel sabe de que demo
   // es y puede pintar la marca de la institucion y su mascota. Sin slug caemos
   // en la direccion vieja, que sirve la plantilla generica.
-  const url = DEMO.slug ? '/' + encodeURIComponent(DEMO.slug) + '/dashboard' : '/demo-dashboard';
+  // /padres (y no /dashboard) porque lo que se pide aqui es SU ficha, no el
+  // panel con la pestana del profesor. ?yo=1 le dice al panel que la ficha es
+  // del alumno que la abre: nombre y numeros reales en vez del de ejemplo.
+  const base = DEMO.slug ? '/' + encodeURIComponent(DEMO.slug) + '/padres' : '/demo-dashboard';
+  const url = base + '?yo=1';
   try { (window.top || window).location.href = url; }
   catch (e) { window.location.href = url; }
 }

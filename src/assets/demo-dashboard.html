@@ -856,6 +856,36 @@
 @media (prefers-reduced-motion:reduce){
   *:not(#parent){animation:none!important; transition:none!important}
 }
+  /* ====== Ficha propia (?yo=1): la abre el alumno desde su app ==============
+     Es el mismo panel y los mismos ids; lo unico que cambia es la ropa. El
+     panel normal se lee como producto de seguimiento —Inter, Bricolage, DM
+     Mono, esquinas de tarjeta— y esta bien que sea asi para la familia y el
+     profe. Pero abierto DESDE la app, ese salto tipografico se siente como
+     salir a otro sitio, cuando deberia sentirse como una pantalla mas del
+     juego. Asi que aqui se toma la voz de la app: redonda y blanda.
+     La pila redonda es la misma de la app y es de sistema —no se descarga
+     nada, asi que esto no anade ni una peticion de red. */
+  body.yo{ --font-round: ui-rounded, 'SF Pro Rounded', 'Baloo 2', 'Quicksand',
+    'Varela Round', 'Segoe UI Variable Display', system-ui, sans-serif; }
+  body.yo, body.yo .hi, body.yo .hi small, body.yo .rachabadge b,
+  body.yo .streak b, body.yo .wksel .wklabel, body.yo .eyebrow,
+  body.yo .seg button, body.yo h3, body.yo h4, body.yo .k, body.yo .l,
+  body.yo .tk span, body.yo .t, body.yo .t small, body.yo .lab,
+  body.yo .backbar button{ font-family: var(--font-round); }
+  /* Bricolage y DM Mono venian apretadas y en versalitas; la voz redonda pide
+     lo contrario, o las mayusculas se leen como un grito. */
+  body.yo .hi, body.yo h3, body.yo h4, body.yo .eyebrow{ letter-spacing: 0; }
+  body.yo h4{ text-transform: none; font-size: 15px; }
+  body.yo .hi{ font-size: 22px; font-weight: 800; }
+  body.yo h3{ font-weight: 800; }
+  /* Esquinas de la app: mas blandas que las de tarjeta de reporte. */
+  body.yo .screen{ border-radius: 26px; }
+  body.yo .s-head{ border-radius: 24px; }
+  body.yo .ring-card, body.yo .sect, body.yo .chip, body.yo .mission,
+  body.yo .evo{ border-radius: 20px; }
+  /* Lo que el resumen de la app no puede sostener con datos reales se esconde
+     desde JS (semanas anteriores, la evolucion de 8 semanas). */
+  body.yo #sect-evo, body.yo #wksel-p{ display: none; }
 </style>
 </head>
 <body>
@@ -955,7 +985,7 @@
                sugerencias: primero lo que paso, luego el consejo. Los datos son
                las ocho semanas del mismo alumno, que ya estaban escritas y solo
                se podian ver de una en una moviendo las flechas. -->
-          <div class="sect">
+          <div class="sect" id="sect-evo">
             <h4>Su evolución <span style="font-family:'Inter';text-transform:none;letter-spacing:0;font-weight:600;font-size:11px">8 semanas</span></h4>
             <div class="evo-grid">
               <figure class="evo" id="ev-dias"><figcaption>Días activos<b>—</b></figcaption></figure>
@@ -3100,6 +3130,111 @@
     p.addEventListener('click',()=>{ if(wkIdx>0){wkIdx--; wkRender();} });
     n.addEventListener('click',()=>{ if(wkIdx<WEEKS.length-1){wkIdx++; wkRender();} }); });
   wkRender();
+
+  // ============ Ficha propia: la abre el alumno desde su app (?yo=1) =========
+  // La app manda aqui con ?yo=1 y deja su resumen en localStorage. Misma URL ⇒
+  // mismo origen ⇒ se comparte sin backend. Entonces la ficha deja de ser la
+  // del alumno de ejemplo y pasa a ser la suya.
+  // Va AL FINAL a proposito: wkRender() acaba de escribir los datos de ejemplo
+  // en estos mismos ids, asi que hay que pintar despues, no antes.
+  // Si no hay resumen —alguien que abre el enlace sin haber usado la app— no se
+  // toca nada y el demo se queda exactamente como estaba.
+  (function(){
+    var q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
+    if (!q || q.get('yo') !== '1') return;
+
+    var S = null, P = null;
+    try { S = JSON.parse(localStorage.getItem('ingles_web_summary_v1') || 'null'); } catch (e) {}
+    try { P = JSON.parse(localStorage.getItem('ingles_web_profile_v1') || 'null'); } catch (e) {}
+    var nombre = (S && S.name) || (P && P.name) || '';
+    if (!nombre) return;              // sin nombre no hay ficha propia que pintar
+    S = S || {};
+
+    // Helpers propios: los de arriba (html/bar) viven dentro de otra funcion.
+    function txt(id, v){ var e = document.getElementById(id); if (e) e.textContent = v; }
+    function wide(id, p){ var e = document.getElementById(id); if (e) e.style.width = p + '%'; }
+    function pct(v){ return v == null ? 100 : Math.max(0, Math.min(100, Math.round(v))); }
+
+    var first = String(nombre).trim().split(/\s+/)[0];
+    // La app es la unica dueña de estos numeros; aqui no se recalcula nada.
+    var dias = S.daysThisWeek || 0;
+    var mins = S.weekMin || 0, hh = Math.floor(mins / 60), mm = mins % 60;
+    var sk = S.skills || {};
+    var nivel = S.level || 'A1';
+
+    document.body.classList.add('yo', 'solo', 'solo-parent');
+    var vp = document.getElementById('parent'); if (vp) vp.classList.add('on');
+
+    txt('p-racha', S.streak || 0);
+    var elDias = document.getElementById('p-dias');
+    var pat = typeof S.weekPattern === 'string' && S.weekPattern.length === 7 ? S.weekPattern : '';
+    if (elDias && pat) {
+      elDias.innerHTML = '<span class="use">' + pat.split('').map(function(c){
+        return '<i class="d' + (c === '1' ? ' on' : '') + '"></i>';
+      }).join('') + '</span>';
+    }
+    txt('p-dias-n', dias + ' / 7');
+    txt('p-tiempo', hh ? hh + ' h ' + (mm < 10 ? '0' + mm : mm) : mm + ' min');
+    txt('p-lecc', S.lessonsDone || 0);
+    txt('p-l-pct', pct(sk.listening) + '%'); wide('p-l-bar', pct(sk.listening));
+    txt('p-r-pct', pct(sk.reading) + '%');   wide('p-r-bar', pct(sk.reading));
+    txt('p-w-pct', pct(sk.writing) + '%');   wide('p-w-bar', pct(sk.writing));
+    // Los XP que faltan para el siguiente nivel los sabe la app, no este panel:
+    // aqui se dice lo que si se puede sostener con el resumen.
+    txt('p-sub', (S.lessonsDone || 0) + ' de ' + (S.lessonsTotal || 0) +
+        ' lecciones · meta diaria ' + (S.goalMin || 15) + ' min');
+
+    // El titulo se arma por nodos y no con innerHTML: el nombre lo escribio el
+    // alumno en la app y entra aqui tal cual.
+    var h3 = document.querySelector('#parent .ring-info h3');
+    if (h3) {
+      h3.textContent = '';
+      var sp = document.createElement('span'); sp.className = 'u-name'; sp.textContent = first;
+      h3.appendChild(sp);
+      h3.appendChild(document.createTextNode(' está en nivel ' + nivel));
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('#parent .u-name'), function(el){
+      el.textContent = first;
+    });
+
+    // El track quiere un promedio en la escala del panel; el equivalente honesto
+    // que hay en el resumen es la media de las tres destrezas.
+    var vals = ['listening','reading','writing'].filter(function(k){ return sk[k] != null; })
+      .map(function(k){ return pct(sk[k]); });
+    var prom = vals.length ? Math.round(vals.reduce(function(a,b){ return a+b; }, 0) / vals.length) : 100;
+    if (typeof pintarTrack === 'function') pintarTrack(nivel, prom);
+
+    // Sugerencias armadas con lo que de verdad dice el resumen. Las de ejemplo
+    // hablaban de un alumno que no es este.
+    var tips = [];
+    if (dias >= 6)      tips.push(['🔥', 'Practicó ' + dias + ' de 7 días', 'La constancia es lo que más suma']);
+    else if (dias > 0)  tips.push(['📅', 'Practicó ' + dias + ' de 7 días', 'Una misma hora cada día ayuda más que sesiones largas']);
+    else                tips.push(['👋', 'Esta semana todavía no hay práctica', 'Con 5 minutos ya cuenta el día']);
+    var flojas = [['listening','Listening'],['reading','Reading'],['writing','Writing']]
+      .filter(function(k){ return sk[k[0]] != null; })
+      .sort(function(a, b){ return sk[a[0]] - sk[b[0]]; });
+    if (flojas.length) {
+      tips.push(['🎯', flojas[0][1] + ' es su punto a reforzar',
+                 'Va en ' + pct(sk[flojas[0][0]]) + '% — el juego se lo repasa solo']);
+    }
+    var faltan = (S.lessonsTotal || 0) - (S.lessonsDone || 0);
+    tips.push(faltan > 0
+      ? ['🎓', 'Le faltan ' + faltan + (faltan === 1 ? ' lección' : ' lecciones') + ' para terminar la ruta', 'Cada lección terminada suma XP']
+      : ['🏆', '¡Ruta completa!', 'Puede repasar las lecciones cuando quiera']);
+
+    Array.prototype.forEach.call(document.querySelectorAll('#parent .tips-list .mission'),
+      function(row, i){
+        var t = tips[i];
+        if (!t) { row.hidden = true; return; }          // menos consejos que huecos
+        var ico = row.querySelector('.box'), cuerpo = row.querySelector('.t');
+        if (ico) ico.textContent = t[0];
+        if (cuerpo) {
+          cuerpo.textContent = t[1] + ' ';
+          var s = document.createElement('small'); s.textContent = t[2];
+          cuerpo.appendChild(s);
+        }
+      });
+  })();
 </script>
 </body>
 </html>
