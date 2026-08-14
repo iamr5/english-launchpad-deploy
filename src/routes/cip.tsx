@@ -455,7 +455,7 @@ function LiveDemo() {
   }, [on]);
 
   return (
-    <section className="px-5 py-14">
+    <section id="curso" className="px-5 py-14">
       <div className="mx-auto max-w-5xl text-center">
         <h2 className="text-3xl font-black">Este es el curso, sin maquetas</h2>
         <p className="mt-2 text-slate-600">
