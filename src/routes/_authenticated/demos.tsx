@@ -53,6 +53,7 @@ import {
   saveMascot,
   type SavedMascot,
 } from "@/lib/mascot-library";
+import { PreinscripcionesPanel } from "@/components/preinscripciones-panel";
 
 import {
   arteAntiguo,
