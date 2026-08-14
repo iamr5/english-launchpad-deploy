@@ -2141,7 +2141,21 @@
   .sp-gloss span { padding: 5px 9px; border-radius: 999px; border: 2px solid var(--line);
     background: #fff; font-size: 11.5px; font-weight: 700; color: var(--muted); }
   .sp-gloss b { color: var(--ink); font-weight: 900; }
-  .sp-mic { touch-action: none; user-select: none; -webkit-user-select: none; }
+  .sp-mic { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  .sp-timer { margin-top: 4px; font-size: 13px; font-weight: 900; color: #C1373A; font-variant-numeric: tabular-nums; }
+  .sp-transcript { margin-top: 14px; padding: 14px 15px; border-radius: 15px;
+    border: 2px solid var(--line); background: #fff; }
+  .sp-transcript.vacio { border-color: color-mix(in srgb, #E5474A 45%, var(--line)); }
+  .sp-transcript .lbl, .sp-audio-row .lbl { display: block; font-size: 10.5px; font-weight: 900;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted2); margin-bottom: 6px; }
+  .sp-transcript p { margin: 0; font-size: 16px; line-height: 1.55; font-weight: 700; color: var(--ink);
+    user-select: text; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .sp-audio-row { display: flex; align-items: flex-end; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .sp-audio-row > div { flex: 1 1 220px; min-width: 0; }
+  .sp-audio-row audio { width: 100%; }
+  .sp-details { margin-top: 12px; font-size: 12px; line-height: 1.5; color: var(--muted2); font-weight: 700; }
+  .sp-details summary { cursor: pointer; font-weight: 900; color: var(--muted); }
+  .sp-details > div { margin-top: 6px; overflow-wrap: anywhere; }
   .sp-task { margin: 4px 0 2px; padding: 12px 14px; border-radius: 14px; font-size: 14px; line-height: 1.45;
     border: 2px dashed var(--line); background: #FBFAFC; color: var(--ink); font-weight: 700; }
   .sp-row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
@@ -6440,7 +6454,8 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
   const kicker = libre ? 'Habla libremente' : (q.mode === 'read' ? 'Lee en voz alta' : 'Repite en voz alta');
   let rec = null, recog = null, cerrado = false, attemptNo = 0, beganAt = 0;
   let localText = '', recognitionDone = Promise.resolve(), grabando = false, procesando = false;
-  let audioUrl = '', micListo = false;
+  let audioUrl = '', micListo = false, cronoT = null, topeT = null;
+  const MAX_MS = 60000; // corte de seguridad: nadie pierde la toma por olvidar parar
 
   const consigna = libre ? (q.taskEs || q.promptEs || q.task || '') : (q.promptEs || q.prompt || '');
   const glosas = (q.gloss || []).slice(0, 8);
@@ -6453,33 +6468,44 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
          ${glosas.length ? `<div class="sp-gloss">${glosas.map(g => `<span><b>${escapeHtml(g.w)}</b> ${escapeHtml(g.es)}</span>`).join('')}</div>` : ''}
          <button class="btn blue" id="sp-listen" type="button" style="margin-top:10px">Escuchar el modelo</button>`}
     <div class="sp-row">
-      <button class="sp-mic" id="sp-mic" type="button" aria-label="Mantener pulsado para hablar">${micSvg(30)}</button>
-      <div class="sp-hint" id="sp-hint">Mantén pulsado el micrófono mientras hablas y suéltalo al terminar.</div>
+      <button class="sp-mic" id="sp-mic" type="button" aria-label="Grabar tu respuesta">${micSvg(30)}</button>
+      <div>
+        <div class="sp-hint" id="sp-hint">Toca el micrófono para grabar y tócalo otra vez cuando termines.</div>
+        <div class="sp-timer" id="sp-timer" hidden>0:00</div>
+      </div>
     </div><div id="sp-fb"></div>`;
 
   const listen = document.getElementById('sp-listen');
   if (listen) listen.onclick = () => speak(q.target, null, null, 0.85, true);
   const mic = document.getElementById('sp-mic'), hint = document.getElementById('sp-hint'), fb = document.getElementById('sp-fb');
+  const crono = document.getElementById('sp-timer');
   function ondas() { fb.innerHTML = '<div class="sp-wave">' + Array.from({ length: 14 }, (_, i) => `<i style="animation-delay:${(i % 7) * .07}s"></i>`).join('') + '</div>'; }
   function cleanupAudio() { if (audioUrl) { URL.revokeObjectURL(audioUrl); audioUrl = ''; } }
-  function reposo(txt) { grabando = false; procesando = false; mic.classList.remove('rec'); mic.disabled = false; hint.textContent = txt; }
+  function pararCrono() { clearInterval(cronoT); clearTimeout(topeT); cronoT = topeT = null; crono.hidden = true; }
+  function reposo(txt) { grabando = false; procesando = false; pararCrono(); mic.classList.remove('rec'); mic.disabled = false; hint.textContent = txt; }
 
   // El permiso se resuelve antes de grabar nada: nunca se evalúa una toma vacía.
   async function pedirPermiso() {
     mic.disabled = true; hint.textContent = 'Esperando tu permiso para usar el micrófono…';
-    try { await spMicReady(); micListo = true; reposo('Listo. Ahora mantén pulsado el micrófono mientras hablas.'); }
+    try { await spMicReady(); micListo = true; reposo('Listo. Toca el micrófono para empezar a grabar.'); }
     catch (e) { reposo('No pudimos usar el micrófono. Permite el acceso en tu navegador y vuelve a intentarlo.'); }
   }
 
   async function startAttempt() {
     if (cerrado || grabando || procesando) return;
     if (!micListo) return pedirPermiso();
-    grabando = true; fb.innerHTML = '';
+    grabando = true; fb.innerHTML = ''; mic.disabled = true;
     try { rec = await spRecorder(); }
     catch (e) { micListo = false; return reposo('Perdimos el micrófono. Tócalo para volver a darle permiso.'); }
-    if (!grabando) { try { await rec.stop(); } catch (e) {} return; } // soltó antes de arrancar
     attemptNo++; beganAt = Date.now(); localText = '';
-    mic.classList.add('rec'); hint.textContent = 'Grabando… suelta el botón cuando termines de hablar.'; ondas();
+    mic.disabled = false; mic.classList.add('rec');
+    hint.textContent = 'Grabando… toca otra vez cuando termines.'; ondas();
+    crono.hidden = false; crono.textContent = '0:00';
+    cronoT = setInterval(() => {
+      const s = Math.floor((Date.now() - beganAt) / 1000);
+      crono.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    }, 250);
+    topeT = setTimeout(() => { if (grabando) stopAttempt(); }, MAX_MS);
     const localStarted = Date.now();
     recog = spRecognizer();
     if (recog) {
@@ -6498,17 +6524,17 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
   async function stopAttempt() {
     if (!grabando) return;
     const dur = Date.now() - beganAt;
-    grabando = false; mic.classList.remove('rec');
-    if (!rec) return reposo('Mantén pulsado el micrófono mientras hablas.');
+    grabando = false; pararCrono(); mic.classList.remove('rec');
+    if (!rec) return reposo('Toca el micrófono para grabar.');
     if (dur < 500) {
       try { await rec.stop(); } catch (e) {}
       try { if (recog) recog.stop(); } catch (e) {}
       fb.innerHTML = '';
-      return reposo('Fue muy corto: mantén pulsado el botón durante toda tu respuesta.');
+      return reposo('Fue muy corto: graba de nuevo y para recién cuando termines de hablar.');
     }
     procesando = true; mic.disabled = true;
-    hint.textContent = 'Comparando el reconocimiento local con la IA…';
-    fb.innerHTML = '<div class="sp-said">Procesando la misma toma por los dos caminos…</div>';
+    hint.textContent = 'Transcribiendo tu audio…';
+    fb.innerHTML = '<div class="sp-said">Enviando tu grabación a transcribir y evaluar…</div>';
     try { if (recog) recog.stop(); } catch (e) {}
     try {
       const blobPromise = rec.stop();
@@ -6517,63 +6543,80 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
       if (blob.size < 4096) throw Object.assign(new Error('vacío'), { code: 'empty_audio' });
       cleanupAudio(); audioUrl = URL.createObjectURL(blob);
       const localLatency = await localLatencyPromise;
-      const cmp = q.target ? spCompare(q.target, localText.trim()) : { pct: localText.trim() ? 100 : 0, words: [], hits: [] };
-      const localResult = { transcript: localText.trim(), score: cmp.pct, latencyMs: localLatency,
-        differences: (cmp.words || []).filter((w, i) => !cmp.hits[i]) };
+      const cmpLocal = q.target ? spCompare(q.target, localText.trim()) : { pct: localText.trim() ? 100 : 0, words: [], hits: [] };
+      const localResult = { transcript: localText.trim(), score: cmpLocal.pct, latencyMs: localLatency,
+        differences: (cmpLocal.words || []).filter((w, i) => !cmpLocal.hits[i]) };
       const ai = await spEvaluate(blob, q);
       const saved = await spSaveAttempt(blob, q, attemptNo, dur, localResult, ai).catch(() => ({ saved: false, reason: 'save_failed' }));
       procesando = false;
-      showComparison(cmp, localResult, ai, saved);
+      showComparison(localResult, ai, saved);
     } catch (e) {
-      const reason = e.code === 'empty_audio' || e.code === 'no_speech' ? 'No se oyó una respuesta completa.' : 'No pudimos terminar la comparación.';
+      const reason = e.code === 'empty_audio' || e.code === 'no_speech' ? 'No se oyó una respuesta completa.' : 'No pudimos terminar la transcripción.';
       fb.innerHTML = `<div class="sp-advice">${reason} No perderás el ejercicio: vuelve a intentarlo.</div>`;
-      reposo('Mantén pulsado el micrófono y repítelo cuando estés listo.');
+      reposo('Toca el micrófono para grabar de nuevo.');
     }
   }
 
-  function showComparison(cmp, localResult, ai, saved) {
+  // El resultado gira alrededor de la transcripción de la IA: se lee entera
+  // mientras se escucha la propia grabación y se compara con el modelo.
+  function showComparison(localResult, ai, saved) {
     const ok = !!ai.passed;
-    const localMiss = (localResult.differences || []).slice(0, 6);
+    const dicho = (ai.transcript || '').trim();
+    const cmp = (q.target && dicho) ? spCompare(q.target, dicho) : null;
     const review = (ai.problemWords || []).slice(0, 6);
     const metrics = ai.metrics || {};
-    if (q.target) {
+    if (cmp) {
       const t = document.getElementById('sp-t');
-      if (t) t.innerHTML = (cmp.words || []).map((w, i) => `<span class="w ${cmp.hits[i] ? 'ok' : 'bad'}">${escapeHtml(w)}</span>`).join(' ');
+      if (t) t.innerHTML = cmp.words.map((w, i) => `<span class="w ${cmp.hits[i] ? 'ok' : 'bad'}">${escapeHtml(w)}</span>`).join(' ');
     }
-    fb.innerHTML = `<audio id="sp-playback" controls src="${audioUrl}" style="width:100%;margin:12px 0"></audio>
-      <div class="sp-note">Escúchate y compárate con el modelo antes de continuar.</div>
-      <div class="sp-score">
-        <div><b>${localResult.score}%</b><span>Local</span></div>
-        <div><b>${ai.pronunciation ?? '–'}</b><span>IA · pronunciación*</span></div>
-        <div><b>${ai.fluency ?? '–'}</b><span>IA · fluidez</span></div>
-        <div><b>${ai.grammar ?? '–'}</b><span>IA · gramática</span></div>
+    const faltantes = cmp ? cmp.words.filter((w, i) => !cmp.hits[i]) : [];
+    fb.innerHTML = `
+      <div class="sp-transcript ${dicho ? '' : 'vacio'}">
+        <span class="lbl">Lo que se te entendió</span>
+        <p>${dicho ? escapeHtml(dicho) : 'La transcripción llegó vacía: no se reconoció voz en la grabación. Vuelve a grabar más cerca del micrófono.'}</p>
       </div>
-      <div class="sp-said"><b>Navegador:</b> “${escapeHtml(localResult.transcript || 'No produjo transcripción')}”<br><b>IA:</b> “${escapeHtml(ai.transcript || '—')}”</div>
+      <div class="sp-audio-row">
+        <div><span class="lbl">Tu grabación</span><audio id="sp-playback" controls src="${audioUrl}"></audio></div>
+        ${q.target ? `<button class="btn blue" id="sp-listen2" type="button">Escuchar el modelo</button>` : ''}
+      </div>
+      <div class="sp-note">Escúchate mientras lees la transcripción: donde no coinciden, ahí está lo que falta pronunciar.</div>
+      ${cmp ? `<div class="sp-score" style="margin-top:12px"><div><b>${cmp.pct}%</b><span>Palabras del modelo</span></div>
+        <div><b>${ai.pronunciation ?? '–'}</b><span>Pronunciación*</span></div>
+        <div><b>${ai.fluency ?? '–'}</b><span>Fluidez</span></div>
+        <div><b>${ai.grammar ?? '–'}</b><span>Gramática</span></div></div>`
+        : `<div class="sp-score" style="margin-top:12px"><div><b>${ai.pronunciation ?? '–'}</b><span>Pronunciación*</span></div>
+        <div><b>${ai.fluency ?? '–'}</b><span>Fluidez</span></div>
+        <div><b>${ai.grammar ?? '–'}</b><span>Gramática</span></div></div>`}
       <div class="sp-advice"><b>${escapeHtml(ai.headline || '')}</b><br>${escapeHtml(ai.advice || '')}
         ${ai.betterVersion ? `<br><br>Mejor así: <i>${escapeHtml(ai.betterVersion)}</i>` : ''}
-        ${localMiss.length ? `<br><br>El motor local no reconoció: <b>${localMiss.map(escapeHtml).join(', ')}</b>` : ''}
+        ${faltantes.length ? `<br><br>No se te entendió: <b>${faltantes.slice(0, 8).map(escapeHtml).join(', ')}</b>` : ''}
         ${review.length ? `<br><br>Palabras para revisar: <b>${review.map(escapeHtml).join(', ')}</b>` : ''}</div>
-      <div class="sp-note">*La nota de pronunciación es una inferencia de la transcripción, no análisis fonético. Local ${localResult.latencyMs || 0} ms · IA ${metrics.totalMs || 0} ms.${saved.saved ? ' Intento guardado en tu historial privado.' : ' Inicia sesión para conservar audio e historial.'}</div>
+      <details class="sp-details"><summary>Ver comparación local vs IA</summary>
+        <div><b>Navegador:</b> ${escapeHtml(localResult.transcript || 'no produjo transcripción')} · ${localResult.score}% del modelo · ${localResult.latencyMs || 0} ms</div>
+        <div><b>IA:</b> ${escapeHtml(dicho || '—')} · ${metrics.totalMs || 0} ms</div>
+        <div>*La nota de pronunciación se infiere de la transcripción, no es análisis fonético.${saved.saved ? ' Intento guardado en tu historial privado.' : ' Inicia sesión para conservar audio e historial.'}</div>
+      </details>
       ${ok ? `<button class="btn green" id="sp-next" style="margin-top:12px">Continuar</button>`
         : `<button class="btn amber" id="sp-retry" style="margin-top:12px">Reintentar hasta lograrlo</button>`}`;
+    const l2 = document.getElementById('sp-listen2');
+    if (l2) l2.onclick = () => speak(q.target, null, null, 0.85, true);
     if (ok) {
-      cerrado = true; mic.disabled = true;
+      cerrado = true; mic.disabled = true; pararCrono();
       document.getElementById('sp-next').onclick = () => { cleanupAudio(); onCorrect(); };
     } else {
-      reposo('Escucha el modelo y mantén pulsado el micrófono para volver a grabar.');
+      reposo('Escucha el modelo y toca el micrófono para volver a grabar.');
       document.getElementById('sp-retry').onclick = () => {
         cleanupAudio(); fb.innerHTML = '';
         if (q.target) { const t = document.getElementById('sp-t'); if (t) t.textContent = q.target; }
-        reposo('Mantén pulsado el micrófono mientras hablas.');
+        reposo('Toca el micrófono para grabar de nuevo.');
       };
     }
   }
 
-  // Pulsar y mantener: quien decide cuándo termina la toma es el alumno.
-  mic.addEventListener('pointerdown', e => { e.preventDefault(); try { mic.setPointerCapture(e.pointerId); } catch (err) {} startAttempt(); });
-  ['pointerup', 'pointercancel'].forEach(ev => mic.addEventListener(ev, e => { e.preventDefault(); stopAttempt(); }));
-  mic.addEventListener('contextmenu', e => e.preventDefault());
+  // Un toque empieza, otro toque termina: el alumno decide cuándo para.
+  mic.addEventListener('click', () => { if (grabando) stopAttempt(); else startAttempt(); });
 }
+
 
 
 // La estantería de Speaking dentro de la biblioteca de práctica: un nivel por
