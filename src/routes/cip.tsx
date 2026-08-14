@@ -14,33 +14,34 @@ export const Route = createFileRoute("/cip")({
   loader: () => getCipBrand(),
   head: () => ({
     meta: [
-      { title: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP" },
+      { title: "Inglés para los ingenieros del Perú · Preinscripción CIP" },
       {
         name: "description",
         content:
-          "Todavía no existe: se activa si somos suficientes. Deja tu correo y pásale la voz a tus colegas para que el Colegio de Ingenieros lance su plataforma de inglés técnico en un mes.",
+          "Inglés completo de A1 a C1 (MCER), con inglés técnico de ingeniería incluido. Todavía no existe: se activa si somos suficientes. Deja tu correo y pásale la voz a tus colegas.",
       },
       { property: "og:type", content: "website" },
       {
         property: "og:title",
-        content: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP",
+        content: "Inglés para los ingenieros del Perú · Preinscripción CIP",
       },
       {
         property: "og:description",
         content:
-          "La plataforma está construida: 45 microlecciones A1–C1, 8.127 ejercicios y 779 términos de ingeniería. Falta la demanda. Preinscríbete y comparte.",
+          "Curso completo A1–C1 con marca del Colegio: 45 microlecciones, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Falta la demanda. Preinscríbete y comparte.",
       },
       { property: "og:image", content: "https://aprendoenglish.com/social-preview.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
-        content: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP",
+        content: "Inglés para los ingenieros del Perú · Preinscripción CIP",
       },
       {
         name: "twitter:description",
-        content: "Se activa si somos suficientes. Deja tu correo y pásale la voz a tu colega.",
+        content: "Inglés A1–C1 con inglés técnico incluido. Deja tu correo y pásale la voz.",
       },
       { name: "twitter:image", content: "https://aprendoenglish.com/social-preview.jpg" },
+
     ],
     links: [
       { rel: "icon", href: "/head.png", type: "image/png" },
