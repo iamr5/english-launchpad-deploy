@@ -4472,9 +4472,15 @@ function renderProgress() {
 
   <div class="card" style="cursor:default">
     <div class="pg-sect-t">Comparte tu progreso</div>
-    <div class="pg-sub" style="margin:0 0 10px">Invita a alguien (familia, tutor o profe) a seguir tu avance. Solo verá tu progreso — nada más — y podrá animarte si te detienes.</div>
+    <div class="pg-sub" style="margin:0 0 10px">Invita a alguien (familia, tutor o profe) a seguir tu avance. Verá exactamente este mismo reporte — nada más — y podrá animarte si te detienes.</div>
+    <button class="dash-cta" style="margin:0 0 12px" onclick="openDashboard()">
+      ${iconHTML(CFG.icons.dashboard, 'dc-em')}
+      <span class="dc-txt"><b>Ver el reporte como lo ven ellos</b><small>La misma ficha, con la marca de tu institución</small></span>
+      ${arrowFwd(20, '#1CB0F6', 2.6)}
+    </button>
     <div class="share-row"><input id="share-mail" type="email" placeholder="correo@ejemplo.com" autocomplete="email"><button class="btn green" id="share-add">Invitar</button></div>
     <div id="share-list" class="share-list">${shareListHTML()}</div>
+
   </div>`;
   document.getElementById('progress-body').innerHTML = html;
   bindShare();
