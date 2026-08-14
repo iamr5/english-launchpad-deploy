@@ -4948,7 +4948,8 @@ function renderPractice() {
           <span class="pr-les-c">${hechos}/${items.length}</span></div>
         <div class="pr-list">` +
         items.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
-            data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}">
+            data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}" data-bank="${q.bank ? 1 : 0}">
+
             <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
             <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
             <span class="pr-q-go">${arrowFwd(20, 'currentColor', 2.6)}</span>
