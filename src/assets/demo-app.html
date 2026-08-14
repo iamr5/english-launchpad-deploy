@@ -361,14 +361,41 @@
     color: #fff; font-size: 9px; font-weight: 900; letter-spacing: .5px; line-height: 1;
     padding: 3px 5px; border-radius: 999px; }
 
-  /* Hueco de Vocabulary: de momento solo el cartel de que aun no hay nada. */
-  .vocab-empty { text-align: center; padding: 30px 22px; }
-  .vocab-empty .ve-em { font-size: 42px; line-height: 1; margin-bottom: 12px; }
-  .vocab-empty h3 { font-size: 20px; font-weight: 800; color: var(--ink); margin: 0 0 8px; }
-  .vocab-empty p { font-size: 15px; line-height: 1.5; color: var(--muted); margin: 0 0 10px; }
-  .vocab-empty .ve-tag { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 800;
-    letter-spacing: .4px; text-transform: uppercase; color: var(--amberInk);
-    background: #FDF0D5; border-radius: 999px; padding: 6px 12px; }
+  /* ===== Vocabulary: la biblioteca de palabras =====
+     La rejilla es la de Duolingo: fichas de tres en tres, cada una con su barra
+     de progreso propia. Lo que hace que una lista de palabras no se lea como un
+     diccionario es justo esa barra — dice que la palabra es tuya a medias, no
+     que exista. */
+  .vocab-intro { margin: 2px 2px 18px; }
+  .vocab-intro b { display: block; font-size: 19px; font-weight: 800; color: var(--ink); }
+  .vocab-intro small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.4; color: var(--muted); }
+  .vocab-intro .vi-count { display: inline-block; margin-top: 9px; font-size: 12px; font-weight: 800;
+    letter-spacing: .3px; color: var(--amberInk); background: #FDF0D5;
+    border-radius: 999px; padding: 5px 11px; }
+  .vg { margin-bottom: 20px; }
+  .vg-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 2px 9px; }
+  .vg-h h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--ink); }
+  .vg-h span { font-size: 12px; font-weight: 800; color: var(--muted2); }
+  .vg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  /* Borde inferior grueso: el mismo relieve de boton que ya usan las tarjetas
+     de la ruta, para que la ficha se lea como algo que se toca. */
+  .vw { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 94px;
+    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px;
+    padding: 11px 6px 9px; cursor: pointer; font-family: inherit; text-align: center;
+    -webkit-tap-highlight-color: transparent; }
+  .vw:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .vw-en { font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.15; overflow-wrap: anywhere; }
+  .vw-es { font-size: 12px; font-weight: 700; color: var(--muted2); line-height: 1.2;
+    overflow-wrap: anywhere; margin-bottom: 9px; }
+  /* margin-top:auto pega la barra abajo: las fichas tienen alturas distintas
+     segun lo larga que sea la palabra, y si no, las barras salen escalonadas.
+     El <span> es la via y la <i> el relleno. */
+  .vw-bar { display: block; margin-top: auto; width: 100%; height: 8px;
+    border-radius: 999px; background: var(--gray); overflow: hidden; }
+  .vw-bar i { display: block; height: 100%; border-radius: 999px; background: var(--amber);
+    transition: width .25s ease; }
+  .vw.done { border-color: #F3D08A; background: #FFFCF4; }
+  .vw.speaking { border-color: var(--blue); }
   .course-foot .foot-done { display: flex; align-items: center; justify-content: center; gap: 8px;
     font-weight: 700; color: var(--muted2); padding: 10px 0; }
 
@@ -2760,13 +2787,16 @@ function readingMinutes(lesson) {
 // TTS
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 let _speaking = false;
-function speak(text, onStart, onEnd) {
+// rate opcional: 0.45 esta calibrado para frases largas del quiz. Una palabra
+// suelta a esa velocidad se arrastra y deja de sonar a palabra, asi que el
+// vocabulario pasa la suya. Sin argumento, todo se comporta como antes.
+function speak(text, onStart, onEnd, rate) {
   try {
     const synth = window.speechSynthesis;
     if (!synth) return;
     if (_speaking) { synth.cancel(); _speaking = false; if (onEnd) onEnd(); return; }
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US'; u.rate = 0.45; u.pitch = 1.0;
+    u.lang = 'en-US'; u.rate = rate || 0.45; u.pitch = 1.0;
     u.onstart = () => { _speaking = true; if (onStart) onStart(); };
     u.onend = () => { _speaking = false; if (onEnd) onEnd(); };
     u.onerror = () => { _speaking = false; if (onEnd) onEnd(); };
@@ -3105,20 +3135,103 @@ function showHomeTab(tab) {
   if (!esRuta) renderVocab();
 }
 
-// Se pinta una sola vez: es un cartel fijo, no depende del progreso. Cuando
-// haya contenido de verdad, esto pasa a repintarse en cada entrada.
+// CONTENIDO DE ARRANQUE. El curso no trae listas de palabras por ningun lado
+// —sus bloques son teoria, titulo, resumen, mision, intro y cierre—, asi que
+// esto va escrito a mano y agrupado por tema, con el vocabulario practico que
+// pide un curso "para moverte". Es el sitio a reemplazar cuando exista la lista
+// de verdad: cambiando SOLO este arreglo cambia toda la pantalla.
+// Formato: [ingles, español].
+const VOCAB = [
+  { g: 'Saludos y cortesía', w: [
+    ['hello', 'hola'], ['goodbye', 'adiós'], ['please', 'por favor'],
+    ['thank you', 'gracias'], ['sorry', 'perdón'], ['excuse me', 'disculpe'],
+    ['yes', 'sí'], ['no', 'no'], ['nice to meet you', 'mucho gusto'] ] },
+  { g: 'Números y tiempo', w: [
+    ['one', 'uno'], ['two', 'dos'], ['three', 'tres'],
+    ['today', 'hoy'], ['tomorrow', 'mañana'], ['yesterday', 'ayer'],
+    ['morning', 'la mañana'], ['night', 'noche'], ['hour', 'hora'] ] },
+  { g: 'En la calle', w: [
+    ['street', 'calle'], ['left', 'izquierda'], ['right', 'derecha'],
+    ['near', 'cerca'], ['far', 'lejos'], ['bus', 'bus'],
+    ['ticket', 'boleto'], ['map', 'mapa'], ['where', 'dónde'] ] },
+  { g: 'Comida', w: [
+    ['water', 'agua'], ['bread', 'pan'], ['chicken', 'pollo'],
+    ['rice', 'arroz'], ['coffee', 'café'], ['bill', 'la cuenta'],
+    ['menu', 'carta'], ['hungry', 'con hambre'], ['delicious', 'delicioso'] ] },
+  { g: 'Trabajo y estudio', w: [
+    ['work', 'trabajo'], ['meeting', 'reunión'], ['email', 'correo'],
+    ['help', 'ayuda'], ['question', 'pregunta'], ['answer', 'respuesta'],
+    ['to learn', 'aprender'], ['easy', 'fácil'], ['difficult', 'difícil'] ] },
+];
+
+// Cuantas escuchas llenan la barra de una palabra. La barra mide PRACTICA, no
+// dominio: hoy lo unico medible es cuantas veces la ha trabajado. Cuando el
+// vocabulario tenga sus propios ejercicios, esto pasa a leer aciertos.
+const VOCAB_TARGET = 4;
+function vocabCounts() { return PROGRESS['__vocab'] = PROGRESS['__vocab'] || {}; }
+function vocabMastery(en) { return Math.min(1, (vocabCounts()[en] || 0) / VOCAB_TARGET); }
+
+// Se repinta en cada entrada: las barras dependen del progreso y quedarse con
+// la primera version las congelaria.
 function renderVocab() {
   const el = document.getElementById('vocab-body');
-  if (!el || el.dataset.ready === '1') return;
-  el.dataset.ready = '1';
-  el.innerHTML = `
-    <div class="card vocab-empty">
-      <div class="ve-em">📚</div>
-      <h3>Vocabulary</h3>
-      <p>Aquí van a vivir las palabras que ya viste en la ruta, para repasarlas
-         y practicarlas sueltas, sin volver a la lección entera.</p>
-      <span class="ve-tag">En construcción</span>
+  if (!el) return;
+  const total = VOCAB.reduce((s, g) => s + g.w.length, 0);
+  const hechas = VOCAB.reduce((s, g) => s + g.w.filter(p => vocabMastery(p[0]) >= 1).length, 0);
+  let html = `<div class="vocab-intro">
+      <b>Tu biblioteca de palabras</b>
+      <small>Toca una palabra para escucharla. La barra se llena a medida que la practicas.</small>
+      <span class="vi-count">${hechas} de ${total} dominadas</span>
     </div>`;
+  VOCAB.forEach(grupo => {
+    const listas = grupo.w.filter(p => vocabMastery(p[0]) >= 1).length;
+    html += `<div class="vg">
+      <div class="vg-h"><h3>${escapeHtml(grupo.g)}</h3><span>${listas}/${grupo.w.length}</span></div>
+      <div class="vg-grid">` +
+      grupo.w.map(([en, es]) => {
+        const m = Math.round(vocabMastery(en) * 100);
+        return `<button class="vw${m >= 100 ? ' done' : ''}" data-w="${escapeHtml(en)}">
+          <span class="vw-en">${escapeHtml(en)}</span>
+          <span class="vw-es">${escapeHtml(es)}</span>
+          <span class="vw-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                aria-valuenow="${m}" aria-label="Practicada al ${m}%"><i style="width:${m}%"></i></span>
+        </button>`;
+      }).join('') +
+      `</div></div>`;
+  });
+  el.innerHTML = html;
+  el.querySelectorAll('.vw').forEach(b => b.onclick = () => vocabTap(b));
+}
+
+// Escuchar cuenta como practicar. Se repinta SOLO esta ficha y no la pantalla
+// entera: repintarla devolveria el scroll arriba con cada toque.
+function vocabTap(btn) {
+  const en = btn.getAttribute('data-w');
+  if (!en) return;
+  const c = vocabCounts();
+  if ((c[en] || 0) < VOCAB_TARGET) { c[en] = (c[en] || 0) + 1; saveProgress(PROGRESS); }
+  const m = Math.round(vocabMastery(en) * 100);
+  const bar = btn.querySelector('.vw-bar'), fill = btn.querySelector('.vw-bar i');
+  if (fill) fill.style.width = m + '%';
+  if (bar) { bar.setAttribute('aria-valuenow', m); bar.setAttribute('aria-label', 'Practicada al ' + m + '%'); }
+  btn.classList.toggle('done', m >= 100);
+  btn.classList.add('speaking');
+  // 0.85 y no el 0.45 del quiz: una palabra suelta a esa velocidad no se
+  // reconoce como palabra.
+  speak(en, null, () => btn.classList.remove('speaking'), 0.85);
+  // Los contadores de cabecera y de grupo se quedarian viejos; se recalculan
+  // sin tocar el resto del arbol.
+  const total = VOCAB.reduce((s, g) => s + g.w.length, 0);
+  const hechas = VOCAB.reduce((s, g) => s + g.w.filter(p => vocabMastery(p[0]) >= 1).length, 0);
+  const cnt = document.querySelector('#vocab-body .vi-count');
+  if (cnt) cnt.textContent = `${hechas} de ${total} dominadas`;
+  const grupo = VOCAB.find(g => g.w.some(p => p[0] === en));
+  const caja = btn.closest('.vg');
+  if (grupo && caja) {
+    const listas = grupo.w.filter(p => vocabMastery(p[0]) >= 1).length;
+    const sp = caja.querySelector('.vg-h span');
+    if (sp) sp.textContent = `${listas}/${grupo.w.length}`;
+  }
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
