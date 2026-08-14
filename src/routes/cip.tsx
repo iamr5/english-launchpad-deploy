@@ -508,8 +508,9 @@ function LiveDemo() {
         <p className="eyebrow text-[var(--cip)]">Sin maquetas</p>
         <h2 className="head">Este es el curso, tal cual</h2>
         <p className="lede mx-auto mt-3 text-[var(--ink-2)]">
-          Ábrelo y recórrelo completo: test de ubicación, ruta de niveles, vocabulario técnico y
-          panel de progreso.
+          Ábrelo y recórrelo completo: test de ubicación, ruta A1–C1, vocabulario general y de
+          ingeniería, y panel de progreso.
+
         </p>
 
         <div className="mx-auto mt-8 w-full max-w-[390px]">
