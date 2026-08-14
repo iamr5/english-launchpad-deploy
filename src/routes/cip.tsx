@@ -418,7 +418,7 @@ function SampleQuiz() {
           <button
             type="button"
             className="btn"
-            disabled={sel === null || (done && last)}
+            disabled={!done && sel === null}
             onClick={done ? next : confirm}
             style={{ background: "var(--cta)", ["--lip" as string]: "var(--ctaLip)" }}
           >
