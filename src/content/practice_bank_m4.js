@@ -432,7 +432,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La presentación será preparada por mi.\"",
    "accepted": [
-    "The presentation will be prepared by me."
+    "The presentation will be prepared by me.",
+    "The presentation will be put together by me."
    ],
    "hint": "Recuerda usar 'by' para el agente.",
    "reject": [
@@ -451,7 +452,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Este edificio fue construido en 1950.\"",
    "accepted": [
-    "This building was built in 1950."
+    "This building was built in 1950.",
+    "In 1950, this building was built.",
+    "This building was constructed in 1950."
    ],
    "hint": "Usa el participio pasado de 'build'.",
    "reject": [
@@ -470,7 +473,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los pedidos son procesados diariamente.\"",
    "accepted": [
-    "The orders are processed daily."
+    "The orders are processed daily.",
+    "Every day, the orders are processed.",
+    "The orders are processed every day."
    ],
    "hint": "Usa el presente simple pasivo.",
    "reject": [
@@ -489,7 +494,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La puerta fue abierta por el conserje.\"",
    "accepted": [
-    "The door was opened by the janitor."
+    "The door was opened by the janitor.",
+    "The door was opened by the caretaker.",
+    "The door was opened by the custodian.",
+    "The door was opened by the building caretaker."
    ],
    "hint": "Participio pasado de 'open'.",
    "reject": [
@@ -508,7 +516,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Nuestros productos son vendidos en muchos países.\"",
    "accepted": [
-    "Our products are sold in many countries."
+    "Our products are sold in many countries.",
+    "In many countries, our products are sold.",
+    "Our products are sold across many countries."
    ],
    "hint": "Participio pasado de 'sell'.",
    "reject": [
@@ -547,7 +557,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Las reglas son explicadas a los nuevos empleados.\"",
    "accepted": [
-    "The rules are explained to the new employees."
+    "The rules are explained to the new employees.",
+    "The rules are explained to the new hires."
    ],
    "hint": "Usa el presente simple pasivo.",
    "reject": [
@@ -586,7 +597,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los tickets fueron comprados en línea.\"",
    "accepted": [
-    "The tickets were bought online."
+    "The tickets were bought online.",
+    "The tickets were purchased online.",
+    "The tickets were bought over the internet.",
+    "The tickets were purchased on the internet."
    ],
    "hint": "Participio pasado de 'buy'.",
    "reject": [
@@ -605,7 +619,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Se está contratando personal para el nuevo proyecto.\"",
    "accepted": [
-    "Staff is being hired for the new project."
+    "Staff is being hired for the new project.",
+    "For the new project, staff is being hired."
    ],
    "hint": "Considera que 'personal' (staff) es singular en inglés.",
    "reject": [
@@ -624,7 +639,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El contrato fue firmado por ambas partes.\"",
    "accepted": [
-    "The contract was signed by both parties."
+    "The contract was signed by both parties.",
+    "The contract was signed by the two parties.",
+    "The contract was signed by each of the two parties."
    ],
    "hint": "Usa el participio pasado de 'sign'.",
    "reject": [
@@ -643,7 +660,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La información es almacenada en la nube.\"",
    "accepted": [
-    "The information is stored in the cloud."
+    "The information is stored in the cloud.",
+    "In the cloud, the information is stored.",
+    "The information is kept in cloud storage."
    ],
    "hint": "Recuerda que 'information' es incontable y singular.",
    "reject": [
@@ -1133,7 +1152,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El doctor me dijo que no me preocupara.\"",
    "accepted": [
-    "The doctor told me not to worry."
+    "The doctor told me not to worry.",
+    "The doctor told me not to be concerned."
    ],
    "hint": "Usa 'told me' y la estructura negativa del Reported Speech para mandatos.",
    "reject": [
@@ -1152,7 +1172,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Nosotros le informamos que el reporte estaba listo.\"",
    "accepted": [
-    "We informed him the report was ready."
+    "We informed him the report was ready.",
+    "We informed him that the report was ready.",
+    "We notified him that the report was ready."
    ],
    "hint": "Recuerda el cambio de tiempo verbal.",
    "reject": [
@@ -1171,7 +1193,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella preguntó si podíamos empezar la reunión ahora.\"",
    "accepted": [
-    "She asked if we could start the meeting then."
+    "She asked if we could start the meeting then.",
+    "She asked whether we could start the meeting then.",
+    "She asked if we could begin the meeting at that time.",
+    "She asked whether we could begin the meeting at that point."
    ],
    "hint": "No olvides cambiar 'ahora' a su equivalente en Reported Speech.",
    "reject": [
@@ -1190,7 +1215,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los clientes comentaron que estaban muy satisfechos.\"",
    "accepted": [
-    "The clients commented they were very satisfied."
+    "The clients commented they were very satisfied.",
+    "The clients commented that they were very satisfied."
    ],
    "hint": "Asegúrate de que el verbo 'estar' y el pronombre estén correctos.",
    "reject": [
@@ -1209,7 +1235,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Mi colega me dijo que iba a salir de viaje.\"",
    "accepted": [
-    "My colleague told me he was going on a trip."
+    "My colleague told me he was going on a trip.",
+    "My colleague told me that he was going on a trip."
    ],
    "hint": "Usa 'going on a trip' para 'salir de viaje'.",
    "reject": [
@@ -1228,7 +1255,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El ingeniero explicó que había un problema con el diseño.\"",
    "accepted": [
-    "The engineer explained there was a problem with the design."
+    "The engineer explained there was a problem with the design.",
+    "The engineer explained that there was a problem with the design.",
+    "The engineer explained that there was an issue with the design."
    ],
    "hint": "Recuerda que 'hay/había' se traduce con 'there is/was'.",
    "reject": [
@@ -1247,7 +1276,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Nos dijeron que empezarían el lunes.\"",
    "accepted": [
-    "They told us they would start on Monday."
+    "They told us they would start on Monday.",
+    "They told us that they would start on Monday.",
+    "They told us that on Monday they would begin."
    ],
    "hint": "Usa 'would' para el futuro en Reported Speech.",
    "reject": [
@@ -1266,7 +1297,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Mi supervisor comentó que le gustaba mi propuesta.\"",
    "accepted": [
-    "My supervisor commented he liked my proposal."
+    "My supervisor commented he liked my proposal.",
+    "My supervisor commented that he liked my proposal.",
+    "My supervisor remarked that he liked my proposal."
    ],
    "hint": "Recuerda el cambio de pronombre y tiempo verbal.",
    "reject": [
@@ -1285,7 +1318,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella dijo que estaba lloviendo ayer.\"",
    "accepted": [
-    "She said it was raining the day before."
+    "She said it was raining the day before.",
+    "She said that it was raining the previous day."
    ],
    "hint": "Cambia 'ayer' por su equivalente en Reported Speech.",
    "reject": [
@@ -1304,7 +1338,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos prometieron que nos contactarían pronto.\"",
    "accepted": [
-    "They promised they would contact us soon."
+    "They promised they would contact us soon.",
+    "They promised that they would contact us soon."
    ],
    "hint": "Usa 'would' para el futuro en Reported Speech.",
    "reject": [
@@ -1323,7 +1358,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El contador nos avisó que no estaría en la oficina hoy.\"",
    "accepted": [
-    "The accountant told us he wouldn't be in the office that day."
+    "The accountant told us he wouldn't be in the office that day.",
+    "The accountant told us that he wouldn't be in the office that day.",
+    "The accountant told us he would not be in the office that day."
    ],
    "hint": "Usa 'wouldn't be' para el futuro negativo y cambia 'hoy'.",
    "reject": [
@@ -1342,7 +1379,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él nos dijo que su carro estaba estacionado aquí.\"",
    "accepted": [
-    "He told us his car was parked there."
+    "He told us his car was parked there.",
+    "He told us that his car was parked there."
    ],
    "hint": "Recuerda cambiar 'su' y 'aquí' en Reported Speech.",
    "reject": [
@@ -1764,7 +1802,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Me preguntó si iba a la conferencia.\"",
    "accepted": [
-    "He asked me if I was going to the conference."
+    "He asked me if I was going to the conference.",
+    "He asked me whether I was going to the conference."
    ],
    "hint": "Usa 'if' para preguntas de sí/no.",
    "reject": [
@@ -1783,7 +1822,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El supervisor nos dijo que termináramos el trabajo.\"",
    "accepted": [
-    "The supervisor told us to finish the work."
+    "The supervisor told us to finish the work.",
+    "The supervisor told us to complete the work."
    ],
    "hint": "Usa 'tell + objeto + to + infinitivo' para órdenes.",
    "reject": [
@@ -1802,7 +1842,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El cliente preguntó cuánto costaba.\"",
    "accepted": [
-    "The client asked how much it cost."
+    "The client asked how much it cost.",
+    "The client asked what it cost."
    ],
    "hint": "Recuerda el orden sujeto + verbo después de la palabra interrogativa.",
    "reject": [
@@ -1821,7 +1862,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Me pidió que no tocara la pantalla.\"",
    "accepted": [
-    "He asked me not to touch the screen."
+    "He asked me not to touch the screen.",
+    "He asked me not to touch the display."
    ],
    "hint": "Usa 'not to' para órdenes negativas.",
    "reject": [
@@ -1840,7 +1882,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Pregunté si había algún problema.\"",
    "accepted": [
-    "I asked if there was any problem."
+    "I asked if there was any problem.",
+    "I asked whether there was any problem.",
+    "I asked whether there was a problem."
    ],
    "hint": "Usa 'if' para preguntas de sí/no y recuerda el tiempo verbal.",
    "reject": [
@@ -1859,7 +1903,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella me dijo que esperara su llamada.\"",
    "accepted": [
-    "She told me to wait for her call."
+    "She told me to wait for her call.",
+    "She told me to wait for a call from her."
    ],
    "hint": "Usa 'told' si hay un objeto (me).",
    "reject": [
@@ -1878,7 +1923,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Preguntaron si habíamos visitado el sitio.\"",
    "accepted": [
-    "They asked if we had visited the site."
+    "They asked if we had visited the site.",
+    "They asked whether we had visited the site."
    ],
    "hint": "Usa 'if' para preguntas de sí/no y el pasado perfecto para la acción anterior.",
    "reject": [
@@ -1897,7 +1943,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El doctor le dijo que no comiera antes de la cirugía.\"",
    "accepted": [
-    "The doctor told him not to eat before the surgery."
+    "The doctor told him not to eat before the surgery.",
+    "The doctor told him not to eat before the operation.",
+    "The doctor told him not to have anything to eat before the surgery."
    ],
    "hint": "Usa 'told + objeto + not to + infinitivo'.",
    "reject": [
@@ -1916,7 +1964,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella preguntó qué planes tenía él.\"",
    "accepted": [
-    "She asked what plans he had."
+    "She asked what plans he had.",
+    "She asked what his plans were."
    ],
    "hint": "Después de 'what plans', el orden es sujeto + verbo en pasado simple.",
    "reject": [
@@ -1935,7 +1984,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Me pidió que entregara el informe para el lunes.\"",
    "accepted": [
-    "He asked me to submit the report by Monday."
+    "He asked me to submit the report by Monday.",
+    "He asked me to hand in the report by Monday.",
+    "He asked me to turn in the report by Monday.",
+    "He asked me to send in the report by Monday."
    ],
    "hint": "Usa 'asked + objeto + to + infinitivo' para peticiones.",
    "reject": [
@@ -1954,7 +2006,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La guía preguntó si todos entendían las instrucciones.\"",
    "accepted": [
-    "The guide asked if everyone understood the instructions."
+    "The guide asked if everyone understood the instructions.",
+    "The guide asked whether everyone understood the instructions.",
+    "The guide asked if everybody understood the instructions.",
+    "The guide asked whether everybody understood the instructions."
    ],
    "hint": "Usa 'if' para preguntas de sí/no y el pasado del verbo 'understand'.",
    "reject": [
@@ -2421,7 +2476,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella dijo que la reunión era importante.\"",
    "accepted": [
-    "She said the meeting was important."
+    "She said the meeting was important.",
+    "She said that the meeting was important."
    ],
    "hint": "Recuerda el cambio de tiempo verbal.",
    "reject": [
@@ -2440,7 +2496,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él preguntó cuándo llegaría ella.\"",
    "accepted": [
-    "He asked when she would arrive."
+    "He asked when she would arrive.",
+    "He asked when she'd arrive."
    ],
    "hint": "Transforma 'will' a 'would' y mantén el orden S+V.",
    "reject": [
@@ -2478,7 +2535,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El jefe preguntó dónde estaba el informe.\"",
    "accepted": [
-    "The boss asked where the report was."
+    "The boss asked where the report was.",
+    "The boss asked where the report was located."
    ],
    "hint": "Orden S+V y tiempo verbal correcto.",
    "reject": [
@@ -2516,7 +2574,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él mencionó que estaba muy cansado.\"",
    "accepted": [
-    "He mentioned he was very tired."
+    "He mentioned he was very tired.",
+    "He mentioned that he was very tired."
    ],
    "hint": "Ajusta el tiempo verbal al pasado.",
    "reject": [
@@ -2535,7 +2594,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La clienta preguntó si teníamos descuento.\"",
    "accepted": [
-    "The client asked if we had a discount."
+    "The client asked if we had a discount.",
+    "The client asked whether we had a discount."
    ],
    "hint": "Usa 'if' y el tiempo verbal en pasado.",
    "reject": [
@@ -2593,7 +2653,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El técnico nos preguntó qué problema teníamos.\"",
    "accepted": [
-    "The technician asked us what problem we had."
+    "The technician asked us what problem we had.",
+    "The technician asked us what issue we had."
    ],
    "hint": "Mantén el orden S+V después de la palabra WH-.",
    "reject": [
@@ -2631,7 +2692,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La recepcionista dijo que no había habitaciones disponibles.\"",
    "accepted": [
-    "The receptionist said there were no rooms available."
+    "The receptionist said there were no rooms available.",
+    "The receptionist said that there were no rooms available.",
+    "The receptionist said there were no available rooms.",
+    "The receptionist said that no rooms were available."
    ],
    "hint": "Cambia 'is' por 'was' (o 'are' por 'were') al reportar.",
    "reject": [
@@ -3080,7 +3144,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La reunión fue pospuesta.\"",
    "accepted": [
-    "The meeting was postponed."
+    "The meeting was postponed.",
+    "The meeting was moved to a later date."
    ],
    "hint": "Usa el verbo 'postpone' en participio.",
    "reject": [
@@ -3099,7 +3164,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los documentos serán revisados mañana.\"",
    "accepted": [
-    "The documents will be reviewed tomorrow."
+    "The documents will be reviewed tomorrow.",
+    "Tomorrow, the documents will be reviewed."
    ],
    "hint": "Recuerda 'will be' para futuro pasivo.",
    "reject": [
@@ -3118,7 +3184,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El problema es discutido cada lunes.\"",
    "accepted": [
-    "The problem is discussed every Monday."
+    "The problem is discussed every Monday.",
+    "Every Monday, the problem is discussed.",
+    "The problem is discussed each Monday.",
+    "On Mondays, the problem is discussed."
    ],
    "hint": "Usa 'discuss' en participio.",
    "reject": [
@@ -3137,7 +3206,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El contrato fue firmado la semana pasada.\"",
    "accepted": [
-    "The contract was signed last week."
+    "The contract was signed last week.",
+    "Last week, the contract was signed."
    ],
    "hint": "Usa el verbo 'sign' en participio.",
    "reject": [
@@ -3156,7 +3226,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La presentación será preparada por el equipo.\"",
    "accepted": [
-    "The presentation will be prepared by the team."
+    "The presentation will be prepared by the team.",
+    "The presentation will be put together by the team."
    ],
    "hint": "Recuerda 'will be' para futuro pasivo.",
    "reject": [
@@ -3175,7 +3246,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los correos son enviados dos veces al día.\"",
    "accepted": [
-    "The emails are sent twice a day."
+    "The emails are sent twice a day.",
+    "Twice a day, the emails are sent.",
+    "The emails are sent twice daily.",
+    "The emails are sent two times a day."
    ],
    "hint": "Usa 'send' en participio pasado.",
    "reject": [
@@ -3194,7 +3268,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El presupuesto fue aprobado ayer.\"",
    "accepted": [
-    "The budget was approved yesterday."
+    "The budget was approved yesterday.",
+    "Yesterday, the budget was approved.",
+    "Yesterday, the budget was given approval."
    ],
    "hint": "Usa el verbo 'approve' en participio.",
    "reject": [
@@ -3213,7 +3289,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La nueva política será anunciada pronto.\"",
    "accepted": [
-    "The new policy will be announced soon."
+    "The new policy will be announced soon.",
+    "Soon, the new policy will be announced."
    ],
    "hint": "Usa 'announce' en participio pasado.",
    "reject": [
@@ -3232,7 +3309,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los productos son manufacturados en China.\"",
    "accepted": [
-    "The products are manufactured in China."
+    "The products are manufactured in China.",
+    "In China, the products are manufactured.",
+    "The products are made in China.",
+    "The products are produced in China."
    ],
    "hint": "Usa 'manufacture' en participio pasado.",
    "reject": [
@@ -3270,7 +3350,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El informe final será publicado el viernes.\"",
    "accepted": [
-    "The final report will be published on Friday."
+    "The final report will be published on Friday.",
+    "On Friday, the final report will be published."
    ],
    "hint": "Usa 'publish' en participio pasado.",
    "reject": [
@@ -3289,7 +3370,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Nuevas ideas son generadas cada día.\"",
    "accepted": [
-    "New ideas are generated every day."
+    "New ideas are generated every day.",
+    "Every day, new ideas are generated.",
+    "New ideas are generated each day.",
+    "New ideas are generated on a daily basis."
    ],
    "hint": "Usa el verbo 'generate' en participio.",
    "reject": [
@@ -3597,7 +3681,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El problema es entendido por todos.\"",
    "accepted": [
-    "The problem is understood by everyone."
+    "The problem is understood by everyone.",
+    "The problem is understood by all."
    ],
    "hint": "Recuerda el participio pasado de 'understand'.",
    "reject": [
@@ -3636,7 +3721,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La información es guardada en la nube.\"",
    "accepted": [
-    "The information is saved in the cloud."
+    "The information is saved in the cloud.",
+    "The information is stored in the cloud.",
+    "In the cloud, the information is saved.",
+    "The information is kept in the cloud."
    ],
    "hint": "Recuerda que 'information' es incontable.",
    "reject": [
@@ -3655,7 +3743,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Las noticias fueron anunciadas anoche.\"",
    "accepted": [
-    "The news was announced last night."
+    "The news was announced last night.",
+    "Last night, the news was announced."
    ],
    "hint": "'News' es singular en inglés, aunque termine en 's'.",
    "reject": [
@@ -3674,7 +3763,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El correo electrónico es enviado por el asistente.\"",
    "accepted": [
-    "The email is sent by the assistant."
+    "The email is sent by the assistant.",
+    "The e-mail is sent by the assistant.",
+    "The email is sent out by the assistant."
    ],
    "hint": "Participio pasado de 'send'.",
    "reject": [
@@ -3693,7 +3784,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los nuevos empleados fueron entrenados la semana pasada.\"",
    "accepted": [
-    "The new employees were trained last week."
+    "The new employees were trained last week.",
+    "Last week, the new employees were trained.",
+    "The new staff members were trained last week.",
+    "The new hires were trained last week."
    ],
    "hint": "Usa 'were' para plural en pasado.",
    "reject": [
@@ -3712,7 +3806,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Mi boleto de avión fue comprado por mi agencia.\"",
    "accepted": [
-    "My plane ticket was bought by my agency."
+    "My plane ticket was bought by my agency.",
+    "My airline ticket was bought by my agency.",
+    "My plane ticket was purchased by my agency.",
+    "My airline ticket was purchased by my agency."
    ],
    "hint": "Participio pasado de 'buy'.",
    "reject": [
@@ -3731,7 +3828,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Las reglas son explicadas en la reunión.\"",
    "accepted": [
-    "The rules are explained in the meeting."
+    "The rules are explained in the meeting.",
+    "At the meeting, the rules are explained.",
+    "During the meeting, the rules are explained."
    ],
    "hint": "Usa 'are' para plural en presente.",
    "reject": [
@@ -3750,7 +3849,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los pagos se hacen el día 15.\"",
    "accepted": [
-    "Payments are made on the 15th."
+    "Payments are made on the 15th.",
+    "On the 15th, payments are made."
    ],
    "hint": "Voz pasiva en presente simple.",
    "reject": [
@@ -3769,7 +3869,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La presentación será dada por el director.\"",
    "accepted": [
-    "The presentation will be given by the director."
+    "The presentation will be given by the director.",
+    "The presentation will be delivered by the director."
    ],
    "hint": "Recuerda el participio pasado de 'give' y el futuro pasivo.",
    "reject": [
@@ -3788,7 +3889,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El café es cultivado en esta región.\"",
    "accepted": [
-    "Coffee is grown in this region."
+    "Coffee is grown in this region.",
+    "In this region, coffee is grown.",
+    "Coffee is cultivated in this region."
    ],
    "hint": "El participio pasado de 'grow' es irregular.",
    "reject": [
@@ -4115,7 +4218,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él debe estar cansado, ha estado trabajando todo el día.\"",
    "accepted": [
-    "He must be tired, he's been working all day."
+    "He must be tired, he's been working all day.",
+    "He must be tired; he has been working all day.",
+    "He must be tired because he's been working all day."
    ],
    "hint": "Usa 'must' para alta certeza.",
    "reject": [
@@ -4153,7 +4258,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos podrían haber perdido el tren.\"",
    "accepted": [
-    "They could have missed the train."
+    "They could have missed the train.",
+    "They could've missed the train.",
+    "They could have failed to catch the train."
    ],
    "hint": "Usa 'could have' para una deducción sobre el pasado.",
    "reject": [
@@ -4172,7 +4279,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No puede ser cierto, es imposible.\"",
    "accepted": [
-    "It can't be true, it's impossible."
+    "It can't be true, it's impossible.",
+    "It cannot be true; it's impossible.",
+    "It cannot be true—it's not possible."
    ],
    "hint": "Usa 'can't' para imposibilidad.",
    "reject": [
@@ -4191,7 +4300,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Deberías haber estudiado más para el examen.\"",
    "accepted": [
-    "You should have studied more for the exam."
+    "You should have studied more for the exam.",
+    "For the exam, you should have studied more.",
+    "You should've studied more for the exam.",
+    "You should have done more studying for the exam."
    ],
    "hint": "Usa 'should have' para remordimiento o crítica de una acción pasada.",
    "reject": [
@@ -4210,7 +4322,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El tráfico debe ser muy malo, por eso llegó tarde.\"",
    "accepted": [
-    "The traffic must be very bad, that's why he arrived late."
+    "The traffic must be very bad, that's why he arrived late.",
+    "The traffic must be terrible; that's why he arrived late.",
+    "The traffic must be very bad, which is why he arrived late.",
+    "The traffic must be really bad; that's why he arrived late."
    ],
    "hint": "Usa 'must' para deducción con alta certeza.",
    "reject": [
@@ -4248,7 +4363,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Mi jefe no puede haber olvidado la reunión.\"",
    "accepted": [
-    "My boss can't have forgotten the meeting."
+    "My boss can't have forgotten the meeting.",
+    "My boss cannot have forgotten the meeting."
    ],
    "hint": "Usa 'can't have' para expresar imposibilidad sobre una acción pasada.",
    "reject": [
@@ -4267,7 +4383,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella debe ser la nueva ingeniera, su nombre estaba en la lista.\"",
    "accepted": [
-    "She must be the new engineer, her name was on the list."
+    "She must be the new engineer, her name was on the list.",
+    "She must be the new engineer, as her name was on the list.",
+    "She must be the new engineer; her name appeared on the list."
    ],
    "hint": "Usa 'must' para alta certeza.",
    "reject": [
@@ -4286,7 +4404,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos quizás necesiten más tiempo para el informe.\"",
    "accepted": [
-    "They might need more time for the report."
+    "They might need more time for the report.",
+    "They might need additional time for the report.",
+    "They might need extra time for the report.",
+    "For the report, they might need more time."
    ],
    "hint": "Usa 'might' para posibilidad.",
    "reject": [
@@ -4305,7 +4426,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La situación podría mejorar el próximo mes.\"",
    "accepted": [
-    "The situation could improve next month."
+    "The situation could improve next month.",
+    "Next month, the situation could improve.",
+    "The situation could get better next month."
    ],
    "hint": "Usa 'could' para posibilidad futura.",
    "reject": [
@@ -4324,7 +4447,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La máquina no puede estar funcionando mal, la revisamos ayer.\"",
    "accepted": [
-    "The machine can't be malfunctioning, we checked it yesterday."
+    "The machine can't be malfunctioning, we checked it yesterday.",
+    "The machine cannot be malfunctioning; we checked it yesterday.",
+    "We checked the machine yesterday, so it can't be malfunctioning."
    ],
    "hint": "Usa 'can't be + -ing' para imposibilidad de una acción en progreso.",
    "reject": [
@@ -4343,7 +4468,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella debería haber informado al equipo sobre el cambio.\"",
    "accepted": [
-    "She should have informed the team about the change."
+    "She should have informed the team about the change.",
+    "She should have told the team about the change.",
+    "She should've informed the team of the change.",
+    "She should have notified the team about the change."
    ],
    "hint": "Usa 'should have + participio' para remordimiento o lo que debería haber ocurrido.",
    "reject": [
@@ -4802,7 +4930,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él debe estar en su oficina.\"",
    "accepted": [
-    "He must be in his office."
+    "He must be in his office.",
+    "He must currently be in his office.",
+    "He must be in his office right now."
    ],
    "hint": "Usa 'must' para certeza y no olvides el pronombre posesivo.",
    "reject": [
@@ -4821,7 +4951,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella piensa que son muy organizados.\"",
    "accepted": [
-    "She thinks they are very organized."
+    "She thinks they are very organized.",
+    "She thinks that they're very organized.",
+    "She believes they are very organized."
    ],
    "hint": "Recuerda la 's' en 'thinks' y el sujeto 'they'.",
    "reject": [
@@ -4860,7 +4992,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él debe ser muy inteligente para este trabajo.\"",
    "accepted": [
-    "He must be very intelligent for this job."
+    "He must be very intelligent for this job.",
+    "He must be highly intelligent for this job.",
+    "He must be very smart for this job.",
+    "For this job, he must be very intelligent."
    ],
    "hint": "Usa 'must' para expresar una conclusión o certeza.",
    "reject": [
@@ -4879,7 +5014,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Creemos que la situación mejorará.\"",
    "accepted": [
-    "We believe the situation will improve."
+    "We believe the situation will improve.",
+    "We believe that the situation will improve.",
+    "We think the situation will improve.",
+    "We believe the situation will get better."
    ],
    "hint": "No olvides el sujeto después de 'believe'.",
    "reject": [
@@ -4898,7 +5036,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La reunión fue larga; sin embargo, no se llegó a un acuerdo.\"",
    "accepted": [
-    "The meeting was long; however, no agreement was reached."
+    "The meeting was long; however, no agreement was reached.",
+    "The meeting was lengthy; nevertheless, no agreement was reached."
    ],
    "hint": "Usa punto y coma antes de 'however' y coma después.",
    "reject": [
@@ -4917,7 +5056,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos deben saber la respuesta.\"",
    "accepted": [
-    "They must know the answer."
+    "They must know the answer.",
+    "They must be aware of the answer.",
+    "They must know what the answer is."
    ],
    "hint": "Usa 'must' para expresar una conclusión con alta certeza.",
    "reject": [
@@ -4976,7 +5117,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estoy seguro, él debe haber terminado el proyecto.\"",
    "accepted": [
-    "I'm sure, he must have finished the project."
+    "I'm sure, he must have finished the project.",
+    "I'm sure that he must have completed the project."
    ],
    "hint": "Usa 'must have' para expresar certeza sobre algo pasado.",
    "reject": [
@@ -5566,7 +5708,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En mi opinión, el equipo necesita más capacitación.\"",
    "accepted": [
-    "In my opinion, the team needs more training."
+    "In my opinion, the team needs more training.",
+    "In my view, the team needs more training.",
+    "From my perspective, the team needs more training.",
+    "The team needs additional training, in my opinion."
    ],
    "hint": "Usa 'In my opinion' para empezar.",
    "reject": [
@@ -5585,7 +5730,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La conexión es inestable. Por lo tanto, la reunión es presencial.\"",
    "accepted": [
-    "The connection is unstable. Therefore, the meeting is in person."
+    "The connection is unstable. Therefore, the meeting is in person.",
+    "The connection is unstable. The meeting is therefore in person."
    ],
    "hint": "Usa 'Therefore' para la consecuencia.",
    "reject": [
@@ -5604,7 +5750,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Tenemos una fecha límite ajustada. Sin embargo, entregaremos a tiempo.\"",
    "accepted": [
-    "We have a tight deadline. However, we will deliver on time."
+    "We have a tight deadline. However, we will deliver on time.",
+    "We face a tight deadline. However, we will deliver on time.",
+    "Our deadline is tight. However, we will deliver on time.",
+    "We have a tight deadline. We will, however, deliver on time."
    ],
    "hint": "Usa 'However' para el contraste.",
    "reject": [
@@ -5623,7 +5772,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Creo que la calidad es nuestra prioridad.\"",
    "accepted": [
-    "I believe quality is our priority."
+    "I believe quality is our priority.",
+    "I think quality is our priority."
    ],
    "hint": "Usa 'I believe' para expresar tu opinión.",
    "reject": [
@@ -5642,7 +5792,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El presupuesto es limitado. No obstante, logramos los objetivos.\"",
    "accepted": [
-    "The budget is limited. Nevertheless, we achieved the objectives."
+    "The budget is limited. Nevertheless, we achieved the objectives.",
+    "The budget is constrained. Nevertheless, we met the objectives."
    ],
    "hint": "Usa 'Nevertheless' para 'no obstante'.",
    "reject": [
@@ -5661,7 +5812,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El sistema es complejo. Por ejemplo, la configuración requiere expertos.\"",
    "accepted": [
-    "The system is complex. For example, the setup requires experts."
+    "The system is complex. For example, the setup requires experts.",
+    "The system is complicated. For example, the setup requires experts.",
+    "The system is complicated. The configuration, for example, requires experts."
    ],
    "hint": "Usa 'For example' para introducir el ejemplo.",
    "reject": [
@@ -5680,7 +5833,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Algunos prefieren trabajar de forma remota. Por otro lado, otros valoran la oficina.\"",
    "accepted": [
-    "Some prefer remote work. On the other hand, others value the office."
+    "Some prefer remote work. On the other hand, others value the office.",
+    "Some people prefer working remotely. On the other hand, others value working in the office.",
+    "Some prefer to work remotely. Others, on the other hand, value the office.",
+    "Some favor remote work. On the other hand, others appreciate the office."
    ],
    "hint": "Usa 'On the other hand' para otra perspectiva.",
    "reject": [
@@ -5699,7 +5855,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él trabajó muy duro. Por lo tanto, obtuvo una buena evaluación.\"",
    "accepted": [
-    "He worked very hard. Therefore, he got a good evaluation."
+    "He worked very hard. Therefore, he got a good evaluation.",
+    "He put in a great deal of effort. Therefore, he got a good evaluation.",
+    "He worked very hard. He therefore received a good evaluation."
    ],
    "hint": "Usa 'Therefore' para la consecuencia.",
    "reject": [
@@ -5718,7 +5876,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La inversión es arriesgada. Sin embargo, puede traer grandes ganancias.\"",
    "accepted": [
-    "The investment is risky. However, it can bring great returns."
+    "The investment is risky. However, it can bring great returns.",
+    "The investment is risky. However, it can yield substantial returns."
    ],
    "hint": "Usa 'However' para el contraste.",
    "reject": [
@@ -5737,7 +5896,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"I believe es importante la comunicación.\"",
    "accepted": [
-    "I believe communication is important."
+    "I believe communication is important.",
+    "I believe communication to be important.",
+    "Communication, I believe, is important.",
+    "Communication is important, I believe."
    ],
    "hint": "Usa 'I believe' al principio y el sujeto después.",
    "reject": [
@@ -5756,7 +5918,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La empresa tuvo pérdidas. Por lo tanto, habrá recortes.\"",
    "accepted": [
-    "The company had losses. Therefore, there will be cuts."
+    "The company had losses. Therefore, there will be cuts.",
+    "The company suffered losses. Therefore, there will be cuts.",
+    "The company incurred losses. There will, therefore, be cuts."
    ],
    "hint": "Usa 'Therefore' para la consecuencia.",
    "reject": [
@@ -5775,7 +5939,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"In my opinion, el reporte es muy claro.\"",
    "accepted": [
-    "In my opinion, the report is very clear."
+    "In my opinion, the report is very clear.",
+    "The report, in my opinion, is very clear.",
+    "The report is very clear, in my opinion."
    ],
    "hint": "Usa 'In my opinion' para empezar.",
    "reject": [
@@ -5794,7 +5960,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Hay problemas de inventario. For example, faltan 20 unidades del producto A.\"",
    "accepted": [
-    "There are inventory problems. For example, 20 units of product A are missing."
+    "There are inventory problems. For example, 20 units of product A are missing.",
+    "There are inventory issues. For example, the inventory is missing 20 units of product A.",
+    "There are inventory problems. Twenty units of product A, for example, are missing."
    ],
    "hint": "Usa 'For example' para introducir el ejemplo.",
    "reject": [
@@ -6210,7 +6378,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos habrían invertido si hubieran visto una oportunidad clara.\"",
    "accepted": [
-    "They would have invested if they had seen a clear opportunity."
+    "They would have invested if they had seen a clear opportunity.",
+    "If they had seen a clear opportunity, they would have invested.",
+    "They'd have invested if they'd seen a clear opportunity.",
+    "Had they seen a clear opportunity, they would have invested."
    ],
    "hint": "Participios de 'invest' y 'see'.",
    "reject": [
@@ -6249,7 +6420,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él habría avisado si hubiera sabido del cambio.\"",
    "accepted": [
-    "He would have informed us if he had known about the change."
+    "He would have informed us if he had known about the change.",
+    "If he had known about the change, he would have informed us.",
+    "Had he known about the change, he would have informed us."
    ],
    "hint": "Participios de 'inform' y 'know'.",
    "reject": [
@@ -6308,7 +6481,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Si hubieran aprobado el préstamo, habrían comprado el departamento.\"",
    "accepted": [
-    "If they had approved the loan, they would have bought the apartment."
+    "If they had approved the loan, they would have bought the apartment.",
+    "They would have bought the apartment if they had approved the loan.",
+    "They'd have bought the apartment if they'd approved the loan.",
+    "Had they approved the loan, they would have bought the apartment."
    ],
    "hint": "Participios de 'approve' y 'buy'.",
    "reject": [
@@ -6367,7 +6543,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella habría encontrado otro trabajo si hubiera renunciado antes.\"",
    "accepted": [
-    "She would have found another job if she had resigned earlier."
+    "She would have found another job if she had resigned earlier.",
+    "If she had resigned earlier, she would have found another job.",
+    "She'd have found another job if she'd resigned earlier.",
+    "Had she resigned earlier, she would have found another job."
    ],
    "hint": "Participios de 'find' y 'resign'.",
    "reject": [
@@ -7265,7 +7444,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Le escribo para expresar mi preocupación.\"",
    "accepted": [
-    "I am writing to express my concern."
+    "I am writing to express my concern.",
+    "I am writing to voice my concern.",
+    "I am writing to convey my concern."
    ],
    "hint": "Usa la frase estándar para iniciar correos formales.",
    "reject": [
@@ -7284,7 +7465,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Para resumir, el proyecto fue un éxito.\"",
    "accepted": [
-    "To sum up, the project was a success."
+    "To sum up, the project was a success.",
+    "In summary, the project was a success.",
+    "In short, the project was successful.",
+    "To sum things up, the project was successful."
    ],
    "hint": "Recuerda el conector para recapitular.",
    "reject": [
@@ -7303,7 +7487,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En primer lugar, los resultados son prometedores.\"",
    "accepted": [
-    "Firstly, the results are promising."
+    "Firstly, the results are promising.",
+    "In the first place, the results are promising."
    ],
    "hint": "Usa el conector para el primer punto.",
    "reject": [
@@ -7322,7 +7507,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Además, el equipo ha trabajado muy bien.\"",
    "accepted": [
-    "In addition, the team has worked very well."
+    "In addition, the team has worked very well.",
+    "Furthermore, the team has worked very well."
    ],
    "hint": "Usa el conector para añadir una idea.",
    "reject": [
@@ -7341,7 +7527,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Sin embargo, hay algunos desafíos.\"",
    "accepted": [
-    "However, there are some challenges."
+    "However, there are some challenges.",
+    "Nevertheless, there are some challenges.",
+    "There are, however, some challenges."
    ],
    "hint": "Usa el conector para contrastar.",
    "reject": [
@@ -7360,7 +7548,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Por lo tanto, necesitamos una nueva estrategia.\"",
    "accepted": [
-    "Therefore, we need a new strategy."
+    "Therefore, we need a new strategy.",
+    "Consequently, we need a new strategy.",
+    "Thus, we need a new strategy.",
+    "We therefore need a new strategy."
    ],
    "hint": "Usa el conector para indicar una consecuencia.",
    "reject": [
@@ -7379,7 +7570,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En conclusión, el proyecto es viable.\"",
    "accepted": [
-    "In conclusion, the project is viable."
+    "In conclusion, the project is viable.",
+    "In summary, the project is viable.",
+    "In conclusion, the project is feasible."
    ],
    "hint": "Usa el conector para cerrar un texto formal.",
    "reject": [
@@ -7398,7 +7591,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La introducción debe explicar el propósito.\"",
    "accepted": [
-    "The introduction should explain the purpose."
+    "The introduction should explain the purpose.",
+    "The introductory section should explain the purpose."
    ],
    "hint": "Usa 'should' para expresar lo que debe hacer.",
    "reject": [
@@ -7417,7 +7611,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El cuerpo del informe incluye varias ideas.\"",
    "accepted": [
-    "The body of the report includes several ideas."
+    "The body of the report includes several ideas.",
+    "The body of the report contains several ideas."
    ],
    "hint": "El 'cuerpo' de un informe es 'body'.",
    "reject": [
@@ -7436,7 +7631,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La conclusión recapitula los puntos principales.\"",
    "accepted": [
-    "The conclusion recaps the main points."
+    "The conclusion recaps the main points.",
+    "The conclusion summarizes the main points.",
+    "The concluding section recaps the key points."
    ],
    "hint": "Usa 'recap' como verbo.",
    "reject": [
@@ -7474,7 +7671,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En segundo lugar, la calidad es fundamental.\"",
    "accepted": [
-    "Secondly, quality is fundamental."
+    "Secondly, quality is fundamental.",
+    "In the second place, quality is fundamental.",
+    "Secondly, quality is essential."
    ],
    "hint": "Usa el conector para el segundo punto.",
    "reject": [
@@ -7493,7 +7692,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Por lo tanto, la inversión es necesaria.\"",
    "accepted": [
-    "Therefore, the investment is necessary."
+    "Therefore, the investment is necessary.",
+    "Consequently, the investment is necessary.",
+    "Thus, the investment is necessary.",
+    "The investment is therefore necessary."
    ],
    "hint": "Usa el conector para indicar una consecuencia.",
    "reject": [
@@ -7888,7 +8090,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No estamos de acuerdo con la propuesta.\"",
    "accepted": [
-    "We are not in agreement with the proposal."
+    "We are not in agreement with the proposal.",
+    "We are not in accord with the proposal.",
+    "We are not in agreement regarding the proposal."
    ],
    "hint": "Evita contracciones y sé formal.",
    "reject": [
@@ -7907,7 +8111,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La situación laboral actual es difícil.\"",
    "accepted": [
-    "The current labor situation is difficult."
+    "The current labor situation is difficult.",
+    "The present labor situation is difficult.",
+    "The current employment situation is difficult."
    ],
    "hint": "Usa vocabulario formal para 'difícil' y 'laboral'.",
    "reject": [
@@ -7926,7 +8132,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Quisiera solicitar una oportunidad.\"",
    "accepted": [
-    "I would like to request an opportunity."
+    "I would like to request an opportunity.",
+    "I wish to request an opportunity.",
+    "I would like to request a chance."
    ],
    "hint": "Usa la estructura formal para 'quisiera' y 'solicitar'.",
    "reject": [
@@ -7945,7 +8153,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Por favor, envíe el informe antes de la fecha límite.\"",
    "accepted": [
-    "Please send the report before the deadline."
+    "Please send the report before the deadline.",
+    "Kindly send the report before the deadline."
    ],
    "hint": "Incluye 'please' y el término formal para 'fecha límite'.",
    "reject": [
@@ -7964,7 +8173,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Atentamente, [Tu nombre].\"",
    "accepted": [
-    "Sincerely, [Your Name]."
+    "Sincerely, [Your Name].",
+    "Yours sincerely, [Your Name].",
+    "Sincerely yours, [Your Name]."
    ],
    "hint": "Usa la despedida formal indicada.",
    "reject": [
@@ -7983,7 +8194,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estamos trabajando en un nuevo proyecto.\"",
    "accepted": [
-    "We are working on a new project."
+    "We are working on a new project.",
+    "We're currently working on a new project.",
+    "Currently, we're working on a new project.",
+    "We're presently working on a new project."
    ],
    "hint": "Usa el vocabulario laboral formal.",
    "reject": [
@@ -8002,7 +8216,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El cambio climático es un problema social.\"",
    "accepted": [
-    "Climate change is a social issue."
+    "Climate change is a social issue.",
+    "Climate change constitutes a social issue.",
+    "Climate change represents a social issue.",
+    "Climate change is an issue for society."
    ],
    "hint": "Usa el vocabulario formal para 'problema' en este contexto.",
    "reject": [
@@ -8021,7 +8238,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No estamos hablando de niños.\"",
    "accepted": [
-    "We are not speaking about children."
+    "We are not speaking about children.",
+    "We are not talking about children.",
+    "We are currently not talking about children."
    ],
    "hint": "Evita contracciones y usa el término formal para 'niños'.",
    "reject": [
@@ -8040,7 +8259,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Quisiera proponer una mejora.\"",
    "accepted": [
-    "I would like to propose an improvement."
+    "I would like to propose an improvement.",
+    "I would like to propose an enhancement."
    ],
    "hint": "Usa la estructura formal para 'quisiera' y el verbo 'proponer'.",
    "reject": [
@@ -8059,7 +8279,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En primer lugar, la economía global es compleja.\"",
    "accepted": [
-    "Firstly, the global economy is complex."
+    "Firstly, the global economy is complex.",
+    "Firstly, the global economy is complicated."
    ],
    "hint": "Usa la palabra formal para iniciar una frase de ensayo.",
    "reject": [
@@ -8078,7 +8299,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El informe demuestra el progreso.\"",
    "accepted": [
-    "The report demonstrates the progress."
+    "The report demonstrates the progress.",
+    "The report illustrates the progress."
    ],
    "hint": "Usa el verbo formal para 'demostrar'.",
    "reject": [
@@ -8116,7 +8338,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Por favor, considere mi solicitud.\"",
    "accepted": [
-    "Please consider my request."
+    "Please consider my request.",
+    "Kindly consider my request.",
+    "Please take my request into consideration."
    ],
    "hint": "Usa 'please' y el sustantivo formal para 'solicitud'.",
    "reject": [
@@ -8565,7 +8789,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estimado Sr. Torres, estoy yendo a verificar el cronograma.\"",
    "accepted": [
-    "Dear Mr. Torres, I am going to check the schedule."
+    "Dear Mr. Torres, I am going to check the schedule.",
+    "Dear Mr. Torres, I am going to verify the schedule."
    ],
    "hint": "Recuerda el saludo formal y evita contracciones.",
    "reject": [
@@ -8603,7 +8828,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Podría por favor enviar el informe final?\"",
    "accepted": [
-    "Could you please send the final report?"
+    "Could you please send the final report?",
+    "Could you kindly send the final report?"
    ],
    "hint": "No olvides 'please' y el artículo 'the'.",
    "reject": [
@@ -8622,7 +8848,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estimada Sra. Rojas, no voy a estar disponible mañana.\"",
    "accepted": [
-    "Dear Ms. Rojas, I am not going to be available tomorrow."
+    "Dear Ms. Rojas, I am not going to be available tomorrow.",
+    "Dear Ms. Rojas, I am going to be unavailable tomorrow.",
+    "Dear Ms. Rojas, tomorrow I am not going to be available."
    ],
    "hint": "Usa un saludo formal y evita la contracción 'won't' o 'I'm not gonna'.",
    "reject": [
@@ -8641,7 +8869,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estoy yendo a contactar al cliente esta semana.\"",
    "accepted": [
-    "I am going to contact the client this week."
+    "I am going to contact the client this week.",
+    "This week, I am going to contact the client.",
+    "I am going to get in touch with the client this week.",
+    "I am going to reach out to the client this week."
    ],
    "hint": "Evita la jerga y las contracciones.",
    "reject": [
@@ -8660,7 +8891,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Primeramente, creo que debemos considerar todas las opciones.\"",
    "accepted": [
-    "Firstly, I believe that we should consider all options."
+    "Firstly, I believe that we should consider all options.",
+    "To begin with, I believe that we should consider all options.",
+    "Firstly, I believe we should consider every option."
    ],
    "hint": "Usa 'believe' para una opinión formal y 'firstly' para ordenar ideas.",
    "reject": [
@@ -8679,7 +8912,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Podría por favor darnos los detalles?\"",
    "accepted": [
-    "Could you please give us the details?"
+    "Could you please give us the details?",
+    "Could you please provide us with the details?",
+    "Could you please share the details with us?",
+    "Could you kindly give us the details?"
    ],
    "hint": "Usa 'could you please' para una solicitud formal.",
    "reject": [
@@ -8698,7 +8934,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estoy yendo a enviar mi renuncia mañana.\"",
    "accepted": [
-    "I am going to submit my resignation tomorrow."
+    "I am going to submit my resignation tomorrow.",
+    "Tomorrow, I am going to submit my resignation.",
+    "I am going to hand in my resignation tomorrow."
    ],
    "hint": "Usa vocabulario profesional ('submit resignation') y evita contracciones.",
    "reject": [
@@ -8717,7 +8955,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estimado equipo, adjunto el presupuesto.\"",
    "accepted": [
-    "Dear Team, please find the budget attached."
+    "Dear Team, please find the budget attached.",
+    "Dear Team, please find attached the budget.",
+    "Dear Team, please see the attached budget."
    ],
    "hint": "Usa un saludo formal y una frase profesional para adjuntar documentos.",
    "reject": [
@@ -8736,7 +8976,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No vamos a aceptar este cambio.\"",
    "accepted": [
-    "We are not going to accept this change."
+    "We are not going to accept this change.",
+    "We are going to reject this change."
    ],
    "hint": "Evita contracciones y jerga.",
    "reject": [
@@ -8755,7 +8996,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estimado Gerente, ¿podría revisar el documento?\"",
    "accepted": [
-    "Dear Manager, could you please review the document?"
+    "Dear Manager, could you please review the document?",
+    "Dear Manager, could you kindly review the document?"
    ],
    "hint": "Usa un saludo formal y una petición cortés.",
    "reject": [
@@ -8774,7 +9016,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Estoy yendo a finalizar la presentación mañana.\"",
    "accepted": [
-    "I am going to finalize the presentation tomorrow."
+    "I am going to finalize the presentation tomorrow.",
+    "Tomorrow, I am going to finalize the presentation.",
+    "I am going to complete the presentation tomorrow."
    ],
    "hint": "Evita contracciones y usa un verbo formal.",
    "reject": [
@@ -8793,7 +9037,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Creemos que el problema es urgente.\"",
    "accepted": [
-    "We believe that the problem is urgent."
+    "We believe that the problem is urgent.",
+    "We believe the problem is urgent."
    ],
    "hint": "Usa 'believe' para una opinión formal.",
    "reject": [
@@ -9345,7 +9590,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Es algo bueno o malo?\"",
    "accepted": [
-    "Is it something good or bad?"
+    "Is it something good or bad?",
+    "Is it a good or bad thing?",
+    "Is it a good thing or a bad thing?"
    ],
    "hint": "La estructura 'is it... or...?'",
    "reject": [
@@ -9424,7 +9671,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Primero el bosque, luego los árboles.\"",
    "accepted": [
-    "First the forest, then the trees."
+    "First the forest, then the trees.",
+    "The forest first, then the trees.",
+    "First comes the forest, then the trees."
    ],
    "hint": "Traducción literal de la frase idiomática.",
    "reject": [
@@ -10570,7 +10819,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Debes enfocarte en las palabras clave.\"",
    "accepted": [
-    "You should focus on keywords."
+    "You should focus on keywords.",
+    "You should concentrate on keywords.",
+    "You should focus your attention on keywords."
    ],
    "hint": "Usa 'focus on'.",
    "reject": [
@@ -10608,7 +10859,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Los verbos y nombres son palabras clave.\"",
    "accepted": [
-    "Verbs and nouns are keywords."
+    "Verbs and nouns are keywords.",
+    "Nouns and verbs are keywords.",
+    "Both verbs and nouns are keywords."
    ],
    "hint": "Usa 'nouns' para nombres.",
    "reject": [
@@ -10627,7 +10880,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Él necesita su medicina.\"",
    "accepted": [
-    "He needs his medicine."
+    "He needs his medicine.",
+    "He needs his medication."
    ],
    "hint": "Recuerda la -s en tercera persona singular.",
    "reject": [
@@ -10668,7 +10922,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No te frenes, sigue escuchando.\"",
    "accepted": [
-    "Don't stop, keep listening."
+    "Don't stop, keep listening.",
+    "Keep listening; don't stop."
    ],
    "hint": "Usa 'don't stop' y 'keep + -ing'.",
    "reject": [
@@ -10687,7 +10942,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El acento americano es muy común.\"",
    "accepted": [
-    "The American accent is very common."
+    "The American accent is very common.",
+    "The American English accent is very common."
    ],
    "hint": "Usa 'American' como adjetivo.",
    "reject": [
@@ -10706,7 +10962,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Identifica los conectores de discurso.\"",
    "accepted": [
-    "Identify the discourse connectors."
+    "Identify the discourse connectors.",
+    "Find the discourse connectors.",
+    "Point out the discourse connectors."
    ],
    "hint": "Usa 'identify' y 'discourse connectors'.",
    "reject": [
@@ -11142,7 +11400,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Necesitamos escuchar diferentes acentos.\"",
    "accepted": [
-    "We need to listen to different accents."
+    "We need to listen to different accents.",
+    "We need to listen to various accents.",
+    "We need to listen to a variety of accents."
    ],
    "hint": "Usa 'to' después de 'listen'.",
    "reject": [
@@ -11238,7 +11498,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"No entiendo la idea principal.\"",
    "accepted": [
-    "I don't understand the main idea."
+    "I don't understand the main idea.",
+    "I don't grasp the main idea."
    ],
    "hint": "Usa 'don't' para la negación con 'I'.",
    "reject": [
@@ -11257,7 +11518,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella no escucha podcasts.\"",
    "accepted": [
-    "She doesn't listen to podcasts."
+    "She doesn't listen to podcasts.",
+    "She doesn't listen to any podcasts."
    ],
    "hint": "Recuerda el auxiliar negativo para 'she' y la preposición de 'listen'.",
    "reject": [
@@ -11276,7 +11538,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Podrías decir eso otra vez?\"",
    "accepted": [
-    "Could you say that again?"
+    "Could you say that again?",
+    "Could you say it again?",
+    "Could you say that once more?"
    ],
    "hint": "Usa 'say that again' para la expresión.",
    "reject": [
@@ -11295,7 +11559,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Siempre veo películas en inglés.\"",
    "accepted": [
-    "I always watch movies in English."
+    "I always watch movies in English.",
+    "I always watch films in English."
    ],
    "hint": "Usa 'watch' para 'ver películas' y la preposición correcta para idiomas.",
    "reject": [
@@ -11314,7 +11579,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos no se fijan en cada palabra.\"",
    "accepted": [
-    "They don't focus on every word."
+    "They don't focus on every word.",
+    "They don't concentrate on every word."
    ],
    "hint": "Usa 'focus on' y recuerda la preposición.",
    "reject": [
@@ -11779,7 +12045,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En mi opinión, el informe es muy completo.\"",
    "accepted": [
-    "In my view, the report is very complete."
+    "In my view, the report is very complete.",
+    "From my perspective, the report is very complete."
    ],
    "hint": "Usa la frase para dar opinión y 'muy completo'.",
    "reject": [
@@ -11798,7 +12065,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Primero, necesitamos confirmar la asistencia.\"",
    "accepted": [
-    "Firstly, we need to confirm attendance."
+    "Firstly, we need to confirm attendance.",
+    "We need, firstly, to confirm attendance."
    ],
    "hint": "Usa el conector para enumerar y 'confirmar asistencia'.",
    "reject": [
@@ -11817,7 +12085,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Por un lado, el costo es bajo. Por otro lado, la calidad es superior.\"",
    "accepted": [
-    "On one hand, the cost is low. On the other hand, the quality is superior."
+    "On one hand, the cost is low. On the other hand, the quality is superior.",
+    "On the one hand, the cost is low. On the other hand, the quality is superior.",
+    "On the one hand, the cost is low. The quality, on the other hand, is superior.",
+    "The cost, on the one hand, is low. On the other hand, the quality is superior."
    ],
    "hint": "Usa ambos conectores para contrastar.",
    "reject": [
@@ -11836,7 +12107,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Finalmente, revisaremos las conclusiones.\"",
    "accepted": [
-    "Finally, we will review the conclusions."
+    "Finally, we will review the conclusions.",
+    "Finally, we'll review the conclusions."
    ],
    "hint": "Usa el conector para terminar una enumeración.",
    "reject": [
@@ -11855,7 +12127,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Segundo, debemos preparar el material.\"",
    "accepted": [
-    "Secondly, we must prepare the material."
+    "Secondly, we must prepare the material.",
+    "Secondly, we must get the material ready."
    ],
    "hint": "Usa el conector ordinal y 'preparar el material'.",
    "reject": [
@@ -11874,7 +12147,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Puedo añadir algo sobre los requisitos del cliente?\"",
    "accepted": [
-    "Can I add something about the client's requirements?"
+    "Can I add something about the client's requirements?",
+    "Can I add a point about the client's requirements?"
    ],
    "hint": "Usa la frase para pedir la palabra y 'requisitos del cliente'.",
    "reject": [
@@ -11893,7 +12167,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En mi opinión, el equipo ha superado las expectativas.\"",
    "accepted": [
-    "In my view, the team has exceeded expectations."
+    "In my view, the team has exceeded expectations.",
+    "From my perspective, the team has exceeded expectations.",
+    "From my standpoint, the team has surpassed expectations."
    ],
    "hint": "Usa la frase para dar tu opinión.",
    "reject": [
@@ -11912,7 +12188,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Primero, identificaremos los problemas clave.\"",
    "accepted": [
-    "Firstly, we will identify the key problems."
+    "Firstly, we will identify the key problems.",
+    "Firstly, we'll identify the key problems."
    ],
    "hint": "Usa el conector para empezar una enumeración y 'problemas clave'.",
    "reject": [
@@ -11931,7 +12208,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Tercero, evaluaremos los resultados.\"",
    "accepted": [
-    "Thirdly, we will evaluate the results."
+    "Thirdly, we will evaluate the results.",
+    "Thirdly, we'll evaluate the results.",
+    "Thirdly, we will assess the results."
    ],
    "hint": "Usa el conector ordinal (similar a 'secondly').",
    "reject": [
@@ -11950,7 +12229,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Por un lado, el diseño es innovador. Por otro lado, la implementación es compleja.\"",
    "accepted": [
-    "On one hand, the design is innovative. On the other hand, the implementation is complex."
+    "On one hand, the design is innovative. On the other hand, the implementation is complex.",
+    "On the one hand, the design is innovative. On the other hand, the implementation is complicated.",
+    "The design, on the one hand, is innovative. The implementation, on the other hand, is complex."
    ],
    "hint": "Usa los conectores de contraste.",
    "reject": [
@@ -11969,7 +12250,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Finalmente, presentaremos nuestras recomendaciones.\"",
    "accepted": [
-    "Finally, we will present our recommendations."
+    "Finally, we will present our recommendations.",
+    "Finally, we'll present our recommendations.",
+    "Finally, we will put forward our recommendations."
    ],
    "hint": "Usa el conector para el último punto.",
    "reject": [
@@ -11988,7 +12271,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Puedo añadir algo a esta conversación?\"",
    "accepted": [
-    "Can I add something to this conversation?"
+    "Can I add something to this conversation?",
+    "Can I add a comment to this conversation?"
    ],
    "hint": "Usa la frase para pedir la palabra y 'conversación'.",
    "reject": [
@@ -12007,7 +12291,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En mi opinión, el plazo es razonable.\"",
    "accepted": [
-    "In my view, the deadline is reasonable."
+    "In my view, the deadline is reasonable.",
+    "From my perspective, the deadline is reasonable."
    ],
    "hint": "Usa la frase para dar tu opinión y 'plazo'.",
    "reject": [
@@ -12544,7 +12829,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Necesitamos un ritmo natural.\"",
    "accepted": [
-    "We need a natural rhythm."
+    "We need a natural rhythm.",
+    "What we need is a natural rhythm.",
+    "A natural rhythm is what we need."
    ],
    "hint": "La palabra 'rhythm' puede ser un poco difícil de escribir.",
    "reject": [
@@ -12583,7 +12870,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Podemos usar rellenos útiles.\"",
    "accepted": [
-    "We can use useful fillers."
+    "We can use useful fillers.",
+    "We can make use of useful fillers.",
+    "We can use helpful filler words.",
+    "We can use fillers that are useful."
    ],
    "hint": "El adjetivo va antes del sustantivo.",
    "reject": [
@@ -12622,7 +12912,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella habla con un volumen bajo.\"",
    "accepted": [
-    "She speaks with a low volume."
+    "She speaks with a low volume.",
+    "She speaks at a low volume.",
+    "She talks at a low volume.",
+    "She speaks in a low voice."
    ],
    "hint": "Recuerda la -s del verbo y el orden del adjetivo.",
    "reject": [
@@ -13002,7 +13295,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Déjame ver... El informe está listo.\"",
    "accepted": [
-    "Let me see... The report is ready."
+    "Let me see... The report is ready.",
+    "Let me see... The report's ready."
    ],
    "hint": "Usa 'Let me see...' para ganar tiempo.",
    "reject": [
@@ -13021,7 +13315,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"De hecho, creo que podemos terminar hoy.\"",
    "accepted": [
-    "Actually, I think we can finish today."
+    "Actually, I think we can finish today.",
+    "I actually think we can finish today.",
+    "I think, actually, we can finish today."
    ],
    "hint": "Recuerda que 'Actually' se usa para introducir una idea o hecho.",
    "reject": [
@@ -13040,7 +13336,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Esa es una buena pregunta. No tengo la respuesta ahora.\"",
    "accepted": [
-    "That's a good question. I don't have the answer now."
+    "That's a good question. I don't have the answer now.",
+    "That's a good question. I don't have the answer right now.",
+    "That's a good question. I currently don't have the answer.",
+    "That's a good question. Right now, I don't have the answer."
    ],
    "hint": "Usa la contracción para 'That is'.",
    "reject": [
@@ -13059,7 +13358,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Sabes a qué me refiero? Necesitamos concentrarnos.\"",
    "accepted": [
-    "Do you know what I mean? We need to focus."
+    "Do you know what I mean? We need to focus.",
+    "Do you know what I mean? We need to concentrate.",
+    "Do you understand what I mean? We need to focus.",
+    "Do you see what I mean? We need to focus."
    ],
    "hint": "La frase para confirmar es 'Do you know what I mean?'.",
    "reject": [
@@ -13078,7 +13380,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Bueno, el punto es que la calidad es lo más importante.\"",
    "accepted": [
-    "Well, the point is quality is the most important thing."
+    "Well, the point is quality is the most important thing.",
+    "Well, the point is that quality is the most important thing."
    ],
    "hint": "Para introducir una idea importante: 'Well, the point is...'.",
    "reject": [
@@ -13097,7 +13400,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Primero, creamos el diseño; segundo, compramos los materiales.\"",
    "accepted": [
-    "Firstly, we create the design; secondly, we buy the materials."
+    "Firstly, we create the design; secondly, we buy the materials.",
+    "Firstly, we create the design; secondly, we purchase the materials."
    ],
    "hint": "Usa 'firstly' y 'secondly' para enumerar.",
    "reject": [
@@ -13116,7 +13420,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Sin embargo, también debemos considerar las opiniones del equipo.\"",
    "accepted": [
-    "However, we must also consider the team's opinions."
+    "However, we must also consider the team's opinions.",
+    "However, we also must consider the team's opinions.",
+    "We must, however, also consider the team's opinions.",
+    "However, we must consider the team's opinions too."
    ],
    "hint": "Usa 'However' para cambiar de perspectiva y el posesivo ('s) para 'del equipo'.",
    "reject": [
@@ -13135,7 +13442,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es lo que usas para firmar documentos – ¿un lapicero, sí?\"",
    "accepted": [
-    "It's the thing you use to sign documents – a pen, yes?"
+    "It's the thing you use to sign documents – a pen, yes?",
+    "It's what you use to sign documents – a pen, yes?",
+    "It's the object you use to sign documents – a pen, yes?"
    ],
    "hint": "Usa 'the thing you use for...' para describir un objeto.",
    "reject": [
@@ -13154,7 +13463,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En conclusión, creo que el servicio al cliente es clave.\"",
    "accepted": [
-    "In conclusion, I think customer service is key."
+    "In conclusion, I think customer service is key.",
+    "In conclusion, customer service is key, I think.",
+    "To conclude, I think customer service is key.",
+    "I think, in conclusion, that customer service is key."
    ],
    "hint": "Recuerda la estructura para finalizar tu opinión.",
    "reject": [
@@ -13193,7 +13505,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Es como una pantalla grande, ¿sabes a qué me refiero?\"",
    "accepted": [
-    "It's like a big screen, do you know what I mean?"
+    "It's like a big screen, do you know what I mean?",
+    "It's like a large screen, do you know what I mean?",
+    "It's similar to a big screen, do you know what I mean?"
    ],
    "hint": "Combina una paráfrasis con una frase de clarificación.",
    "reject": [
@@ -13212,7 +13526,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"De hecho, esa es una buena pregunta para el gerente.\"",
    "accepted": [
-    "Actually, that's a good question for the manager."
+    "Actually, that's a good question for the manager.",
+    "That's actually a good question for the manager.",
+    "That's a good question for the manager, actually.",
+    "Actually, that's a good question to ask the manager."
    ],
    "hint": "Combina 'Actually' con 'That's a good question'.",
    "reject": [
@@ -13231,7 +13548,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Sin embargo, déjame ver... creo que podemos encontrar una solución.\"",
    "accepted": [
-    "However, let me see... I think we can find a solution."
+    "However, let me see... I think we can find a solution.",
+    "Still, let me see... I think we can find a solution.",
+    "That said, let me see... I think we can work out a solution."
    ],
    "hint": "Usa 'However' para cambiar, y 'Let me see...' para la pausa.",
    "reject": [
@@ -13635,7 +13954,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé llamar al gerente.\"",
    "accepted": [
-    "I'm sorry, I forgot to call the manager."
+    "I'm sorry, I forgot to call the manager.",
+    "Sorry, I forgot to call the manager.",
+    "I'm sorry that I forgot to call the manager."
    ],
    "hint": "Recuerda la estructura 'I'm sorry, I forgot to...'",
    "reject": [
@@ -13654,7 +13975,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En mi opinión, la oficina tiene beneficios y desventajas.\"",
    "accepted": [
-    "In my opinion, the office has benefits and drawbacks."
+    "In my opinion, the office has benefits and drawbacks.",
+    "From my point of view, the office has benefits and drawbacks.",
+    "As I see it, the office has both benefits and drawbacks.",
+    "I think the office has its benefits and drawbacks."
    ],
    "hint": "Usa 'In my opinion,' y recuerda la concordancia verbal para 'the office'.",
    "reject": [
@@ -13673,7 +13997,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé registrar mi entrada.\"",
    "accepted": [
-    "I'm sorry, I forgot to clock in."
+    "I'm sorry, I forgot to clock in.",
+    "Sorry, I forgot to clock in.",
+    "I'm sorry that I forgot to clock in."
    ],
    "hint": "Para 'registrar entrada/salida' se usa 'clock in/out'.",
    "reject": [
@@ -13692,7 +14018,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé verificar los datos.\"",
    "accepted": [
-    "I'm sorry, I forgot to check the data."
+    "I'm sorry, I forgot to check the data.",
+    "Sorry, I forgot to check the data.",
+    "I'm sorry that I forgot to verify the data."
    ],
    "hint": "Usa 'check' para 'verificar'.",
    "reject": [
@@ -13711,7 +14039,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé cargar mi laptop.\"",
    "accepted": [
-    "I'm sorry, I forgot to charge my laptop."
+    "I'm sorry, I forgot to charge my laptop.",
+    "Sorry, I forgot to charge my laptop.",
+    "I'm sorry that I forgot to charge my laptop."
    ],
    "hint": "El verbo 'cargar' para dispositivos electrónicos es 'charge'.",
    "reject": [
@@ -13730,7 +14060,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En mi opinión, el plan tiene ventajas y desventajas.\"",
    "accepted": [
-    "In my opinion, the plan has benefits and drawbacks."
+    "In my opinion, the plan has benefits and drawbacks.",
+    "From my point of view, the plan has benefits and drawbacks.",
+    "As I see it, the plan has both benefits and drawbacks.",
+    "I think the plan has its pros and cons."
    ],
    "hint": "Recuerda la expresión para 'ventajas y desventajas'.",
    "reject": [
@@ -13749,7 +14082,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé traer mi DNI.\"",
    "accepted": [
-    "I'm sorry, I forgot to bring my ID."
+    "I'm sorry, I forgot to bring my ID.",
+    "Sorry, I forgot to bring my ID.",
+    "I'm sorry that I forgot to bring my identification."
    ],
    "hint": "Para 'Documento Nacional de Identidad' usa la abreviatura común en inglés.",
    "reject": [
@@ -13768,7 +14103,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé desconectar el cable.\"",
    "accepted": [
-    "I'm sorry, I forgot to unplug the cable."
+    "I'm sorry, I forgot to unplug the cable.",
+    "Sorry, I forgot to unplug the cable.",
+    "I'm sorry that I forgot to unplug the cable."
    ],
    "hint": "El verbo 'desconectar' (un enchufe) es 'unplug'.",
    "reject": [
@@ -13787,7 +14124,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En mi opinión, el transporte público tiene aspectos buenos y malos.\"",
    "accepted": [
-    "In my opinion, public transport has benefits and drawbacks."
+    "In my opinion, public transport has benefits and drawbacks.",
+    "From my point of view, public transport has benefits and drawbacks.",
+    "As I see it, public transport has both benefits and drawbacks.",
+    "I think public transport has its good and bad points."
    ],
    "hint": "Usa 'public transport' y la expresión para 'aspectos buenos y malos'.",
    "reject": [
@@ -13806,7 +14146,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé enviar el paquete.\"",
    "accepted": [
-    "I'm sorry, I forgot to send the package."
+    "I'm sorry, I forgot to send the package.",
+    "Sorry, I forgot to send the package."
    ],
    "hint": "El verbo 'enviar' es 'send'.",
    "reject": [
@@ -13825,7 +14166,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé reservar los pasajes.\"",
    "accepted": [
-    "I'm sorry, I forgot to book the tickets."
+    "I'm sorry, I forgot to book the tickets.",
+    "Sorry, I forgot to book the tickets."
    ],
    "hint": "Para 'reservar' boletos/pasajes, se usa 'book'.",
    "reject": [
@@ -13844,7 +14186,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"En mi opinión, trabajar desde casa tiene beneficios y desventajas.\"",
    "accepted": [
-    "In my opinion, working from home has benefits and drawbacks."
+    "In my opinion, working from home has benefits and drawbacks.",
+    "From my point of view, working from home has benefits and drawbacks.",
+    "As I see it, working from home has both benefits and drawbacks.",
+    "I think working from home has its pros and cons."
    ],
    "hint": "Usa la forma en -ing para el sujeto 'working from home'.",
    "reject": [
@@ -13863,7 +14208,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Lo siento, olvidé guardar el archivo.\"",
    "accepted": [
-    "I'm sorry, I forgot to save the file."
+    "I'm sorry, I forgot to save the file.",
+    "Sorry, I forgot to save the file.",
+    "I'm sorry that I forgot to save the file."
    ],
    "hint": "El verbo 'guardar' (un archivo) es 'save'.",
    "reject": [
@@ -14347,7 +14694,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"¿Trabajarías menos si tuvieras más ayuda?\"",
    "accepted": [
-    "Would you work less if you had more help?"
+    "Would you work less if you had more help?",
+    "If you had more help, would you work less?"
    ],
    "hint": "Para preguntas en 'second conditional', 'would' va al inicio de la cláusula de resultado.",
    "reject": [
@@ -14819,7 +15167,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella ha entregado su informe.\"",
    "accepted": [
-    "She has delivered her report."
+    "She has delivered her report.",
+    "She's delivered her report."
    ],
    "hint": "Usa el participio pasado de 'deliver'.",
    "reject": [
@@ -14838,7 +15187,8 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Hemos discutido el problema.\"",
    "accepted": [
-    "We have discussed the problem."
+    "We have discussed the problem.",
+    "We've discussed the problem."
    ],
    "hint": "Recuerda el participio pasado.",
    "reject": [
@@ -14897,7 +15247,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ella también ha visitado a sus abuelos.\"",
    "accepted": [
-    "She has also visited her grandparents."
+    "She has also visited her grandparents.",
+    "She's also visited her grandparents.",
+    "She has visited her grandparents as well."
    ],
    "hint": "La posición de 'also' es clave.",
    "reject": [
@@ -14936,7 +15288,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"La empresa ha crecido mucho.\"",
    "accepted": [
-    "The company has grown a lot."
+    "The company has grown a lot.",
+    "The company's grown a lot.",
+    "The company has grown considerably.",
+    "The company has grown substantially."
    ],
    "hint": "Participio de 'grow' y 'a lot' para 'mucho'.",
    "reject": [
@@ -14955,7 +15310,10 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos han terminado el proyecto a tiempo.\"",
    "accepted": [
-    "They have finished the project on time."
+    "They have finished the project on time.",
+    "They've finished the project on time.",
+    "They have completed the project on time.",
+    "They've completed the project on time."
    ],
    "hint": "Usa 'on time'.",
    "reject": [
@@ -15014,7 +15372,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"Ellos nunca han estado en una fábrica.\"",
    "accepted": [
-    "They have never been to a factory."
+    "They have never been to a factory.",
+    "They've never been to a factory.",
+    "They haven't ever been to a factory."
    ],
    "hint": "Usa 'never' con 'been to'.",
    "reject": [
@@ -15053,7 +15413,9 @@ window.PRACTICE_BANK = Object.assign(window.PRACTICE_BANK || {}, {
    "type": "writing",
    "question": "Escríbelo en inglés: \"El reporte ha sido enviado.\"",
    "accepted": [
-    "The report has been sent."
+    "The report has been sent.",
+    "The report's been sent.",
+    "The report has been dispatched."
    ],
    "hint": "Usa la voz pasiva con Present Perfect.",
    "reject": [
