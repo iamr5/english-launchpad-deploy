@@ -68,8 +68,10 @@ export const Route = createFileRoute("/api/course/bundle")({
             course: getCourse(),
             placement: getPlacement(),
             practiceIndex: getPracticeIndex(),
+            speakingIndex: getSpeakingIndex(),
             vocabIndex: getVocabIndex(packs, url.searchParams.get("vmax") || ""),
           },
+
           {
             headers: {
               // Que no se quede en ninguna caché intermedia: cada visita pasa
