@@ -60,7 +60,16 @@ const METRICS = [
   { n: "45", l: "microlecciones A1 → C1" },
   { n: "8.127", l: "ejercicios de práctica" },
   { n: "11.040", l: "palabras de vocabulario" },
-  { n: "779", l: "términos de ingeniería" },
+  { n: "779", l: "de ellas, de ingeniería" },
+];
+
+/** Etiquetas cortas bajo el titular: qué incluye el programa. */
+const BADGES = [
+  "Niveles A1 a C1 (MCER)",
+  "Incluye inglés técnico",
+  "Test de ubicación",
+  "Certificado por nivel",
+  "Con la marca del CIP",
 ];
 
 /** Capturas reales de la plataforma (tomadas del demo del CIP). */
@@ -73,7 +82,7 @@ const SHOTS = [
   {
     img: "/cip/app-nivel.webp",
     t: "Tu ruta completa, de A1 a C1",
-    d: "Cinco niveles del marco europeo (MCER) encadenados. Ves dónde estás y cuánto falta para el siguiente.",
+    d: "Los cinco niveles del Marco Común Europeo (MCER) encadenados: gramática, lectura, escucha y escritura.",
   },
   {
     img: "/cip/app-ruta.webp",
@@ -82,8 +91,8 @@ const SHOTS = [
   },
   {
     img: "/cip/app-vocab.webp",
-    t: "Vocabulario técnico de ingeniería",
-    d: "197 temas en tandas de diez con examen, definición en español y 779 términos propios de ingeniería.",
+    t: "Vocabulario general y de ingeniería",
+    d: "197 temas en tandas de diez con examen y definición en español; 779 de esas palabras son términos de ingeniería.",
   },
 ];
 
@@ -91,7 +100,7 @@ const TECH = [
   {
     e: "/demo-assets/ob-goal.svg",
     t: "Ubicación automática",
-    d: "Motor adaptativo: el test corta apenas tiene evidencia suficiente de tu nivel.",
+    d: "Motor adaptativo: el test corta apenas tiene evidencia suficiente de tu nivel del MCER.",
   },
   {
     e: "/demo-assets/ob-words.svg",
@@ -109,6 +118,7 @@ const TECH = [
     d: "Corre en el navegador del celular o la computadora. 20 minutos al día bastan para avanzar.",
   },
 ];
+
 
 const STEPS = [
   {
