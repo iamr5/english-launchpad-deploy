@@ -5102,7 +5102,8 @@ function openPracticeQuiz(lesson, block, bank) {
   }
   // El banco de una teoría trae muchos más ejercicios de los que se pueden hacer
   // de una sentada: cada entrada saca una tanda corta y distinta.
-  function tanda() { const s = shuffle(preguntas); return bank ? s.slice(0, 10) : s; }
+  function tanda() { const s = shuffle(preguntas); const t = bank ? s.slice(0, 10) : s; tandaN = t.length; return t; }
+
   sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
   startRound(tanda(), false);
 }
