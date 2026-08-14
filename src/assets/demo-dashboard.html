@@ -871,10 +871,14 @@
   body.yo .streak b, body.yo .wksel .wklabel, body.yo .eyebrow,
   body.yo .seg button, body.yo h3, body.yo h4, body.yo .k, body.yo .l,
   body.yo .tk span, body.yo .t, body.yo .t small, body.yo .lab,
-  body.yo .backbar button{ font-family: var(--font-round); }
+  body.yo .backbar button,
+  /* Ruta completa a proposito: .skill .bar .lab i trae tres clases y gana a
+     cualquier atajo mas corto, por muy alto que este en el archivo. */
+  body.yo .skill .bar .lab i{ font-family: var(--font-round); }
   /* Bricolage y DM Mono venian apretadas y en versalitas; la voz redonda pide
      lo contrario, o las mayusculas se leen como un grito. */
-  body.yo .hi, body.yo h3, body.yo h4, body.yo .eyebrow{ letter-spacing: 0; }
+  body.yo .hi, body.yo h3, body.yo h4, body.yo .eyebrow,
+  body.yo .skill .bar .lab i{ letter-spacing: 0; }
   body.yo h4{ text-transform: none; font-size: 15px; }
   body.yo .hi{ font-size: 22px; font-weight: 800; }
   body.yo h3{ font-weight: 800; }
@@ -883,9 +887,17 @@
   body.yo .s-head{ border-radius: 24px; }
   body.yo .ring-card, body.yo .sect, body.yo .chip, body.yo .mission,
   body.yo .evo{ border-radius: 20px; }
+  /* La cabecera va plana. El degradado es de la marca del panel, y dentro de la
+     app compite con el color que ya trae la propia app alrededor. */
+  body.yo .s-head{ background: var(--bar-1, var(--ink)); }
   /* Lo que el resumen de la app no puede sostener con datos reales se esconde
      desde JS (semanas anteriores, la evolucion de 8 semanas). */
   body.yo #sect-evo, body.yo #wksel-p{ display: none; }
+  /* Incrustada en la hoja de la app (&sheet=1): la hoja ya pone su marco y sus
+     esquinas, asi que aqui sobran los margenes de pagina. */
+  body.yo.sheet .wrap{ padding: 0 0 24px; }
+  body.yo.sheet .s-head{ border-radius: 0; padding-right: 56px; }
+  body.yo.sheet .screen{ border-radius: 0; }
 </style>
 </head>
 <body>
@@ -3163,6 +3175,7 @@
     var nivel = S.level || 'A1';
 
     document.body.classList.add('yo', 'solo', 'solo-parent');
+    if (q.get('sheet') === '1') document.body.classList.add('sheet');
     var vp = document.getElementById('parent'); if (vp) vp.classList.add('on');
 
     txt('p-racha', S.streak || 0);
@@ -3176,9 +3189,16 @@
     txt('p-dias-n', dias + ' / 7');
     txt('p-tiempo', hh ? hh + ' h ' + (mm < 10 ? '0' + mm : mm) : mm + ' min');
     txt('p-lecc', S.lessonsDone || 0);
-    txt('p-l-pct', pct(sk.listening) + '%'); wide('p-l-bar', pct(sk.listening));
-    txt('p-r-pct', pct(sk.reading) + '%');   wide('p-r-bar', pct(sk.reading));
-    txt('p-w-pct', pct(sk.writing) + '%');   wide('p-w-bar', pct(sk.writing));
+    // Una destreza sin quiz hecho vale null, y null NO es 100: una barra llena
+    // se lee como dominio y aqui significaria justo lo contrario.
+    function destreza(k, idPct, idBar){
+      var v = sk[k];
+      if (v == null) { txt(idPct, 'sin datos'); wide(idBar, 0); }
+      else { txt(idPct, pct(v) + '%'); wide(idBar, pct(v)); }
+    }
+    destreza('listening', 'p-l-pct', 'p-l-bar');
+    destreza('reading',   'p-r-pct', 'p-r-bar');
+    destreza('writing',   'p-w-pct', 'p-w-bar');
     // Los XP que faltan para el siguiente nivel los sabe la app, no este panel:
     // aqui se dice lo que si se puede sostener con el resumen.
     txt('p-sub', (S.lessonsDone || 0) + ' de ' + (S.lessonsTotal || 0) +
@@ -3197,12 +3217,26 @@
       el.textContent = first;
     });
 
-    // El track quiere un promedio en la escala del panel; el equivalente honesto
-    // que hay en el resumen es la media de las tres destrezas.
-    var vals = ['listening','reading','writing'].filter(function(k){ return sk[k] != null; })
-      .map(function(k){ return pct(sk[k]); });
-    var prom = vals.length ? Math.round(vals.reduce(function(a,b){ return a+b; }, 0) / vals.length) : 100;
-    if (typeof pintarTrack === 'function') pintarTrack(nivel, prom);
+    // La escalera de niveles y el relleno del nivel en curso los manda la app,
+    // sacados del curso real. pintarTrack() no sirve aqui: trabaja sobre ESCALA
+    // y BANDAS, que son una lista fija de cuatro niveles y unos cortes por
+    // promedio — ni los niveles de este curso ni su progreso.
+    var niveles = Array.isArray(S.levels) && S.levels.length ? S.levels : null;
+    var track = document.getElementById('p-track');
+    if (track && niveles) {
+      var li = typeof S.levelIdx === 'number' ? S.levelIdx : 0;
+      // Un minimo visible: con 0% el nivel en curso no se distingue del que
+      // todavia no se ha empezado.
+      var fill = Math.max(4, Math.min(100, typeof S.levelPct === 'number' ? S.levelPct : 0));
+      track.innerHTML = niveles.map(function(n, i){
+        var lab = '<span>' + String(n).replace(/[<>&]/g, '') + '</span>';
+        return i < li  ? '<div class="tk done">' + lab + '</div>'
+             : i === li ? '<div class="tk now"><i style="width:' + fill + '%"></i>' + lab + '</div>'
+             :            '<div class="tk">' + lab + '</div>';
+      }).join('');
+    } else if (typeof pintarTrack === 'function') {
+      pintarTrack(nivel, 0);      // resumen viejo, sin escalera: al menos el nivel
+    }
 
     // Sugerencias armadas con lo que de verdad dice el resumen. Las de ejemplo
     // hablaban de un alumno que no es este.
