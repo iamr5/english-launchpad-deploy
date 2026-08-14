@@ -472,7 +472,7 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
         <b style={{ fontSize: 12 }}>0 min</b>
       </span>
       <span style={chip}>
-        <Ico v={g("icons.streak")} fallback="🔥" size={15} />
+        <Ico v={g("icons.streak")} fallback="/demo-assets/streak.svg" size={15} />
         <b style={{ fontSize: 12 }}>5</b>
       </span>
     </div>
@@ -820,7 +820,7 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
         {DashCta}
         <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
           <span style={chip}>
-            <Ico v={g("icons.streak")} fallback="🔥" size={15} />
+            <Ico v={g("icons.streak")} fallback="/demo-assets/streak.svg" size={15} />
             <b style={{ fontSize: 12 }}>5</b>
           </span>
           <span style={chip}>
@@ -2068,8 +2068,8 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 label="Racha"
                 slug={demo.slug}
                 kind="icono-racha"
-                suggestions={["🔥", "⚡", "🌟", "🏆", "💪"]}
-                fallback="🔥"
+                suggestions={["/demo-assets/streak.svg", "⚡", "🌟", "🏆", "💪"]}
+                fallback="/demo-assets/streak.svg"
                 value={g2("icons.streak")}
                 onChange={upd("icons.streak")}
               />

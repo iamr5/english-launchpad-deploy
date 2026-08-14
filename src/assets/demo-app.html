@@ -951,6 +951,10 @@
     font-family: inherit; font-size: 15px; font-weight: 800; color: var(--ink); cursor: pointer;
     display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
   .streak-chip:active { background: var(--card); }
+  /* Racha: icono de llama en SVG (nunca el emoji del sistema, que cambia por plataforma). */
+  img.sc-em { width: 19px; height: 19px; display: block; flex: 0 0 auto; }
+  .pg-flame img.fl { width: 28px; height: 28px; }
+  .w-chip img { width: 19px; height: 19px; vertical-align: -3px; }
   .pg-hero { cursor: default; }
   .pg-hero .pg-row { display: flex; align-items: center; gap: 16px; }
   .pg-ring { position: relative; width: 104px; height: 104px; flex: 0 0 auto; }
@@ -2058,7 +2062,7 @@
          en demos cuya mascota es otra. -->
     <div class="appbar"><img class="appbar-en" alt=""><div class="title" id="course-title"></div>
       <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"><svg class="gc-ico" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 11V5.2"/><path class="gc-sweep" d="M11 11l3.4 3.4"/></svg></span><span class="gc-t">0 min</span></button>
-      <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()"><span class="sc-em">🔥</span><b id="streak-n">0</b></button>
+      <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()"><img class="sc-em" src="/demo-assets/streak.svg" alt="" aria-hidden="true"><b id="streak-n">0</b></button>
     </div>
     <div class="scroll">
       <div class="pad" id="course-body"></div>
@@ -2268,7 +2272,7 @@ const CFG = {
   colors: DEMO.colors || {},
   // goal vacio = se conserva el anillo de progreso de siempre; si se define un
   // emoji o una imagen, ese icono sustituye al anillo.
-  icons: Object.assign({ streak: '🔥', goal: '', dashboard: '📊' }, DEMO.icons),
+  icons: Object.assign({ streak: '/demo-assets/streak.svg', goal: '', dashboard: '📊' }, DEMO.icons),
   copy: Object.assign({
     audience: 'estudiante',
     dashboardCta: 'Ver mi panel de progreso',

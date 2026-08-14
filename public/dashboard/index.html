@@ -80,6 +80,8 @@
   .rachabadge{display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.15);
     border:1px solid rgba(255,255,255,.22); border-radius:13px; padding:6px 11px; flex:none}
   .rachabadge .fl{font-size:19px; line-height:1}
+  .rachabadge img.fl{width:19px; height:19px; display:block}
+  .mission .box img, .tips-list .box img{width:20px; height:20px; display:block}
   .rachabadge .txt{display:flex; flex-direction:column; gap:2px}
   .rachabadge b{font-family:"DM Mono"; font-size:16px; font-weight:500; line-height:1; color:#fff}
   .rachabadge span{font-size:9.5px; font-weight:600; color:rgba(255,255,255,.82); line-height:1; white-space:nowrap}
@@ -234,7 +236,7 @@
           <div class="s-head">
             <div class="row">
               <div class="hi">Resumen de <span class="u-name">Valeria</span></div>
-              <div class="rachabadge"><span class="fl">🔥</span><div class="txt"><b id="p-racha">24</b><span>Racha</span></div></div>
+              <div class="rachabadge"><img class="fl" src="/demo-assets/streak.svg" alt="" aria-hidden="true"><div class="txt"><b id="p-racha">24</b><span>Racha</span></div></div>
             </div>
             <div class="wksel" id="wksel-p">
               <button id="wk-prev-p" aria-label="Semana anterior">‹</button>
@@ -497,6 +499,10 @@
   const KLABEL=['Alumnos activos','Nivel promedio','Lecciones completadas','Sin ingresar +5 días'];
 
   function set(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; }
+  // Algunos iconos ya no son emoji sino SVG (la racha): se pintan como imagen.
+  function esIcono(v){ return typeof v === 'string' && /^(https?:|\/|data:)/.test(v); }
+  function setIcono(id,v){ const e=document.getElementById(id); if(!e) return;
+    if (esIcono(v)) e.innerHTML = '<img src="' + v + '" alt="" aria-hidden="true">'; else e.textContent = v; }
   function renderParent(wk){
     const d=PWEEK[wk];
     set('p-racha',d.racha); set('p-sub',d.sub); set('p-dias',d.dias); set('p-tiempo',d.tiempo); set('p-lecc',d.lecc); set('p-cert',d.cert);
