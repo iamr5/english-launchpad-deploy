@@ -4689,6 +4689,8 @@ function renderRebuild(host, q, onCorrect, onIncorrect) {
 
 function renderTap(host, q, onCorrect, onIncorrect) {
   let tapped = null, showing = false, isCorrect = false;
+  // Los del banco no traen enunciado; el del curso siempre dice esto mismo.
+  const enunciado = q.question || 'Toca la palabra incorrecta:';
   function correctedSentence() { const t = q.sentenceTokens.slice(); t[q.errorTokenIndex] = q.correctedToken; return t.join(' '); }
   function draw() {
     const tokens = q.sentenceTokens.map((tk, i) => {
