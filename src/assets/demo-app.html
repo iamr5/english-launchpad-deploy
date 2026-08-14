@@ -605,6 +605,9 @@
     box-shadow: -12px 0 40px rgba(0,0,0,.18);
     transform: translateX(100%); transition: transform .26s cubic-bezier(.2,.8,.3,1); }
   .pnl-overlay.shown .pnl-sheet { transform: none; }
+  /* Segundo cinturon del overscroll: el iframe ya lo corta por dentro, pero si
+     el panel se sirviera sin la clase de hoja, aqui se para igual. */
+  .pnl-sheet, .pnl-frame { overscroll-behavior: contain; }
   .pnl-frame { flex: 1 1 auto; width: 100%; border: 0; display: block; background: #fff; }
   /* Se cierra tocando fuera o con Esc. Sin boton de cerrar: el velo ya dice que
      hay algo detras a lo que se vuelve, y una ✕ encima de la cabecera del panel

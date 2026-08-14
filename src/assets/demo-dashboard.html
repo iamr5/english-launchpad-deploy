@@ -898,6 +898,16 @@
   body.yo.sheet .wrap{ padding: 0 0 24px; }
   body.yo.sheet .s-head{ border-radius: 0; }
   body.yo.sheet .screen{ border-radius: 0; }
+  /* Dentro de la hoja no se enseña barra de desplazamiento —una barra dentro de
+     otra ventana se lee como un marco de mas— pero se sigue desplazando igual.
+     Va en html Y en body porque quien desplaza el documento es uno u otro segun
+     el navegador, y con la clase solo en body a Chrome le queda la del viewport.
+     overscroll-behavior corta el rebote y, sobre todo, el encadenado: sin el,
+     al llegar al final la rueda sigue arrastrando la app de detras. */
+  html.yo-sheet, body.yo.sheet{ scrollbar-width: none; -ms-overflow-style: none;
+    overscroll-behavior: none; }
+  html.yo-sheet::-webkit-scrollbar, body.yo.sheet::-webkit-scrollbar{
+    width: 0; height: 0; display: none; }
 </style>
 </head>
 <body>
@@ -3178,7 +3188,11 @@
     var nivel = S.level || 'A1';
 
     document.body.classList.add('yo', 'solo', 'solo-parent');
-    if (q.get('sheet') === '1') document.body.classList.add('sheet');
+    if (q.get('sheet') === '1') {
+      document.body.classList.add('sheet');
+      // El <html> tambien: la barra del viewport cuelga de el, no del body.
+      document.documentElement.classList.add('yo-sheet');
+    }
     var vp = document.getElementById('parent'); if (vp) vp.classList.add('on');
 
     txt('p-racha', S.streak || 0);
