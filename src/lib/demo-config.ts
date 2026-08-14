@@ -385,6 +385,8 @@ export type DemoConfig = {
      * pasada de filtro por capa encendida.
      */
     tints?: MascotTint[];
+    /** Como se guardaba antes, de una sola capa. Se sigue leyendo como la primera. */
+    tint?: MascotTint;
   };
 
   /** Emoji o URL de imagen. */
@@ -479,11 +481,9 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
     accent: "#7C1C56",
     modules: ["#3faa24", "#ff6ba0", "#b875f5", "#1cb0f6", "#fd5d04"],
   },
-  // Una capa de teñido, apagada y completa: así la plantilla recibe siempre los
-  // siete valores y no tiene que conocer ningún valor de fábrica. `merge`
-  // reemplaza las listas enteras, así que un demo con dos capas guardadas no se
-  // mezcla con ésta.
-  mascot: { pack: "ozito", tints: [TINT_DEF] },
+  // Sin capas de fábrica: que falten es lo que permite distinguir un demo que
+  // no tiene teñido de uno que lo guardó con la forma antigua (`tint`).
+  mascot: { pack: "ozito" },
   // `goal` vacío conserva el anillo de progreso; con emoji o URL, lo sustituye.
   icons: { streak: "🔥", goal: "", dashboard: "📊" },
   copy: {

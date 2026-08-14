@@ -1259,9 +1259,12 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
   const g2 = (p: string, f: unknown = "") => get(cfg, p, f) as string;
   // Las capas de recoloreado. Siempre hay una en pantalla, aunque el demo no
   // tenga ninguna guardada: es el punto de partida para tocar los mandos.
-  const tints = ((get(cfg, "mascot.tints", null) as MascotTint[] | null) ?? []).length
-    ? (get(cfg, "mascot.tints", []) as MascotTint[])
-    : [{ ...TINT_DEF }];
+  // Un demo guardado antes de que esto fueran capas trae `tint` a secas: entra
+  // como la primera capa y se convierte sola en cuanto se toca algo.
+  const tintLegado = get(cfg, "mascot.tint", null) as MascotTint | null;
+  const tintGuardadas =
+    (get(cfg, "mascot.tints", null) as MascotTint[] | null) ?? (tintLegado ? [tintLegado] : null);
+  const tints = tintGuardadas?.length ? tintGuardadas : [{ ...TINT_DEF }];
   // Lo que trae la mascota elegida, para enseñarlo como marca de agua.
   const mascotHead = (() => {
     const id = g2("mascot.pack", "ozito");
@@ -1895,7 +1898,12 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 tints={tints}
                 headIcon={mascotHead}
               />
-              <TintLayers tints={tints} onChange={(next) => upd("mascot.tints")(next)} />
+              <TintLayers
+                tints={tints}
+                onChange={(next) =>
+                  setCfg((c) => set(set(c, "mascot.tints", next), "mascot.tint", null))
+                }
+              />
               <div className="space-y-1.5">
                 <Label>Personaje</Label>
                 <div className="grid gap-2 sm:grid-cols-2">

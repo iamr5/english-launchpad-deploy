@@ -239,7 +239,9 @@ function resolveMascot(cfg: DemoConfig) {
       headIcon: pack?.headIcon ? dir + pack.headIcon : "",
       // El recoloreado necesita esta misma cadena para cazar por CSS todos los
       // <img> de la cabeza, así que viaja al lado de ella.
-      tints: cfg.mascot.tints,
+      // Un demo guardado antes de que esto fueran capas trae `tint` a secas: se
+      // lee como la primera capa, así no pierde su teñido.
+      tints: cfg.mascot.tints ?? (cfg.mascot.tint ? [cfg.mascot.tint] : undefined),
     },
   };
 }
