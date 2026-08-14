@@ -333,6 +333,42 @@
   .course-foot .foot-title { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.2; margin-bottom: 18px;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .course-foot .cta-btn { margin: 0; }
+
+  /* ===== Barra de pestañas del inicio (Ruta / Vocabulary) =====
+     Copiando a Duolingo, que es lo que se pidió: barra anclada abajo del todo,
+     icono grande con la etiqueta corta debajo, y la activa marcada con color
+     MAS una pastilla de fondo. Lo del fondo importa: con el color solo, en una
+     barra de dos, no se distingue "la que estoy viendo" de "la otra".
+     Etiqueta siempre visible, no solo en la activa: con dos pestañas sobra
+     sitio, y un icono suelto sin nombre se adivina.
+     Es un andamio — la barra ya aguanta mas pestañas sin tocar el CSS: cada
+     .tab reparte a partes iguales. */
+  .tabbar { flex: 0 0 auto; display: flex; gap: 6px; background: #fff;
+    border-top: 2px solid var(--line);
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); }
+  .tab { position: relative; flex: 1 1 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3px; cursor: pointer;
+    border: 2px solid transparent; border-radius: 16px; background: none;
+    padding: 7px 4px 6px; font-family: inherit; color: var(--muted2);
+    -webkit-tap-highlight-color: transparent; }
+  .tab svg { width: 27px; height: 27px; display: block; }
+  .tab .tab-lbl { font-size: 12px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; }
+  .tab.on { color: var(--blue); background: #DDF4FF; border-color: #A5E0FB; }
+  .tab:not(.on):active { background: var(--canvas); }
+  /* El globito de "recién llegada". Se quita borrando el <span>, no hay estado
+     que apagar: cuando Vocabulary deje de ser nueva, fuera la etiqueta. */
+  .tab-badge { position: absolute; top: 1px; right: 8px; background: var(--red2);
+    color: #fff; font-size: 9px; font-weight: 900; letter-spacing: .5px; line-height: 1;
+    padding: 3px 5px; border-radius: 999px; }
+
+  /* Hueco de Vocabulary: de momento solo el cartel de que aun no hay nada. */
+  .vocab-empty { text-align: center; padding: 30px 22px; }
+  .vocab-empty .ve-em { font-size: 42px; line-height: 1; margin-bottom: 12px; }
+  .vocab-empty h3 { font-size: 20px; font-weight: 800; color: var(--ink); margin: 0 0 8px; }
+  .vocab-empty p { font-size: 15px; line-height: 1.5; color: var(--muted); margin: 0 0 10px; }
+  .vocab-empty .ve-tag { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 800;
+    letter-spacing: .4px; text-transform: uppercase; color: var(--amberInk);
+    background: #FDF0D5; border-radius: 999px; padding: 6px 12px; }
   .course-foot .foot-done { display: flex; align-items: center; justify-content: center; gap: 8px;
     font-weight: 700; color: var(--muted2); padding: 10px 0; }
 
@@ -1683,8 +1719,36 @@
       <button class="goal-chip" onclick="renderProgress()" aria-label="Meta diaria"><span class="gc-ring"><svg class="gc-ico" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 11V5.2"/><path class="gc-sweep" d="M11 11l3.4 3.4"/></svg></span><span class="gc-t">0 min</span></button>
       <button class="streak-chip" id="streak-chip" aria-label="Mi progreso" onclick="renderProgress()"><span class="sc-em">🔥</span><b id="streak-n">0</b></button>
     </div>
-    <div class="scroll"><div class="pad" id="course-body"></div></div>
+    <div class="scroll">
+      <div class="pad" id="course-body"></div>
+      <!-- Vocabulary: el hueco existe desde ya y se llena al entrar (renderVocab). -->
+      <div class="pad" id="vocab-body" hidden></div>
+    </div>
     <div class="course-foot" id="course-foot"></div>
+    <!-- Pestañas del inicio. Andamio: "Ruta" es el curso de siempre, movido tal
+         cual; "Vocabulary" entra vacia pero con su sitio y su pantalla ya
+         hechos, que es lo que hace falta para empezar a llenarla. -->
+    <nav class="tabbar" id="home-tabs" role="tablist" aria-label="Secciones del inicio">
+      <button class="tab on" type="button" role="tab" aria-selected="true"
+              aria-controls="course-body" data-tab="ruta" onclick="showHomeTab('ruta')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 20c0-3 3-3 6-3s6 0 6-3-3-3-6-3-6 0-6-3 3-3 6-3"/>
+          <circle cx="18" cy="5" r="2.2" fill="currentColor" stroke="none"/>
+        </svg>
+        <span class="tab-lbl">Ruta</span>
+      </button>
+      <button class="tab" type="button" role="tab" aria-selected="false"
+              aria-controls="vocab-body" data-tab="vocab" onclick="showHomeTab('vocab')">
+        <span class="tab-badge">NUEVO</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2.5 2.5 0 0 1 2 1 2.5 2.5 0 0 1 2-1h4.5A1.5 1.5 0 0 1 20 5.5v12a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 0 0-2 1 2 2 0 0 0-2-1H5.5A1.5 1.5 0 0 1 4 17.5z"/>
+          <path d="M12 5v14"/>
+        </svg>
+        <span class="tab-lbl">Vocabulary</span>
+      </button>
+    </nav>
   </section>
 
   <!-- MI PROGRESO (student dashboard — everything shown is real tracked data:
@@ -3004,7 +3068,57 @@ function renderCourse() {
   });
   const cta = document.getElementById('cta-continue');
   if (cta && na) cta.onclick = () => openLesson(na.lesson, na.mod);
+  // Volver al inicio desde un modulo devuelve a la ruta, que es de donde se
+  // salio. Sin esto se vuelve a la pestaña que estuviera abierta y el pie con
+  // el boton de continuar reaparece debajo de Vocabulary.
+  showHomeTab('ruta');
   playPlacementFillIn('course');
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// PESTAÑAS DEL INICIO (Ruta / Vocabulary)
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Andamio. La ruta es la de siempre; Vocabulary llega vacia a proposito: lo que
+// se pidio es el sitio, no el contenido. Las dos viven dentro de #screen-course
+// y se turnan, en vez de ser dos .screen: el inicio es UNA pantalla con dos
+// pestañas, y separarlas obligaria a duplicar la barra en las dos.
+function showHomeTab(tab) {
+  const esRuta = tab !== 'vocab';
+  const body = document.getElementById('course-body');
+  const vocab = document.getElementById('vocab-body');
+  const foot = document.getElementById('course-foot');
+  if (!body || !vocab) return;
+  body.hidden = !esRuta;
+  vocab.hidden = esRuta;
+  // El pie es el "continuar con la leccion": pertenece a la ruta y en
+  // Vocabulary no significa nada.
+  if (foot) foot.hidden = !esRuta;
+  document.querySelectorAll('#home-tabs .tab').forEach(b => {
+    const on = b.getAttribute('data-tab') === (esRuta ? 'ruta' : 'vocab');
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  // Cada pestaña empieza por arriba: heredar el desplazamiento de la otra deja
+  // a Vocabulary abierta por la mitad de una pantalla que ni se ha visto.
+  const sc = document.querySelector('#screen-course .scroll');
+  if (sc) sc.scrollTop = 0;
+  if (!esRuta) renderVocab();
+}
+
+// Se pinta una sola vez: es un cartel fijo, no depende del progreso. Cuando
+// haya contenido de verdad, esto pasa a repintarse en cada entrada.
+function renderVocab() {
+  const el = document.getElementById('vocab-body');
+  if (!el || el.dataset.ready === '1') return;
+  el.dataset.ready = '1';
+  el.innerHTML = `
+    <div class="card vocab-empty">
+      <div class="ve-em">📚</div>
+      <h3>Vocabulary</h3>
+      <p>Aquí van a vivir las palabras que ya viste en la ruta, para repasarlas
+         y practicarlas sueltas, sin volver a la lección entera.</p>
+      <span class="ve-tag">En construcción</span>
+    </div>`;
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
