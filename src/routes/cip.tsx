@@ -303,7 +303,9 @@ const QUIZ_CSS = `
   display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; }
 .qz .opt:disabled { cursor:default; }
 .qz .opt .opt-ic { flex:0 0 22px; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+.qz .opt.sel { border-color:var(--cta); background:color-mix(in srgb, var(--cta) 10%, transparent); }
 .qz .opt.correct { background:color-mix(in srgb, var(--ok) 12%, transparent); border-color:var(--ok); color:var(--okDark); }
+
 .qz .opt.wrong { background:rgba(244,67,54,.08); border-color:var(--red); color:#B3261E; }
 .qz .fb-slot { min-height:64px; margin:14px 2px 2px; display:flex; align-items:flex-start; overflow:hidden; }
 .qz .fb-line { font-size:15px; font-weight:700; line-height:1.4; text-align:left; }
