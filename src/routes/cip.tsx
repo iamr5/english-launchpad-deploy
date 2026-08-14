@@ -380,12 +380,19 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
           <h1 className="title">
             Que todos los ingenieros del Perú
             <br />
-            <span className="acc">aprendan inglés técnico</span>
+            <span className="acc">hablen inglés</span>
           </h1>
           <p className="lede mt-5 text-white/85">
-            La plataforma ya está construida, con la marca del Colegio y vocabulario de ingeniería.
-            Falta una sola cosa: demostrar que los colegiados la quieren. Tu correo es esa prueba.
+            Un curso de inglés completo, de cero a nivel avanzado, con la marca del Colegio — y con
+            inglés técnico de ingeniería incluido. Ya está construido. Falta una sola cosa: demostrar
+            que los colegiados lo quieren. Tu correo es esa prueba.
           </p>
+          <ul className="badges">
+            {BADGES.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
+
 
           <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
             <EmailForm id="hero" cta="Firmar mi preinscripción" />
