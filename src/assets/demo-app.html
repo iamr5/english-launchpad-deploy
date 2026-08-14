@@ -679,6 +679,10 @@
   .md th:last-child, .md td:last-child { border-right: none; }
   .md tr:last-child td { border-bottom: none; }
   .md thead th { background: rgba(255,255,255,.55); font-weight: 700; }
+  /* Cabecera de idioma: el texto a la izquierda y la banderita pegada al borde
+     derecho de la celda, no colgando de la última palabra. */
+  .md thead th .th-in { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .md thead th .th-flag { flex: 0 0 auto; width: 24px; height: 18px; display: block; border-radius: 4px; }
   .md tbody td { font-weight: 400; }
 
   .divider { height: 2px; background: var(--gray); margin: 16px 24px; }
