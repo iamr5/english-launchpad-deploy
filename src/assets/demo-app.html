@@ -2540,7 +2540,21 @@ async function loadCourse() {
   window.PLACEMENT_ITEMS = data.placement || [];
   course = applyTokens(data.course);
   allLessons = course.modules.flatMap(m => m.lessons);
+  attachPracticeBank(data.practice || {});
 }
+
+// Banco de práctica: ejercicios extra por bloque de teoría, escritos aparte del
+// curso para no engordar la lección. Se cuelgan del bloque como `practiceBank`.
+// La lección sigue usando su miniQuiz de siempre; la pestaña Práctica ofrece
+// además todo el banco, que es donde vive el grueso de los ejercicios.
+function attachPracticeBank(bank) {
+  const items = applyTokens(bank) || {};
+  course.modules.forEach(m => m.lessons.forEach(l => (l.contentBlocks || []).forEach(b => {
+    const extra = items[b.id];
+    if (extra && extra.length) b.practiceBank = extra;
+  })));
+}
+
 
 // WIPED: una vez que el usuario pide "Borrar TODO", ninguna escritura tardía
 // (guardado diferido, cronómetro) puede resucitar el progreso viejo.
