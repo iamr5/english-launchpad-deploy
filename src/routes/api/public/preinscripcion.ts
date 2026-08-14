@@ -23,7 +23,23 @@ function tooMany(ip: string) {
 export const Route = createFileRoute("/api/public/preinscripcion")({
   server: {
     handlers: {
+      // Contador público de firmas para el landing (sólo el total, sin correos).
+      GET: async ({ request }) => {
+        const raw = (new URL(request.url).searchParams.get("slug") ?? "cip").toLowerCase();
+        const slug = /^[a-z0-9-]{1,40}$/.test(raw) ? raw : "cip";
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { count, error } = await supabaseAdmin
+          .from("preinscripciones")
+          .select("id", { count: "exact", head: true })
+          .eq("slug", slug);
+        if (error) return Response.json({ error: "server" }, { status: 500 });
+        return Response.json(
+          { total: count ?? 0 },
+          { headers: { "Cache-Control": "public, max-age=60" } },
+        );
+      },
       POST: async ({ request }) => {
+
         const ip =
           request.headers.get("cf-connecting-ip") ||
           request.headers.get("x-forwarded-for") ||

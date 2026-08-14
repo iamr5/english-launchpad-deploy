@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { getCipBrand } from "@/lib/cip-landing.functions";
 
-// Landing de preinscripción para el Colegio de Ingenieros. Pide sólo el correo.
-// La marca sale del demo /democip (configurable en /demos).
+// Campaña de preinscripción del Colegio de Ingenieros. El objetivo no es vender
+// un curso: es juntar firmas (correos) para que el Colegio active el programa,
+// y que cada ingeniero le pase la voz a sus colegas.
 //
 // El aspecto sigue el sistema de las presentaciones y sílabos: papel crema,
 // bandas navy con textura de puntos, Archivo / Archivo Black y acentos en
@@ -13,25 +14,31 @@ export const Route = createFileRoute("/cip")({
   loader: () => getCipBrand(),
   head: () => ({
     meta: [
-      { title: "Inglés para ingenieros del Perú · Preinscripción CIP" },
+      { title: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP" },
       {
         name: "description",
         content:
-          "Preinscríbete al programa de inglés del Colegio de Ingenieros: 45 microlecciones A1–C1, 8.127 ejercicios y vocabulario técnico de ingeniería. Solo tu correo.",
+          "Todavía no existe: se activa si somos suficientes. Deja tu correo y pásale la voz a tus colegas para que el Colegio de Ingenieros lance su plataforma de inglés técnico en un mes.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:title", content: "Inglés para ingenieros del Perú · Preinscripción CIP" },
+      {
+        property: "og:title",
+        content: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP",
+      },
       {
         property: "og:description",
         content:
-          "45 microlecciones A1–C1, 8.127 ejercicios y 779 términos técnicos de ingeniería. Deja tu correo y asegura tu cupo.",
+          "La plataforma está construida: 45 microlecciones A1–C1, 8.127 ejercicios y 779 términos de ingeniería. Falta la demanda. Preinscríbete y comparte.",
       },
       { property: "og:image", content: "https://aprendoenglish.com/social-preview.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Inglés para ingenieros del Perú · Preinscripción CIP" },
+      {
+        name: "twitter:title",
+        content: "Inglés técnico para los ingenieros del Perú · Preinscripción CIP",
+      },
       {
         name: "twitter:description",
-        content: "45 microlecciones A1–C1, 8.127 ejercicios y vocabulario técnico. Solo tu correo.",
+        content: "Se activa si somos suficientes. Deja tu correo y pásale la voz a tu colega.",
       },
       { name: "twitter:image", content: "https://aprendoenglish.com/social-preview.jpg" },
     ],
@@ -55,55 +62,68 @@ const METRICS = [
   { n: "779", l: "términos de ingeniería" },
 ];
 
-const BENEFITS = [
+/** Capturas reales de la plataforma (tomadas del demo del CIP). */
+const SHOTS = [
   {
-    e: "/demo-assets/ob-thunder.svg",
-    t: "20 minutos al día",
-    d: "Microlecciones pensadas para agendas de ingeniero: entras, practicas y sigues con tu día.",
+    img: "/cip/app-quiz.webp",
+    t: "Test de ubicación de 40 preguntas",
+    d: "Se adapta a tus respuestas y te ubica entre A1 y C1 desde el primer día. Nadie empieza donde no le toca.",
+  },
+  {
+    img: "/cip/app-nivel.webp",
+    t: "Tu ruta completa, de A1 a C1",
+    d: "Cinco niveles del marco europeo (MCER) encadenados. Ves dónde estás y cuánto falta para el siguiente.",
+  },
+  {
+    img: "/cip/app-ruta.webp",
+    t: "Con la marca del Colegio",
+    d: "Logo, colores y lenguaje del CIP. Para el colegiado es la plataforma de su Colegio, no la de un tercero.",
+  },
+  {
+    img: "/cip/app-vocab.webp",
+    t: "Vocabulario técnico de ingeniería",
+    d: "197 temas en tandas de diez con examen, definición en español y 779 términos propios de ingeniería.",
+  },
+];
+
+const TECH = [
+  {
+    e: "/demo-assets/ob-goal.svg",
+    t: "Ubicación automática",
+    d: "Motor adaptativo: el test corta apenas tiene evidencia suficiente de tu nivel.",
   },
   {
     e: "/demo-assets/ob-words.svg",
-    t: "Inglés técnico de verdad",
-    d: "Vocabulario de matemáticas, programación, construcción, energía y calidad, no frases de turista.",
-  },
-  {
-    e: "/demo-assets/ob-goal.svg",
-    t: "Empiezas en tu nivel",
-    d: "Un test de ubicación de 40 preguntas te coloca en A1, A2, B1, B2 o C1 desde el primer día.",
+    t: "Corrección de escritura con IA",
+    d: "Acepta varias formas correctas de decir la misma frase, no una sola respuesta memorizada.",
   },
   {
     e: "/demo-assets/streak.svg",
     t: "Progreso medible",
-    d: "Racha, XP y niveles. Tú y el Colegio ven el avance real, no la asistencia.",
+    d: "Racha, XP y niveles por colegiado; el Colegio ve avance real, no asistencia.",
+  },
+  {
+    e: "/demo-assets/ob-thunder.svg",
+    t: "Sin instalar nada",
+    d: "Corre en el navegador del celular o la computadora. 20 minutos al día bastan para avanzar.",
   },
 ];
 
-
-type Quiz = {
-  q: string;
-  opts: string[];
-  ok: number;
-  tip: string;
-};
-
-const SAMPLE: Quiz[] = [
+const STEPS = [
   {
-    q: "The bridge ___ designed to resist earthquakes.",
-    opts: ["was", "were", "is being were", "been"],
-    ok: 0,
-    tip: "Pasiva en pasado: was/were + participio. «Bridge» es singular → was designed.",
+    n: "1",
+    t: "Dejas tu correo",
+    d: "Toma diez segundos y no cuesta nada. Es tu voto para que el programa exista.",
   },
   {
-    q: "¿Cómo dirías «plazo de entrega» en un informe técnico?",
-    opts: ["deadline", "dateline", "time limit out", "delay"],
-    ok: 0,
-    tip: "«Deadline» es el término estándar en gestión de proyectos.",
+    n: "2",
+    t: "Le pasas la voz a tus colegas",
+    d: "Mientras más ingenieros firmen, más fuerte es el pedido al Colegio. Una firma sola no mueve nada.",
   },
   {
-    q: "If we ___ the load, the structure would fail.",
-    opts: ["increase", "increased", "will increase", "increasing"],
-    ok: 1,
-    tip: "Segundo condicional: if + pasado simple, would + verbo.",
+    n: "3",
+    t: "El Colegio lo activa",
+    d: "La plataforma ya está construida. Con la demanda demostrada, puede estar funcionando en un mes.",
   },
 ];
 
@@ -118,9 +138,6 @@ function darken(hex: string, amount = 0.22) {
   return `rgb(${ch[0]},${ch[1]},${ch[2]})`;
 }
 
-/* ------------------------------------------------------- sistema de estilos */
-
-/** Tokens y componentes tomados del sílabo/presentaciones, tintados con la marca. */
 const PAGE_CSS = `
 .cipp{ --ink:#16233F; --ink-2:#22345A; --ink-0:#0c1225;
   --cream:#FBF3DD; --paper:#FEFBF4; --line:#e7dcc2; --muted:#5f6b82;
@@ -144,11 +161,13 @@ const PAGE_CSS = `
 .cipp .bg-accent{ color:#fff;
   background:radial-gradient(800px 500px at 80% -20%,color-mix(in srgb,#fff 18%,transparent),transparent 60%),var(--cip); }
 .cipp .bg-accent::before{ background-image:radial-gradient(rgba(255,255,255,.07) 1.2px,transparent 1.3px); opacity:.6; }
+.cipp .bg-ink{ color:#eef2fb; background:radial-gradient(900px 600px at 90% 0%,#1b2c52,transparent 60%),var(--ink); }
+.cipp .bg-ink::before{ background-image:radial-gradient(rgba(255,255,255,.05) 1.2px,transparent 1.3px); opacity:.6; }
 
 .cipp .eyebrow{ display:inline-flex; align-items:center; gap:10px; font:800 11.5px/1 var(--disp);
   letter-spacing:.24em; text-transform:uppercase; margin-bottom:18px; }
 .cipp h1.title{ font-family:var(--black); font-weight:400; line-height:1; letter-spacing:-.03em;
-  font-size:clamp(34px,6.2vw,68px); }
+  font-size:clamp(32px,5.6vw,62px); }
 .cipp h1.title .acc{ font-family:var(--serif); font-style:italic; font-weight:400; letter-spacing:-.005em; }
 .cipp h2.head{ font-family:var(--black); font-weight:400; line-height:1.06; letter-spacing:-.025em;
   font-size:clamp(25px,3.5vw,42px); }
@@ -162,6 +181,28 @@ const PAGE_CSS = `
   font-size:clamp(28px,3.6vw,40px); line-height:1; color:var(--cip); }
 .cipp .metric span{ display:block; margin-top:8px; font-size:12.5px; font-weight:700; letter-spacing:.02em; color:var(--muted); }
 .cipp .rule{ height:1px; background:var(--line); }
+
+/* pasos numerados */
+.cipp .step{ position:relative; padding-left:66px; }
+.cipp .step b.num{ position:absolute; left:0; top:-4px; width:48px; height:48px; border-radius:14px;
+  display:grid; place-items:center; font-family:var(--black); font-weight:400; font-size:22px;
+  background:color-mix(in srgb,var(--cip) 14%,#fff); color:var(--cip); border:1px solid color-mix(in srgb,var(--cip) 30%,transparent); }
+.cipp .step h3{ font-weight:800; font-size:18px; line-height:1.2; margin-bottom:6px; }
+.cipp .step p{ font-size:15px; color:var(--ink-2); }
+
+/* pantallas reales */
+.cipp .shot{ border-radius:18px; overflow:hidden; border:1px solid var(--line); background:#fff;
+  box-shadow:var(--shadow-sm); }
+.cipp .shot img{ display:block; width:100%; height:auto; }
+.cipp .badge{ display:inline-block; border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:800;
+  letter-spacing:.14em; text-transform:uppercase; }
+
+/* burbuja de Boti */
+.cipp .bubble{ position:relative; background:#fff; color:var(--ink); border-radius:18px;
+  padding:14px 16px; font-size:15px; font-weight:600; line-height:1.4; box-shadow:var(--shadow-sm);
+  max-width:260px; }
+.cipp .bubble::after{ content:""; position:absolute; left:34px; bottom:-9px; width:18px; height:18px;
+  background:#fff; transform:rotate(45deg); border-radius:3px; }
 `;
 
 function CipLanding() {
@@ -176,16 +217,17 @@ function CipLanding() {
 
   return (
     <main style={vars} className="cipp min-h-screen">
-      <style dangerouslySetInnerHTML={{ __html: PAGE_CSS + QUIZ_CSS }} />
+      <style dangerouslySetInnerHTML={{ __html: PAGE_CSS }} />
       <Hero brand={b} />
+      <Steps />
       <Metrics />
-      <Benefits />
-      <SampleQuiz />
+      <Tech />
       <LiveDemo />
+      <Share />
       <FinalCta brand={b} />
       <footer className="bg-paper band !py-8">
         <div className="sheet text-center text-xs font-semibold tracking-wide text-[var(--muted)]">
-          AprendoEnglish × {b.institution} · Programa de inglés para colegiados
+          AprendoEnglish × {b.institution} · Campaña de preinscripción · Aún no es un servicio activo
         </div>
       </footer>
     </main>
@@ -225,8 +267,14 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
   if (state === "done") {
     return (
       <div className="rounded-2xl border-2 border-emerald-500 bg-emerald-50 px-5 py-4 text-emerald-800">
-        <strong className="block text-lg">¡Listo, estás preinscrito! 🎉</strong>
-        <span className="text-sm">Te escribiremos a {email} cuando se abra tu cupo.</span>
+        <strong className="block text-lg">Firma registrada 🎉</strong>
+        <span className="text-sm">
+          Te escribiremos a {email}. Ahora lo importante: pásale este enlace a dos colegas
+          ingenieros.
+        </span>
+        <div className="mt-3">
+          <ShareButtons compact />
+        </div>
       </div>
     );
   }
@@ -253,7 +301,7 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
         </button>
       </div>
       <p className="mt-2 text-xs font-medium text-[#5f6b82]">
-        Solo usamos tu correo para avisarte del inicio.
+        Sin costo y sin compromiso. Sólo usamos tu correo para avisarte si el programa se activa.
       </p>
       {state === "error" && (
         <p className="mt-2 text-sm font-semibold text-red-600">
@@ -261,6 +309,33 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
         </p>
       )}
     </form>
+  );
+}
+
+/* ------------------------------------------------------------------ contador */
+
+function Counter() {
+  const [n, setN] = useState<number | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    fetch("/api/public/preinscripcion?slug=cip")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { total?: number } | null) => {
+        if (live && d && typeof d.total === "number") setN(d.total);
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  if (n === null || n < 1) return null;
+  return (
+    <p className="mt-4 text-sm font-bold text-white/80">
+      <span className="text-white">{n.toLocaleString("es-PE")}</span>{" "}
+      {n === 1 ? "ingeniero ya firmó" : "ingenieros ya firmaron"} por que esto exista.
+    </p>
   );
 }
 
@@ -280,23 +355,50 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
               className="mb-7 h-16 w-auto object-contain"
             />
           ) : null}
-          <p className="eyebrow text-white/70">Preinscripción abierta · Cupos limitados</p>
+          <p className="eyebrow text-white/70">Todavía no existe · Puede existir en un mes</p>
           <h1 className="title">
-            Habla inglés en 1 año,
+            Que todos los ingenieros del Perú
             <br />
-            <span className="acc">veinte minutos al día</span>
+            <span className="acc">aprendan inglés técnico</span>
           </h1>
-          <p className="mt-4 text-sm font-semibold text-white/70">
-            87 horas de curso ÷ 5 días por semana = 20 min al día durante 12 meses.
+          <p className="lede mt-5 text-white/85">
+            La plataforma ya está construida, con la marca del Colegio y vocabulario de ingeniería.
+            Falta una sola cosa: demostrar que los colegiados la quieren. Tu correo es esa prueba.
           </p>
-          <p className="lede mt-5 text-white/85">{brand.phrase}</p>
 
           <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
-            <EmailForm id="hero" cta="Quiero mi cupo" />
+            <EmailForm id="hero" cta="Firmar mi preinscripción" />
           </div>
+          <Counter />
         </div>
-        <div className="hidden justify-center md:flex">
+        <div className="hidden flex-col items-center gap-3 md:flex">
           <BotiFull />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------- pasos */
+
+function Steps() {
+  return (
+    <section className="band bg-cream">
+      <div className="sheet">
+        <p className="eyebrow text-[var(--cip)]">Cómo funciona esta campaña</p>
+        <h2 className="head">Esto no está funcionando todavía. De ti depende que arranque.</h2>
+        <p className="lede mt-3 text-[var(--ink-2)]">
+          No estás comprando un curso: estás pidiendo que el Colegio lo active para todos los
+          colegiados.
+        </p>
+        <div className="mt-10 grid gap-8 md:grid-cols-3">
+          {STEPS.map((s) => (
+            <div key={s.n} className="step">
+              <b className="num">{s.n}</b>
+              <h3>{s.t}</h3>
+              <p>{s.d}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -307,7 +409,7 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
 
 function Metrics() {
   return (
-    <section className="band bg-cream !py-10">
+    <section className="band bg-paper !py-10">
       <div className="sheet grid grid-cols-2 gap-8 md:grid-cols-4">
         {METRICS.map((m) => (
           <div key={m.l} className="metric text-center">
@@ -320,16 +422,43 @@ function Metrics() {
   );
 }
 
-function Benefits() {
+/* --------------------------------------------------- tecnología con capturas */
+
+function Tech() {
   return (
     <section className="band bg-paper">
       <div className="sheet">
-        <p className="eyebrow text-[var(--cip)]">Qué recibe cada colegiado</p>
-        <h2 className="head">Un curso hecho para ingenieros</h2>
-        <div className="mt-9 grid gap-5 sm:grid-cols-2">
-          {BENEFITS.map((x) => (
+        <p className="eyebrow text-[var(--cip)]">Tecnología de punta, hecha para ingenieros</p>
+        <h2 className="head">Esto es lo que ya está construido</h2>
+        <p className="lede mt-3 text-[var(--ink-2)]">
+          No es una idea ni una maqueta: son pantallas reales de la plataforma del CIP, funcionando
+          hoy.
+        </p>
+
+        <div className="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+          {SHOTS.map((s) => (
+            <figure key={s.t} className="shot">
+              <img src={s.img} alt={s.t} width={560} height={1147} loading="lazy" />
+              <figcaption className="border-t border-[var(--line)] p-4">
+                <h3 className="text-[16px] font-extrabold leading-tight">{s.t}</h3>
+                <p className="mt-1.5 text-[14px] leading-snug text-[var(--ink-2)]">{s.d}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {TECH.map((x) => (
             <div key={x.t} className="mini">
-              <img src={x.e} alt="" aria-hidden width={40} height={40} loading="lazy" className="h-10 w-10" />
+              <img
+                src={x.e}
+                alt=""
+                aria-hidden
+                width={40}
+                height={40}
+                loading="lazy"
+                className="h-10 w-10"
+              />
               <h3>{x.t}</h3>
               <p>{x.d}</p>
             </div>
@@ -340,183 +469,19 @@ function Benefits() {
   );
 }
 
-/* ------------------------------------------------------------ quiz de muestra */
+/* ------------------------------------------------------------- demo en vivo */
 
-/**
- * El mismo quiz que ve el alumno en la app: barra segmentada arriba, pregunta a
- * la izquierda, pastillas de opción con hueco fijo para el icono, franja de
- * feedback de alto fijo y botón anclado abajo. Nada de esto cambia de tamaño al
- * responder: el alto de la tarjeta y de cada zona está reservado de antemano.
- */
-const QUIZ_CSS = `
-.qz { --ink:#3C3C3C; --muted:#8C8C8C; --line:#E5E5E5; --blue:#1CB0F6; --ok:#3FAA24;
-  --okDark:#2E7D1A; --red:#F44336; font-family:'Archivo',system-ui,sans-serif; }
-.qz .q-top { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
-.qz .segs { display:flex; gap:5px; flex:1 1 auto; }
-.qz .seg { flex:1; height:5px; border-radius:3px; background:var(--line); transition:background .3s; }
-.qz .seg.done { background:var(--ok); }
-.qz .seg.fail { background:var(--red); }
-.qz .seg.now { background:#FF9600; }
-.qz .q-counter { font-size:13px; font-weight:800; color:var(--muted); flex:0 0 auto; min-width:36px; text-align:right; }
-.qz .q-kicker { font-size:12px; font-weight:800; letter-spacing:1px; color:var(--muted); text-transform:uppercase; margin:0 0 10px; }
-.qz .q-question { font-size:23px; font-weight:800; text-align:left; color:var(--ink); line-height:1.3;
-  margin:0 0 22px; min-height:60px; }
-.qz .q-options { display:flex; flex-direction:column; gap:11px; }
-.qz .opt { border:2px solid var(--line); background:#fff; border-radius:16px; color:var(--ink);
-  padding:16px 18px; font-size:17px; font-weight:700; text-align:left; cursor:pointer; font-family:inherit;
-  display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; }
-.qz .opt:disabled { cursor:default; }
-.qz .opt .opt-ic { flex:0 0 22px; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
-.qz .opt.sel { border-color:var(--blue); background:color-mix(in srgb, var(--blue) 10%, transparent); }
-.qz .opt.correct { background:color-mix(in srgb, var(--ok) 12%, transparent); border-color:var(--ok); color:var(--okDark); }
-
-.qz .opt.wrong { background:rgba(244,67,54,.08); border-color:var(--red); color:#B3261E; }
-.qz .fb-slot { min-height:64px; margin:14px 2px 2px; display:flex; align-items:flex-start; overflow:hidden; }
-.qz .fb-line { font-size:15px; font-weight:700; line-height:1.4; text-align:left; }
-.qz .fb-line strong { display:block; font-size:16px; font-weight:800; }
-.qz .fb-line.ok strong { color:var(--okDark); }
-.qz .fb-line.no strong { color:#B3261E; }
-.qz .btn { width:100%; border:none; border-radius:18px; padding:14px; font-family:inherit; font-size:18px;
-  font-weight:700; color:#fff; cursor:pointer; min-height:52px; margin-top:auto; background:var(--ok); --lip:var(--okDark);
-  transition:transform .12s ease, box-shadow .12s ease; }
-.qz .btn:disabled { opacity:.45; cursor:default; box-shadow:none; }
-.qz .btn:not(:disabled) { box-shadow:0 4px 0 var(--lip), 0 6px 14px rgba(0,0,0,.16); }
-.qz .btn:not(:disabled):active { transform:translateY(2px); box-shadow:0 2px 0 var(--lip), 0 3px 8px rgba(0,0,0,.14); }
-`;
-
-function SampleQuiz() {
-  const [i, setI] = useState(0);
-  const [sel, setSel] = useState<number | null>(null);
-  const [picked, setPicked] = useState<number | null>(null);
-  const [marks, setMarks] = useState<("done" | "fail")[]>([]);
-  const q = SAMPLE[i]!;
-  const done = picked !== null;
-  const right = picked === q.ok;
-  const last = i === SAMPLE.length - 1;
-
-  function choose(k: number) {
-    if (done) return;
-    setSel(k);
-  }
-
-  function confirm() {
-    if (sel === null) return;
-    setPicked(sel);
-    setMarks((m) => [...m, sel === q.ok ? "done" : "fail"]);
-  }
-
-  function next() {
-    if (last) {
-      document.getElementById("curso")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-    setI(i + 1);
-    setPicked(null);
-    setSel(null);
-  }
-
-  return (
-    <section className="band bg-cream">
-      <div className="sheet">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="eyebrow text-[var(--cip)]">Ejercicios reales</p>
-          <h2 className="head">Pruébalo ahora mismo</h2>
-          <p className="lede mx-auto mt-3 text-[var(--ink-2)]">
-            Tres ejercicios del curso, tal como se ven en la app.
-          </p>
-        </div>
-
-        {/* Alto fijo: la tarjeta no crece ni encoge al responder o avanzar. */}
-        <div
-          className="qz card mx-auto mt-8 flex h-[620px] max-w-2xl flex-col p-6 sm:h-[600px]"
-          style={{ boxShadow: "var(--shadow)" }}
-        >
-          <div className="q-top">
-            <div className="segs">
-              {SAMPLE.map((_, k) => (
-                <div key={k} className={`seg ${marks[k] ?? (k === i ? "now" : "")}`} />
-              ))}
-            </div>
-            <div className="q-counter">
-              {i + 1}/{SAMPLE.length}
-            </div>
-          </div>
-
-          <p className="q-kicker">Elige la opción correcta</p>
-          <p className="q-question">{q.q}</p>
-
-          <div className="q-options">
-            {q.opts.map((o, k) => (
-              <button
-                key={o}
-                type="button"
-                disabled={done}
-                onClick={() => choose(k)}
-                className={`opt ${
-                  done && k === q.ok
-                    ? "correct"
-                    : done && k === picked
-                      ? "wrong"
-                      : !done && k === sel
-                        ? "sel"
-                        : ""
-                }`}
-              >
-                <span>{o}</span>
-                <span className="opt-ic">
-                  {done && k === q.ok ? "✓" : done && k === picked ? "✕" : ""}
-                </span>
-              </button>
-            ))}
-          </div>
-
-          <div className="fb-slot">
-            {done && (
-              <p className={`fb-line ${right ? "ok" : "no"}`}>
-                <strong>{right ? "¡Correcto!" : "Casi."}</strong>
-                {q.tip}
-              </p>
-            )}
-          </div>
-
-          <button
-            type="button"
-            className="btn"
-            disabled={!done && sel === null}
-            onClick={done ? next : confirm}
-          >
-            {!done
-              ? sel === null
-                ? "Elige una opción"
-                : "Confirmar"
-              : last
-                ? "Y así hay 8.127 ejercicios más"
-                : "Siguiente ejercicio"}
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------------------------------------------- demo vivo */
-
-/**
- * El demo real pesa varios cientos de kB, así que no se pide hasta que la
- * persona lo abre: hasta entonces sólo se ve el marco del teléfono con una
- * portada estática. El iframe se pinta al 111,11 % y se reduce a 0,9 para que,
- * una vez escalado, ocupe exactamente el hueco interior sin recortes.
- */
 function LiveDemo() {
   const [on, setOn] = useState(false);
 
   return (
-    <section id="curso" className="band bg-paper">
+    <section id="curso" className="band bg-cream">
       <div className="sheet text-center">
         <p className="eyebrow text-[var(--cip)]">Sin maquetas</p>
         <h2 className="head">Este es el curso, tal cual</h2>
         <p className="lede mx-auto mt-3 text-[var(--ink-2)]">
-          La app real del Colegio de Ingenieros. Ábrela y recórrela.
+          Ábrelo y recórrelo completo: test de ubicación, ruta de niveles, vocabulario técnico y
+          panel de progreso.
         </p>
 
         <div className="mx-auto mt-8 w-full max-w-[390px]">
@@ -535,7 +500,12 @@ function LiveDemo() {
               <button
                 type="button"
                 onClick={() => setOn(true)}
-                className="flex h-full w-full flex-col items-center justify-center gap-5 bg-[radial-gradient(600px_400px_at_50%_0%,#22345A,transparent_60%),#0c1225] px-8 text-white"
+                className="flex h-full w-full flex-col items-center justify-center gap-5 px-8 text-white"
+                style={{
+                  background:
+                    "radial-gradient(600px 400px at 50% 0%, #22345A, transparent 60%), #0c1225",
+                }}
+
               >
                 <img
                   src="/head.png"
@@ -561,6 +531,93 @@ function LiveDemo() {
               </button>
             )}
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------- compartir */
+
+function ShareButtons({ compact = false }: { compact?: boolean }) {
+  const [copied, setCopied] = useState(false);
+  const url = "https://aprendoenglish.com/cip";
+  const msg =
+    "Colega ingeniero: el CIP puede darnos inglés técnico a todos los colegiados. Solo falta que seamos suficientes. Firma aquí: ";
+
+  const wa = `https://wa.me/?text=${encodeURIComponent(msg + url + "?utm_source=whatsapp")}`;
+  const li = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url + "?utm_source=linkedin")}`;
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    } catch {
+      /* sin portapapeles */
+    }
+  }
+
+  const cls = compact
+    ? "rounded-lg px-3.5 py-2 text-[13px] font-extrabold"
+    : "rounded-xl px-5 py-3.5 text-base font-extrabold";
+
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <a
+        href={wa}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${cls} text-white`}
+        style={{ background: "#25D366", boxShadow: "0 4px 0 #14904a" }}
+      >
+        WhatsApp
+      </a>
+      <a
+        href={li}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${cls} text-white`}
+        style={{ background: "#0A66C2", boxShadow: "0 4px 0 #06427d" }}
+      >
+        LinkedIn
+      </a>
+      <button
+        type="button"
+        onClick={copy}
+        className={`${cls} border-2 border-current text-[var(--cip)]`}
+      >
+        {copied ? "¡Enlace copiado!" : "Copiar enlace"}
+      </button>
+    </div>
+  );
+}
+
+function Share() {
+  return (
+    <section className="band bg-ink">
+      <div className="sheet grid items-center gap-10 md:grid-cols-[1.1fr_.9fr]">
+        <div>
+          <p className="eyebrow text-white/70">Lo más importante de esta página</p>
+          <h2 className="head text-white">Pásale la voz a tus colegas</h2>
+          <p className="lede mt-4 text-white/85">
+            Una firma no mueve nada; mil firmas mueven al Colegio. Manda este enlace a tu grupo de
+            obra, a tu capítulo, a los ingenieros de tu empresa. Cada colegiado que firma acerca la
+            fecha de arranque.
+          </p>
+          <div className="mt-7">
+            <ShareButtons />
+          </div>
+        </div>
+        <div className="card p-6">
+          <p className="badge bg-[color-mix(in_srgb,var(--cip)_14%,#fff)] text-[var(--cip)]">
+            Qué le dices
+          </p>
+          <p className="mt-4 text-[15.5px] font-semibold leading-relaxed text-[var(--ink-2)]">
+            «Colega, el Colegio puede darnos inglés técnico a todos los colegiados, con la
+            plataforma ya construida. Sólo falta que seamos suficientes. Firma acá, toma diez
+            segundos.»
+          </p>
         </div>
       </div>
     </section>
@@ -621,12 +678,18 @@ function BotiFull() {
   }, []);
 
   return (
-    <div
-      ref={ref}
-      aria-label="Boti, la mascota del programa"
-      className="relative w-[260px] drop-shadow-2xl"
-      style={{ aspectRatio: "757.6 / 1139.5" }}
-    />
+    <div className="flex flex-col items-center">
+      <div className="bubble mb-4">
+        ¡Hola! Soy <b>Boti</b>. Si tus colegas firman, te acompaño hasta que hables inglés de
+        ingeniero.
+      </div>
+      <div
+        ref={ref}
+        aria-label="Boti, la mascota del programa"
+        className="relative w-[240px] drop-shadow-2xl"
+        style={{ aspectRatio: "757.6 / 1139.5" }}
+      />
+    </div>
   );
 }
 
@@ -634,14 +697,17 @@ function FinalCta({ brand }: { brand: { institution: string } }) {
   return (
     <section className="band bg-accent">
       <div className="sheet mx-auto max-w-2xl text-center">
-        <p className="eyebrow text-white/75">Últimos cupos de la primera cohorte</p>
-        <h2 className="head text-white">Asegura tu cupo hoy</h2>
+        <p className="eyebrow text-white/75">Última llamada</p>
+        <h2 className="head text-white">Firma y pásala</h2>
         <p className="lede mx-auto mt-3 text-white/90">
-          Deja tu correo y te avisamos apenas se abra la inscripción para colegiados del{" "}
-          {brand.institution}.
+          Diez segundos tuyos para que el {brand.institution} pueda lanzar, en un mes, la plataforma
+          de inglés técnico de todos los colegiados.
         </p>
-        <div className="card mx-auto mt-8 max-w-xl p-4 text-left" style={{ boxShadow: "var(--shadow)" }}>
-          <EmailForm id="final" cta="Preinscribirme" />
+        <div
+          className="card mx-auto mt-8 max-w-xl p-4 text-left"
+          style={{ boxShadow: "var(--shadow)" }}
+        >
+          <EmailForm id="final" cta="Firmar mi preinscripción" />
         </div>
       </div>
     </section>
