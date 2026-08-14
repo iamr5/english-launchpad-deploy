@@ -710,9 +710,10 @@ function BotiFull() {
   return (
     <div className="flex flex-col items-center">
       <div className="bubble mb-4">
-        ¡Hola! Soy <b>Boti</b>. Si tus colegas firman, te acompaño hasta que hables inglés de
-        ingeniero.
+        ¡Hola! Soy <b>Boti</b>. Si tus colegas firman, te acompaño desde tu primer &quot;hello&quot;
+        hasta que hables inglés de ingeniero.
       </div>
+
       <div
         ref={ref}
         aria-label="Boti, la mascota del programa"
