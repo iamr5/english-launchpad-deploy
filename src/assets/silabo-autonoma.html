@@ -640,6 +640,23 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
   .mod-head{padding:20px}
   .mod-body{padding:4px 20px 22px}
 }
+/* Nomi, la mascota del demo de la Autónoma, en la portada. */
+.cover-with-nomi{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:26px;align-items:center}
+.cover-with-nomi .standfirst{margin:0}
+.cover-nomi{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.cover-nomi img{width:100%;max-width:180px;height:auto;display:block;filter:drop-shadow(0 18px 30px rgba(4,14,36,.35))}
+.cover-nomi figcaption{display:flex;flex-direction:column;gap:2px;line-height:1.3}
+.cover-nomi figcaption b{font:800 13px/1 var(--disp);letter-spacing:.02em}
+.cover-nomi figcaption span{font-size:11.5px;opacity:.78;max-width:200px}
+.nomi-tag{display:inline-flex;align-items:center;gap:9px;margin-bottom:6px}
+.nomi-tag img{width:34px;height:34px;display:block}
+.nomi-tag span{font:700 12px/1.3 var(--disp);letter-spacing:.02em;opacity:.8}
+@media (max-width:760px){
+  .cover-with-nomi{grid-template-columns:1fr}
+  .cover-nomi{flex-direction:row;text-align:left;gap:14px}
+  .cover-nomi img{max-width:110px}
+  .cover-nomi figcaption{align-items:flex-start}
+}
 </style>
 </head>
 <body>
@@ -653,7 +670,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 </div>
 <span class="doc-kind">Propuesta académica · implementación institucional</span>
 <h1 class="title">Un e-learning de inglés <span class="acc">para toda la Autónoma</span></h1>
+<div class="cover-with-nomi">
 <p class="standfirst">Una plataforma de aprendizaje disponible en <b>web y app</b>, con la <b>identidad de la Universidad Autónoma del Perú</b>, que puede implementarse desde la Coordinación de Inglés para extender la práctica de sus alumnos fuera del aula.</p>
+<figure class="cover-nomi">
+<img src="/demo-assets/nomi-autonoma.svg" alt="Nomi, la llamita guía de la plataforma de inglés de la Universidad Autónoma del Perú" loading="eager"/>
+<figcaption><b>Nomi</b><span>La guía que acompaña al alumno dentro de la plataforma, ya vestida con los colores de la Autónoma.</span></figcaption>
+</figure>
+</div>
+
 <div class="opportunity">
 <div class="opportunity-top">
 <span class="opportunity-kicker">La oportunidad para la Coordinación de Inglés</span>
@@ -690,9 +714,9 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <dl class="colofon">
 <div><dt>Dirigido a</dt><dd>Coordinación de Inglés<br/>Universidad Autónoma del Perú</dd></div>
 <div><dt>Marcos de referencia</dt><dd>MCER (Consejo de Europa)<br/>Cambridge English Qualifications</dd></div>
-<div><dt>Extensión</dt><dd>5 módulos · 48 microlecciones<br/>7 200 ejercicios · ≈130 h</dd></div>
+<div><dt>Extensión</dt><dd>5 módulos · 45 microlecciones<br/>8 127 ejercicios · ≈145 h disponibles</dd></div>
 <div><dt>Naturaleza</dt><dd>Recurso complementario<br/>de práctica autónoma</dd></div>
-<div><dt>Versión</dt><dd>Sílabo vigente<br/>Agosto de 2026</dd></div>
+<div><dt>Actualización</dt><dd>Revisión de agosto de 2026<br/>Según descriptores vigentes de Cambridge English / MCER y pedidos de la Coordinación de Inglés.</dd></div>
 </dl>
 </div>
 </header>
@@ -701,6 +725,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <div class="sheet">
 <div class="demo-intro">
 <div class="copy">
+<span class="nomi-tag"><img src="/demo-assets/nomi-autonoma-head.svg" alt=""/><span>Con Nomi, la guía de la plataforma</span></span>
 <span class="eyebrow"><span class="bar"></span>Antes del detalle académico</span>
 <h2 class="head">Primero, <span class="hl">veamos cómo lo viviría el alumno</span>.</h2>
 <p class="lead">La misma experiencia institucional puede acompañar al estudiante desde su computador o desde el celular. Esta previsualización muestra cómo se presenta la propuesta bajo la identidad de la Universidad Autónoma.</p>
@@ -756,10 +781,10 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <h2 class="head">Plataforma, contenido e implementación</h2>
 <ol class="toc">
 <li><a href="#proposito"><span class="n">01</span><span class="t">La oportunidad</span><span class="d">E-learning institucional para la Autónoma</span></a></li>
-<li><a href="#marco"><span class="n">02</span><span class="t">Encaje académico</span><span class="d">Alineamiento y estructura académica</span></a></li>
-<li><a href="#arquitectura"><span class="n">03</span><span class="t">Lo que recibe el alumno</span><span class="d">≈130 h · 7 200 ejercicios · 48 microlecciones</span></a></li>
+<li><a href="#marco"><span class="n">02</span><span class="t">Cómo está escrito el contenido</span><span class="d">Criterios pedagógicos del diseño</span></a></li>
+<li><a href="#arquitectura"><span class="n">03</span><span class="t">Lo que recibe el alumno</span><span class="d">8 127 ejercicios · 45 microlecciones · ≈145 h disponibles</span></a></li>
 <li><a href="#modulos"><span class="n">04</span><span class="t">Sílabo por nivel</span><span class="d">A1 · A2 · B1 · B2 · C1</span></a></li>
-<li><a href="#alineacion"><span class="n">05</span><span class="t">MCER + Cambridge</span><span class="d">Correspondencia académica revisable</span></a></li>
+<li><a href="#alineacion"><span class="n">05</span><span class="t">MCER + Cambridge</span><span class="d">Anexo: tabla de correspondencia</span></a></li>
 <li><a href="#tipologia"><span class="n">06</span><span class="t">Experiencia de práctica</span><span class="d">Formatos y dinámica de práctica</span></a></li>
 <li><a href="#alcance"><span class="n">07</span><span class="t">Valor para la universidad</span><span class="d">Coordinación · docentes · estudiantes</span></a></li>
 <li><a href="#articulacion"><span class="n">08</span><span class="t">Implementación</span><span class="d">Cómo llevarlo a la Autónoma</span></a></li>
@@ -780,7 +805,6 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 </div>
 <div class="hero-proof">
 <div class="copy"><span class="label">Plataforma institucional de inglés</span><b>La Autónoma puede contar con su propio e-learning de inglés, integrado a su experiencia académica y disponible para toda su comunidad estudiantil.</b></div>
-<div class="proof-pill">48 microlecciones · 7 200 ejercicios · ≈130 h</div>
 </div>
 <div class="stake-grid">
 <article class="stake"><div class="who">Para la Coordinación</div><h3>Una iniciativa institucional que puede liderar</h3><p>Define cómo se presenta, cómo se articula al programa y qué rol cumple dentro de la estrategia de inglés.</p></article>
@@ -792,20 +816,13 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <!-- ==================== 02 · ALINEAMIENTO ==================== -->
 <section class="band bg-paper" id="marco">
 <div class="sheet">
-<span class="eyebrow"><span class="sec-no">02</span>Encaje académico</span>
-<h2 class="head">Una estructura académica <span class="hl-b">visible y revisable</span>.</h2>
-<p class="lead">El programa presenta de forma explícita su estructura, progresión, niveles y referencias académicas, para facilitar su revisión y articulación con el curso de inglés de la universidad.</p>
-<div class="check-wall">
-<div class="check-card"><span class="ck">✓</span><div><b>Progresión MCER de A1 a C1</b><span>Cinco módulos organizados sobre la escala que la universidad ya reconoce.</span></div></div>
-<div class="check-card"><span class="ck">✓</span><div><b>Cambridge como horizonte de logro</b><span>A2 Key, B1 Preliminary, B2 First y referencias de nivel avanzado.</span></div></div>
-<div class="check-card"><span class="ck">✓</span><div><b>Contenido identificable por punto de lengua</b><span>La Coordinación puede ver qué trabaja cada microlección y contrastarlo con su propia secuencia.</span></div></div>
-<div class="check-card"><span class="ck">✓</span><div><b>Diseñado para complementar, no desplazar</b><span>La herramienta añade volumen de práctica sin exigir reemplazar material, docente o estructura académica.</span></div></div>
-</div>
-<div class="audit-note"><b>Estructura académica visible y revisable.</b> Los niveles, contenidos, correspondencias y criterios de organización están expuestos para su revisión directa.</div>
+<span class="eyebrow"><span class="sec-no">02</span>Criterios de diseño</span>
+<h2 class="head">Con qué criterios <span class="hl-b">está escrito el contenido</span>.</h2>
+<p class="lead">Seis decisiones pedagógicas explican por qué el material está ordenado como está. Son los criterios con los que se escribió cada microlección y los que la Coordinación puede discutir o pedir ajustar.</p>
 <details class="academic-detail">
-<summary>Ver fundamento pedagógico del diseño <span style="font-weight:600;color:var(--muted)">Fundamento pedagógico</span></summary>
+<summary>Ver los seis criterios en detalle <span style="font-weight:600;color:var(--muted)">Fundamento pedagógico</span></summary>
 <div class="detail-body">
-<p class="note" style="margin-top:17px">El fundamento pedagógico completo se presenta como referencia complementaria para la revisión académica.</p>
+
 <div class="grid-3">
 <div class="mini"><div class="ic">I</div><h3>Carga cognitiva controlada</h3><p>Cada microlección aísla una dificultad. Cuando una regla tiene una sola excepción, la excepción se presenta al final y sin competencia, no mezclada con el resto del paradigma.</p></div>
 <div class="mini"><div class="ic">II</div><h3>Currículo en espiral</h3><p>Los puntos críticos se retoman en un nivel superior con mayor exigencia, no se presentan dos veces desde cero. El presente perfecto y el estilo indirecto son los dos ejes de esa espiral.</p></div>
@@ -825,13 +842,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <h2 class="head">Una capa de práctica ya construida, <span class="hl-b">lista para ponerse en manos del estudiante</span>.</h2>
 <p class="lead">La plataforma cuenta con una base amplia de práctica para acompañar al estudiante durante el semestre en tramos breves y recurrentes.</p>
 <div class="metric-wall">
-<div class="m"><span class="k">≈130 h</span><span class="u">de práctica potencial</span><span class="d">Proyección manteniendo el tiempo medio de resolución usado en el cálculo académico anterior.</span></div>
-<div class="m"><span class="k">7 200</span><span class="u">ejercicios</span><span class="d">Práctica activa con corrección inmediata.</span></div>
-<div class="m"><span class="k">48</span><span class="u">microlecciones</span><span class="d">Unidades breves y fáciles de distribuir.</span></div>
+<div class="m"><span class="k">≈145 h</span><span class="u">de práctica disponible</span><span class="d">Volumen total del banco, no una carga exigida: el alumno toma lo que necesita según su nivel y su meta diaria.</span></div>
+<div class="m"><span class="k">8 127</span><span class="u">ejercicios</span><span class="d">Práctica activa con corrección inmediata.</span></div>
+<div class="m"><span class="k">45</span><span class="u">microlecciones</span><span class="d">Unidades breves y fáciles de distribuir.</span></div>
 <div class="m"><span class="k">5</span><span class="u">niveles</span><span class="d">A1, A2, B1, B2 y C1.</span></div>
-<div class="m"><span class="k">12–15</span><span class="u">min por tramo de práctica</span><span class="d">Sesiones breves que pueden repetirse durante la semana sin exigir completar todo el banco de una vez.</span></div>
+<div class="m"><span class="k">11 040</span><span class="u">palabras de vocabulario</span><span class="d">Banco general más seis bancos por carrera; el de Ingeniería aporta 779 términos.</span></div>
+<div class="m"><span class="k">20</span><span class="u">min al día</span><span class="d">La meta diaria por defecto. Con ese ritmo el alumno avanza de nivel sin agotar el banco: sobra material, no falta.</span></div>
 </div>
-<p class="note" style="color:#9fb2d0;margin-top:12px">Las ≈130 h son una estimación del volumen potencial de práctica al escalar el tiempo medio de resolución utilizado anteriormente. La cifra objetiva de contenido es <b style="color:#fff">7 200 ejercicios</b>: 1,800 por cada formato.</p>
+<p class="note" style="color:#9fb2d0;margin-top:12px"><b style="color:#fff">Nadie tiene que hacer las ≈145 h.</b> Es el volumen disponible: 8 127 ejercicios contados uno a uno sobre el contenido actual, al tiempo medio de resolución. El alumno avanza por su ruta —unos 20 minutos al día— y el resto del banco queda como práctica libre para quien quiera más repetición.</p>
 <h3 class="sub" style="color:#fff">Una rutina simple para el estudiante</h3>
 <div class="flow-3">
 <article class="flow-card"><div class="n">1</div><h3>Entiende</h3><p>Recibe el punto de lengua en bloques breves, con foco claro y sin convertir cada práctica en una clase extensa.</p></article>
@@ -846,22 +864,22 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <span class="eyebrow"><span class="sec-no">04</span>Sílabo por nivel</span>
 <h2 class="head">El contenido no es una promesa: <span class="hl-b">A1 a C1 ya está construido</span>.</h2>
 <p class="lead">La estructura general se presenta de forma resumida y cada nivel puede abrirse para consultar su sílabo completo.</p>
-<p class="note">El banco global contiene <b>7 200 ejercicios</b>, con <b>1 800 por cada uno de los cuatro formatos de práctica</b>. La distribución por nivel mantiene proporcionalmente la estructura del sílabo original.</p>
+<p class="note">El banco global contiene <b>8 127 ejercicios</b> repartidos en los cuatro formatos de práctica. Las cifras por nivel son el conteo real del contenido publicado, no una proyección.</p>
 <div class="level-summary">
-<div class="level-chip-card"><span class="lv">A1</span><b>10 microlecciones</b><span>1 833 ejercicios · Base verbal y fonológica.</span></div>
-<div class="level-chip-card"><span class="lv">A2</span><b>15 microlecciones</b><span>2 233 ejercicios · Ampliación del sistema y uso funcional.</span></div>
-<div class="level-chip-card"><span class="lv">B1</span><b>8 microlecciones</b><span>1 130 ejercicios · Cohesión, registro y estrategia.</span></div>
-<div class="level-chip-card"><span class="lv">B2</span><b>8 microlecciones</b><span>1 107 ejercicios · Matiz, eficacia y preparación FCE.</span></div>
-<div class="level-chip-card"><span class="lv">C1</span><b>7 microlecciones</b><span>897 ejercicios · Gestión de información y nivel avanzado.</span></div>
+<div class="level-chip-card"><span class="lv">A1</span><b>10 microlecciones</b><span>2 251 ejercicios · Base verbal y fonológica.</span></div>
+<div class="level-chip-card"><span class="lv">A2</span><b>12 microlecciones</b><span>2 224 ejercicios · Ampliación del sistema y uso funcional.</span></div>
+<div class="level-chip-card"><span class="lv">B1</span><b>8 microlecciones</b><span>1 385 ejercicios · Cohesión, registro y estrategia.</span></div>
+<div class="level-chip-card"><span class="lv">B2</span><b>8 microlecciones</b><span>1 233 ejercicios · Matiz, eficacia y preparación FCE.</span></div>
+<div class="level-chip-card"><span class="lv">C1</span><b>7 microlecciones</b><span>1 034 ejercicios · Gestión de información y nivel avanzado.</span></div>
 </div>
-<details class="academic-detail"><summary>A1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">10 microlecciones · 1 833 ejercicios</span></summary><div class="detail-body"><article class="module">
+<details class="academic-detail"><summary>A1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">10 microlecciones · 2 251 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 1</span>A1</div>
 <div class="mt">Primeros pasos</div>
 <div class="ms">Instalación del sistema verbal básico y conciencia fonológica temprana</div>
 </div>
-<div class="mod-metrics"><span><b>10</b>microlecciones</span><span><b>1 833</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>10</b>microlecciones</span><span><b>2 251</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -890,14 +908,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p>Situar la pronunciación en la microlección 8, todavía en A1, es poco habitual y responde a un criterio de prevención: la conciencia fonológica temprana evita la fosilización articulatoria. Corregir la pronunciación en B1 exige un esfuerzo desproporcionado frente al de instalarla desde el principio.</p>
 </div>
 </div>
-</article></div></details><details class="academic-detail"><summary>A2 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">15 microlecciones · 2 233 ejercicios</span></summary><div class="detail-body"><article class="module">
+</article></div></details><details class="academic-detail"><summary>A2 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">12 microlecciones · 2 224 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 2</span>A2</div>
 <div class="mt">A2 en acción</div>
 <div class="ms">Ampliación del sistema verbal y primeras unidades funcionales</div>
 </div>
-<div class="mod-metrics"><span><b>15</b>microlecciones</span><span><b>2 233</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>12</b>microlecciones</span><span><b>2 224</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -907,38 +925,35 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <tbody>
 <tr><td class="num">01</td><td class="lang">Presente continuo frente a presente simple</td><td class="tit">¿Qué está pasando ahora?</td></tr>
 <tr><td class="num">02</td><td class="lang">Pasado simple</td><td class="tit">Historias del pasado</td></tr>
-<tr><td class="num">03</td><td class="lang">Presente perfecto: <em>just, yet, already, ever, never, for, since</em></td><td class="tit">¿Y eso ya pasó o sigue contando?</td></tr>
-<tr><td class="num">04</td><td class="lang">Futuro con <em>going to</em> y <em>will</em></td><td class="tit">¿Cómo hablo del futuro?</td></tr>
-<tr><td class="num">05</td><td class="lang">Comparativos y superlativos</td><td class="tit">¡Qué diferente!</td></tr>
-<tr><td class="num">06</td><td class="lang">Modal <em>can / can't</em></td><td class="tit">¿Qué puedo hacer?</td></tr>
-<tr><td class="num">07</td><td class="lang">Modales <em>should</em> frente a <em>must</em></td><td class="tit">¿Debo o tengo que?</td></tr>
-<tr><td class="num">08</td><td class="lang">Verbos de gusto + <em>‑ing</em></td><td class="tit">Me gusta o no me gusta</td></tr>
-<tr><td class="num">09</td><td class="lang">Preguntas WH‑ en presente y pasado</td><td class="tit">¿Quién, cómo, cuándo?</td></tr>
-<tr><td class="num">10</td><td class="lang">Voz pasiva en presente y pasado simple</td><td class="tit">¿Y si no importa quién lo hizo?</td></tr>
-<tr><td class="num">11</td><td class="lang">Estilo indirecto básico con <em>say</em> y <em>tell</em></td><td class="tit">¿Qué te dijo?</td></tr>
-<tr><td class="num">12</td><td class="lang">Léxico funcional: compras</td><td class="tit">¡Vamos de compras!</td></tr>
-<tr><td class="num">13</td><td class="lang">Léxico funcional: salud</td><td class="tit">¡Me siento mal!</td></tr>
-<tr><td class="num">14</td><td class="lang">Léxico funcional: viajes e indicaciones</td><td class="tit">¡A viajar!</td></tr>
-<tr><td class="num">15</td><td class="lang">Escritura básica de correos y notas</td><td class="tit">Mensajes que conectan</td></tr>
+<tr><td class="num">03</td><td class="lang">Futuro con <em>going to</em> y <em>will</em></td><td class="tit">¿Cómo hablo del futuro?</td></tr>
+<tr><td class="num">04</td><td class="lang">Comparativos y superlativos</td><td class="tit">¡Qué diferente!</td></tr>
+<tr><td class="num">05</td><td class="lang">Modal <em>can / can't</em></td><td class="tit">¿Qué puedo hacer?</td></tr>
+<tr><td class="num">06</td><td class="lang">Modales <em>should</em> frente a <em>must</em></td><td class="tit">¿Debo o tengo que?</td></tr>
+<tr><td class="num">07</td><td class="lang">Verbos de gusto + <em>‑ing</em></td><td class="tit">Me gusta o no me gusta</td></tr>
+<tr><td class="num">08</td><td class="lang">Preguntas WH‑ en presente y pasado</td><td class="tit">¿Quién, cómo, cuándo?</td></tr>
+<tr><td class="num">09</td><td class="lang">Léxico funcional: compras</td><td class="tit">¡Vamos de compras!</td></tr>
+<tr><td class="num">10</td><td class="lang">Léxico funcional: salud</td><td class="tit">¡Me siento mal!</td></tr>
+<tr><td class="num">11</td><td class="lang">Léxico funcional: viajes e indicaciones</td><td class="tit">¡A viajar!</td></tr>
+<tr><td class="num">12</td><td class="lang">Escritura básica de correos y notas</td><td class="tit">Mensajes que conectan</td></tr>
 </tbody>
 </table>
 </div>
 <div class="rationale">
 <span class="rl">Fundamento del ordenamiento</span>
-<p>La arquitectura del módulo separa deliberadamente la construcción del sistema de su puesta en uso. Las microlecciones 1 a 11 levantan la maquinaria —tiempos, modales, comparación, voz y discurso referido— y las cuatro últimas la ponen a trabajar en situaciones concretas: comprar, enfermarse, viajar y escribir.</p>
+<p>La arquitectura del módulo separa deliberadamente la construcción del sistema de su puesta en uso. Las microlecciones 1 a 8 levantan la maquinaria —tiempos, modales, comparación y preguntas— y las cuatro últimas la ponen a trabajar en situaciones concretas: comprar, enfermarse, viajar y escribir.</p>
 <p>Las unidades funcionales del cierre no son material de relleno. <b>Compras, salud y viajes figuran entre los temas del listado oficial de A2 Key</b> —<em>Shopping</em>, <em>Health, medicine and exercise</em> y <em>Travel and holidays</em>—, de modo que el módulo queda alineado con el examen sin necesidad de presentarse como preparación para él.</p>
 <p>El contraste de la primera microlección —presente continuo <b>frente a</b> presente simple— responde al mismo principio enunciado en la sección 02: presentado en oposición, el continuo obliga a elegir; presentado aisladamente, se generaliza a todo contexto.</p>
-<p><b>Sobre las tres microlecciones de cierre.</b> Completan la cobertura del módulo respecto de la especificación de A2. El <b>presente perfecto</b> es la más urgente de las tres: interviene en las tres destrezas evaluadas del A2 Key y tiene alta frecuencia en el examen. La <b>voz pasiva</b> en este nivel se limita a presente y pasado simple —<em>The shop is closed at eight</em>—, no al sistema pasivo completo. Y el <b>estilo indirecto</b> se restringe a la subordinada con <em>say</em> y <em>tell</em> —<em>She says that she's his sister</em>—, sin desplazamiento temporal. Son unidades de carga ligera; el criterio explícito es no trasladar a A2 el tratamiento que estos mismos contenidos reciben en B1 y B2.</p>
+<p><b>Sobre el alcance del módulo.</b> El presente perfecto, la voz pasiva y el estilo indirecto figuran en la especificación de A2 pero no están todavía publicados como microlección propia: son la ampliación natural de este módulo y pueden incorporarse a pedido de la Coordinación. Se declaran aquí para que el mapa académico no prometa más de lo que hoy está construido.</p>
 </div>
 </div>
-</article></div></details><details class="academic-detail"><summary>B1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">8 microlecciones · 1 130 ejercicios</span></summary><div class="detail-body"><article class="module">
+</article></div></details><details class="academic-detail"><summary>B1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">8 microlecciones · 1 385 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 3</span>B1</div>
 <div class="mt">Rumbo al B1</div>
 <div class="ms">De la oración al texto: cohesión, registro y estrategia de examen</div>
 </div>
-<div class="mod-metrics"><span><b>8</b>microlecciones</span><span><b>1 130</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>8</b>microlecciones</span><span><b>1 385</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -964,14 +979,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p>Con el presente perfecto ya introducido en A2, la primera microlección cumple lo que su título anuncia: un <b>contraste</b> entre dos tiempos que el estudiante conoce por separado. Es currículo en espiral en sentido estricto —se regresa al mismo punto con mayor exigencia—, y no una segunda presentación desde cero. Lo mismo ocurre con la microlección 4: el estilo indirecto de A2 se limitaba a <em>say</em> y <em>tell</em> en presente; aquí entra el desplazamiento temporal —<em>«I am tired» → She said she was tired</em>—, que es la dificultad real del fenómeno.</p>
 </div>
 </div>
-</article></div></details><details class="academic-detail"><summary>B2 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">8 microlecciones · 1 107 ejercicios</span></summary><div class="detail-body"><article class="module">
+</article></div></details><details class="academic-detail"><summary>B2 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">8 microlecciones · 1 233 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 4</span>B2</div>
 <div class="mt">Rumbo al B2 First</div>
 <div class="ms">De la corrección a la eficacia: matiz, énfasis y habla natural</div>
 </div>
-<div class="mod-metrics"><span><b>8</b>microlecciones</span><span><b>1 107</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>8</b>microlecciones</span><span><b>1 233</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -997,14 +1012,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p>La microlección 5, sobre acentos y habla rápida, atiende el punto donde se concentra el mayor número de caídas. La prueba de comprensión auditiva de Cambridge emplea hablantes con acentos diversos a velocidad natural, no la locución cuidada de los materiales de estudio. Es también, y conviene señalarlo, el punto en que este programa depende más del trabajo del docente en sesión: véase la sección 07.</p>
 </div>
 </div>
-</article></div></details><details class="academic-detail"><summary>C1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">7 microlecciones · 897 ejercicios</span></summary><div class="detail-body"><article class="module">
+</article></div></details><details class="academic-detail"><summary>C1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">7 microlecciones · 1 034 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 5</span>C1</div>
 <div class="mt">Rumbo a IELTS y TOEFL</div>
 <div class="ms">Estrategia de gestión de la información bajo presión temporal</div>
 </div>
-<div class="mod-metrics"><span><b>7</b>microlecciones</span><span><b>897</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>7</b>microlecciones</span><span><b>1 034</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -1035,7 +1050,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <section class="band bg-cream page-break" id="alineacion">
 <div class="sheet">
 <span class="eyebrow"><span class="sec-no">05</span>MCER + Cambridge</span>
-<h2 class="head">Un alineamiento que el equipo académico <span class="hl">puede revisar de un vistazo</span>.</h2>
+<h2 class="head">Anexo: <span class="hl">la tabla de correspondencia nivel por nivel</span>.</h2>
 <p class="lead">Detrás de la experiencia digital existe una estructura académica reconocible y compatible con los objetivos de inglés de la universidad.</p>
 <div class="hero-proof" style="margin-top:22px">
 <div class="copy"><span class="label">Alineamiento académico</span><b>La plataforma es una extensión digital del programa, para acompañar al alumno siempre y llegar a más alumnos con un mejor nivel de inglés.</b></div>
@@ -1079,21 +1094,21 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <h2 class="head">El estudiante no solo mira contenido. <span class="hl-b">Tiene que responder</span>.</h2>
 <p class="lead">La plataforma combina formatos que obligan al alumno a reconocer, detectar, escuchar y producir. Eso convierte el tiempo en pantalla en práctica activa, no únicamente en consumo de teoría.</p>
 <div class="practice-grid">
-<article class="practice-card"><div class="ic">A</div><h3>Opción múltiple</h3><p><b>1 800 ejercicios.</b> Reconocer la forma correcta e inferir sobre textos breves.</p></article>
-<article class="practice-card"><div class="ic">!</div><h3>Detección de error</h3><p><b>1 800 ejercicios.</b> Localizar qué está mal y prestar atención a la forma.</p></article>
-<article class="practice-card"><div class="ic">▶</div><h3>Escucha y reconstrucción</h3><p><b>1 800 ejercicios.</b> Procesar audio y reconstruir la estructura correcta.</p></article>
-<article class="practice-card"><div class="ic">✎</div><h3>Producción escrita</h3><p><b>1 800 ejercicios.</b> Responder sin opciones dadas y recuperar activamente lo aprendido.</p></article>
+<article class="practice-card"><div class="ic">A</div><h3>Opción múltiple</h3><p><b>1 983 ejercicios.</b> Reconocer la forma correcta e inferir sobre textos breves.</p></article>
+<article class="practice-card"><div class="ic">!</div><h3>Detección de error</h3><p><b>1 957 ejercicios.</b> Localizar qué está mal y prestar atención a la forma.</p></article>
+<article class="practice-card"><div class="ic">▶</div><h3>Escucha y reconstrucción</h3><p><b>1 921 ejercicios.</b> Procesar audio y reconstruir la estructura correcta.</p></article>
+<article class="practice-card"><div class="ic">✎</div><h3>Producción escrita</h3><p><b>2 266 ejercicios.</b> Responder sin opciones dadas y recuperar activamente lo aprendido.</p></article>
 </div>
 <h3 class="sub">Cuatro formatos, con el mismo volumen de práctica</h3>
 <div class="coverage-strip">
-<div class="coverage"><b>1 800 ejercicios</b><span>Opción múltiple · reconocimiento e inferencia</span></div>
-<div class="coverage"><b>1 800 ejercicios</b><span>Detección de error · atención a la forma</span></div>
-<div class="coverage"><b>1 800 ejercicios</b><span>Escucha y reconstrucción · comprensión auditiva</span></div>
-<div class="coverage"><b>1 800 ejercicios</b><span>Producción escrita · recuperación activa</span></div>
+<div class="coverage"><b>1 983 ejercicios</b><span>Opción múltiple · reconocimiento e inferencia</span></div>
+<div class="coverage"><b>1 957 ejercicios</b><span>Detección de error · atención a la forma</span></div>
+<div class="coverage"><b>1 921 ejercicios</b><span>Escucha y reconstrucción · comprensión auditiva</span></div>
+<div class="coverage"><b>2 266 ejercicios</b><span>Producción escrita · recuperación activa</span></div>
 </div>
 <div class="hero-proof" style="margin-top:18px">
-<div class="copy"><span class="label">Volumen total de práctica</span><b>7 200 ejercicios: 1,800 oportunidades de práctica en cada uno de los cuatro formatos.</b></div>
-<div class="proof-pill">4 formatos × 1 800</div>
+<div class="copy"><span class="label">Volumen total de práctica</span><b>8 127 ejercicios repartidos en los cuatro formatos, con la producción escrita como el bloque más grande.</b></div>
+<div class="proof-pill">4 formatos · 8 127 ejercicios</div>
 </div>
 <p class="note">La interacción oral evaluable continúa siendo especialmente valiosa con docente. La plataforma cuenta además con una capa de conversación guiada que puede plantearse como complemento cuando se quiera ampliar ese volumen de práctica.</p>
 </div>
@@ -1132,12 +1147,12 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <article class="get-card">
 <div class="ic">A1</div>
 <h3>Contenido estructurado de A1 a C1</h3>
-<p>48 microlecciones organizadas sobre el MCER y con Cambridge como referencia académica.</p>
+<p>45 microlecciones organizadas sobre el MCER y con Cambridge como referencia académica.</p>
 </article>
 <article class="get-card">
-<div class="ic">7.2K</div>
-<h3>7 200 ejercicios de práctica activa</h3>
-<p>1 800 ejercicios en cada formato: opción múltiple, detección de error, escucha y producción escrita.</p>
+<div class="ic">8.1K</div>
+<h3>8 127 ejercicios de práctica activa</h3>
+<p>Repartidos en cuatro formatos: opción múltiple, detección de error, escucha y reconstrucción y producción escrita.</p>
 </article>
 </div>
 <div class="reward-band">
@@ -1147,8 +1162,8 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p>El inglés deja de estar limitado al horario de clase: la práctica puede continuar durante toda la semana desde una plataforma institucional disponible en los dispositivos que el alumno ya usa.</p>
 </div>
 <div class="reward-stats">
-<div class="reward-stat"><b>7 200</b><span>ejercicios totales</span></div>
-<div class="reward-stat"><b>1 800</b><span>por cada formato</span></div>
+<div class="reward-stat"><b>8 127</b><span>ejercicios totales</span></div>
+<div class="reward-stat"><b>11 040</b><span>palabras de vocabulario</span></div>
 <div class="reward-stat"><b>A1–C1</b><span>ruta completa</span></div>
 <div class="reward-stat"><b>Web + app</b><span>una sola experiencia</span></div>
 </div>
