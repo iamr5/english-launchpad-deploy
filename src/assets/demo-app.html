@@ -3771,10 +3771,19 @@ function openVocabExam(id) {
     sheet.innerHTML = `<div class="handle"></div>
       <div class="q-top"><div class="segs" id="mq-segs"></div><span class="q-counter" id="mq-counter"></span></div>
       <div class="quiz-host" id="mq-host"></div>`;
-    renderQuiz(document.getElementById('mq-host'), round[idx],
+    const pintado = renderQuiz(document.getElementById('mq-host'), round[idx],
       () => { correct++; answered++; results[idx] = true; advance(); },
       () => { answered++; results[idx] = false; failedQs.push(round[idx]); advance(); });
+    if (!pintado) return skipBroken();
     quizProgress(document.getElementById('mq-segs'), document.getElementById('mq-counter'), round.length, idx, results);
+  }
+  // Un ejercicio que no se pudo pintar se cae de la ronda: no cuenta como fallo
+  // del alumno y, sobre todo, no deja la hoja en blanco.
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { closeOverlay(); toast('Ese quiz tuvo un problema. Prueba con otro.'); return; }
+    if (idx >= round.length) return finish();
+    step();
   }
   function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
   function finish() {
@@ -4918,10 +4927,19 @@ function openMiniQuiz(lesson, block) {
     sheet.innerHTML = `<div class="handle"></div>
       <div class="q-top"><div class="segs" id="mq-segs"></div><span class="q-counter" id="mq-counter"></span></div>
       <div class="quiz-host" id="mq-host"></div>`;
-    renderQuiz(document.getElementById('mq-host'), round[idx],
+    const pintado = renderQuiz(document.getElementById('mq-host'), round[idx],
       () => { correct++; answered++; results[idx] = true; advance(); },
       () => { answered++; results[idx] = false; failedQs.push(round[idx]); advance(); });
+    if (!pintado) return skipBroken();
     quizProgress(document.getElementById('mq-segs'), document.getElementById('mq-counter'), round.length, idx, results);
+  }
+  // Un ejercicio que no se pudo pintar se cae de la ronda: no cuenta como fallo
+  // del alumno y, sobre todo, no deja la hoja en blanco.
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { closeOverlay(); toast('Ese quiz tuvo un problema. Prueba con otro.'); return; }
+    if (idx >= round.length) return finish();
+    step();
   }
   function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
   function finish() {
@@ -4984,10 +5002,17 @@ function openFinalQuiz(lesson, mod) {
     round = qs; redo = isRedo; idx = 0; correct = 0; results = []; failedQs = []; step();
   }
   function step() {
-    renderQuiz(host, round[idx],
+    const pintado = renderQuiz(host, round[idx],
       () => { correct++; results[idx] = true; if (!redo) recSkill(round[idx], true); advance(); },
       () => { results[idx] = false; failedQs.push(round[idx]); if (!redo) recSkill(round[idx], false); advance(); });
+    if (!pintado) return skipBroken();
     quizProgress(segs, counter, round.length, idx, results);
+  }
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { toast('Ese quiz tuvo un problema. Inténtalo de nuevo más tarde.'); return; }
+    if (idx >= round.length) return finish();
+    step();
   }
   function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
   function finish() {
@@ -5268,10 +5293,17 @@ function openPracticeQuiz(lesson, block, bank) {
     sheet.innerHTML = `<div class="handle"></div>
       <div class="q-top"><div class="segs" id="pq-segs"></div><span class="q-counter" id="pq-counter"></span></div>
       <div class="quiz-host" id="pq-host"></div>`;
-    renderQuiz(document.getElementById('pq-host'), round[idx],
+    const pintado = renderQuiz(document.getElementById('pq-host'), round[idx],
       () => { answered++; results[idx] = true; if (!redo) recSkill(round[idx], true); advance(); },
       () => { answered++; results[idx] = false; failedQs.push(round[idx]); if (!redo) recSkill(round[idx], false); advance(); });
+    if (!pintado) return skipBroken();
     quizProgress(document.getElementById('pq-segs'), document.getElementById('pq-counter'), round.length, idx, results);
+  }
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { _dismissGuard = null; closeOverlay(); toast('Esa tanda tuvo un problema. Prueba con otra.'); return; }
+    if (idx >= round.length) return finish();
+    step();
   }
   function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
   function finish() {
