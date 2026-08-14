@@ -365,9 +365,9 @@
     padding: 7px 4px 6px; font-family: inherit; color: var(--muted2);
     -webkit-tap-highlight-color: transparent; }
   .tab svg { width: 27px; height: 27px; display: block; }
-  /* La mancuerna es un trazo fino; a 27px se ve más pequeña que el resto. */
-  .tab svg.tab-ico-lg { width: 32px; height: 32px; margin: -2px 0 -3px; }
+  .tab svg.tab-ico-lg { width: 38px; height: 38px; margin: -4px 0 -5px; }
   .tab .tab-lbl { font-size: 12px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; }
+  .tab-lbl[for="practice"], .tab[data-tab="practice"] .tab-lbl { font-size: 11px; }
   .tab.on { color: var(--blue); background: #DDF4FF; border-color: #A5E0FB; }
   .tab:not(.on):active { background: var(--canvas); }
 
@@ -1170,7 +1170,9 @@
   .ob-opt .em { font-size: 27px; flex: 0 0 auto; }
   /* Iconos propios (SVG) dentro de los mismos huecos que ocupaban los emojis */
   .ob-opt .em img { display: block; width: 32px; height: 32px; }
+  .ob-opt .em img[src*="/streak.svg"] { width: 24px; height: 24px; }
   .ob-point.big .em img { display: block; width: 38px; height: 38px; }
+  .ob-sum .ob-chip .em img { display: block; width: 32px; height: 32px; margin: 0 auto; }
   .ob-opt small { display: block; font-size: 13.5px; font-weight: 600; color: var(--muted2); }
   .ob-opt.sel { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 10%, transparent); color: var(--blue); box-shadow: 0 2px 0 color-mix(in srgb, var(--blue) 45%, transparent); }
   .ob-opt.sel small { color: var(--blue); opacity: .75; }
@@ -2157,7 +2159,7 @@
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M7 8.2v7.6M4.2 10.1v3.8M17 8.2v7.6M19.8 10.1v3.8M7 12h10"/>
         </svg>
-        <span class="tab-lbl">Practice</span>
+        <span class="tab-lbl">Ejercicios</span>
       </button>
 
     </nav>
@@ -6993,9 +6995,10 @@ function obRender() {
   if (OB.step === 1) setTimeout(() => document.getElementById('ob-name').focus(), 120);
   if (OB.step === 3) { plRender(); obSyncNext(); }
   if (isLast) {
+    const goalIcon = (OB.goal || 15) == 60 ? '/demo-assets/ob-rocket.svg' : ((OB.goal || 15) == 30 ? '/demo-assets/streak.svg' : '/demo-assets/ob-thunder.svg');
     document.getElementById('ob-sum').innerHTML =
-      `<div class="ob-chip lvl"><span class="em">🏁</span><span class="lb">Nivel ${OB_LEVELS[OB.lvl || 0]}</span><div class="sb">Tu nivel</div></div>` +
-      `<div class="ob-chip goal"><span class="em">🎯</span><span class="lb">${OB.goal || 15} min</span><div class="sb">Meta diaria</div></div>`;
+      `<div class="ob-chip lvl"><span class="em"><img src="/demo-assets/ob-goal.svg" alt="" aria-hidden="true"></span><span class="lb">Nivel ${OB_LEVELS[OB.lvl || 0]}</span><div class="sb">Tu nivel</div></div>` +
+      `<div class="ob-chip goal"><span class="em"><img src="${goalIcon}" alt="" aria-hidden="true"></span><span class="lb">${OB.goal || 15} min</span><div class="sb">Meta diaria</div></div>`;
     // arranca en el módulo que corresponde al nivel del test de ubicación
     const sIdx = placementStartIdx(OB.lvl || 0);
     const mod = course.modules[sIdx], fl = mod.lessons[0];
