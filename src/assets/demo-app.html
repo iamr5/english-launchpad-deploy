@@ -3230,7 +3230,8 @@ function renderCourse() {
   document.getElementById('course-title').innerHTML = brandHTML();
   document.getElementById('streak-n').textContent = streakDays();
   const na = nextActiveLesson();
-  let html = '';
+  let html = homeGreeting();
+
   const LEVEL = ['A1', 'A2', 'B1', 'B2', 'C1'];
   const CROWN = '<svg viewBox="0 0 24 24" fill="#F4A720" stroke="#D98E00" stroke-width="1" stroke-linejoin="round"><path d="M2.6 7.2l4.3 3.3L12 3.4l5.1 7.1 4.3-3.3-1.9 11.1a1 1 0 0 1-1 .8H5.5a1 1 0 0 1-1-.8L2.6 7.2z"/></svg>';
   // The current module = latest unlocked one that isn't fully completed → gets a play triangle.
