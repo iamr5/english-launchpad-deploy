@@ -644,8 +644,8 @@ function Share() {
           </p>
           <p className="mt-4 text-[15.5px] font-semibold leading-relaxed text-[var(--ink-2)]">
             «Colega, el Colegio puede darnos inglés completo —de A1 a C1, con inglés técnico
-            incluido— a todos los colegiados, con la plataforma ya construida. Sólo falta que
-            seamos suficientes. Firma acá, toma diez segundos.»
+            incluido— a todos los colegiados, con la plataforma ya construida. Sólo falta que el
+            Colegio vea que los colegiados lo pedimos. Firma acá, toma diez segundos.»
 
           </p>
         </div>
