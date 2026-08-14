@@ -500,7 +500,12 @@ function LiveDemo() {
               <button
                 type="button"
                 onClick={() => setOn(true)}
-                className="flex h-full w-full flex-col items-center justify-center gap-5 bg-[radial-gradient(600px_400px_at_50%_0%,#22345A,transparent_60%),#0c1225] px-8 text-white"
+                className="flex h-full w-full flex-col items-center justify-center gap-5 px-8 text-white"
+                style={{
+                  background:
+                    "radial-gradient(600px 400px at 50% 0%, #22345A, transparent 60%), #0c1225",
+                }}
+
               >
                 <img
                   src="/head.png"
