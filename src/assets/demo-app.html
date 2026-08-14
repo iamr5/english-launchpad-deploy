@@ -5205,9 +5205,10 @@ function renderPracticeLibrary(el) {
 
   el.innerHTML = `<div class="pr-intro">
       <b>Tu biblioteca de práctica</b>
-      <small>Elige un libro y practica cuando quieras: no hace falta haber hecho la lección, no hay nota ni penalidad — lo que aciertes suma en tu ruta.</small>
+      <small>Es tu cuaderno libre: practica lo que quieras, cuando quieras. No hace falta haber hecho la lección, no hay nota ni penalidad — y nada de esto cambia tu ruta.</small>
       <span class="pr-count">${prNum(totQ)} quizzes · ${prNum(totEj)} ejercicios para practicar cuanto quieras</span>
-      <span class="pr-sub">Llevas ${prNum(totHechas)} ejercicios superados</span>
+      <span class="pr-sub">Llevas ${prNum(totHechas)} ejercicios practicados</span>
+
     </div>
     <div class="pr-chips">${chips.join('')}</div>` +
     (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
