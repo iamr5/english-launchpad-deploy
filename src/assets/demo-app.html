@@ -4870,12 +4870,25 @@ function renderWriting(host, q, onCorrect, onIncorrect) {
   draw();
 }
 
+// Devuelve false si el ejercicio no se pudo pintar. Quien llama debe saltárselo:
+// un ítem con un campo suelto no puede dejar al alumno mirando una hoja vacía.
 function renderQuiz(host, q, onCorrect, onIncorrect) {
   clearAutoNext(host);
-  if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
-  else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
-  else if (q.type === 'writing') renderWriting(host, q, onCorrect, onIncorrect);
-  else renderTap(host, q, onCorrect, onIncorrect);
+  try {
+    if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
+    else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
+    else if (q.type === 'writing') renderWriting(host, q, onCorrect, onIncorrect);
+    else renderTap(host, q, onCorrect, onIncorrect);
+  } catch (e) {
+    console.error('[quiz] no se pudo pintar el ejercicio', q && q.id, q && q.type, e);
+    host.innerHTML = '';
+    return false;
+  }
+  if (!host.innerHTML.trim()) {
+    console.error('[quiz] ejercicio vacío', q && q.id, q && q.type);
+    return false;
+  }
+  return true;
 }
 // Segmented progress bar (one segment per question) + an "n/total" counter.
 // `results[i]` (true=correct, false=wrong) colors answered steps green/red;
