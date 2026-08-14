@@ -4825,25 +4825,26 @@ function practiceItems(lesson) {
   return items;
 }
 
-// Se repinta en cada entrada: lo desbloqueado cambia a medida que avanza la ruta.
+// Se repinta en cada entrada: lo hecho cambia a medida que avanza la ruta.
+// Aquí NO se filtra por desbloqueo: Práctica es un cuaderno de ejercicios y se
+// puede responder por cuenta propia, sin haber pasado la lección.
 function renderPractice() {
   const el = document.getElementById('practice-body');
   if (!el || !course) return;
-  let abiertos = 0, totales = 0, cuerpo = '';
+  let hechosTot = 0, totales = 0, cuerpo = '';
   course.modules.forEach((mod, mi) => {
     let lecciones = '';
     mod.lessons.forEach(lesson => {
       const items = practiceItems(lesson);
+      if (!items.length) return;
       totales += items.length;
-      const open = items.filter(q => q.open);
-      abiertos += open.length;
-      if (!open.length) return; // leccion sin nada que practicar todavia
-      const hechos = open.filter(q => q.done).length;
+      const hechos = items.filter(q => q.done).length;
+      hechosTot += hechos;
       lecciones += `<div class="pr-les">
         <div class="pr-les-h"><span class="pr-les-t">${escapeHtml(lessonName(lesson))}</span>
-          <span class="pr-les-c">${hechos}/${open.length}</span></div>
+          <span class="pr-les-c">${hechos}/${items.length}</span></div>
         <div class="pr-list">` +
-        open.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
+        items.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
             data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}">
             <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
             <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
@@ -4851,17 +4852,18 @@ function renderPractice() {
           </button>`).join('') +
         `</div></div>`;
     });
-    if (!lecciones) return; // modulo entero sin abrir: no ocupa sitio
+    if (!lecciones) return;
     cuerpo += `<div class="pr-mod"><div class="pr-mod-h">
       <span class="pr-mod-n" style="background:${modAccent(mi)}">${mi + 1}</span>
       <span class="pr-mod-t">${escapeHtml(moduleName(mod))}</span></div>${lecciones}</div>`;
   });
   el.innerHTML = `<div class="pr-intro">
-      <b>Practica cuando quieras</b>
-      <small>Los quizzes que ya desbloqueaste en tu ruta, juntos y sin volver a la lección. Puedes repetirlos las veces que quieras.</small>
-      <span class="pr-count">${abiertos} de ${totales} desbloqueados</span>
-    </div>` + (cuerpo || `<div class="pr-empty"><b>Todavía no hay nada que practicar</b>
-      <small>Empieza tu primera lección en la Ruta: sus quizzes aparecerán aquí en cuanto los desbloquees.</small></div>`);
+      <b>Tu cuaderno de ejercicios</b>
+      <small>Aquí están todos los ejercicios del curso, abiertos desde el primer día. No hace falta haber hecho la lección: puedes responder por tu cuenta, en el orden que quieras y las veces que quieras. No hay nota ni penalidad — lo que aciertes suma en tu ruta.</small>
+      <span class="pr-count">${hechosTot} de ${totales} ejercicios superados</span>
+    </div>` + (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
+      <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
+
   // Indices en vez de ids en el HTML: asi no hay que escapar nada para meterlo
   // en un atributo.
   el.querySelectorAll('.pr-q').forEach(b => b.onclick = () => {
