@@ -23,12 +23,21 @@
     --accent: #7C1C56;
     --blue: #1CB0F6;
     --blueDark: #1488C0;
+    /* --green / --greenDark son de MARCA: los mueve colors.action del demo y
+       pintan CTAs, nodos del mapa y pies. NO deben usarse para "está bien". */
     --green: #3FAA24;
     --greenDark: #2E7D1A;
+    /* Semántica fija: acierto y error se leen igual en cualquier institución,
+       así que no se personalizan nunca (si la marca fuera roja, un "correcto"
+       rojo sería indistinguible del fallo). */
+    --ok: #3FAA24;
+    --okDark: #2E7D1A;
+    --err: #F44336;
     --amber: #F4A720;
     --amberInk: #7A4D06;
     --red: #F44336;
     --red2: #FF4D6A;
+
     --gray: #E0E0E0;
     --line: #E6E6EA;       /* neutral hairline for cards / chrome */
     --canvas: #F4F4F6;     /* neutral light surface (cards stay white) */
@@ -145,7 +154,7 @@
   /* Progress bar */
   .pbar { height: 24px; background: var(--gray); border-radius: 9px; position: relative; overflow: hidden; }
   .pbar > .fill { height: 24px; border-radius: 9px; background: var(--blue); min-width: 18px; transition: width .3s; }
-  .pbar > .fill.done { background: var(--green); }
+  .pbar > .fill.done { background: var(--ok); }
   .pbar > .pct {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
     font-size: 12px; font-weight: 700; line-height: 1; color: rgba(0,0,0,.7);
@@ -428,8 +437,8 @@
   /* Aprobado sigue siendo pulsable: repetir un examen es practicar, igual que en
      la ruta el quiz completado se vuelve a abrir. */
   .vd-exam.done { border-color: #BFE6B0; background: #F6FCF3; }
-  .vd-exam.done .vd-exam-ic { background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green); }
-  .vchip-ex { display: block; margin-top: 2px; color: var(--greenDark); }
+  .vd-exam.done .vd-exam-ic { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
+  .vchip-ex { display: block; margin-top: 2px; color: var(--okDark); }
   /* Fichitas: pequeñas y de tres en tres. Una palabra no necesita una fila
      entera, y en rejilla se abarca el tema de un vistazo. */
   .vd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 9px; }
@@ -493,6 +502,23 @@
   .btn.disabled { background: var(--gray); color: #888; }
 
   /* Lesson content */
+  /* Columna de lectura: una línea de 90+ caracteres se lee mal, así que el
+     cuerpo de la lección va acotado y centrado. La banda de color (.g-head) se
+     queda a sangre; sólo se estrecha el texto. */
+  #lesson-body { max-width: 680px; margin: 0 auto; }
+  #lesson-body .g-head { margin-left: -19px; margin-right: -19px; }
+  @media (min-width: 720px) {
+    #lesson-body .g-head { margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
+  }
+  /* Marca dentro de la lectura: filete de acento en las secciones, viñetas y
+     citas con el color de la institución en vez de un gris de sistema. */
+  #lesson-body .sec-collap > .collap-h { border-left: 4px solid var(--accent); border-radius: 4px;
+    padding-left: 12px; }
+  #lesson-body .collap-h .sc-ic-m { color: var(--accent); }
+  #lesson-body .md blockquote { border-left: 4px solid var(--accent); }
+  #lesson-body .md ul li::marker { color: var(--accent); }
+  #lesson-body .md h2, #lesson-body .md h3 { color: var(--accent); }
+  #lesson-body .md thead th { background: color-mix(in srgb, var(--accent) 10%, #fff); }
   .block { margin-bottom: 8px; }
   .titulo h1 { font-size: 27px; font-weight: 800; margin: 0 0 2px; letter-spacing: -.3px; line-height: 1.3; }
   .titulo .tsub { font-size: 18px; font-weight: 600; color: rgba(0,0,0,.45); margin-bottom: 18px; }
@@ -625,7 +651,7 @@
   .q-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
   .segs { display: flex; gap: 5px; flex: 1 1 auto; }
   .seg { flex: 1; height: 5px; border-radius: 3px; background: var(--line); transition: background .3s; }
-  .seg.done { background: var(--green); }
+  .seg.done { background: var(--ok); }
   .seg.fail { background: var(--red); }
   .seg.now { background: var(--amber); animation: seg-pulse 1.3s ease-in-out infinite; }
   @keyframes seg-pulse { 0%,100% { background: var(--amber); } 50% { background: var(--line); } }
@@ -650,20 +676,20 @@
   .w-input::placeholder { color: var(--muted); font-weight: 700; }
   .w-input:focus { border-color: var(--blue); }
   .w-input:disabled { opacity: 1; }
-  .w-input.correct { background: rgba(63,170,36,.12); border-color: var(--green); color: var(--greenDark); }
+  .w-input.correct { background: rgba(63,170,36,.12); border-color: var(--ok); color: var(--okDark); }
   .w-input.wrong { background: rgba(244,67,54,.08); border-color: var(--red); color: #B3261E; }
   .w-hint { font-size: 14px; font-weight: 700; color: var(--muted); margin: 10px 2px 0; }
   /* Always reserve the icon slot (fixed size) so showing the check/x never re-flows the card */
   .opt .opt-ic { flex: 0 0 22px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
   .opt.sel { background: color-mix(in srgb, var(--blue) 10%, transparent); border-color: var(--blue); color: var(--blue); }
-  .opt.correct { background: color-mix(in srgb, var(--green) 12%, transparent); border-color: var(--green); color: var(--greenDark); }
+  .opt.correct { background: color-mix(in srgb, var(--ok) 12%, transparent); border-color: var(--ok); color: var(--okDark); }
   .opt.wrong { background: rgba(244,67,54,.08); border-color: var(--red); color: #B3261E; }
 
   .fb-slot { height: 48px; margin: 14px 2px 2px; display: flex; align-items: flex-start; overflow: hidden; }
   /* Pin the quiz action button to the bottom, lifted off the edge for safe areas */
   .quiz-body > .btn, .quiz-host > .btn { margin-top: auto; margin-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
   .fb-line { font-size: 16px; font-weight: 800; line-height: 1.4; text-align: left; animation: fbFade .25s ease; }
-  .fb-line.ok { color: var(--greenDark); }
+  .fb-line.ok { color: var(--okDark); }
   .fb-line.no { color: #B3261E; }
   @keyframes fbFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
@@ -704,8 +730,8 @@
     border: 2px solid var(--gray); background: #fff; border-radius: 14px; padding: 12px 18px;
     font-size: 19px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 3px rgba(0,0,0,.08); transition: all .2s;
   }
-  .token.sel { background: var(--red2); border-color: var(--red2); color: #fff; }
-  .token.err { background: var(--red2); border-color: var(--red2); color: #fff; }
+  .token.sel { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .token.err { background: var(--err); border-color: var(--err); color: #fff; }
   .token.dim { background: #d6d6d6; border-color: #aaa; color: #fff; }
 
   /* Panel de progreso, presentado como hoja sobre la app.
@@ -785,7 +811,7 @@
     display: flex; align-items: center; justify-content: center;
     animation: tr-pop .45s ease both;
   }
-  .result-icon.ok { background: color-mix(in srgb, var(--green) 12%, transparent); }
+  .result-icon.ok { background: color-mix(in srgb, var(--ok) 12%, transparent); }
   .result-icon.no { background: rgba(0,0,0,.05); }
   .result-title { font-size: 26px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
   .result-sub { font-size: 17px; font-weight: 500; color: var(--muted); white-space: pre-line; line-height: 1.5; margin-bottom: 24px; }
@@ -812,7 +838,7 @@
   .pg-track { display: flex; gap: 5px; }
   .pg-track .tk { flex: 1; text-align: center; font-size: 11px; font-weight: 800; color: var(--muted2);
     padding: 5px 0; border-radius: 9px; background: var(--card); border: 1.5px solid var(--line); }
-  .pg-track .tk.done { background: var(--green); border-color: var(--green); color: #fff; }
+  .pg-track .tk.done { background: var(--ok); border-color: var(--ok); color: #fff; }
   .pg-track .tk.now { background: var(--amber); border-color: var(--amber); color: #5A3D00; }
   .pg-band { display: flex; gap: 10px; margin-bottom: 14px; }
   .pg-chip { flex: 1; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 11px 8px;
@@ -843,7 +869,7 @@
   .pg-mission:last-child { padding-bottom: 2px; }
   .pg-mission .mbox { width: 26px; height: 26px; border-radius: 8px; border: 2.5px solid var(--gray); flex: 0 0 auto;
     display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; font-weight: 800; }
-  .pg-mission.done .mbox { background: var(--green); border-color: var(--green); }
+  .pg-mission.done .mbox { background: var(--ok); border-color: var(--ok); }
   .pg-mission.done .mt { color: var(--muted2); }
   .pg-mission .mt { flex: 1 1 auto; font-size: 15px; font-weight: 700; min-width: 0; }
   .pg-mission .mt small { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted2); }
@@ -1029,7 +1055,7 @@
     padding: 13px 15px; border-radius: 16px; font-size: 17px; font-weight: 800; line-height: 1.25;
     color: #fff; animation: fbPop .28s cubic-bezier(.2,1.2,.3,1) both; }
   .fb-banner b { font-weight: 900; }
-  .fb-banner.ok { background: var(--green, #3FAA24); box-shadow: 0 6px 16px color-mix(in srgb, var(--green) 32%, transparent); }
+  .fb-banner.ok { background: var(--ok, #3FAA24); box-shadow: 0 6px 16px color-mix(in srgb, var(--ok) 32%, transparent); }
   .fb-banner.no { background: #E23B34; box-shadow: 0 6px 16px rgba(226,59,52,.30); }
   @keyframes fbPop { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
   /* Auto-avance tipo Waze: la barra recorre el botón y al llenarse continúa sola */
@@ -1092,7 +1118,7 @@
   /* Progreso por sección */
   .secsegs { display: flex; gap: 4px; margin-bottom: 6px; }
   .secsegs .ssg { flex: 1; height: 4px; border-radius: 3px; background: rgba(0,0,0,.10); }
-  .secsegs .ssg.done { background: var(--green, #3FAA24); }
+  .secsegs .ssg.done { background: var(--ok, #3FAA24); }
   .secsegs .ssg.now { background: color-mix(in srgb, var(--blue) 55%, transparent); }
 
   /* Sección recién desbloqueada */
@@ -1116,7 +1142,7 @@
   @keyframes winOut { to { opacity: 0 } }
   .win .w-boti { width: 132px; height: 132px; animation: winPop .7s cubic-bezier(.2,1.5,.4,1) both; }
   @keyframes winPop { 0% { transform: scale(.2) rotate(-14deg); opacity: 0 } 60% { transform: scale(1.12) rotate(6deg); opacity: 1 } 100% { transform: scale(1) rotate(0) } }
-  .win .w-t { font-family: var(--font-round); font-size: 30px; font-weight: 800; color: var(--greenDark, #2E7D1A); text-align: center; margin-top: 8px; }
+  .win .w-t { font-family: var(--font-round); font-size: 30px; font-weight: 800; color: var(--okDark, #2E7D1A); text-align: center; margin-top: 8px; }
   .win .w-s { font-size: 16px; font-weight: 700; color: var(--muted2, #5C5159); text-align: center; max-width: 320px; }
   .win .w-stats { display: flex; gap: 10px; margin: 16px 0 4px; }
   .win .w-chip { background: #fff; border: 2px solid var(--line, #E6E4EA); border-radius: 16px;
@@ -1793,6 +1819,29 @@
      caminito: quien entra aquí no viene a navegar, viene a repetir un quiz.
      Clases propias (pr-*) aunque se parezcan a las de Vocabulary: son dos
      pestañas distintas y compartir clases ata el retoque de una a la otra. */
+  /* Saludo de la Ruta (home) */
+  .home-hi { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 62%, #fff));
+    color: #fff; border-radius: 20px; padding: 16px 17px 14px; margin: 2px 2px 16px;
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 26%, transparent);
+    animation: tr-rise .3s ease both; }
+  .home-hi .hh-top { display: flex; align-items: center; gap: 12px; }
+  .home-hi .hh-txt { flex: 1 1 auto; min-width: 0; }
+  .home-hi .hh-txt b { display: block; font-size: 18px; font-weight: 800; line-height: 1.25;
+    color: var(--brand-ink, #fff); }
+  .home-hi .hh-txt small { display: block; margin-top: 3px; font-size: 13px; font-weight: 600;
+    line-height: 1.35; opacity: .9; }
+  .home-hi .hh-ring { position: relative; flex: 0 0 auto; width: 62px; height: 62px; }
+  .home-hi .hh-ring svg { display: block; transform: rotate(-90deg); }
+  .home-hi .hh-ring circle { fill: none; stroke-width: 7; }
+  .home-hi .hh-ring .track { stroke: rgba(255,255,255,.28); }
+  .home-hi .hh-ring .prog { stroke: #fff; stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .home-hi .hh-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; }
+  .home-hi .hh-stats { display: flex; gap: 8px; margin-top: 13px; }
+  .home-hi .hh-st { flex: 1; background: rgba(255,255,255,.16); border-radius: 13px; padding: 7px 6px;
+    text-align: center; }
+  .home-hi .hh-st b { display: block; font-size: 16px; font-weight: 800; }
+  .home-hi .hh-st i { display: block; font-style: normal; font-size: 11px; font-weight: 700; opacity: .88; margin-top: 1px; }
   .pr-intro { margin: 2px 2px 18px; }
   .pr-intro b { display: block; font-size: 19px; font-weight: 800; color: var(--ink); }
   .pr-intro small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.4; color: var(--muted); }
@@ -1825,7 +1874,7 @@
   .pr-q-ic svg { display: block; }
   /* Superado = palomita verde; pendiente = triángulo de play. El estado vive en
      el icono y no en un texto suelto, que es lo que se busca de un vistazo. */
-  .pr-q.done .pr-q-ic { background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green); }
+  .pr-q.done .pr-q-ic { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
   .pr-q-t { flex: 1 1 auto; min-width: 0; }
   .pr-q-t b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.2; }
   .pr-q-t small { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted2); }
@@ -1865,15 +1914,6 @@
          cual; "Vocabulary" entra vacia pero con su sitio y su pantalla ya
          hechos, que es lo que hace falta para empezar a llenarla. -->
     <nav class="tabbar" id="home-tabs" role="tablist" aria-label="Secciones del inicio">
-      <button class="tab on" type="button" role="tab" aria-selected="true"
-              aria-controls="course-body" data-tab="ruta" onclick="showHomeTab('ruta')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 20c0-3 3-3 6-3s6 0 6-3-3-3-6-3-6 0-6-3 3-3 6-3"/>
-          <circle cx="18" cy="5" r="2.2" fill="currentColor" stroke="none"/>
-        </svg>
-        <span class="tab-lbl">Ruta</span>
-      </button>
       <button class="tab" type="button" role="tab" aria-selected="false"
               aria-controls="vocab-body" data-tab="vocab" onclick="showHomeTab('vocab')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
@@ -1883,10 +1923,20 @@
         </svg>
         <span class="tab-lbl">Vocabulary</span>
       </button>
-      <!-- Práctica: atajo a los quizzes ya desbloqueados en la ruta. La mancuerna
-           es lo que se espera de una pestaña que se llama así — un icono de quiz
-           (papel, palomita) diría "examen", que es justo lo contrario de lo que
-           esto es: repetir lo que ya pasaste, sin nota. -->
+      <!-- Ruta al centro: es el inicio y a lo que se vuelve entre lección y
+           lección, así que ocupa el sitio que el pulgar alcanza primero. -->
+      <button class="tab on" type="button" role="tab" aria-selected="true"
+              aria-controls="course-body" data-tab="ruta" onclick="showHomeTab('ruta')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 20c0-3 3-3 6-3s6 0 6-3-3-3-6-3-6 0-6-3 3-3 6-3"/>
+          <circle cx="18" cy="5" r="2.2" fill="currentColor" stroke="none"/>
+        </svg>
+        <span class="tab-lbl">Ruta</span>
+      </button>
+      <!-- Práctica: cuaderno de ejercicios libre. La mancuerna es lo que se
+           espera de una pestaña que se llama así — un icono de quiz (papel,
+           palomita) diría "examen", que es justo lo contrario. -->
       <button class="tab" type="button" role="tab" aria-selected="false"
               aria-controls="practice-body" data-tab="practice" onclick="showHomeTab('practice')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
@@ -1895,6 +1945,7 @@
         </svg>
         <span class="tab-lbl">Práctica</span>
       </button>
+
     </nav>
   </section>
 
@@ -3213,13 +3264,50 @@ function warmDashboard() {
   if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 4000 });
   else setTimeout(go, 1500);
 }
+// La Ruta es el "home": antes de las lecciones va un saludo con el nombre del
+// onboarding y un resumen de por dónde va el alumno. Todo son datos reales que
+// ya se calculan para Mi progreso; aquí sólo se resumen.
+function homeGreeting() {
+  const prof = (typeof loadProfile === 'function' && loadProfile()) || {};
+  const nombre = prof.name ? escapeHtml(prof.name) : '';
+  const total = allLessons.length;
+  const hechas = allLessons.filter(l => isLessonCompleted(l.id)).length;
+  const pct = total ? Math.round((hechas / total) * 100) : 0;
+  const racha = streakDays();
+  const xp = totalXp();
+  const C = 2 * Math.PI * 26;
+  return `<div class="home-hi">
+    <div class="hh-top">
+      <div class="hh-txt">
+        <b>¡Hola${nombre ? ', ' + nombre : ''}! Qué bueno verte de vuelta :)</b>
+        <small>${hechas === 0 ? 'Empecemos por tu primera lección.' : `Llevas ${hechas} de ${total} lecciones. Sigamos donde lo dejaste.`}</small>
+      </div>
+      <div class="hh-ring">
+        <svg width="62" height="62" viewBox="0 0 62 62" aria-hidden="true">
+          <circle class="track" cx="31" cy="31" r="26"/>
+          <circle class="prog" cx="31" cy="31" r="26"
+                  stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - pct / 100)).toFixed(1)}"/>
+        </svg>
+        <span class="hh-pct">${pct}%</span>
+      </div>
+    </div>
+    <div class="hh-stats">
+      <span class="hh-st"><b>${hechas}/${total}</b><i>lecciones</i></span>
+      <span class="hh-st"><b>${racha}</b><i>días de racha</i></span>
+      <span class="hh-st"><b>${fmtXp(xp)}</b><i>XP</i></span>
+    </div>
+  </div>`;
+}
+
 function renderCourse() {
+
   show('course');
   precacheModuleBgs(); // warm the module backdrops while on the modules list
   document.getElementById('course-title').innerHTML = brandHTML();
   document.getElementById('streak-n').textContent = streakDays();
   const na = nextActiveLesson();
-  let html = '';
+  let html = homeGreeting();
+
   const LEVEL = ['A1', 'A2', 'B1', 'B2', 'C1'];
   const CROWN = '<svg viewBox="0 0 24 24" fill="#F4A720" stroke="#D98E00" stroke-width="1" stroke-linejoin="round"><path d="M2.6 7.2l4.3 3.3L12 3.4l5.1 7.1 4.3-3.3-1.9 11.1a1 1 0 0 1-1 .8H5.5a1 1 0 0 1-1-.8L2.6 7.2z"/></svg>';
   // The current module = latest unlocked one that isn't fully completed → gets a play triangle.
@@ -4814,25 +4902,26 @@ function practiceItems(lesson) {
   return items;
 }
 
-// Se repinta en cada entrada: lo desbloqueado cambia a medida que avanza la ruta.
+// Se repinta en cada entrada: lo hecho cambia a medida que avanza la ruta.
+// Aquí NO se filtra por desbloqueo: Práctica es un cuaderno de ejercicios y se
+// puede responder por cuenta propia, sin haber pasado la lección.
 function renderPractice() {
   const el = document.getElementById('practice-body');
   if (!el || !course) return;
-  let abiertos = 0, totales = 0, cuerpo = '';
+  let hechosTot = 0, totales = 0, cuerpo = '';
   course.modules.forEach((mod, mi) => {
     let lecciones = '';
     mod.lessons.forEach(lesson => {
       const items = practiceItems(lesson);
+      if (!items.length) return;
       totales += items.length;
-      const open = items.filter(q => q.open);
-      abiertos += open.length;
-      if (!open.length) return; // leccion sin nada que practicar todavia
-      const hechos = open.filter(q => q.done).length;
+      const hechos = items.filter(q => q.done).length;
+      hechosTot += hechos;
       lecciones += `<div class="pr-les">
         <div class="pr-les-h"><span class="pr-les-t">${escapeHtml(lessonName(lesson))}</span>
-          <span class="pr-les-c">${hechos}/${open.length}</span></div>
+          <span class="pr-les-c">${hechos}/${items.length}</span></div>
         <div class="pr-list">` +
-        open.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
+        items.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
             data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}">
             <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
             <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
@@ -4840,17 +4929,18 @@ function renderPractice() {
           </button>`).join('') +
         `</div></div>`;
     });
-    if (!lecciones) return; // modulo entero sin abrir: no ocupa sitio
+    if (!lecciones) return;
     cuerpo += `<div class="pr-mod"><div class="pr-mod-h">
       <span class="pr-mod-n" style="background:${modAccent(mi)}">${mi + 1}</span>
       <span class="pr-mod-t">${escapeHtml(moduleName(mod))}</span></div>${lecciones}</div>`;
   });
   el.innerHTML = `<div class="pr-intro">
-      <b>Practica cuando quieras</b>
-      <small>Los quizzes que ya desbloqueaste en tu ruta, juntos y sin volver a la lección. Puedes repetirlos las veces que quieras.</small>
-      <span class="pr-count">${abiertos} de ${totales} desbloqueados</span>
-    </div>` + (cuerpo || `<div class="pr-empty"><b>Todavía no hay nada que practicar</b>
-      <small>Empieza tu primera lección en la Ruta: sus quizzes aparecerán aquí en cuanto los desbloquees.</small></div>`);
+      <b>Tu cuaderno de ejercicios</b>
+      <small>Aquí están todos los ejercicios del curso, abiertos desde el primer día. No hace falta haber hecho la lección: puedes responder por tu cuenta, en el orden que quieras y las veces que quieras. No hay nota ni penalidad — lo que aciertes suma en tu ruta.</small>
+      <span class="pr-count">${hechosTot} de ${totales} ejercicios superados</span>
+    </div>` + (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
+      <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
+
   // Indices en vez de ids en el HTML: asi no hay que escapar nada para meterlo
   // en un atributo.
   el.querySelectorAll('.pr-q').forEach(b => b.onclick = () => {
