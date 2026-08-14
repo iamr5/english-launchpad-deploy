@@ -326,8 +326,12 @@
   .cta-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--lip, #2E7D1A), 0 4px 10px rgba(0,0,0,.14); }
 
   /* Pinned "next lesson" bar at the bottom of the course screen */
+  /* Abajo el mismo aire que a los lados. Antes reservaba ademas el area segura
+     del iPhone, pero desde que hay barra de pestañas este pie ya no toca el
+     borde de la pantalla: la barra la reserva por su cuenta y se estaba
+     contando dos veces. En el onboarding, que no lleva barra, se repone. */
   .course-foot { flex: 0 0 auto; background: #fff; border-top: 1px solid var(--line); border-radius: 20px 20px 0 0;
-    padding: 24px 18px calc(34px + env(safe-area-inset-bottom)); box-shadow: 0 -3px 12px rgba(0,0,0,.05); }
+    padding: 24px 18px 18px; box-shadow: 0 -3px 12px rgba(0,0,0,.05); }
   .course-foot .foot-kicker { font-size: 13px; font-weight: 800; letter-spacing: .6px;
     text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
   .course-foot .foot-title { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.2; margin-bottom: 18px;
@@ -346,7 +350,7 @@
   .tabbar { flex: 0 0 auto; display: flex; gap: 6px; background: #fff;
     border-top: 2px solid var(--line);
     padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); }
-  .tab { position: relative; flex: 1 1 0; display: flex; flex-direction: column;
+  .tab { flex: 1 1 0; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 3px; cursor: pointer;
     border: 2px solid transparent; border-radius: 16px; background: none;
     padding: 7px 4px 6px; font-family: inherit; color: var(--muted2);
@@ -355,11 +359,6 @@
   .tab .tab-lbl { font-size: 12px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; }
   .tab.on { color: var(--blue); background: #DDF4FF; border-color: #A5E0FB; }
   .tab:not(.on):active { background: var(--canvas); }
-  /* El globito de "recién llegada". Se quita borrando el <span>, no hay estado
-     que apagar: cuando Vocabulary deje de ser nueva, fuera la etiqueta. */
-  .tab-badge { position: absolute; top: 1px; right: 8px; background: var(--red2);
-    color: #fff; font-size: 9px; font-weight: 900; letter-spacing: .5px; line-height: 1;
-    padding: 3px 5px; border-radius: 999px; }
 
   /* ===== Vocabulary: la biblioteca de palabras =====
      La rejilla es la de Duolingo: fichas de tres en tres, cada una con su barra
@@ -413,15 +412,18 @@
   /* Fichitas: pequeñas y de tres en tres. Una palabra no necesita una fila
      entera, y en rejilla se abarca el tema de un vistazo. */
   .vd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 9px; }
-  .vcard { display: flex; flex-direction: column; align-items: center; gap: 1px; min-height: 84px;
+  .vcard { display: flex; flex-direction: column; align-items: center; gap: 1px; min-height: 96px;
     background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px;
-    padding: 10px 7px 8px; cursor: pointer; font-family: inherit; text-align: center;
+    padding: 11px 7px 10px; cursor: pointer; font-family: inherit; text-align: center;
     -webkit-tap-highlight-color: transparent; }
   .vcard:active { transform: translateY(2px); border-bottom-width: 2px; }
   .vcard-en { font-size: 14px; font-weight: 800; color: var(--ink); line-height: 1.15; overflow-wrap: anywhere; }
   .vcard-es { font-size: 11px; font-weight: 700; color: var(--muted2); line-height: 1.2; overflow-wrap: anywhere; }
-  .vcard-ic { margin-top: auto; padding-top: 7px; color: var(--gray); }
-  .vcard-ic svg { display: block; width: 16px; height: 16px; }
+  /* El altavoz manda: encima del texto y grande. La ficha no es una entrada de
+     diccionario con un botoncito al lado, es un boton de escuchar con la
+     palabra escrita debajo. */
+  .vcard-ic { color: var(--gray); margin-bottom: 6px; }
+  .vcard-ic svg { display: block; width: 28px; height: 28px; }
   /* Escuchada = un tinte, no una palomita: es "ya pasaste por aquí", no "lo sabes". */
   .vcard.heard { border-color: #A5E0FB; background: #F5FCFF; }
   .vcard.heard .vcard-ic { color: var(--blue); }
@@ -959,7 +961,9 @@
   .ob-sum .ob-chip.goal { background: rgba(244,167,32,.13); border-color: rgba(244,167,32,.34); }
   .ob-sum .ob-chip.goal .lb { color: var(--amberInk); }
   /* the last step shows the real course-foot bar pinned at the bottom (#ob-foot) */
-  #screen-onboard .course-foot { margin-top: auto; }
+  /* Aqui el pie SI es lo ultimo de la pantalla, asi que le toca el area segura. */
+  #screen-onboard .course-foot { margin-top: auto;
+    padding-bottom: calc(18px + env(safe-area-inset-bottom)); }
   #screen-onboard .btn { margin-top: auto; }
 
   /* DEBUG-only floating buttons (reset progress / complete lesson / undo).
@@ -1798,7 +1802,6 @@
       </button>
       <button class="tab" type="button" role="tab" aria-selected="false"
               aria-controls="vocab-body" data-tab="vocab" onclick="showHomeTab('vocab')">
-        <span class="tab-badge">NUEVO</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2.5 2.5 0 0 1 2 1 2.5 2.5 0 0 1 2-1h4.5A1.5 1.5 0 0 1 20 5.5v12a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 0 0-2 1 2 2 0 0 0-2-1H5.5A1.5 1.5 0 0 1 4 17.5z"/>
@@ -2818,20 +2821,49 @@ function readingMinutes(lesson) {
 // TTS
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 let _speaking = false;
-// rate opcional: 0.45 esta calibrado para frases largas del quiz. Una palabra
-// suelta a esa velocidad se arrastra y deja de sonar a palabra, asi que el
-// vocabulario pasa la suya. Sin argumento, todo se comporta como antes.
-function speak(text, onStart, onEnd, rate) {
+let _utter = null;    // la locucion en curso
+let _onEnd = null;    // su callback de cierre, para poder llamarlo al cortarla
+
+// Corta lo que suene y avisa a quien lo lanzo, para que limpie su estado (por
+// ejemplo la ficha que se habia puesto en "sonando").
+function stopSpeak() {
+  try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+  const cb = _onEnd;
+  _utter = null; _onEnd = null; _speaking = false;
+  if (cb) cb();
+}
+
+// rate: 0.45 esta calibrado para frases largas del quiz. Una palabra suelta a
+// esa velocidad se arrastra y deja de sonar a palabra, asi que el vocabulario
+// pasa la suya.
+// interrupt: que hacer si ya hay algo sonando.
+//   sin el (quiz)         → volver a pulsar PARA. Es un boton de play/stop.
+//   con el (vocabulario)  → calla lo anterior y suena lo nuevo. Ahi cada palabra
+//                           es su propio boton, y pulsar otra quiere decir
+//                           "esta otra", no "silencio".
+function speak(text, onStart, onEnd, rate, interrupt) {
   try {
     const synth = window.speechSynthesis;
     if (!synth) return;
-    if (_speaking) { synth.cancel(); _speaking = false; if (onEnd) onEnd(); return; }
+    const sonaba = _speaking;
+    if (sonaba) { stopSpeak(); if (!interrupt) return; }
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'en-US'; u.rate = rate || 0.45; u.pitch = 1.0;
-    u.onstart = () => { _speaking = true; if (onStart) onStart(); };
-    u.onend = () => { _speaking = false; if (onEnd) onEnd(); };
-    u.onerror = () => { _speaking = false; if (onEnd) onEnd(); };
-    synth.cancel(); synth.speak(u);
+    // Los callbacks solo valen si esta locucion sigue siendo la vigente: al
+    // interrumpir, el 'onend' tardio de la anterior llegaba despues del
+    // 'onstart' de la nueva y dejaba el estado en "no suena nada".
+    u.onstart = () => { if (_utter !== u) return; _speaking = true; if (onStart) onStart(); };
+    const done = () => {
+      if (_utter !== u) return;
+      _utter = null; _onEnd = null; _speaking = false;
+      if (onEnd) onEnd();
+    };
+    u.onend = done; u.onerror = done;
+    _utter = u; _onEnd = onEnd;
+    // Un cancel() no vacia la cola al instante: el speak() inmediatamente
+    // despues se pierde y no suena nada. Un tick de margen y entra.
+    if (sonaba) setTimeout(() => { if (_utter === u) synth.speak(u); }, 60);
+    else synth.speak(u);
   } catch (e) {}
 }
 
@@ -3306,7 +3338,7 @@ const VOCAB = [
       ['nephew', 'sobrino'], ['niece', 'sobrina'], ['grandson', 'nieto'],
       ['granddaughter', 'nieta'], ['godmother', 'madrina'], ['godfather', 'padrino'],
       ['relative', 'pariente'], ['great-grandmother', 'bisabuela'], ['twin', 'gemelo'] ] },
-    { n: 'Pareja y suegros', e: '💍', w: [
+    { n: 'Familia extendida', e: '💍', w: [
       ['girlfriend', 'novia'], ['boyfriend', 'novio'], ['wife', 'esposa'],
       ['husband', 'esposo'], ['partner', 'pareja'], ['mother-in-law', 'suegra'],
       ['father-in-law', 'suegro'], ['daughter-in-law', 'nuera'], ['son-in-law', 'yerno'],
@@ -3469,9 +3501,9 @@ function renderVocabTema(el) {
     <div class="vd-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pc}"><i style="width:${pc}%"></i></div>
     <div class="vd-grid">` +
     chip.w.map(([en, es]) => `<button class="vcard${isHeard(en) ? ' heard' : ''}" data-w="${escapeHtml(en)}">
+        <span class="vcard-ic">${VS_SPEAKER}</span>
         <span class="vcard-en">${escapeHtml(en)}</span>
         <span class="vcard-es">${escapeHtml(es)}</span>
-        <span class="vcard-ic">${VS_SPEAKER}</span>
       </button>`).join('') +
     `</div>`;
   el.querySelectorAll('.vcard').forEach(c => c.onclick = () => vocabSay(c));
@@ -3485,8 +3517,9 @@ function vocabSay(card) {
   if (!isHeard(en)) { vocabHeard()[en] = 1; saveProgress(PROGRESS); }
   card.classList.add('heard', 'speaking');
   // 0.85 y no el 0.45 del quiz: una palabra suelta a esa velocidad no se
-  // reconoce como palabra.
-  speak(en, null, () => card.classList.remove('speaking'), 0.85);
+  // reconoce como palabra. interrupt: pulsar otra palabra mientras suena una
+  // significa "quiero esta", no "callate".
+  speak(en, null, () => card.classList.remove('speaking'), 0.85, true);
   if (!VOPEN) return;
   // Solo la cabecera del tema: repintar la rejilla entera con cada toque
   // cortaria la animacion de la ficha que se acaba de pulsar. El indice se
