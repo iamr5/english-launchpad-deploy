@@ -2182,6 +2182,13 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 />
               ))}
             </TabsContent>
+
+            <TabsContent value="preinscripciones" className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Correos recogidos por el landing de preinscripción (/cip).
+              </p>
+              <PreinscripcionesPanel />
+            </TabsContent>
           </Tabs>
 
           <hr className="my-5" />
