@@ -342,11 +342,15 @@ function SampleQuiz() {
   }
 
   function next() {
-    if (last) return;
+    if (last) {
+      document.getElementById("curso")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
     setI(i + 1);
     setPicked(null);
     setSel(null);
   }
+
 
 
   return (
