@@ -145,7 +145,7 @@
   /* Progress bar */
   .pbar { height: 24px; background: var(--gray); border-radius: 9px; position: relative; overflow: hidden; }
   .pbar > .fill { height: 24px; border-radius: 9px; background: var(--blue); min-width: 18px; transition: width .3s; }
-  .pbar > .fill.done { background: var(--green); }
+  .pbar > .fill.done { background: var(--ok); }
   .pbar > .pct {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
     font-size: 12px; font-weight: 700; line-height: 1; color: rgba(0,0,0,.7);
@@ -428,8 +428,8 @@
   /* Aprobado sigue siendo pulsable: repetir un examen es practicar, igual que en
      la ruta el quiz completado se vuelve a abrir. */
   .vd-exam.done { border-color: #BFE6B0; background: #F6FCF3; }
-  .vd-exam.done .vd-exam-ic { background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green); }
-  .vchip-ex { display: block; margin-top: 2px; color: var(--greenDark); }
+  .vd-exam.done .vd-exam-ic { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
+  .vchip-ex { display: block; margin-top: 2px; color: var(--okDark); }
   /* Fichitas: pequeñas y de tres en tres. Una palabra no necesita una fila
      entera, y en rejilla se abarca el tema de un vistazo. */
   .vd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 9px; }
@@ -625,7 +625,7 @@
   .q-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
   .segs { display: flex; gap: 5px; flex: 1 1 auto; }
   .seg { flex: 1; height: 5px; border-radius: 3px; background: var(--line); transition: background .3s; }
-  .seg.done { background: var(--green); }
+  .seg.done { background: var(--ok); }
   .seg.fail { background: var(--red); }
   .seg.now { background: var(--amber); animation: seg-pulse 1.3s ease-in-out infinite; }
   @keyframes seg-pulse { 0%,100% { background: var(--amber); } 50% { background: var(--line); } }
@@ -650,20 +650,20 @@
   .w-input::placeholder { color: var(--muted); font-weight: 700; }
   .w-input:focus { border-color: var(--blue); }
   .w-input:disabled { opacity: 1; }
-  .w-input.correct { background: rgba(63,170,36,.12); border-color: var(--green); color: var(--greenDark); }
+  .w-input.correct { background: rgba(63,170,36,.12); border-color: var(--ok); color: var(--okDark); }
   .w-input.wrong { background: rgba(244,67,54,.08); border-color: var(--red); color: #B3261E; }
   .w-hint { font-size: 14px; font-weight: 700; color: var(--muted); margin: 10px 2px 0; }
   /* Always reserve the icon slot (fixed size) so showing the check/x never re-flows the card */
   .opt .opt-ic { flex: 0 0 22px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
   .opt.sel { background: color-mix(in srgb, var(--blue) 10%, transparent); border-color: var(--blue); color: var(--blue); }
-  .opt.correct { background: color-mix(in srgb, var(--green) 12%, transparent); border-color: var(--green); color: var(--greenDark); }
+  .opt.correct { background: color-mix(in srgb, var(--ok) 12%, transparent); border-color: var(--ok); color: var(--okDark); }
   .opt.wrong { background: rgba(244,67,54,.08); border-color: var(--red); color: #B3261E; }
 
   .fb-slot { height: 48px; margin: 14px 2px 2px; display: flex; align-items: flex-start; overflow: hidden; }
   /* Pin the quiz action button to the bottom, lifted off the edge for safe areas */
   .quiz-body > .btn, .quiz-host > .btn { margin-top: auto; margin-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
   .fb-line { font-size: 16px; font-weight: 800; line-height: 1.4; text-align: left; animation: fbFade .25s ease; }
-  .fb-line.ok { color: var(--greenDark); }
+  .fb-line.ok { color: var(--okDark); }
   .fb-line.no { color: #B3261E; }
   @keyframes fbFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
@@ -704,8 +704,8 @@
     border: 2px solid var(--gray); background: #fff; border-radius: 14px; padding: 12px 18px;
     font-size: 19px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 3px rgba(0,0,0,.08); transition: all .2s;
   }
-  .token.sel { background: var(--red2); border-color: var(--red2); color: #fff; }
-  .token.err { background: var(--red2); border-color: var(--red2); color: #fff; }
+  .token.sel { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .token.err { background: var(--err); border-color: var(--err); color: #fff; }
   .token.dim { background: #d6d6d6; border-color: #aaa; color: #fff; }
 
   /* Panel de progreso, presentado como hoja sobre la app.
@@ -785,7 +785,7 @@
     display: flex; align-items: center; justify-content: center;
     animation: tr-pop .45s ease both;
   }
-  .result-icon.ok { background: color-mix(in srgb, var(--green) 12%, transparent); }
+  .result-icon.ok { background: color-mix(in srgb, var(--ok) 12%, transparent); }
   .result-icon.no { background: rgba(0,0,0,.05); }
   .result-title { font-size: 26px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
   .result-sub { font-size: 17px; font-weight: 500; color: var(--muted); white-space: pre-line; line-height: 1.5; margin-bottom: 24px; }
@@ -812,7 +812,7 @@
   .pg-track { display: flex; gap: 5px; }
   .pg-track .tk { flex: 1; text-align: center; font-size: 11px; font-weight: 800; color: var(--muted2);
     padding: 5px 0; border-radius: 9px; background: var(--card); border: 1.5px solid var(--line); }
-  .pg-track .tk.done { background: var(--green); border-color: var(--green); color: #fff; }
+  .pg-track .tk.done { background: var(--ok); border-color: var(--ok); color: #fff; }
   .pg-track .tk.now { background: var(--amber); border-color: var(--amber); color: #5A3D00; }
   .pg-band { display: flex; gap: 10px; margin-bottom: 14px; }
   .pg-chip { flex: 1; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 11px 8px;
@@ -843,7 +843,7 @@
   .pg-mission:last-child { padding-bottom: 2px; }
   .pg-mission .mbox { width: 26px; height: 26px; border-radius: 8px; border: 2.5px solid var(--gray); flex: 0 0 auto;
     display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; font-weight: 800; }
-  .pg-mission.done .mbox { background: var(--green); border-color: var(--green); }
+  .pg-mission.done .mbox { background: var(--ok); border-color: var(--ok); }
   .pg-mission.done .mt { color: var(--muted2); }
   .pg-mission .mt { flex: 1 1 auto; font-size: 15px; font-weight: 700; min-width: 0; }
   .pg-mission .mt small { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted2); }
@@ -1029,7 +1029,7 @@
     padding: 13px 15px; border-radius: 16px; font-size: 17px; font-weight: 800; line-height: 1.25;
     color: #fff; animation: fbPop .28s cubic-bezier(.2,1.2,.3,1) both; }
   .fb-banner b { font-weight: 900; }
-  .fb-banner.ok { background: var(--green, #3FAA24); box-shadow: 0 6px 16px color-mix(in srgb, var(--green) 32%, transparent); }
+  .fb-banner.ok { background: var(--ok, #3FAA24); box-shadow: 0 6px 16px color-mix(in srgb, var(--ok) 32%, transparent); }
   .fb-banner.no { background: #E23B34; box-shadow: 0 6px 16px rgba(226,59,52,.30); }
   @keyframes fbPop { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
   /* Auto-avance tipo Waze: la barra recorre el botón y al llenarse continúa sola */
@@ -1092,7 +1092,7 @@
   /* Progreso por sección */
   .secsegs { display: flex; gap: 4px; margin-bottom: 6px; }
   .secsegs .ssg { flex: 1; height: 4px; border-radius: 3px; background: rgba(0,0,0,.10); }
-  .secsegs .ssg.done { background: var(--green, #3FAA24); }
+  .secsegs .ssg.done { background: var(--ok, #3FAA24); }
   .secsegs .ssg.now { background: color-mix(in srgb, var(--blue) 55%, transparent); }
 
   /* Sección recién desbloqueada */
@@ -1116,7 +1116,7 @@
   @keyframes winOut { to { opacity: 0 } }
   .win .w-boti { width: 132px; height: 132px; animation: winPop .7s cubic-bezier(.2,1.5,.4,1) both; }
   @keyframes winPop { 0% { transform: scale(.2) rotate(-14deg); opacity: 0 } 60% { transform: scale(1.12) rotate(6deg); opacity: 1 } 100% { transform: scale(1) rotate(0) } }
-  .win .w-t { font-family: var(--font-round); font-size: 30px; font-weight: 800; color: var(--greenDark, #2E7D1A); text-align: center; margin-top: 8px; }
+  .win .w-t { font-family: var(--font-round); font-size: 30px; font-weight: 800; color: var(--okDark, #2E7D1A); text-align: center; margin-top: 8px; }
   .win .w-s { font-size: 16px; font-weight: 700; color: var(--muted2, #5C5159); text-align: center; max-width: 320px; }
   .win .w-stats { display: flex; gap: 10px; margin: 16px 0 4px; }
   .win .w-chip { background: #fff; border: 2px solid var(--line, #E6E4EA); border-radius: 16px;
@@ -1825,7 +1825,7 @@
   .pr-q-ic svg { display: block; }
   /* Superado = palomita verde; pendiente = triángulo de play. El estado vive en
      el icono y no en un texto suelto, que es lo que se busca de un vistazo. */
-  .pr-q.done .pr-q-ic { background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green); }
+  .pr-q.done .pr-q-ic { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
   .pr-q-t { flex: 1 1 auto; min-width: 0; }
   .pr-q-t b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.2; }
   .pr-q-t small { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted2); }
