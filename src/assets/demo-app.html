@@ -6284,13 +6284,16 @@ function spAiSpend() {
 }
 
 // ---- reconocimiento del navegador (coste cero) ----
+// continuous = true: el navegador ya no corta la toma cuando cree que
+// terminaste de hablar; quien decide cuándo parar es el alumno soltando el botón.
 function spRecognizer() {
   const R = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!R) return null;
   const r = new R();
-  r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 3;
+  r.lang = 'en-US'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
   return r;
 }
+
 const spNorm = s => String(s || '').toLowerCase().replace(/[^a-z0-9' ]+/g, ' ').replace(/\s+/g, ' ').trim();
 
 // Compara lo dicho con la frase modelo, palabra por palabra y en orden. Devuelve
