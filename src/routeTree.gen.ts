@@ -34,6 +34,7 @@ import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/ap
 import { Route as SlugPadresRouteImport } from './routes/$slug_.padres'
 import { Route as SlugDashboardRouteImport } from './routes/$slug_.dashboard'
 import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
+import { Route as ApiPublicPreinscripcionRouteImport } from './routes/api/public/preinscripcion'
 import { Route as ApiDemosMetasRouteImport } from './routes/api/demos/metas'
 import { Route as ApiDemosInvalidateRouteImport } from './routes/api/demos/invalidate'
 import { Route as ApiCourseVocabRouteImport } from './routes/api/course/vocab'
@@ -166,6 +167,11 @@ const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
   path: '/api/public/share-invite',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPreinscripcionRoute = ApiPublicPreinscripcionRouteImport.update({
+  id: '/api/public/preinscripcion',
+  path: '/api/public/preinscripcion',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiDemosMetasRoute = ApiDemosMetasRouteImport.update({
   id: '/api/demos/metas',
   path: '/api/demos/metas',
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
+  '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -266,6 +273,7 @@ export interface FileRoutesByTo {
   '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
+  '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -301,6 +309,7 @@ export interface FileRoutesById {
   '/api/course/vocab': typeof ApiCourseVocabRoute
   '/api/demos/invalidate': typeof ApiDemosInvalidateRoute
   '/api/demos/metas': typeof ApiDemosMetasRoute
+  '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -336,6 +345,7 @@ export interface FileRouteTypes {
     | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
+    | '/api/public/preinscripcion'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
+    | '/api/public/preinscripcion'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   id:
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/api/course/vocab'
     | '/api/demos/invalidate'
     | '/api/demos/metas'
+    | '/api/public/preinscripcion'
     | '/api/public/share-invite'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -435,6 +447,7 @@ export interface RootRouteChildren {
   ApiCourseVocabRoute: typeof ApiCourseVocabRoute
   ApiDemosInvalidateRoute: typeof ApiDemosInvalidateRoute
   ApiDemosMetasRoute: typeof ApiDemosMetasRoute
+  ApiPublicPreinscripcionRoute: typeof ApiPublicPreinscripcionRoute
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -616,6 +629,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicShareInviteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/preinscripcion': {
+      id: '/api/public/preinscripcion'
+      path: '/api/public/preinscripcion'
+      fullPath: '/api/public/preinscripcion'
+      preLoaderRoute: typeof ApiPublicPreinscripcionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/demos/metas': {
       id: '/api/demos/metas'
       path: '/api/demos/metas'
@@ -711,6 +731,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCourseVocabRoute: ApiCourseVocabRoute,
   ApiDemosInvalidateRoute: ApiDemosInvalidateRoute,
   ApiDemosMetasRoute: ApiDemosMetasRoute,
+  ApiPublicPreinscripcionRoute: ApiPublicPreinscripcionRoute,
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
