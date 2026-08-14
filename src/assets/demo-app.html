@@ -4972,60 +4972,114 @@ function practiceItems(lesson) {
 }
 
 
-// Se repinta en cada entrada: lo hecho cambia a medida que avanza la ruta.
-// Aquí NO se filtra por desbloqueo: Práctica es un cuaderno de ejercicios y se
-// puede responder por cuenta propia, sin haber pasado la lección.
+// La pestaña Práctica es una BIBLIOTECA: cada lección es un "libro" con su
+// progreso, y al abrirlo se ve su estantería de quizzes. La lista plana de todas
+// las lecciones con todos sus quizzes era imposible de navegar.
+//
+// Aquí NO se filtra por desbloqueo: es un cuaderno de ejercicios y se puede
+// responder por cuenta propia, sin haber pasado la lección.
+let PRACTICE_OPEN = null;   // índice en allLessons del libro abierto, o null
+let PRACTICE_FILTER = -1;   // módulo filtrado en la biblioteca, -1 = todos
+const prNum = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+function practiceStats(lesson) {
+  const items = practiceItems(lesson);
+  return {
+    items,
+    quizzes: items.length,
+    qs: items.reduce((a, q) => a + q.qs, 0),
+    hechas: items.reduce((a, q) => a + (q.hechas || 0), 0),
+    quizzesHechos: items.filter(q => q.done).length,
+  };
+}
+
 function renderPractice() {
   const el = document.getElementById('practice-body');
   if (!el || !course) return;
-  // Se cuentan EJERCICIOS, no filas: una fila puede ser un quiz de 10 preguntas
-  // o una teoría con 40 de práctica extra, y decir "2 de 377" no dice nada.
-  const num = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  let hechosTot = 0, totales = 0, cuerpo = '';
-  course.modules.forEach((mod, mi) => {
-    let lecciones = '';
-    mod.lessons.forEach(lesson => {
-      const items = practiceItems(lesson);
-      if (!items.length) return;
-      const preguntas = items.reduce((a, q) => a + q.qs, 0);
-      const hechos = items.reduce((a, q) => a + (q.hechas || 0), 0);
-      totales += preguntas;
-      hechosTot += hechos;
-      lecciones += `<div class="pr-les">
-        <div class="pr-les-h"><span class="pr-les-t">${escapeHtml(lessonName(lesson))}</span>
-          <span class="pr-les-c">${num(hechos)}/${num(preguntas)}</span></div>
-        <div class="pr-list">` +
-        items.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
-            data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}" data-bank="${q.bank ? 1 : 0}">
+  const lesson = PRACTICE_OPEN != null ? allLessons[PRACTICE_OPEN] : null;
+  if (lesson) renderPracticeShelf(el, lesson);
+  else renderPracticeLibrary(el);
+}
 
-            <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
-            <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${num(q.qs)} ${q.qs === 1 ? 'ejercicio' : 'ejercicios'}${q.bank ? ' · tandas de 10' : ''} · ${q.bank ? `${num(q.hechas || 0)} superado${(q.hechas || 0) === 1 ? '' : 's'}` : (q.done ? 'Superado' : 'Pendiente')}</small></span>
-            <span class="pr-q-go">${arrowFwd(20, 'currentColor', 2.6)}</span>
-          </button>`).join('') +
-        `</div></div>`;
+function renderPracticeLibrary(el) {
+  let totQ = 0, totEj = 0, totHechas = 0, cuerpo = '';
+  const chips = [`<button class="pr-chip${PRACTICE_FILTER === -1 ? ' on' : ''}" type="button" data-m="-1">Todos</button>`];
+  course.modules.forEach((mod, mi) => {
+    const nivel = mod.level || (typeof CEFR !== 'undefined' && CEFR[mi]) || ('M' + (mi + 1));
+    chips.push(`<button class="pr-chip${PRACTICE_FILTER === mi ? ' on' : ''}" type="button" data-m="${mi}">${escapeHtml(nivel)}</button>`);
+    let tarjetas = '';
+    mod.lessons.forEach(lesson => {
+      const s = practiceStats(lesson);
+      if (!s.quizzes) return;
+      totQ += s.quizzes; totEj += s.qs; totHechas += s.hechas;
+      if (PRACTICE_FILTER !== -1 && PRACTICE_FILTER !== mi) return;
+      const pct = s.qs ? Math.round(s.hechas / s.qs * 100) : 0;
+      tarjetas += `<button class="pr-card" type="button" data-l="${allLessons.indexOf(lesson)}">
+        <span class="pr-card-spine" style="background:${modAccent(mi)}"></span>
+        <span class="pr-card-lvl" style="color:${modAccent(mi)}">${escapeHtml(nivel)}</span>
+        <span class="pr-card-t">${escapeHtml(lessonName(lesson))}</span>
+        <span class="pr-card-m">${prNum(s.quizzes)} quizzes · ${prNum(s.qs)} ejercicios</span>
+        <span class="pr-bar"><i style="width:${pct}%;background:${modAccent(mi)}"></i></span>
+        <span class="pr-card-p">${pct}% · ${prNum(s.hechas)} de ${prNum(s.qs)}</span>
+      </button>`;
     });
-    if (!lecciones) return;
+    if (!tarjetas) return;
     cuerpo += `<div class="pr-mod"><div class="pr-mod-h">
       <span class="pr-mod-n" style="background:${modAccent(mi)}">${mi + 1}</span>
-      <span class="pr-mod-t">${escapeHtml(moduleName(mod))}</span></div>${lecciones}</div>`;
+      <span class="pr-mod-t">${escapeHtml(moduleName(mod))}</span></div>
+      <div class="pr-grid">${tarjetas}</div></div>`;
   });
+
   el.innerHTML = `<div class="pr-intro">
-      <b>Tu cuaderno de ejercicios</b>
-      <small>Aquí están todos los ejercicios del curso, abiertos desde el primer día. No hace falta haber hecho la lección: puedes responder por tu cuenta, en el orden que quieras y las veces que quieras. No hay nota ni penalidad — lo que aciertes suma en tu ruta.</small>
-      <span class="pr-count">${num(hechosTot)} de ${num(totales)} ejercicios superados</span>
-    </div>` + (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
+      <b>Tu biblioteca de práctica</b>
+      <small>Elige un libro y practica cuando quieras: no hace falta haber hecho la lección, no hay nota ni penalidad — lo que aciertes suma en tu ruta.</small>
+      <span class="pr-count">${prNum(totQ)} quizzes · ${prNum(totEj)} ejercicios para practicar cuanto quieras</span>
+      <span class="pr-sub">Llevas ${prNum(totHechas)} ejercicios superados</span>
+    </div>
+    <div class="pr-chips">${chips.join('')}</div>` +
+    (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
       <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
 
+  el.querySelectorAll('.pr-chip').forEach(b => b.onclick = () => {
+    PRACTICE_FILTER = +b.getAttribute('data-m');
+    renderPractice();
+  });
+  el.querySelectorAll('.pr-card').forEach(b => b.onclick = () => {
+    PRACTICE_OPEN = +b.getAttribute('data-l');
+    renderPractice();
+    const sc = document.querySelector('#screen-course .scroll');
+    if (sc) sc.scrollTop = 0;
+  });
+}
 
-  // Indices en vez de ids en el HTML: asi no hay que escapar nada para meterlo
-  // en un atributo.
+function renderPracticeShelf(el, lesson) {
+  const s = practiceStats(lesson);
+  const mi = course.modules.findIndex(m => m.lessons.indexOf(lesson) !== -1);
+  const color = modAccent(Math.max(0, mi));
+  const pct = s.qs ? Math.round(s.hechas / s.qs * 100) : 0;
+  el.innerHTML = `<button class="pr-back" type="button" id="pr-back">${arrowFwd(18, 'currentColor', 2.6)} Biblioteca</button>
+    <div class="pr-head" style="border-color:${color}">
+      <b>${escapeHtml(lessonName(lesson))}</b>
+      <small>${prNum(s.quizzes)} quizzes · ${prNum(s.qs)} ejercicios</small>
+      <span class="pr-bar"><i style="width:${pct}%;background:${color}"></i></span>
+      <span class="pr-card-p">${pct}% · ${prNum(s.hechas)} de ${prNum(s.qs)} ejercicios · ${s.quizzesHechos}/${s.quizzes} quizzes superados</span>
+    </div>
+    <div class="pr-list">` +
+    s.items.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
+        data-b="${q.bi}" data-bank="${q.bank ? 1 : 0}">
+        <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
+        <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${prNum(q.qs)} ${q.qs === 1 ? 'ejercicio' : 'ejercicios'}${q.bank ? ' · tandas de 10' : ''} · ${q.bank ? `${prNum(q.hechas || 0)} superado${(q.hechas || 0) === 1 ? '' : 's'}` : (q.done ? 'Superado' : 'Pendiente')}</small></span>
+        <span class="pr-q-go">${arrowFwd(20, 'currentColor', 2.6)}</span>
+      </button>`).join('') + `</div>`;
+
+  document.getElementById('pr-back').onclick = () => { PRACTICE_OPEN = null; renderPractice(); };
   el.querySelectorAll('.pr-q').forEach(b => b.onclick = () => {
-    const lesson = allLessons[+b.getAttribute('data-l')];
     const bi = +b.getAttribute('data-b');
-    if (lesson) openPracticeQuiz(lesson, bi >= 0 ? lesson.contentBlocks[bi] : null,
+    openPracticeQuiz(lesson, bi >= 0 ? lesson.contentBlocks[bi] : null,
       b.getAttribute('data-bank') === '1');
   });
 }
+
 
 // Aprobar aqui puede mover la ruta (desbloquea la siguiente seccion, o la
 // siguiente leccion), asi que se repinta entera — pero se vuelve a Práctica, que
