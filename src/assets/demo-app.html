@@ -2408,8 +2408,10 @@ function mapShift(n, i) {
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Markdown renderer (subset: headings, bold/italic, lists, tables, blockquotes)
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Tolera null/undefined a propósito: un campo que falte debe salir vacío, nunca
+// tumbar la pantalla que lo estaba pintando.
 function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -2610,6 +2612,8 @@ function fetchBank(block) {
     .then(r => r.ok ? r.json() : Promise.reject(new Error('banco ' + r.status)))
     .then(j => {
       const items = applyTokens((j.practice || {})[block.id] || []);
+      // Red de seguridad: los "encuentra el error" del banco no traían enunciado.
+      for (const q of items) if (q && q.type === 'tap' && !q.question) q.question = 'Toca la palabra incorrecta:';
       block.practiceBank = items;
       block.bankN = items.length || block.bankN;
       return items;
@@ -3769,10 +3773,19 @@ function openVocabExam(id) {
     sheet.innerHTML = `<div class="handle"></div>
       <div class="q-top"><div class="segs" id="mq-segs"></div><span class="q-counter" id="mq-counter"></span></div>
       <div class="quiz-host" id="mq-host"></div>`;
-    renderQuiz(document.getElementById('mq-host'), round[idx],
+    const pintado = renderQuiz(document.getElementById('mq-host'), round[idx],
       () => { correct++; answered++; results[idx] = true; advance(); },
       () => { answered++; results[idx] = false; failedQs.push(round[idx]); advance(); });
+    if (!pintado) return skipBroken();
     quizProgress(document.getElementById('mq-segs'), document.getElementById('mq-counter'), round.length, idx, results);
+  }
+  // Un ejercicio que no se pudo pintar se cae de la ronda: no cuenta como fallo
+  // del alumno y, sobre todo, no deja la hoja en blanco.
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { closeOverlay(); toast('Ese quiz tuvo un problema. Prueba con otro.'); return; }
+    if (idx >= round.length) return finish();
+    step();
   }
   function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
   function finish() {
@@ -4687,6 +4700,8 @@ function renderRebuild(host, q, onCorrect, onIncorrect) {
 
 function renderTap(host, q, onCorrect, onIncorrect) {
   let tapped = null, showing = false, isCorrect = false;
+  // Los del banco no traen enunciado; el del curso siempre dice esto mismo.
+  const enunciado = q.question || 'Toca la palabra incorrecta:';
   function correctedSentence() { const t = q.sentenceTokens.slice(); t[q.errorTokenIndex] = q.correctedToken; return t.join(' '); }
   function draw() {
     const tokens = q.sentenceTokens.map((tk, i) => {
@@ -4697,7 +4712,7 @@ function renderTap(host, q, onCorrect, onIncorrect) {
     }).join('');
     let fb = '';
     if (showing) fb = fbBanner(isCorrect, correctedSentence());
-    host.innerHTML = `<div class="q-kicker">Encuentra el error</div><div class="q-question">${escapeHtml(q.question)}</div><div class="tokens">${tokens}</div><div class="fb-slot">${fb}</div>
+    host.innerHTML = `<div class="q-kicker">Encuentra el error</div><div class="q-question">${escapeHtml(enunciado)}</div><div class="tokens">${tokens}</div><div class="fb-slot">${fb}</div>
       <button class="btn blue" id="q-next" ${(!showing && tapped === null) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
     if (!showing) host.querySelectorAll('[data-ti]').forEach(b => b.onclick = () => { const i = +b.getAttribute('data-ti'); tapped = (tapped === i) ? null : i; draw(); });
     const nb = host.querySelector('#q-next');
@@ -4866,12 +4881,25 @@ function renderWriting(host, q, onCorrect, onIncorrect) {
   draw();
 }
 
+// Devuelve false si el ejercicio no se pudo pintar. Quien llama debe saltárselo:
+// un ítem con un campo suelto no puede dejar al alumno mirando una hoja vacía.
 function renderQuiz(host, q, onCorrect, onIncorrect) {
   clearAutoNext(host);
-  if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
-  else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
-  else if (q.type === 'writing') renderWriting(host, q, onCorrect, onIncorrect);
-  else renderTap(host, q, onCorrect, onIncorrect);
+  try {
+    if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
+    else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
+    else if (q.type === 'writing') renderWriting(host, q, onCorrect, onIncorrect);
+    else renderTap(host, q, onCorrect, onIncorrect);
+  } catch (e) {
+    console.error('[quiz] no se pudo pintar el ejercicio', q && q.id, q && q.type, e);
+    host.innerHTML = '';
+    return false;
+  }
+  if (!host.innerHTML.trim()) {
+    console.error('[quiz] ejercicio vacío', q && q.id, q && q.type);
+    return false;
+  }
+  return true;
 }
 // Segmented progress bar (one segment per question) + an "n/total" counter.
 // `results[i]` (true=correct, false=wrong) colors answered steps green/red;
@@ -4901,10 +4929,19 @@ function openMiniQuiz(lesson, block) {
     sheet.innerHTML = `<div class="handle"></div>
       <div class="q-top"><div class="segs" id="mq-segs"></div><span class="q-counter" id="mq-counter"></span></div>
       <div class="quiz-host" id="mq-host"></div>`;
-    renderQuiz(document.getElementById('mq-host'), round[idx],
+    const pintado = renderQuiz(document.getElementById('mq-host'), round[idx],
       () => { correct++; answered++; results[idx] = true; advance(); },
       () => { answered++; results[idx] = false; failedQs.push(round[idx]); advance(); });
+    if (!pintado) return skipBroken();
     quizProgress(document.getElementById('mq-segs'), document.getElementById('mq-counter'), round.length, idx, results);
+  }
+  // Un ejercicio que no se pudo pintar se cae de la ronda: no cuenta como fallo
+  // del alumno y, sobre todo, no deja la hoja en blanco.
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { closeOverlay(); toast('Ese quiz tuvo un problema. Prueba con otro.'); return; }
+    if (idx >= round.length) return finish();
+    step();
   }
   function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
   function finish() {
@@ -4967,10 +5004,17 @@ function openFinalQuiz(lesson, mod) {
     round = qs; redo = isRedo; idx = 0; correct = 0; results = []; failedQs = []; step();
   }
   function step() {
-    renderQuiz(host, round[idx],
+    const pintado = renderQuiz(host, round[idx],
       () => { correct++; results[idx] = true; if (!redo) recSkill(round[idx], true); advance(); },
       () => { results[idx] = false; failedQs.push(round[idx]); if (!redo) recSkill(round[idx], false); advance(); });
+    if (!pintado) return skipBroken();
     quizProgress(segs, counter, round.length, idx, results);
+  }
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { toast('Ese quiz tuvo un problema. Inténtalo de nuevo más tarde.'); return; }
+    if (idx >= round.length) return finish();
+    step();
   }
   function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
   function finish() {
@@ -5251,10 +5295,17 @@ function openPracticeQuiz(lesson, block, bank) {
     sheet.innerHTML = `<div class="handle"></div>
       <div class="q-top"><div class="segs" id="pq-segs"></div><span class="q-counter" id="pq-counter"></span></div>
       <div class="quiz-host" id="pq-host"></div>`;
-    renderQuiz(document.getElementById('pq-host'), round[idx],
+    const pintado = renderQuiz(document.getElementById('pq-host'), round[idx],
       () => { answered++; results[idx] = true; if (!redo) recSkill(round[idx], true); advance(); },
       () => { answered++; results[idx] = false; failedQs.push(round[idx]); if (!redo) recSkill(round[idx], false); advance(); });
+    if (!pintado) return skipBroken();
     quizProgress(document.getElementById('pq-segs'), document.getElementById('pq-counter'), round.length, idx, results);
+  }
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { _dismissGuard = null; closeOverlay(); toast('Esa tanda tuvo un problema. Prueba con otra.'); return; }
+    if (idx >= round.length) return finish();
+    step();
   }
   function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
   function finish() {
