@@ -32,7 +32,10 @@ function courseContentPlugin() {
     "practice_bank_m3.js",
     "practice_bank_m4.js",
     "practice_bank_m5.js",
+    // Banco de speaking: los ejercicios de hablar, por módulo.
+    "speaking_bank.js",
   ];
+
 
   return {
     name: "course-content",
