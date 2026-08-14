@@ -4,6 +4,10 @@ import { getCipBrand } from "@/lib/cip-landing.functions";
 
 // Landing de preinscripción para el Colegio de Ingenieros. Pide sólo el correo.
 // La marca sale del demo /democip (configurable en /demos).
+//
+// El aspecto sigue el sistema de las presentaciones y sílabos: papel crema,
+// bandas navy con textura de puntos, Archivo / Archivo Black y acentos en
+// cursiva serif. La carga pesada (demo real y mascota animada) es diferida.
 
 export const Route = createFileRoute("/cip")({
   loader: () => getCipBrand(),
@@ -31,7 +35,15 @@ export const Route = createFileRoute("/cip")({
       },
       { name: "twitter:image", content: "https://aprendoenglish.com/social-preview.jpg" },
     ],
-    links: [{ rel: "icon", href: "/head.png", type: "image/png" }],
+    links: [
+      { rel: "icon", href: "/head.png", type: "image/png" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Black&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap",
+      },
+    ],
   }),
   component: CipLanding,
 });
@@ -65,7 +77,6 @@ const BENEFITS = [
     d: "Racha, XP y niveles. Tú y el Colegio ven el avance real, no la asistencia.",
   },
 ];
-
 
 type Quiz = {
   q: string;
@@ -106,6 +117,52 @@ function darken(hex: string, amount = 0.22) {
   return `rgb(${ch[0]},${ch[1]},${ch[2]})`;
 }
 
+/* ------------------------------------------------------- sistema de estilos */
+
+/** Tokens y componentes tomados del sílabo/presentaciones, tintados con la marca. */
+const PAGE_CSS = `
+.cipp{ --ink:#16233F; --ink-2:#22345A; --ink-0:#0c1225;
+  --cream:#FBF3DD; --paper:#FEFBF4; --line:#e7dcc2; --muted:#5f6b82;
+  --shadow:0 18px 50px -22px rgba(22,35,63,.35); --shadow-sm:0 8px 24px -14px rgba(22,35,63,.4);
+  --disp:'Archivo',system-ui,sans-serif; --black:'Archivo Black','Archivo',system-ui,sans-serif;
+  --serif:'Libre Caslon Text',Georgia,serif;
+  font-family:var(--disp); color:var(--ink); background:var(--paper); line-height:1.55;
+  -webkit-font-smoothing:antialiased; }
+.cipp .sheet{ max-width:1080px; margin:0 auto; padding:0 clamp(20px,5vw,72px); }
+.cipp .band{ position:relative; padding:clamp(46px,6.4vw,88px) 0; }
+.cipp .band::before{ content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(rgba(22,35,63,.05) 1.2px,transparent 1.3px);
+  background-size:26px 26px; opacity:.45; }
+.cipp .band>*{ position:relative; z-index:2; }
+.cipp .bg-paper{ background:var(--paper); }
+.cipp .bg-cream{ background:radial-gradient(900px 500px at 12% 110%,#fff,transparent 55%),var(--cream); }
+.cipp .bg-hero{ color:#eef2fb;
+  background:radial-gradient(1100px 700px at 74% 4%,color-mix(in srgb,var(--cip) 55%,transparent),transparent 62%),
+             radial-gradient(800px 600px at 4% 110%,#1b2c52,transparent 58%),var(--ink-0); }
+.cipp .bg-hero::before{ background-image:radial-gradient(rgba(255,255,255,.05) 1.2px,transparent 1.3px); opacity:.7; }
+.cipp .bg-accent{ color:#fff;
+  background:radial-gradient(800px 500px at 80% -20%,color-mix(in srgb,#fff 18%,transparent),transparent 60%),var(--cip); }
+.cipp .bg-accent::before{ background-image:radial-gradient(rgba(255,255,255,.07) 1.2px,transparent 1.3px); opacity:.6; }
+
+.cipp .eyebrow{ display:inline-flex; align-items:center; gap:10px; font:800 11.5px/1 var(--disp);
+  letter-spacing:.24em; text-transform:uppercase; margin-bottom:18px; }
+.cipp h1.title{ font-family:var(--black); font-weight:400; line-height:1; letter-spacing:-.03em;
+  font-size:clamp(34px,6.2vw,68px); }
+.cipp h1.title .acc{ font-family:var(--serif); font-style:italic; font-weight:400; letter-spacing:-.005em; }
+.cipp h2.head{ font-family:var(--black); font-weight:400; line-height:1.06; letter-spacing:-.025em;
+  font-size:clamp(25px,3.5vw,42px); }
+.cipp .lede{ font-size:clamp(16px,1.7vw,19px); line-height:1.6; max-width:60ch; }
+.cipp .card{ background:#fff; border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow-sm); }
+.cipp .mini{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px 22px 20px;
+  box-shadow:var(--shadow-sm); }
+.cipp .mini h3{ font-family:var(--disp); font-weight:800; font-size:17px; margin:12px 0 6px; line-height:1.2; }
+.cipp .mini p{ font-size:14.6px; color:var(--ink-2); line-height:1.55; }
+.cipp .metric b{ display:block; font-family:var(--black); font-weight:400; letter-spacing:-.03em;
+  font-size:clamp(28px,3.6vw,40px); line-height:1; color:var(--cip); }
+.cipp .metric span{ display:block; margin-top:8px; font-size:12.5px; font-weight:700; letter-spacing:.02em; color:var(--muted); }
+.cipp .rule{ height:1px; background:var(--line); }
+`;
+
 function CipLanding() {
   const b = Route.useLoaderData();
 
@@ -116,20 +173,19 @@ function CipLanding() {
     "--hi": b.highlight,
   } as React.CSSProperties;
 
-
   return (
-    <main
-      style={vars}
-      className="min-h-screen bg-white text-slate-900 [font-family:system-ui,-apple-system,'Segoe_UI',sans-serif]"
-    >
+    <main style={vars} className="cipp min-h-screen">
+      <style dangerouslySetInnerHTML={{ __html: PAGE_CSS + QUIZ_CSS }} />
       <Hero brand={b} />
       <Metrics />
       <Benefits />
       <SampleQuiz />
       <LiveDemo />
       <FinalCta brand={b} />
-      <footer className="border-t border-slate-200 px-5 py-8 text-center text-xs text-slate-500">
-        AprendoEnglish × {b.institution} · Programa de inglés para colegiados
+      <footer className="bg-paper band !py-8">
+        <div className="sheet text-center text-xs font-semibold tracking-wide text-[var(--muted)]">
+          AprendoEnglish × {b.institution} · Programa de inglés para colegiados
+        </div>
       </footer>
     </main>
   );
@@ -184,18 +240,18 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="tucorreo@ejemplo.com"
           aria-label="Tu correo electrónico"
-          className="min-w-0 flex-1 rounded-xl border-2 border-slate-300 px-4 py-3.5 text-base outline-none focus:border-[var(--hi)]"
+          className="min-w-0 flex-1 rounded-xl border-2 border-[#e7dcc2] bg-white px-4 py-3.5 text-base text-[#16233F] outline-none focus:border-[var(--hi)]"
         />
         <button
           type="submit"
           disabled={state === "sending"}
-          className="rounded-xl px-6 py-3.5 text-base font-bold text-white shadow-lg transition active:scale-[.98] disabled:opacity-60"
-          style={{ background: "var(--cta)" }}
+          className="rounded-xl px-6 py-3.5 text-base font-extrabold text-white transition active:translate-y-[2px] disabled:opacity-60"
+          style={{ background: "var(--cta)", boxShadow: "0 4px 0 var(--ctaLip)" }}
         >
           {state === "sending" ? "Enviando…" : cta}
         </button>
       </div>
-      <p className="mt-1 text-xs text-slate-500">
+      <p className="mt-2 text-xs font-medium text-[#5f6b82]">
         Solo usamos tu correo para avisarte del inicio.
       </p>
       {state === "error" && (
@@ -211,23 +267,26 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
 
 function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string } }) {
   return (
-    <section
-      className="relative overflow-hidden px-5 pb-14 pt-10 text-white"
-      style={{ background: `linear-gradient(160deg, var(--cip), #7a0f0c)` }}
-    >
-      <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-[1.1fr_.9fr]">
+    <section className="band bg-hero overflow-hidden">
+      <div className="sheet grid items-center gap-10 md:grid-cols-[1.15fr_.85fr]">
         <div>
           {brand.logo ? (
-            <img src={brand.logo} alt="Colegio de Ingenieros del Perú" className="mb-6 h-16 w-auto object-contain" />
+            <img
+              src={brand.logo}
+              alt="Colegio de Ingenieros del Perú"
+              width={220}
+              height={64}
+              className="mb-7 h-16 w-auto object-contain"
+            />
           ) : null}
-          <p className="mb-3 inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-bold tracking-wide">
-            PREINSCRIPCIÓN ABIERTA · CUPOS LIMITADOS
-          </p>
-          <h1 className="text-4xl font-black leading-tight sm:text-5xl">
-            Habla inglés en 1 año, <span className="opacity-90">15 minutos al día</span>
+          <p className="eyebrow text-white/70">Preinscripción abierta · Cupos limitados</p>
+          <h1 className="title">
+            Habla inglés en 1 año,
+            <br />
+            <span className="acc">quince minutos al día</span>
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-white/90">{brand.phrase}</p>
-          <div className="mt-7 max-w-xl rounded-2xl bg-white p-4 text-slate-900 shadow-2xl">
+          <p className="lede mt-5 text-white/85">{brand.phrase}</p>
+          <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
             <EmailForm id="hero" cta="Quiero mi cupo" />
           </div>
         </div>
@@ -243,14 +302,12 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
 
 function Metrics() {
   return (
-    <section className="border-b border-slate-200 bg-slate-50 px-5 py-8">
-      <div className="mx-auto grid max-w-5xl grid-cols-2 gap-6 md:grid-cols-4">
+    <section className="band bg-cream !py-10">
+      <div className="sheet grid grid-cols-2 gap-8 md:grid-cols-4">
         {METRICS.map((m) => (
-          <div key={m.l} className="text-center">
-            <div className="text-3xl font-black" style={{ color: "var(--cip)" }}>
-              {m.n}
-            </div>
-            <div className="text-xs font-medium text-slate-600">{m.l}</div>
+          <div key={m.l} className="metric text-center">
+            <b>{m.n}</b>
+            <span>{m.l}</span>
           </div>
         ))}
       </div>
@@ -260,16 +317,16 @@ function Metrics() {
 
 function Benefits() {
   return (
-    <section className="px-5 py-14">
-      <div className="mx-auto max-w-5xl">
-        <h2 className="text-center text-3xl font-black">Un curso hecho para ingenieros</h2>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+    <section className="band bg-paper">
+      <div className="sheet">
+        <p className="eyebrow text-[var(--cip)]">Qué recibe cada colegiado</p>
+        <h2 className="head">Un curso hecho para ingenieros</h2>
+        <div className="mt-9 grid gap-5 sm:grid-cols-2">
           {BENEFITS.map((x) => (
-            <div key={x.t} className="rounded-2xl border border-slate-200 p-5 shadow-sm">
-              <img src={x.e} alt="" aria-hidden className="h-10 w-10" />
-
-              <h3 className="mt-1.5 text-lg font-bold">{x.t}</h3>
-              <p className="mt-1 text-sm text-slate-600">{x.d}</p>
+            <div key={x.t} className="mini">
+              <img src={x.e} alt="" aria-hidden width={40} height={40} loading="lazy" className="h-10 w-10" />
+              <h3>{x.t}</h3>
+              <p>{x.d}</p>
             </div>
           ))}
         </div>
@@ -288,7 +345,7 @@ function Benefits() {
  */
 const QUIZ_CSS = `
 .qz { --ink:#3C3C3C; --muted:#8C8C8C; --line:#E5E5E5; --blue:#1CB0F6; --ok:#3FAA24;
-  --okDark:#2E7D1A; --red:#F44336; }
+  --okDark:#2E7D1A; --red:#F44336; font-family:'Archivo',system-ui,sans-serif; }
 .qz .q-top { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
 .qz .segs { display:flex; gap:5px; flex:1 1 auto; }
 .qz .seg { flex:1; height:5px; border-radius:3px; background:var(--line); transition:background .3s; }
@@ -353,26 +410,26 @@ function SampleQuiz() {
     setSel(null);
   }
 
-
-
   return (
-    <section className="bg-slate-50 px-5 py-14">
-      <style dangerouslySetInnerHTML={{ __html: QUIZ_CSS }} />
-      <div className="mx-auto max-w-2xl">
-        <h2 className="text-center text-3xl font-black">Pruébalo ahora mismo</h2>
-        <p className="mt-2 text-center text-slate-600">
-          Tres ejercicios reales del curso. Así se siente cada día.
-        </p>
+    <section className="band bg-cream">
+      <div className="sheet">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="eyebrow text-[var(--cip)]">Ejercicios reales</p>
+          <h2 className="head">Pruébalo ahora mismo</h2>
+          <p className="lede mx-auto mt-3 text-[var(--ink-2)]">
+            Tres ejercicios del curso, tal como se ven en la app.
+          </p>
+        </div>
 
         {/* Alto fijo: la tarjeta no crece ni encoge al responder o avanzar. */}
-        <div className="qz mt-7 flex h-[620px] flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg sm:h-[600px]">
+        <div
+          className="qz card mx-auto mt-8 flex h-[620px] max-w-2xl flex-col p-6 sm:h-[600px]"
+          style={{ boxShadow: "var(--shadow)" }}
+        >
           <div className="q-top">
             <div className="segs">
               {SAMPLE.map((_, k) => (
-                <div
-                  key={k}
-                  className={`seg ${marks[k] ?? (k === i ? "now" : "")}`}
-                />
+                <div key={k} className={`seg ${marks[k] ?? (k === i ? "now" : "")}`} />
               ))}
             </div>
             <div className="q-counter">
@@ -430,7 +487,6 @@ function SampleQuiz() {
               : last
                 ? "Y así hay 8.127 ejercicios más"
                 : "Siguiente ejercicio"}
-
           </button>
         </div>
       </div>
@@ -440,48 +496,64 @@ function SampleQuiz() {
 
 /* ----------------------------------------------------------------- demo vivo */
 
+/**
+ * El demo real pesa varios cientos de kB, así que no se pide hasta que la
+ * persona lo abre: hasta entonces sólo se ve el marco del teléfono con una
+ * portada estática. El iframe se pinta al 111,11 % y se reduce a 0,9 para que,
+ * una vez escalado, ocupe exactamente el hueco interior sin recortes.
+ */
 function LiveDemo() {
-  const ref = useRef<HTMLDivElement>(null);
   const [on, setOn] = useState(false);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || on) return;
-    const io = new IntersectionObserver(
-      (es) => es.some((e) => e.isIntersecting) && setOn(true),
-      { rootMargin: "120px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [on]);
-
   return (
-    <section id="curso" className="px-5 py-14">
-      <div className="mx-auto max-w-5xl text-center">
-        <h2 className="text-3xl font-black">Este es el curso, sin maquetas</h2>
-        <p className="mt-2 text-slate-600">
-          La app real del Colegio de Ingenieros. Toca y recórrela.
+    <section id="curso" className="band bg-paper">
+      <div className="sheet text-center">
+        <p className="eyebrow text-[var(--cip)]">Sin maquetas</p>
+        <h2 className="head">Este es el curso, tal cual</h2>
+        <p className="lede mx-auto mt-3 text-[var(--ink-2)]">
+          La app real del Colegio de Ingenieros. Ábrela y recórrela.
         </p>
-        {/* El demo se pinta al 111,11 % del marco y se reduce a 0,9 para que,
-            una vez escalado, ocupe exactamente el hueco interior sin recortes
-            ni franjas blancas. Usamos porcentajes para que se adapte al ancho. */}
-        <div ref={ref} className="mx-auto mt-8 w-full max-w-[390px]">
-          <div className="relative h-[720px] overflow-hidden rounded-[2rem] border-8 border-slate-900 bg-[#f4f4f6] shadow-2xl">
+
+        <div className="mx-auto mt-8 w-full max-w-[390px]">
+          <div
+            className="relative h-[720px] overflow-hidden rounded-[2rem] border-8 border-[#16233F] bg-[#f4f4f6]"
+            style={{ boxShadow: "var(--shadow)" }}
+          >
             {on ? (
               <iframe
                 src="/democip"
                 title="Demo del curso del CIP"
                 className="block h-[111.111%] w-[111.111%] border-0"
-                loading="lazy"
-                style={{
-                  transform: "scale(0.9)",
-                  transformOrigin: "top left",
-                }}
+                style={{ transform: "scale(0.9)", transformOrigin: "top left" }}
               />
             ) : (
-              <div className="flex h-full items-center justify-center bg-slate-100 text-slate-400">
-                Cargando demo…
-              </div>
+              <button
+                type="button"
+                onClick={() => setOn(true)}
+                className="flex h-full w-full flex-col items-center justify-center gap-5 bg-[radial-gradient(600px_400px_at_50%_0%,#22345A,transparent_60%),#0c1225] px-8 text-white"
+              >
+                <img
+                  src="/head.png"
+                  alt=""
+                  aria-hidden
+                  width={92}
+                  height={92}
+                  loading="lazy"
+                  className="h-[92px] w-[92px] object-contain"
+                />
+                <span className="text-lg font-extrabold leading-snug">
+                  El curso completo, dentro de tu navegador
+                </span>
+                <span
+                  className="rounded-xl px-6 py-3.5 text-base font-extrabold text-white"
+                  style={{ background: "var(--cta)", boxShadow: "0 4px 0 var(--ctaLip)" }}
+                >
+                  Abrir el demo
+                </span>
+                <span className="text-xs font-semibold text-white/60">
+                  Se carga sólo cuando lo pides
+                </span>
+              </button>
             )}
           </div>
         </div>
@@ -492,13 +564,17 @@ function LiveDemo() {
 
 /* ------------------------------------------------------------ mascota entera */
 
-/** Boti completo (cuerpo, brazos, piernas) con su animación real, no el icono. */
+/** Boti completo (cuerpo, brazos, piernas) con su animación real, no el icono.
+ *  Su script se descarga sólo cuando el bloque entra en pantalla. */
 function BotiFull() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
     let live = true;
     const SRC = "/demo-assets/mascots/boti/boti.js";
+    let script: HTMLScriptElement | null = null;
 
     function mount() {
       const w = window as unknown as { Boti?: { mount: (el: Element, o?: object) => void } };
@@ -506,24 +582,36 @@ function BotiFull() {
       w.Boti.mount(ref.current, { shadow: true, track: true, interactive: true });
     }
 
-    if ((window as unknown as { Boti?: unknown }).Boti) {
-      mount();
-      return () => {
-        live = false;
-      };
+    function load() {
+      if ((window as unknown as { Boti?: unknown }).Boti) {
+        mount();
+        return;
+      }
+      script = document.querySelector<HTMLScriptElement>(`script[src="${SRC}"]`);
+      if (!script) {
+        script = document.createElement("script");
+        script.src = SRC;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener("load", mount);
     }
 
-    let s = document.querySelector<HTMLScriptElement>(`script[src="${SRC}"]`);
-    if (!s) {
-      s = document.createElement("script");
-      s.src = SRC;
-      s.async = true;
-      document.head.appendChild(s);
-    }
-    s.addEventListener("load", mount);
+    const io = new IntersectionObserver(
+      (es) => {
+        if (es.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          load();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    io.observe(el);
+
     return () => {
       live = false;
-      s?.removeEventListener("load", mount);
+      io.disconnect();
+      script?.removeEventListener("load", mount);
     };
   }, []);
 
@@ -539,14 +627,15 @@ function BotiFull() {
 
 function FinalCta({ brand }: { brand: { institution: string } }) {
   return (
-    <section className="px-5 py-16 text-white" style={{ background: "var(--cip)" }}>
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-black sm:text-4xl">Asegura tu cupo hoy</h2>
-        <p className="mt-3 text-white/90">
+    <section className="band bg-accent">
+      <div className="sheet mx-auto max-w-2xl text-center">
+        <p className="eyebrow text-white/75">Últimos cupos de la primera cohorte</p>
+        <h2 className="head text-white">Asegura tu cupo hoy</h2>
+        <p className="lede mx-auto mt-3 text-white/90">
           Deja tu correo y te avisamos apenas se abra la inscripción para colegiados del{" "}
           {brand.institution}.
         </p>
-        <div className="mx-auto mt-7 max-w-xl rounded-2xl bg-white p-4 text-slate-900 shadow-2xl">
+        <div className="card mx-auto mt-8 max-w-xl p-4 text-left" style={{ boxShadow: "var(--shadow)" }}>
           <EmailForm id="final" cta="Preinscribirme" />
         </div>
       </div>
