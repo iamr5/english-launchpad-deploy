@@ -4395,6 +4395,11 @@ function renderProgress() {
   const b2Remain = course.modules[certIdx].lessons.filter(l => !isLessonCompleted(l.id)).length;
 
   let html = `
+  <div class="pg-brandbar">
+    <span class="bb-logo">${brandHTML()}</span>
+    <span class="bb-tag">Tu reporte</span>
+  </div>
+
   <div class="card pg-hero">
     <div class="pg-row">
       <div class="pg-info">
@@ -4422,6 +4427,15 @@ function renderProgress() {
     </div>
   </div>
 
+  <div class="card" style="cursor:default">
+    <div class="pg-sect-t">Tu semana <span class="lnk">${diasSem} / 7 días</span></div>
+    <div class="pg-week">${weekDots}</div>
+    <div class="pg-time">
+      <div class="tt"><b>${tiempoSem}</b><span>esta semana</span></div>
+      <div class="tt"><b>${hoyMin} / ${metaMin} min</b><span>meta diaria de hoy</span></div>
+    </div>
+  </div>
+
   <div class="pg-band">
     <div class="pg-chip"><span class="em">⭐</span><div class="k">${fmtXp(xp)}</div><div class="l">XP total</div></div>
     <div class="pg-chip"><span class="em">🏆</span><div class="k">#${myPos}</div><div class="l">Puesto en el aula</div></div>
@@ -4431,6 +4445,12 @@ function renderProgress() {
     <div class="pg-sect-t">Tus destrezas <span class="lnk">MCER</span></div>
     ${skill('🎧', 'Listening', 'listening')}${skill('📖', 'Reading', 'reading')}${skill('✍️', 'Writing', 'writing')}
   </div>
+
+  <div class="card" style="cursor:default">
+    <div class="pg-sect-t">Para esta semana</div>
+    ${tipsHTML}
+  </div>
+
 
   <div class="card" style="cursor:default">
     <div class="pg-sect-t">Misiones de la semana</div>
