@@ -4701,7 +4701,7 @@ function renderTap(host, q, onCorrect, onIncorrect) {
     }).join('');
     let fb = '';
     if (showing) fb = fbBanner(isCorrect, correctedSentence());
-    host.innerHTML = `<div class="q-kicker">Encuentra el error</div><div class="q-question">${escapeHtml(q.question)}</div><div class="tokens">${tokens}</div><div class="fb-slot">${fb}</div>
+    host.innerHTML = `<div class="q-kicker">Encuentra el error</div><div class="q-question">${escapeHtml(enunciado)}</div><div class="tokens">${tokens}</div><div class="fb-slot">${fb}</div>
       <button class="btn blue" id="q-next" ${(!showing && tapped === null) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
     if (!showing) host.querySelectorAll('[data-ti]').forEach(b => b.onclick = () => { const i = +b.getAttribute('data-ti'); tapped = (tapped === i) ? null : i; draw(); });
     const nb = host.querySelector('#q-next');
