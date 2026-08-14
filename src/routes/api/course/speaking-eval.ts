@@ -10,9 +10,8 @@ import { verifyCourseToken } from "@/lib/course-token";
 //
 // El audio no se guarda en ningún sitio: entra, se transcribe y se descarta.
 //
-// Este camino sólo se usa en las tareas de habla libre y cuando el navegador no
-// sabe reconocer voz. Los ejercicios de repetir se corrigen en el propio
-// dispositivo, sin coste.
+// En el piloto debug se usa para todos los modos y se compara con el resultado
+// local. El mismo WAV alimenta ambos análisis; nunca se vuelve a grabar.
 
 const GATEWAY = "https://ai.gateway.lovable.dev/v1";
 const MAX_BYTES = 6 * 1024 * 1024; // ~30 s de WAV a 16 kHz mono, con holgura
@@ -61,6 +60,7 @@ async function drainSSE(
 }
 
 async function transcribe(file: Blob, name: string, key: string) {
+  const started = Date.now();
   const form = new FormData();
   form.append("model", "openai/gpt-4o-transcribe");
   form.append("file", file, name);
@@ -75,7 +75,7 @@ async function transcribe(file: Blob, name: string, key: string) {
     const detalle = await r.text().catch(() => "");
     throw Object.assign(new Error(`transcripcion ${r.status} ${detalle}`), { status: r.status });
   }
-  return (
+  const transcript = (
     await drainSSE(r.body, (e) =>
       e["type"] === "transcript.text.delta"
         ? (e["delta"] as string)
@@ -84,6 +84,11 @@ async function transcribe(file: Blob, name: string, key: string) {
           : undefined,
     )
   ).trim();
+  return {
+    transcript,
+    latencyMs: Date.now() - started,
+    runId: r.headers.get("X-Lovable-AIG-Run-ID"),
+  };
 }
 
 const SCHEMA = {
@@ -105,6 +110,11 @@ const SCHEMA = {
       description: "Palabras que sonaron mal o se usaron mal (máx 4).",
       items: { type: "string" },
     },
+    evidence: {
+      type: "array",
+      description: "Señales observables en la transcripción que justifican el feedback (máx 4).",
+      items: { type: "string" },
+    },
   },
   required: [
     "pronunciation",
@@ -115,13 +125,15 @@ const SCHEMA = {
     "advice",
     "betterVersion",
     "problemWords",
+    "evidence",
   ],
 } as const;
 
 async function score(
   key: string,
-  datos: { transcript: string; level: string; task: string; target: string },
+  datos: { transcript: string; level: string; task: string; target: string; requirements: string; acceptedVariants: string },
 ) {
+  const started = Date.now();
   const instruccion = datos.target
     ? `El alumno debía decir exactamente: "${datos.target}".`
     : `La tarea era: ${datos.task}`;
@@ -129,7 +141,10 @@ async function score(
     `Eres profesor de inglés para hispanohablantes, nivel ${datos.level || "A2"} del MCER.`,
     instruccion,
     `Esto es la transcripción de lo que dijo en voz alta: "${datos.transcript}"`,
-    "Evalúa pronunciación (deduciéndola de los errores de la transcripción: palabras mal reconocidas suelen ser palabras mal pronunciadas), fluidez (largo, repeticiones, cortes) y gramática.",
+    datos.requirements ? `Criterios esperados: ${datos.requirements}` : "",
+    datos.acceptedVariants ? `Variantes aceptables: ${datos.acceptedVariants}` : "",
+    "Evalúa cumplimiento, fluidez aparente y gramática usando únicamente la transcripción.",
+    "No asegures que una palabra fue mal pronunciada: una transcripción distinta no es evidencia acústica suficiente. Llama problemWords a palabras para revisar y explica la señal observable en evidence.",
     "Sé exigente pero alentador, y ajusta el listón al nivel indicado: en A1 basta con hacerse entender.",
     "Escribe el titular y el consejo en español; la versión mejorada, en inglés.",
     "Aprueba (passed) si las tres notas llegan a 60 o más.",
@@ -164,7 +179,11 @@ async function score(
   const texto = await drainSSE(r.body, (e) =>
     e["type"] === "response.output_text.delta" ? (e["delta"] as string) : undefined,
   );
-  return JSON.parse(texto) as Record<string, unknown>;
+  return {
+    feedback: JSON.parse(texto) as Record<string, unknown>,
+    latencyMs: Date.now() - started,
+    runId: r.headers.get("X-Lovable-AIG-Run-ID"),
+  };
 }
 
 export const Route = createFileRoute("/api/course/speaking-eval")({
@@ -201,15 +220,38 @@ export const Route = createFileRoute("/api/course/speaking-eval")({
         const level = String(form.get("level") || "A2").slice(0, 4);
         const task = String(form.get("task") || "").slice(0, 400);
         const target = String(form.get("target") || "").slice(0, 400);
+        const requirements = String(form.get("requirements") || "").slice(0, 600);
+        const acceptedVariants = String(form.get("acceptedVariants") || "").slice(0, 600);
 
         try {
-          const transcript = await transcribe(audio, "recording.wav", key);
-          if (!transcript) {
+          const transcription = await transcribe(audio, "recording.wav", key);
+          if (!transcription.transcript) {
             return Response.json({ error: "no_speech" }, { status: 422 });
           }
-          const feedback = await score(key, { transcript, level, task, target });
+          const scored = await score(key, {
+            transcript: transcription.transcript,
+            level,
+            task,
+            target,
+            requirements,
+            acceptedVariants,
+          });
           return Response.json(
-            { transcript, ...feedback },
+            {
+              transcript: transcription.transcript,
+              ...scored.feedback,
+              metrics: {
+                transcriptionMs: transcription.latencyMs,
+                scoringMs: scored.latencyMs,
+                totalMs: transcription.latencyMs + scored.latencyMs,
+                audioBytes: audio.size,
+              },
+              usage: {
+                transcriptionRunId: transcription.runId,
+                scoringRunId: scored.runId,
+                aiCalls: 2,
+              },
+            },
             { headers: { "Cache-Control": "private, no-store" } },
           );
         } catch (e) {

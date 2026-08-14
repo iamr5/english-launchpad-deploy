@@ -467,6 +467,8 @@ export type DemoConfig = {
     placement: boolean;
     share: boolean;
     dashboard: boolean;
+    /** Piloto oculto: sólo aparece cuando además se activa desde el modo debug. */
+    speaking: boolean;
   };
 
   /**
@@ -512,7 +514,7 @@ export const DEFAULTS: Omit<DemoConfig, "slug" | "institution"> = {
     groupNoun: "aula",
   },
   map: {},
-  features: { placement: true, share: true, dashboard: true },
+  features: { placement: true, share: true, dashboard: true, speaking: false },
   vocab: { packs: [], nivelMax: "" },
 };
 
