@@ -2886,6 +2886,16 @@ function markQuizCompleted(id) {
   saveProgress(PROGRESS);
 }
 function isMiniQuizCompleted(id, blockId) { const b = lp(id).blocks[blockId]; return !!(b && b.mq); }
+// Cuántos ejercicios del banco de una teoría se han superado ya. El banco no se
+// hace de una sentada (sale en tandas de 10), así que no basta un sí/no: se
+// acumula para poder contar ejercicios y no filas en el cuaderno.
+function bankDoneCount(id, blockId) { const b = lp(id).blocks[blockId]; return (b && b.n) || 0; }
+function addBankDone(lesson, blockId, n, tope) {
+  const L = lp(lesson.id);
+  const prev = (L.blocks[blockId] && L.blocks[blockId].n) || 0;
+  L.blocks[blockId] = Object.assign({}, L.blocks[blockId], { n: Math.min(prev + n, tope) });
+}
+
 
 function lastUnlockedBlockIndex(lesson) {
   const blocks = lesson.contentBlocks;
@@ -4890,13 +4900,17 @@ function practiceItems(lesson) {
   blocks.forEach((b, i) => {
     if (!(b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length)) return;
     const n = teoriaNumber(blocks, i);
+    const hechoMq = isMiniQuizCompleted(lesson.id, b.id);
     items.push({
       bi: i,
       // El mismo nombre que lleva la seccion dentro de la leccion. Inventarle uno
       // aqui ("Mini-quiz 2") obliga a traducir mentalmente entre las dos pantallas.
       name: n ? `Teoría ${n}` : (b.title || `Sección ${items.length + 1}`),
       qs: b.miniQuiz.length,
-      done: isMiniQuizCompleted(lesson.id, b.id),
+      done: hechoMq,
+      // Ejercicios superados de esta fila. Un quiz de la ruta es todo o nada:
+      // al aprobarlo cuentan sus preguntas, antes no cuenta ninguna.
+      hechas: hechoMq ? b.miniQuiz.length : 0,
       // Mismo criterio que el cuerpo de la leccion: el mini-quiz esta disponible
       // en cuanto su bloque esta desbloqueado.
       open: abierta && i <= last,
@@ -4910,20 +4924,25 @@ function practiceItems(lesson) {
       name: (n ? `Teoría ${n}` : (b.title || 'Sección')) + ' · práctica extra',
       qs: b.practiceBank.length,
       done: isMiniQuizCompleted(lesson.id, b.id + '-bank'),
+      // El banco sale en tandas: cuentan los ejercicios hechos, no la fila.
+      hechas: Math.min(bankDoneCount(lesson.id, b.id + '-bank'), b.practiceBank.length),
       open: true,
       final: false,
     });
+
   });
   if (lesson.quizQuestions && lesson.quizQuestions.length) items.push({
     bi: -1,
     name: 'Quiz final',
     qs: lesson.quizQuestions.length,
     done: isQuizCompleted(lesson.id),
+    hechas: isQuizCompleted(lesson.id) ? lesson.quizQuestions.length : 0,
     // Mismo criterio que onLessonQuizTap: el final se abre con todos los
     // mini-quizzes hechos, no antes.
     open: abierta && (isLessonCompleted(lesson.id) || allMiniQuizzesDone(lesson)),
     final: true,
   });
+
   return items;
 }
 
@@ -4934,24 +4953,28 @@ function practiceItems(lesson) {
 function renderPractice() {
   const el = document.getElementById('practice-body');
   if (!el || !course) return;
+  // Se cuentan EJERCICIOS, no filas: una fila puede ser un quiz de 10 preguntas
+  // o una teoría con 40 de práctica extra, y decir "2 de 377" no dice nada.
+  const num = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   let hechosTot = 0, totales = 0, cuerpo = '';
   course.modules.forEach((mod, mi) => {
     let lecciones = '';
     mod.lessons.forEach(lesson => {
       const items = practiceItems(lesson);
       if (!items.length) return;
-      totales += items.length;
-      const hechos = items.filter(q => q.done).length;
+      const preguntas = items.reduce((a, q) => a + q.qs, 0);
+      const hechos = items.reduce((a, q) => a + (q.hechas || 0), 0);
+      totales += preguntas;
       hechosTot += hechos;
       lecciones += `<div class="pr-les">
         <div class="pr-les-h"><span class="pr-les-t">${escapeHtml(lessonName(lesson))}</span>
-          <span class="pr-les-c">${hechos}/${items.length}</span></div>
+          <span class="pr-les-c">${num(hechos)}/${num(preguntas)}</span></div>
         <div class="pr-list">` +
         items.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
             data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}" data-bank="${q.bank ? 1 : 0}">
 
             <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
-            <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'}${q.bank ? ' · tandas de 10' : ''} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
+            <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${num(q.qs)} ${q.qs === 1 ? 'ejercicio' : 'ejercicios'}${q.bank ? ' · tandas de 10' : ''} · ${q.bank ? `${num(q.hechas || 0)} superado${(q.hechas || 0) === 1 ? '' : 's'}` : (q.done ? 'Superado' : 'Pendiente')}</small></span>
             <span class="pr-q-go">${arrowFwd(20, 'currentColor', 2.6)}</span>
           </button>`).join('') +
         `</div></div>`;
@@ -4964,9 +4987,10 @@ function renderPractice() {
   el.innerHTML = `<div class="pr-intro">
       <b>Tu cuaderno de ejercicios</b>
       <small>Aquí están todos los ejercicios del curso, abiertos desde el primer día. No hace falta haber hecho la lección: puedes responder por tu cuenta, en el orden que quieras y las veces que quieras. No hay nota ni penalidad — lo que aciertes suma en tu ruta.</small>
-      <span class="pr-count">${hechosTot} de ${totales} ejercicios superados</span>
+      <span class="pr-count">${num(hechosTot)} de ${num(totales)} ejercicios superados</span>
     </div>` + (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
       <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
+
 
   // Indices en vez de ids en el HTML: asi no hay que escapar nada para meterlo
   // en un atributo.
@@ -4998,7 +5022,7 @@ function openPracticeQuiz(lesson, block, bank) {
   if (!preguntas || !preguntas.length) return;
 
   const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
-  let round, redo, idx, results, failedQs, skillAgg, answered = 0;
+  let round, redo, idx, results, failedQs, skillAgg, answered = 0, tandaN = 0;
   _dismissGuard = () => answered > 0; // confirmar antes de salir si ya se respondio algo
   function recSkill(q, ok) {
     if (!skillAgg) return;
@@ -5050,7 +5074,11 @@ function openPracticeQuiz(lesson, block, bank) {
       // nota que ya te habias sacado.
       else { lp(lesson.id).skillErr = skillAgg; markQuizCompleted(lesson.id); }
     }
+    // El banco no es todo o nada: cada tanda limpia suma sus ejercicios al total
+    // del cuaderno, hasta agotar los que tiene esa teoría.
+    if (bank) addBankDone(lesson, marca, tandaN, preguntas.length);
     practiceRefresh(nuevo);  // la lista de detras queda al dia antes de enseñar el resultado
+
     _dismissGuard = null;    // ya esta guardado: salir de la hoja no pierde nada
     result('check', '#2E7D1A', 'ok', '¡Bien hecho!',
       nuevo ? (bank ? 'Tanda superada. Vuelve por otra cuando quieras.'
@@ -5074,7 +5102,8 @@ function openPracticeQuiz(lesson, block, bank) {
   }
   // El banco de una teoría trae muchos más ejercicios de los que se pueden hacer
   // de una sentada: cada entrada saca una tanda corta y distinta.
-  function tanda() { const s = shuffle(preguntas); return bank ? s.slice(0, 10) : s; }
+  function tanda() { const s = shuffle(preguntas); const t = bank ? s.slice(0, 10) : s; tandaN = t.length; return t; }
+
   sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
   startRound(tanda(), false);
 }
