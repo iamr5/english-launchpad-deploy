@@ -6995,9 +6995,10 @@ function obRender() {
   if (OB.step === 1) setTimeout(() => document.getElementById('ob-name').focus(), 120);
   if (OB.step === 3) { plRender(); obSyncNext(); }
   if (isLast) {
+    const goalIcon = (OB.goal || 15) == 60 ? '/demo-assets/ob-rocket.svg' : ((OB.goal || 15) == 30 ? '/demo-assets/streak.svg' : '/demo-assets/ob-thunder.svg');
     document.getElementById('ob-sum').innerHTML =
-      `<div class="ob-chip lvl"><span class="em">🏁</span><span class="lb">Nivel ${OB_LEVELS[OB.lvl || 0]}</span><div class="sb">Tu nivel</div></div>` +
-      `<div class="ob-chip goal"><span class="em">🎯</span><span class="lb">${OB.goal || 15} min</span><div class="sb">Meta diaria</div></div>`;
+      `<div class="ob-chip lvl"><span class="em"><img src="/demo-assets/ob-goal.svg" alt="" aria-hidden="true"></span><span class="lb">Nivel ${OB_LEVELS[OB.lvl || 0]}</span><div class="sb">Tu nivel</div></div>` +
+      `<div class="ob-chip goal"><span class="em"><img src="${goalIcon}" alt="" aria-hidden="true"></span><span class="lb">${OB.goal || 15} min</span><div class="sb">Meta diaria</div></div>`;
     // arranca en el módulo que corresponde al nivel del test de ubicación
     const sIdx = placementStartIdx(OB.lvl || 0);
     const mod = course.modules[sIdx], fl = mod.lessons[0];
