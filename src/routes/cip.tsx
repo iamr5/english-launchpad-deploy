@@ -182,7 +182,7 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
         </button>
       </div>
       <p className="mt-2 text-xs text-slate-500">
-        Sin costo ni compromiso. Solo usamos tu correo para avisarte del inicio.
+        Solo usamos tu correo para avisarte del inicio.
       </p>
       {state === "error" && (
         <p className="mt-2 text-sm font-semibold text-red-600">
