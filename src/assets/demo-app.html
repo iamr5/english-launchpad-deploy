@@ -2408,8 +2408,10 @@ function mapShift(n, i) {
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Markdown renderer (subset: headings, bold/italic, lists, tables, blockquotes)
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Tolera null/undefined a propósito: un campo que falte debe salir vacío, nunca
+// tumbar la pantalla que lo estaba pintando.
 function escapeHtml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
