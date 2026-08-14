@@ -1766,6 +1766,57 @@
   .pl-txt { font-size: 18px; font-weight: 800; color: var(--ink); }
   .pl-sub { font-size: 14px; font-weight: 600; color: var(--muted2); margin-top: 6px; line-height: 1.4; }
 
+  /* ===== Práctica: los quizzes ya desbloqueados, en un solo sitio =====
+     Esta pestaña no enseña nada nuevo: es un atajo a lo que ya abriste en la
+     ruta. Por eso es una lista plana —módulo › lección › quizzes— y no repite el
+     caminito: quien entra aquí no viene a navegar, viene a repetir un quiz.
+     Clases propias (pr-*) aunque se parezcan a las de Vocabulary: son dos
+     pestañas distintas y compartir clases ata el retoque de una a la otra. */
+  .pr-intro { margin: 2px 2px 18px; }
+  .pr-intro b { display: block; font-size: 19px; font-weight: 800; color: var(--ink); }
+  .pr-intro small { display: block; margin-top: 3px; font-size: 13px; line-height: 1.4; color: var(--muted); }
+  .pr-intro .pr-count { display: inline-block; margin-top: 9px; font-size: 12px; font-weight: 800;
+    letter-spacing: .3px; color: var(--amberInk); background: #FDF0D5;
+    border-radius: 999px; padding: 5px 11px; }
+  .pr-mod { margin-bottom: 24px; }
+  .pr-mod-h { display: flex; align-items: center; gap: 9px; margin: 0 2px 10px; }
+  /* El número va con el color del módulo: es el mismo código de color que la
+     ruta, y sin él tres módulos seguidos se leen como una sola lista larga. */
+  .pr-mod-n { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 9px; color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }
+  .pr-mod-t { font-size: 17px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+  .pr-les { margin-bottom: 13px; }
+  .pr-les-h { display: flex; align-items: baseline; gap: 8px; margin: 0 2px 7px; }
+  .pr-les-t { flex: 1 1 auto; font-size: 14px; font-weight: 800; color: var(--muted); line-height: 1.25; }
+  .pr-les-c { flex: 0 0 auto; font-size: 11px; font-weight: 800; color: var(--muted2);
+    font-variant-numeric: tabular-nums; }
+  .pr-list { display: flex; flex-direction: column; gap: 8px; }
+  /* Mismo relieve de botón (borde inferior grueso) que las tarjetas de la ruta y
+     las fichas de Vocabulary: aquí también todo lo que se ve se toca. */
+  .pr-q { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px;
+    padding: 11px 12px; cursor: pointer; font-family: inherit;
+    -webkit-tap-highlight-color: transparent; }
+  .pr-q:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .pr-q-ic { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--blue) 12%, transparent); color: var(--blue); }
+  .pr-q-ic svg { display: block; }
+  /* Superado = palomita verde; pendiente = triángulo de play. El estado vive en
+     el icono y no en un texto suelto, que es lo que se busca de un vistazo. */
+  .pr-q.done .pr-q-ic { background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green); }
+  .pr-q-t { flex: 1 1 auto; min-width: 0; }
+  .pr-q-t b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.2; }
+  .pr-q-t small { display: block; margin-top: 2px; font-size: 12px; font-weight: 700; color: var(--muted2); }
+  .pr-q-go { flex: 0 0 auto; display: flex; color: var(--gray); }
+  /* El quiz final cierra la lección: se marca con un fondo tenue para que no se
+     lea como un mini-quiz más de la fila. */
+  .pr-q.final { background: #FAFBFF; border-color: #DCE3F2; }
+  .pr-empty { margin: 2px; padding: 20px 18px; background: #fff; border: 2px solid var(--line);
+    border-radius: 18px; text-align: center; }
+  .pr-empty b { display: block; font-size: 16px; font-weight: 800; color: var(--ink); }
+  .pr-empty small { display: block; margin-top: 5px; font-size: 13px; line-height: 1.45; color: var(--muted2); }
+
 </style>
 </head>
 <body>
@@ -1785,6 +1836,8 @@
       <div class="pad" id="course-body"></div>
       <!-- Vocabulary: el hueco existe desde ya y se llena al entrar (renderVocab). -->
       <div class="pad" id="vocab-body" hidden></div>
+      <!-- Práctica: igual que Vocabulary, se llena al entrar (renderPractice). -->
+      <div class="pad" id="practice-body" hidden></div>
     </div>
     <div class="course-foot" id="course-foot"></div>
     <!-- Pestañas del inicio. Andamio: "Ruta" es el curso de siempre, movido tal
@@ -1808,6 +1861,18 @@
           <path d="M12 5v14"/>
         </svg>
         <span class="tab-lbl">Vocabulary</span>
+      </button>
+      <!-- Práctica: atajo a los quizzes ya desbloqueados en la ruta. La mancuerna
+           es lo que se espera de una pestaña que se llama así — un icono de quiz
+           (papel, palomita) diría "examen", que es justo lo contrario de lo que
+           esto es: repetir lo que ya pasaste, sin nota. -->
+      <button class="tab" type="button" role="tab" aria-selected="false"
+              aria-controls="practice-body" data-tab="practice" onclick="showHomeTab('practice')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 8.2v7.6M4.2 10.1v3.8M17 8.2v7.6M19.8 10.1v3.8M7 12h10"/>
+        </svg>
+        <span class="tab-lbl">Práctica</span>
       </button>
     </nav>
   </section>
@@ -1960,6 +2025,11 @@
      window.VOCAB antes de que corra el script de abajo.
      Al editar vocab.js hay que subir el ?v= o quedaran copias viejas en cache. -->
 <script src="vocab.js?v=2"></script>
+<!-- Los items de "¿para que se usa?" del examen de vocabulario. Aparte de
+     vocab.js porque son otra cosa (texto escrito a mano, no la biblioteca) y
+     porque cambian por su cuenta. Mismo trato: sin defer, y subir el ?v= al
+     editarlo. -->
+<script src="vocab-quiz.js?v=1"></script>
 <!-- El contenido del curso ya no viaja como archivos sueltos: se pide a
      /api/course/bundle con el pase que trae la pagina. Asi no se lo lleva nadie
      con una sola peticion, y guardar el HTML no guarda las lecciones. -->
@@ -3176,25 +3246,29 @@ function renderCourse() {
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-// PESTAÑAS DEL INICIO (Ruta / Vocabulary)
+// PESTAÑAS DEL INICIO (Ruta / Vocabulary / Práctica)
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Andamio. La ruta es la de siempre; Vocabulary llega vacia a proposito: lo que
-// se pidio es el sitio, no el contenido. Las dos viven dentro de #screen-course
-// y se turnan, en vez de ser dos .screen: el inicio es UNA pantalla con dos
-// pestañas, y separarlas obligaria a duplicar la barra en las dos.
+// se pidio es el sitio, no el contenido. Las tres viven dentro de #screen-course
+// y se turnan, en vez de ser tres .screen: el inicio es UNA pantalla con
+// pestañas, y separarlas obligaria a duplicar la barra en cada una.
 function showHomeTab(tab) {
-  const esRuta = tab !== 'vocab';
+  // Cualquier cosa que no sea una pestaña conocida cae en la ruta: es la de
+  // siempre y la unica que no puede fallar.
+  const cual = (tab === 'vocab' || tab === 'practice') ? tab : 'ruta';
   const body = document.getElementById('course-body');
   const vocab = document.getElementById('vocab-body');
+  const prac = document.getElementById('practice-body');
   const foot = document.getElementById('course-foot');
   if (!body || !vocab) return;
-  body.hidden = !esRuta;
-  vocab.hidden = esRuta;
-  // El pie es el "continuar con la leccion": pertenece a la ruta y en
-  // Vocabulary no significa nada.
-  if (foot) foot.hidden = !esRuta;
+  body.hidden = cual !== 'ruta';
+  vocab.hidden = cual !== 'vocab';
+  if (prac) prac.hidden = cual !== 'practice';
+  // El pie es el "continuar con la leccion": pertenece a la ruta y en las otras
+  // pestañas no significa nada.
+  if (foot) foot.hidden = cual !== 'ruta';
   document.querySelectorAll('#home-tabs .tab').forEach(b => {
-    const on = b.getAttribute('data-tab') === (esRuta ? 'ruta' : 'vocab');
+    const on = b.getAttribute('data-tab') === cual;
     b.classList.toggle('on', on);
     b.setAttribute('aria-selected', on ? 'true' : 'false');
   });
@@ -3202,9 +3276,10 @@ function showHomeTab(tab) {
   // a Vocabulary abierta por la mitad de una pantalla que ni se ha visto.
   const sc = document.querySelector('#screen-course .scroll');
   if (sc) sc.scrollTop = 0;
-  // Salir a la ruta cierra el tema que estuviera abierto: al volver a
-  // Vocabulary se entra por el indice, que es de donde se entra siempre.
-  if (esRuta) VOPEN = null; else renderVocab();
+  // Salir de Vocabulary cierra el tema que estuviera abierto: al volver se entra
+  // por el indice, que es de donde se entra siempre.
+  if (cual === 'vocab') renderVocab(); else VOPEN = null;
+  if (cual === 'practice') renderPractice();
 }
 
 // CONTENIDO DE ARRANQUE. La biblioteca entera vive en demo-assets/vocab.js, que
@@ -3217,6 +3292,10 @@ function showHomeTab(tab) {
 // El respaldo `|| []` es por si la peticion del archivo falla: la pestaña sale
 // vacia, que es feo, pero el resto de la app arranca igual.
 const VOCAB = window.VOCAB || [];
+// Los usos escritos a mano para el tercer tipo de pregunta del examen (ver
+// demo-assets/vocab-quiz.js). Sin el archivo, ese tipo simplemente no sale y el
+// examen se hace con los otros dos.
+const VOCAB_USE = window.VOCAB_USE || {};
 
 // Escuchada o no. Nada mas: cuantas veces le has dado al play no dice que la
 // palabra sea tuya, y una barra que se llena sola con repeticiones lo estaria
@@ -3331,6 +3410,130 @@ function vocabSay(card) {
   if (sub) sub.textContent = `${h} de ${chip.w.length} escuchadas`;
   const bar = document.querySelector('#vocab-body .vd-bar');
   if (bar) { bar.setAttribute('aria-valuenow', pc); const f = bar.querySelector('i'); if (f) f.style.width = pc + '%'; }
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// EXAMEN DEL TEMA
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// UNA pregunta por palabra: el examen de un tema tiene tantas preguntas como
+// palabras hay en el tema, ni una mas. Lo que cambia es la FORMA de preguntar —
+// cada palabra tiene hasta tres posibles y se sortea una en cada intento:
+//   A · escuchar y elegir el español      (mc con audio)
+//   B · escuchar y escribirla en ingles   (writing con audio)
+//   C · ¿para que se usa?                 (mc, solo si esta escrita en vocab-quiz.js)
+// El motor no es nuevo: son las mismas piezas del quiz de la ruta —renderQuiz,
+// quizProgress, la hoja y las dos vueltas de openMiniQuiz—. Aqui solo se
+// fabrican los items.
+
+// Aprobados, por tema. Aparte de __vocab a proposito: esa barra mide "escuchada"
+// y no puede empezar a significar tambien "dominada".
+function vocabExams() { return PROGRESS['__vocabExam'] = PROGRESS['__vocabExam'] || {}; }
+function examKey(si, ci) { return si + '-' + ci; }
+function isExamPassed(si, ci) { return !!vocabExams()[examKey(si, ci)]; }
+
+// Dos palabras del mismo tema pueden compartir traduccion. Ahi "¿como se dice X
+// en ingles?" tiene dos respuestas buenas y el corrector solo acepta una, asi
+// que esas palabras se quedan sin el tipo B.
+function esUnicoEnTema(chip, es) {
+  const k = wNorm(es);
+  return chip.w.filter(p => wNorm(p[1]) === k).length === 1;
+}
+
+// Los distractores salen del MISMO tema: es lo que hace que la pregunta valga
+// algo —elegir entre cuatro colores, no entre un color y tres animales—. Solo
+// si el tema se queda corto se completan con el resto de la seccion.
+function vocabDistractors(en, es, chip, sec, n) {
+  const vistos = new Set([wNorm(es)]);
+  const pool = [];
+  const add = (list) => (list || []).forEach(p => {
+    const k = wNorm(p[1]);
+    if (p[0] !== en && !vistos.has(k)) { vistos.add(k); pool.push(p[1]); }
+  });
+  add(chip.w);
+  if (pool.length < n) (sec.chips || []).forEach(c => { if (c !== chip) add(c.w); });
+  return shuffle(pool).slice(0, n);
+}
+
+// Devuelve un item en el formato exacto que ya entiende renderQuiz.
+function vocabItem(pair, chip, sec) {
+  const en = pair[0], es = pair[1], use = VOCAB_USE[en];
+  const tipos = ['mc'];
+  // El dictado es para palabras y frases cortas: escribir de oido "Excuse me,
+  // where is the bathroom?" no mide vocabulario, mide paciencia.
+  if (en.split(/\s+/).length <= 3 && esUnicoEnTema(chip, es)) tipos.push('writing');
+  if (use && use.q && use.d && use.d.length >= 3) tipos.push('use');
+  const t = tipos[Math.floor(Math.random() * tipos.length)];
+  if (t === 'writing') return { type: 'writing', audio: en, question: `¿Cómo se dice «${es}» en inglés?`, accepted: [en] };
+  if (t === 'use') {
+    const opts = shuffle([use.q].concat(use.d.slice(0, 3)));
+    return { type: 'mc', question: `¿Para qué se usa «${en}»?`, options: opts, correctIndex: opts.indexOf(use.q) };
+  }
+  const opts = shuffle([es].concat(vocabDistractors(en, es, chip, sec, 3)));
+  return { type: 'mc', audio: en, question: '¿Qué significa esta palabra?', options: opts, correctIndex: opts.indexOf(es) };
+}
+
+function vocabExamRound(chip, sec) { return shuffle(chip.w.map(p => vocabItem(p, chip, sec))); }
+
+// La hoja es la del mini-quiz de la ruta, con su barra segmentada, su banner y
+// su repaso: se falla una, se repasa al final; se vuelve a fallar, se repite el
+// examen entero. Lo unico propio es de donde salen las preguntas y que se
+// guarda al aprobar.
+function openVocabExam(si, ci) {
+  const sec = VOCAB[si], chip = sec && sec.chips[ci];
+  if (!chip || !chip.w.length) return;
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  let round, redo, idx, correct, results, failedQs, answered = 0;
+  _dismissGuard = () => answered > 0;   // ya contestaste algo: preguntar antes de salir
+  function startRound(qs, isRedo) { round = qs; redo = isRedo; idx = 0; correct = 0; results = []; failedQs = []; step(); }
+  function step() {
+    sheet.classList.remove('result');
+    sheet.innerHTML = `<div class="handle"></div>
+      <div class="q-top"><div class="segs" id="mq-segs"></div><span class="q-counter" id="mq-counter"></span></div>
+      <div class="quiz-host" id="mq-host"></div>`;
+    renderQuiz(document.getElementById('mq-host'), round[idx],
+      () => { correct++; answered++; results[idx] = true; advance(); },
+      () => { answered++; results[idx] = false; failedQs.push(round[idx]); advance(); });
+    quizProgress(document.getElementById('mq-segs'), document.getElementById('mq-counter'), round.length, idx, results);
+  }
+  function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
+  function finish() {
+    if (failedQs.length === 0) return pass();
+    if (redo) return showFail();
+    return showRedo(failedQs.slice());
+  }
+  function result(iconName, iconColor, cls, title, sub, btnCls, btnLabel, onAction) {
+    sheet.classList.add('result');
+    sheet.innerHTML = `<div class="handle"></div><div class="center-col">
+      <div class="result-icon ${cls}">${icon(iconName, cls === 'ok' ? 40 : 38, iconColor)}</div>
+      <div class="result-title">${title}</div>
+      <div class="result-sub">${sub}</div>
+      <button class="btn ${btnCls}" id="mq-action">${btnLabel}</button>
+      </div>`;
+    document.getElementById('mq-action').onclick = onAction;
+  }
+  function pass() {
+    result('check', '#2E7D1A', 'ok', '¡Examen aprobado!',
+      `${chip.e} ${escapeHtml(chip.n)} — ${chip.w.length} ${chip.w.length === 1 ? 'palabra' : 'palabras'}`,
+      'green', 'Continuar', () => {
+        stopSpeak(); closeOverlay();
+        vocabExams()[examKey(si, ci)] = { p: 1, ts: Date.now() };
+        touchDay(); saveProgress(PROGRESS);
+        renderVocab();
+      });
+  }
+  function showRedo(failed) {
+    const one = failed.length === 1;
+    result('refresh', '#5C5159', 'no', 'Repasemos',
+      `Fallaste ${failed.length} ${one ? 'palabra' : 'palabras'}. Vuelve a intentarla${one ? '' : 's'} para aprobar.`,
+      'amber', `Repasar${one ? '' : ` (${failed.length})`}`, () => { stopSpeak(); startRound(shuffle(failed), true); });
+  }
+  function showFail() {
+    result('refresh', '#5C5159', 'no', 'Casi lo tienes',
+      'Fallaste otra vez. Repite el examen completo para aprobarlo.',
+      'blue', 'Reintentar', () => { stopSpeak(); startRound(vocabExamRound(chip, sec), false); });
+  }
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+  startRound(vocabExamRound(chip, sec), false);
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -4109,6 +4312,27 @@ function armAutoNext(host, btn, isCorrect, run) {
 }
 function clearAutoNext(host) { if (host && host._autoT) { clearTimeout(host._autoT); host._autoT = null; } }
 
+// Altavoz opcional para `mc` y `writing`. Lo usan los items del examen de
+// vocabulario, que traen `audio` (la palabra en ingles); los del curso no lo
+// traen y no cambian en nada. El bloque es el MISMO que ya pinta `rebuild`.
+function audioHTML(q) {
+  if (!q.audio) return '';
+  return `<div class="speaker" id="q-spk">${speakerSvg(40, '#1CB0F6')}<div class="lbl">escuchar</div></div>`;
+}
+// No redibuja para pintar el "sonando": marca la clase sobre el nodo. Un
+// redibujo en mitad de una pregunta escrita se llevaria por delante el cursor
+// del alumno.
+function wireAudio(host, q) {
+  if (!q.audio) return;
+  const el = host.querySelector('#q-spk');
+  if (!el) return;
+  const play = () => speak(q.audio, () => el.classList.add('playing'), () => el.classList.remove('playing'), 0.85, true);
+  el.onclick = play;
+  // Suena sola al aparecer la pregunta —es un examen de escucha—, pero una sola
+  // vez: elegir opcion o confirmar redibujan, y sin esta marca hablaria encima.
+  if (host._spoke !== q) { host._spoke = q; play(); }
+}
+
 function renderMC(host, q, onCorrect, onIncorrect) {
   // Shuffle the options once per presentation, tracking which one is correct.
   const opts = shuffle(q.options.map((text, i) => ({ text, correct: i === q.correctIndex })));
@@ -4126,8 +4350,9 @@ function renderMC(host, q, onCorrect, onIncorrect) {
     const isCorrect = selected === correctIndex;
     let fb = '';
     if (showing) fb = fbBanner(isCorrect, opts[correctIndex].text);
-    host.innerHTML = `<div class="q-kicker">Elige la respuesta correcta</div><div class="q-question">${escapeHtml(q.question)}</div><div class="q-options">${html}</div><div class="fb-slot">${fb}</div>
+    host.innerHTML = `<div class="q-kicker">${q.audio ? 'Escucha y elige' : 'Elige la respuesta correcta'}</div><div class="q-question">${escapeHtml(q.question)}</div>${audioHTML(q)}<div class="q-options">${html}</div><div class="fb-slot">${fb}</div>
       <button class="btn blue" id="q-next" ${(!showing && selected === null) ? 'disabled' : ''}>${showing ? 'Siguiente' : 'Confirmar'}</button>`;
+    wireAudio(host, q);
     if (!showing) host.querySelectorAll('.opt').forEach(b => b.onclick = () => { selected = +b.getAttribute('data-i'); draw(); });
     const nb = host.querySelector('#q-next');
     let go = null;
@@ -4283,6 +4508,11 @@ function wLexicon() {
       (l.quizQuestions || []).forEach(eatQ);
       (l.contentBlocks || []).forEach((b) => (b.miniQuiz || []).forEach(eatQ));
     }));
+    // La biblioteca de vocabulario cuenta como material: el examen dicta esas
+    // palabras y muchas están a un carácter unas de otras (beer/bear,
+    // ship/sheep). Sin ellas aquí, la indulgencia del dedazo taparía justo la
+    // palabra que se está preguntando.
+    (typeof VOCAB !== 'undefined' ? VOCAB : []).forEach((s) => (s.chips || []).forEach((ch) => (ch.w || []).forEach((p) => eat(p[0]))));
   } catch (e) { /* lexicón parcial: sólo perdemos indulgencia, nunca corrección */ }
   return _wLex;
 }
@@ -4335,11 +4565,12 @@ function renderWriting(host, q, onCorrect, onIncorrect) {
   }
   function draw() {
     const state = showing ? (res.ok ? ' correct' : ' wrong') : '';
-    host.innerHTML = '<div class="q-kicker">Escríbelo en inglés</div><div class="q-question">' + escapeHtml(q.question) + '</div>' +
+    host.innerHTML = '<div class="q-kicker">' + (q.audio ? 'Escucha y escríbelo' : 'Escríbelo en inglés') + '</div><div class="q-question">' + escapeHtml(q.question) + '</div>' + audioHTML(q) +
       '<input class="w-input' + state + '" id="w-in" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Escribe tu respuesta…" value="' + escapeHtml(val) + '"' + (showing ? ' disabled' : '') + '>' +
       (q.hint && !showing ? '<div class="w-hint">' + escapeHtml(q.hint) + '</div>' : '') +
       '<div class="fb-slot">' + (showing ? banner() : '') + '</div>' +
       '<button class="btn blue" id="q-next"' + ((!showing && !val.trim()) ? ' disabled' : '') + '>' + (showing ? 'Siguiente' : 'Confirmar') + '</button>';
+    wireAudio(host, q);
     const inp = host.querySelector('#w-in'), nb = host.querySelector('#q-next');
     let go = null;
     if (!showing) {
@@ -4503,6 +4734,196 @@ function openFinalQuiz(lesson, mod) {
   }
 
   startRound(shuffle(lesson.quizQuestions), false);
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// PRÁCTICA — la pestaña de quizzes
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Aqui no hay contenido propio: es un atajo a los quizzes que YA se podian hacer
+// desde la ruta. Ni una pregunta nueva ni una regla de desbloqueo propia — si la
+// tuviera, esta pestaña seria una puerta de atras al curso.
+//
+// Corre en su propia hoja (openPracticeQuiz) en vez de reutilizar openMiniQuiz /
+// openFinalQuiz: esos dos, al aprobar, repintan el cuerpo de la leccion, celebran
+// sobre ella y acaban navegando al modulo. Todo eso tiene sentido cuando vienes
+// leyendo y ninguno cuando estas en el inicio. Lo que si se reutiliza es lo que
+// importa y no conviene duplicar: los widgets de pregunta (renderQuiz), la barra
+// segmentada, el marcado de resultado y las mismas dos rondas (fallas → repites
+// solo las falladas → fallas otra vez → el quiz entero).
+
+// Los quizzes de UNA leccion, en el orden en que aparecen dentro de ella.
+// `open` = se puede hacer ya; los que no, ni se listan.
+function practiceItems(lesson) {
+  const blocks = lesson.contentBlocks;
+  const abierta = isLessonUnlocked(lesson.id);
+  const last = lastUnlockedBlockIndex(lesson);
+  const items = [];
+  blocks.forEach((b, i) => {
+    if (!(b.requiresQuizToUnlockNext && b.miniQuiz && b.miniQuiz.length)) return;
+    const n = teoriaNumber(blocks, i);
+    items.push({
+      bi: i,
+      // El mismo nombre que lleva la seccion dentro de la leccion. Inventarle uno
+      // aqui ("Mini-quiz 2") obliga a traducir mentalmente entre las dos pantallas.
+      name: n ? `Teoría ${n}` : (b.title || `Sección ${items.length + 1}`),
+      qs: b.miniQuiz.length,
+      done: isMiniQuizCompleted(lesson.id, b.id),
+      // Mismo criterio que el cuerpo de la leccion: el mini-quiz esta disponible
+      // en cuanto su bloque esta desbloqueado.
+      open: abierta && i <= last,
+      final: false,
+    });
+  });
+  if (lesson.quizQuestions && lesson.quizQuestions.length) items.push({
+    bi: -1,
+    name: 'Quiz final',
+    qs: lesson.quizQuestions.length,
+    done: isQuizCompleted(lesson.id),
+    // Mismo criterio que onLessonQuizTap: el final se abre con todos los
+    // mini-quizzes hechos, no antes.
+    open: abierta && (isLessonCompleted(lesson.id) || allMiniQuizzesDone(lesson)),
+    final: true,
+  });
+  return items;
+}
+
+// Se repinta en cada entrada: lo desbloqueado cambia a medida que avanza la ruta.
+function renderPractice() {
+  const el = document.getElementById('practice-body');
+  if (!el || !course) return;
+  let abiertos = 0, totales = 0, cuerpo = '';
+  course.modules.forEach((mod, mi) => {
+    let lecciones = '';
+    mod.lessons.forEach(lesson => {
+      const items = practiceItems(lesson);
+      totales += items.length;
+      const open = items.filter(q => q.open);
+      abiertos += open.length;
+      if (!open.length) return; // leccion sin nada que practicar todavia
+      const hechos = open.filter(q => q.done).length;
+      lecciones += `<div class="pr-les">
+        <div class="pr-les-h"><span class="pr-les-t">${escapeHtml(lessonName(lesson))}</span>
+          <span class="pr-les-c">${hechos}/${open.length}</span></div>
+        <div class="pr-list">` +
+        open.map(q => `<button class="pr-q${q.done ? ' done' : ''}${q.final ? ' final' : ''}" type="button"
+            data-l="${allLessons.indexOf(lesson)}" data-b="${q.bi}">
+            <span class="pr-q-ic">${q.done ? checkBold(21, 'currentColor', 3.2) : playIcon(19, 'currentColor')}</span>
+            <span class="pr-q-t"><b>${escapeHtml(q.name)}</b><small>${q.qs} ${q.qs === 1 ? 'pregunta' : 'preguntas'} · ${q.done ? 'Superado' : 'Pendiente'}</small></span>
+            <span class="pr-q-go">${arrowFwd(20, 'currentColor', 2.6)}</span>
+          </button>`).join('') +
+        `</div></div>`;
+    });
+    if (!lecciones) return; // modulo entero sin abrir: no ocupa sitio
+    cuerpo += `<div class="pr-mod"><div class="pr-mod-h">
+      <span class="pr-mod-n" style="background:${modAccent(mi)}">${mi + 1}</span>
+      <span class="pr-mod-t">${escapeHtml(moduleName(mod))}</span></div>${lecciones}</div>`;
+  });
+  el.innerHTML = `<div class="pr-intro">
+      <b>Practica cuando quieras</b>
+      <small>Los quizzes que ya desbloqueaste en tu ruta, juntos y sin volver a la lección. Puedes repetirlos las veces que quieras.</small>
+      <span class="pr-count">${abiertos} de ${totales} desbloqueados</span>
+    </div>` + (cuerpo || `<div class="pr-empty"><b>Todavía no hay nada que practicar</b>
+      <small>Empieza tu primera lección en la Ruta: sus quizzes aparecerán aquí en cuanto los desbloquees.</small></div>`);
+  // Indices en vez de ids en el HTML: asi no hay que escapar nada para meterlo
+  // en un atributo.
+  el.querySelectorAll('.pr-q').forEach(b => b.onclick = () => {
+    const lesson = allLessons[+b.getAttribute('data-l')];
+    const bi = +b.getAttribute('data-b');
+    if (lesson) openPracticeQuiz(lesson, bi >= 0 ? lesson.contentBlocks[bi] : null);
+  });
+}
+
+// Aprobar aqui puede mover la ruta (desbloquea la siguiente seccion, o la
+// siguiente leccion), asi que se repinta entera — pero se vuelve a Práctica, que
+// es donde esta el alumno, y al mismo punto de la lista. Todo dentro del mismo
+// turno de JS: el salto a la ruta no llega a pintarse.
+function practiceRefresh(cambio) {
+  if (!cambio) { renderPractice(); return; }
+  const sc = document.querySelector('#screen-course .scroll');
+  const top = sc ? sc.scrollTop : 0;
+  renderCourse();
+  showHomeTab('practice');
+  if (sc) sc.scrollTop = top;
+}
+
+// `block` = el bloque cuyo mini-quiz se practica; null = el quiz final.
+function openPracticeQuiz(lesson, block) {
+  const preguntas = block ? block.miniQuiz : lesson.quizQuestions;
+  if (!preguntas || !preguntas.length) return;
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  let round, redo, idx, results, failedQs, skillAgg, answered = 0;
+  _dismissGuard = () => answered > 0; // confirmar antes de salir si ya se respondio algo
+  function recSkill(q, ok) {
+    if (!skillAgg) return;
+    const s = skillAgg[qSkill(q)]; if (!s) return;
+    s.t++; if (!ok) s.e++;
+  }
+  function startRound(qs, isRedo) {
+    // Las destrezas solo se miden en el quiz final y solo en la primera vuelta,
+    // igual que en la ruta (las repescas no vuelven a contar).
+    if (!isRedo && !block) skillAgg = { listening: { t: 0, e: 0 }, reading: { t: 0, e: 0 }, writing: { t: 0, e: 0 }, teoria: { t: 0, e: 0 } };
+    round = qs; redo = isRedo; idx = 0; results = []; failedQs = []; step();
+  }
+  function step() {
+    sheet.classList.remove('result');
+    sheet.innerHTML = `<div class="handle"></div>
+      <div class="q-top"><div class="segs" id="pq-segs"></div><span class="q-counter" id="pq-counter"></span></div>
+      <div class="quiz-host" id="pq-host"></div>`;
+    renderQuiz(document.getElementById('pq-host'), round[idx],
+      () => { answered++; results[idx] = true; if (!redo) recSkill(round[idx], true); advance(); },
+      () => { answered++; results[idx] = false; failedQs.push(round[idx]); if (!redo) recSkill(round[idx], false); advance(); });
+    quizProgress(document.getElementById('pq-segs'), document.getElementById('pq-counter'), round.length, idx, results);
+  }
+  function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
+  function finish() {
+    if (failedQs.length === 0) return pass();
+    if (redo) return showFail();
+    return showRedo(failedQs.slice());
+  }
+  function result(iconName, iconColor, cls, title, sub, btnCls, btnLabel, onAction) {
+    sheet.classList.add('result');
+    sheet.innerHTML = `<div class="handle"></div><div class="center-col">
+      <div class="result-icon ${cls}">${icon(iconName, cls === 'ok' ? 40 : 38, iconColor)}</div>
+      <div class="result-title">${title}</div>
+      <div class="result-sub">${sub}</div>
+      <button class="btn ${btnCls}" id="pq-action">${btnLabel}</button>
+      </div>`;
+    document.getElementById('pq-action').onclick = onAction;
+  }
+  function pass() {
+    touchDay(); // pasar un quiz es actividad del dia, se entre por donde se entre
+    // Practicar algo que aun no estaba superado SI cuenta: seria raro aprobarlo
+    // aqui y que la ruta siguiera diciendo que te falta.
+    const nuevo = block ? !isMiniQuizCompleted(lesson.id, block.id) : !isQuizCompleted(lesson.id);
+    if (nuevo) {
+      if (block) markMiniQuizCompleted(lesson, block.id);
+      // Las destrezas del panel se graban con la PRIMERA vez que se supera el
+      // final. Una repeticion no las reescribe: practicar no puede empeorar una
+      // nota que ya te habias sacado.
+      else { lp(lesson.id).skillErr = skillAgg; markQuizCompleted(lesson.id); }
+    }
+    practiceRefresh(nuevo);  // la lista de detras queda al dia antes de enseñar el resultado
+    _dismissGuard = null;    // ya esta guardado: salir de la hoja no pierde nada
+    result('check', '#2E7D1A', 'ok', '¡Bien hecho!',
+      nuevo ? (block ? 'Sección superada. Ya cuenta en tu ruta.' : '¡Lección completada! Ya cuenta en tu ruta.')
+            : 'Ronda limpia. Vuelve cuando quieras.',
+      'green', 'Continuar', closeOverlay);
+  }
+  function showRedo(failed) {
+    const one = failed.length === 1;
+    result('refresh', '#5C5159', 'no', 'Repasemos',
+      `Fallaste ${failed.length} ${one ? 'pregunta' : 'preguntas'}. Vuelve a intentarla${one ? '' : 's'} para terminar.`,
+      'amber', `Repasar${one ? '' : ` (${failed.length})`}`, () => startRound(shuffle(failed), true));
+  }
+  function showFail() {
+    // Sin suggestReview: eso es del ritmo de la ruta (bajar de nivel tras varios
+    // fallos) y aqui solo estas repitiendo algo que ya abriste.
+    result('refresh', '#5C5159', 'no', 'Casi lo tienes',
+      'Fallaste otra vez. Repite el quiz completo cuando quieras.',
+      'blue', 'Reintentar', () => startRound(shuffle(preguntas), false));
+  }
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+  startRound(shuffle(preguntas), false);
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
