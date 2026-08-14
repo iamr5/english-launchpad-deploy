@@ -218,11 +218,7 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
           </div>
         </div>
         <div className="hidden justify-center md:flex">
-          <img
-            src="/demo-assets/mascots/boti/boti_head.svg"
-            alt="Boti, la mascota del programa"
-            className="w-56 drop-shadow-2xl"
-          />
+          <BotiFull />
         </div>
       </div>
     </section>
