@@ -3151,7 +3151,10 @@
   // en estos mismos ids, asi que hay que pintar despues, no antes.
   // Si no hay resumen —alguien que abre el enlace sin haber usado la app— no se
   // toca nada y el demo se queda exactamente como estaba.
-  (function(){
+  // Con nombre y no suelta: la app precarga este iframe al arrancar para que la
+  // hoja no se abra en blanco, asi que para cuando se abre los numeros llevan
+  // rato escritos. La app vuelve a llamarla al abrir y se repinta con lo ultimo.
+  function pintarFichaPropia(){
     var q; try { q = new URLSearchParams(location.search); } catch (e) { return; }
     if (!q || q.get('yo') !== '1') return;
 
@@ -3193,7 +3196,7 @@
     // se lee como dominio y aqui significaria justo lo contrario.
     function destreza(k, idPct, idBar){
       var v = sk[k];
-      if (v == null) { txt(idPct, 'sin datos'); wide(idBar, 0); }
+      if (v == null) { txt(idPct, 'sin datos aún'); wide(idBar, 0); }
       else { txt(idPct, pct(v) + '%'); wide(idBar, pct(v)); }
     }
     destreza('listening', 'p-l-pct', 'p-l-bar');
@@ -3260,6 +3263,7 @@
       function(row, i){
         var t = tips[i];
         if (!t) { row.hidden = true; return; }          // menos consejos que huecos
+        row.hidden = false;                             // al repintar puede volver a haberlo
         var ico = row.querySelector('.box'), cuerpo = row.querySelector('.t');
         if (ico) ico.textContent = t[0];
         if (cuerpo) {
@@ -3268,7 +3272,11 @@
           cuerpo.appendChild(s);
         }
       });
-  })();
+  }
+  // La app la llama por encima del iframe (mismo origen) justo antes de enseñar
+  // la hoja, con el resumen ya reescrito.
+  window.__yoRepintar = pintarFichaPropia;
+  pintarFichaPropia();
 </script>
 </body>
 </html>

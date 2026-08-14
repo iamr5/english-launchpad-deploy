@@ -2910,7 +2910,16 @@ function openDashboard() {
     try { (window.top || window).location.href = url; } catch (e) { window.location.href = url; }
     return;
   }
-  fr.src = base + '?yo=1&sheet=1';
+  // Si warmDashboard() ya lo cargo, NO se vuelve a asignar src: eso lo haria
+  // recargar y devolveria justo el blanco que se quiere evitar. Se repinta por
+  // encima, que es instantaneo.
+  if (!fr.getAttribute('src')) fr.src = base + '?yo=1&sheet=1';
+  else {
+    try {
+      const w = fr.contentWindow;
+      if (w && typeof w.__yoRepintar === 'function') w.__yoRepintar();
+    } catch (e) { /* aun cargando: pintara solo, y ya con el resumen recien escrito */ }
+  }
   ov.hidden = false;
   document.body.classList.add('pnl-open');
   // Un frame de margen: si se pone .shown en el mismo tick que se quita [hidden]
@@ -2920,16 +2929,32 @@ function openDashboard() {
   document.addEventListener('keydown', pnlEsc);
 }
 function closeDashboard() {
-  const ov = document.getElementById('pnl-overlay'), fr = document.getElementById('pnl-frame');
+  const ov = document.getElementById('pnl-overlay');
   if (!ov) return;
   ov.classList.remove('shown');
   document.body.classList.remove('pnl-open');
   document.removeEventListener('keydown', pnlEsc);
-  // Se vacia el iframe al final de la animacion: si se vacia antes se ve
-  // parpadear en blanco mientras la hoja todavia sale.
-  setTimeout(() => { ov.hidden = true; try { fr.src = 'about:blank'; } catch (e) {} }, 260);
+  // El iframe se deja cargado a proposito. Vaciarlo obligaria a recargar en la
+  // siguiente apertura, que es exactamente el blanco que se quiere evitar.
+  setTimeout(() => { ov.hidden = true; }, 260);
 }
 function pnlEsc(e) { if (e.key === 'Escape') closeDashboard(); }
+// El panel se precarga en cuanto la app esta en pie, en un hueco libre. Si el
+// iframe empieza a cargar con la hoja ya abierta se ve el blanco mientras
+// llega; precargado, abrir es solo descorrer.
+function warmDashboard() {
+  const fr = document.getElementById('pnl-frame');
+  if (!fr || fr.getAttribute('src')) return;
+  const go = () => {
+    try { saveSummary(); } catch (e) {}
+    const base = DEMO.slug ? '/' + encodeURIComponent(DEMO.slug) + '/padres' : '/demo-dashboard';
+    fr.src = base + '?yo=1&sheet=1';
+  };
+  // En un hueco libre: cargar el panel no puede competir con el arranque de la
+  // app, que es lo que el alumno esta mirando.
+  if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 4000 });
+  else setTimeout(go, 1500);
+}
 function renderCourse() {
   show('course');
   precacheModuleBgs(); // warm the module backdrops while on the modules list
@@ -5342,7 +5367,9 @@ mountSplash();
 mountBrandLogos();
 mascotMountStatic();
 loadCourse().then(() => {
-  if (loadProfile()) renderCourse(); else startOnboarding();
+  // Solo con perfil: sin el no hay ficha propia que precargar (y el panel se
+  // quedaria con el alumno de ejemplo).
+  if (loadProfile()) { renderCourse(); warmDashboard(); } else startOnboarding();
 }).catch(err => {
   console.error(err);
   document.body.innerHTML = '<div style="font:600 15px/1.5 system-ui;padding:40px;text-align:center;color:#5C5159">No se pudo cargar el curso.<br>Recarga la pagina para volver a intentarlo.</div>';
