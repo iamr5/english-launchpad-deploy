@@ -524,6 +524,7 @@ export const RESERVED_SLUGS = new Set([
   "presentation",
   "cip",
   "cip-presenta",
+  "cip-presentacion",
   "silabo-autonoma",
   "head.png",
   "social-preview.jpg",
