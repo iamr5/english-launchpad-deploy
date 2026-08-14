@@ -131,3 +131,30 @@ export function getLesson(id: string): Lesson | null {
   }
   return null;
 }
+
+/**
+ * El banco de speaking: los ejercicios de hablar, indexados por id de módulo.
+ * Igual que el de práctica, no viaja en el arranque: sólo su índice.
+ */
+export function getSpeaking(): Record<string, unknown[]> {
+  return build().speaking || {};
+}
+
+/** Cuántos ejercicios de hablar tiene cada módulo. */
+export function getSpeakingIndex(): Record<string, number> {
+  const out: Record<string, number> = {};
+  const bank = getSpeaking();
+  for (const k of Object.keys(bank)) {
+    const n = (bank[k] || []).length;
+    if (n) out[k] = n;
+  }
+  return out;
+}
+
+/** Los ejercicios de hablar de unos módulos, para servirlos bajo demanda. */
+export function getSpeakingFor(ids: string[]): Record<string, unknown[]> {
+  const bank = getSpeaking();
+  const out: Record<string, unknown[]> = {};
+  for (const id of ids.slice(0, 10)) if (bank[id]) out[id] = bank[id];
+  return out;
+}
