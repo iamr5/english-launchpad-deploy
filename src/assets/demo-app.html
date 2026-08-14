@@ -6910,9 +6910,10 @@ function plRender() {
   if (PL.state === 'intro') {
     const total = (window.PLACEMENT_ITEMS || []).length || 40;
     host.innerHTML = `<div class="ob-points">
-      <div class="ob-point plain"><span class="em"><img src="/demo-assets/clock.svg" alt="" aria-hidden="true"></span><div><b>Unos 8 minutos</b><small>Hasta ${total} preguntas — termina antes si ya ubicamos tu nivel</small></div></div>
-      <div class="ob-point plain"><span class="em"><img src="/demo-assets/ob-goal.svg" alt="" aria-hidden="true"></span><div><b>Ubicamos tu nivel</b><small>De A1 a C1, según el marco MCER</small></div></div>
-      <div class="ob-point plain"><span class="em"><img src="/demo-assets/ob-speech.svg" alt="" aria-hidden="true"></span><div><b>Sin presión</b><small>Si no sabes, pasa a la siguiente</small></div></div>
+      <div class="ob-point big plain p1"><span class="em"><img src="/demo-assets/clock.svg" alt="" aria-hidden="true"></span><div><b>Unos 8 minutos</b><small>Hasta ${total} preguntas — termina antes si ya ubicamos tu nivel</small></div></div>
+      <div class="ob-point big plain p2"><span class="em"><img src="/demo-assets/ob-goal.svg" alt="" aria-hidden="true"></span><div><b>Ubicamos tu nivel</b><small>De A1 a C1, según el marco MCER</small></div></div>
+      <div class="ob-point big plain p3"><span class="em"><img src="/demo-assets/ob-speech.svg" alt="" aria-hidden="true"></span><div><b>Sin presión</b><small>Si no sabes, pasa a la siguiente</small></div></div>
+
 
     </div>`;
     return;
