@@ -1874,15 +1874,6 @@
          cual; "Vocabulary" entra vacia pero con su sitio y su pantalla ya
          hechos, que es lo que hace falta para empezar a llenarla. -->
     <nav class="tabbar" id="home-tabs" role="tablist" aria-label="Secciones del inicio">
-      <button class="tab on" type="button" role="tab" aria-selected="true"
-              aria-controls="course-body" data-tab="ruta" onclick="showHomeTab('ruta')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 20c0-3 3-3 6-3s6 0 6-3-3-3-6-3-6 0-6-3 3-3 6-3"/>
-          <circle cx="18" cy="5" r="2.2" fill="currentColor" stroke="none"/>
-        </svg>
-        <span class="tab-lbl">Ruta</span>
-      </button>
       <button class="tab" type="button" role="tab" aria-selected="false"
               aria-controls="vocab-body" data-tab="vocab" onclick="showHomeTab('vocab')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
@@ -1892,10 +1883,20 @@
         </svg>
         <span class="tab-lbl">Vocabulary</span>
       </button>
-      <!-- Práctica: atajo a los quizzes ya desbloqueados en la ruta. La mancuerna
-           es lo que se espera de una pestaña que se llama así — un icono de quiz
-           (papel, palomita) diría "examen", que es justo lo contrario de lo que
-           esto es: repetir lo que ya pasaste, sin nota. -->
+      <!-- Ruta al centro: es el inicio y a lo que se vuelve entre lección y
+           lección, así que ocupa el sitio que el pulgar alcanza primero. -->
+      <button class="tab on" type="button" role="tab" aria-selected="true"
+              aria-controls="course-body" data-tab="ruta" onclick="showHomeTab('ruta')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 20c0-3 3-3 6-3s6 0 6-3-3-3-6-3-6 0-6-3 3-3 6-3"/>
+          <circle cx="18" cy="5" r="2.2" fill="currentColor" stroke="none"/>
+        </svg>
+        <span class="tab-lbl">Ruta</span>
+      </button>
+      <!-- Práctica: cuaderno de ejercicios libre. La mancuerna es lo que se
+           espera de una pestaña que se llama así — un icono de quiz (papel,
+           palomita) diría "examen", que es justo lo contrario. -->
       <button class="tab" type="button" role="tab" aria-selected="false"
               aria-controls="practice-body" data-tab="practice" onclick="showHomeTab('practice')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
@@ -1904,6 +1905,7 @@
         </svg>
         <span class="tab-lbl">Práctica</span>
       </button>
+
     </nav>
   </section>
 
