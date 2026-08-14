@@ -6253,15 +6253,15 @@ function fetchSpeaking(modId) {
 function spAiLeft() {
   try {
     const raw = JSON.parse(localStorage.getItem('sp-ai') || '{}');
-    if (raw.d !== hoyISO()) return SP_AI_MAX;
+    if (raw.d !== dayKey()) return SP_AI_MAX;
     return Math.max(0, SP_AI_MAX - (raw.n || 0));
   } catch (e) { return SP_AI_MAX; }
 }
 function spAiSpend() {
   try {
     const raw = JSON.parse(localStorage.getItem('sp-ai') || '{}');
-    const n = raw.d === hoyISO() ? (raw.n || 0) + 1 : 1;
-    localStorage.setItem('sp-ai', JSON.stringify({ d: hoyISO(), n }));
+    const n = raw.d === dayKey() ? (raw.n || 0) + 1 : 1;
+    localStorage.setItem('sp-ai', JSON.stringify({ d: dayKey(), n }));
   } catch (e) {}
 }
 
@@ -6371,7 +6371,7 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
     ${libre
       ? `<div class="sp-task">${escapeHtml(q.task || '')}</div>`
       : `<div class="sp-target" id="sp-t">${escapeHtml(q.target || '')}</div>
-         <button class="btn ghost" id="sp-listen" type="button" style="margin-top:10px">Escuchar el modelo</button>`}
+         <button class="btn blue" id="sp-listen" type="button" style="margin-top:10px">Escuchar el modelo</button>`}
     <div class="sp-row">
       <button class="sp-mic" id="sp-mic" type="button" aria-label="Grabar">${micSvg(30)}</button>
       <div class="sp-hint" id="sp-hint">${escapeHtml(q.hint || (libre ? 'Toca el micrófono y habla unos segundos.' : 'Toca el micrófono y di la frase.'))}</div>
@@ -6473,7 +6473,7 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
           ? 'La corrección con IA no está disponible ahora mismo. Puedes seguir practicando.'
           : 'No pudimos evaluar el audio. Inténtalo de nuevo.';
       fb.innerHTML = `<div class="sp-advice">${motivo}</div>
-        <button class="btn ghost" id="sp-next" style="margin-top:10px">Saltar este</button>`;
+        <button class="btn blue" id="sp-next" style="margin-top:10px">Saltar este</button>`;
       const b = document.getElementById('sp-next');
       if (b) b.onclick = () => { cerrado = true; onIncorrect(); };
     }
@@ -6483,7 +6483,7 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
   if (usaIA && spAiLeft() <= 0 && !local) {
     fb.innerHTML = `<div class="sp-advice">Has usado tus ${SP_AI_MAX} correcciones con IA de hoy.
       Mañana vuelven a estar disponibles; mientras tanto puedes practicar repitiendo el modelo en voz alta.</div>
-      <button class="btn ghost" id="sp-next" style="margin-top:10px">Continuar</button>`;
+      <button class="btn blue" id="sp-next" style="margin-top:10px">Continuar</button>`;
     mic.disabled = true;
     const b = document.getElementById('sp-next');
     if (b) b.onclick = () => onCorrect();
