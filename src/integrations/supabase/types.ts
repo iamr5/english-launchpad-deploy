@@ -125,6 +125,33 @@ export type Database = {
         }
         Relationships: []
       }
+      preinscripciones: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          slug: string
+          user_agent: string | null
+          utm: Json
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          slug?: string
+          user_agent?: string | null
+          utm?: Json
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          slug?: string
+          user_agent?: string | null
+          utm?: Json
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
