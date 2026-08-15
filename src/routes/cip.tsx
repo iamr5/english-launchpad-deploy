@@ -57,7 +57,7 @@ export const Route = createFileRoute("/cip")({
 });
 
 const METRICS = [
-  { n: "391", l: "partes de lección", s: "en 45 lecciones A1 → C1", i: "/demo-assets/ob-books.svg" },
+  { n: "391", l: "microlecciones", s: "en 45 lecciones A1 → C1", i: "/demo-assets/ob-books.svg" },
   { n: "8.127", l: "ejercicios de práctica", s: "corregidos al instante", i: "/demo-assets/ob-thunder.svg" },
   { n: "11.040", l: "palabras de vocabulario", s: "con definición en español", i: "/demo-assets/ob-words.svg" },
   { n: "779", l: "términos de ingeniería", s: "dentro del vocabulario", i: "/demo-assets/ob-work.svg" },
