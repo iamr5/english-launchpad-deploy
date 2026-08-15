@@ -3831,6 +3831,7 @@ function renderCourse() {
       ${arrowFwd(20, '#1CB0F6', 2.6)}
     </button>`;
   document.getElementById('course-body').innerHTML = html;
+  wireCirclesHome();
   document.getElementById('course-foot').innerHTML = courseHero();
   document.querySelectorAll('.mod-card').forEach(c => c.onclick = () => {
     const m = course.modules[+c.getAttribute('data-mod')];
