@@ -312,11 +312,20 @@ export const Route = createFileRoute("/api/course/speaking-eval")({
                 totalMs: transcription.latencyMs + scored.latencyMs,
                 audioBytes: audio.size,
               },
+              cost: {
+                currency: "USD",
+                estimated: true,
+                transcription: { model: transcription.model, ...transcription.cost },
+                scoring: { model: scored.model, ...scored.cost },
+                totalUsd:
+                  Math.round((transcription.cost.usd + scored.cost.usd) * 1e6) / 1e6,
+              },
               usage: {
                 transcriptionRunId: transcription.runId,
                 scoringRunId: scored.runId,
                 aiCalls: 2,
               },
+
             },
             { headers: { "Cache-Control": "private, no-store" } },
           );
