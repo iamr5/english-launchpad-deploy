@@ -489,15 +489,18 @@ function Steps() {
 function Metrics() {
   return (
     <section className="band bg-paper !py-10">
-      <div className="sheet grid grid-cols-2 gap-8 md:grid-cols-4">
+      <div className="sheet grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
         {METRICS.map((m) => (
-          <div key={m.l} className="metric text-center">
+          <div key={m.l} className="mcard">
+            <img src={m.i} alt="" aria-hidden width={40} height={40} loading="lazy" />
             <b>{m.n}</b>
             <span>{m.l}</span>
+            <em>{m.s}</em>
           </div>
         ))}
       </div>
     </section>
+
   );
 }
 
