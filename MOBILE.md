@@ -3,9 +3,19 @@
 Respuesta corta: **Android sí, y ya está montado. iOS se puede, pero hay una
 pega de revisión que hay que resolver antes de subirlo.**
 
-El APK de depuración ya compila en esta máquina (4,1 MB). El proyecto nativo
-vive en `android/` y va al repositorio; lo que ignora `.gitignore` es sólo lo
-que produce la compilación.
+El APK de depuración ya compila en esta máquina (4,1 MB).
+
+El proyecto nativo **no está en el repositorio**: hoy todo lo que contiene sale
+de [`capacitor.config.ts`](capacitor.config.ts) y de [`mobile/`](mobile/), así
+que se regenera entero cuando haga falta:
+
+```sh
+npx cap add android
+```
+
+En cuanto se toque a mano —iconos de lanzador propios, permisos, un plugin
+nativo— hay que quitar `android/` del `.gitignore` y versionarlo, porque a
+partir de ahí regenerarlo perdería trabajo.
 
 ---
 
