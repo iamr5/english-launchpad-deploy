@@ -6354,6 +6354,49 @@ function spCompare(target, heard) {
   return { hits, pct: t.length ? Math.round(ok / t.length * 100) : 0, words: t };
 }
 
+// Resalta dentro de la transcripción los trozos que la IA no reconoció como
+// inglés. Devuelve HTML ya escapado: se recorre el texto marcando coincidencias.
+const SP_UN_MOTIVO = { spanish: 'Esto está en español', 'not-english': 'No es una palabra en inglés',
+  unclear: 'No se entendió', filler: 'Muletilla / relleno' };
+function spMarkUnintelligible(texto, lista) {
+  const src = String(texto || '');
+  const marcas = (lista || [])
+    .map(u => ({ t: String((u && u.text) || '').trim(), r: (u && u.reason) || 'unclear', s: (u && u.suggestion) || '' }))
+    .filter(u => u.t.length > 1);
+  if (!marcas.length) return escapeHtml(src);
+  const bajo = src.toLowerCase();
+  const rangos = [];
+  marcas.forEach(u => {
+    let from = 0, k;
+    while ((k = bajo.indexOf(u.t.toLowerCase(), from)) !== -1) {
+      rangos.push({ a: k, b: k + u.t.length, u });
+      from = k + u.t.length;
+    }
+  });
+  if (!rangos.length) return escapeHtml(src);
+  rangos.sort((x, y) => x.a - y.a);
+  let out = '', pos = 0;
+  rangos.forEach(r => {
+    if (r.a < pos) return;
+    out += escapeHtml(src.slice(pos, r.a));
+    const tip = (SP_UN_MOTIVO[r.u.r] || 'No se reconoció como inglés') + (r.u.s ? ` · en inglés: ${r.u.s}` : '');
+    out += `<span class="sp-unintel" title="${escapeHtml(tip)}">${escapeHtml(src.slice(r.a, r.b))}</span>`;
+    pos = r.b;
+  });
+  out += escapeHtml(src.slice(pos));
+  return out;
+}
+
+// Costo estimado del intento, en formato legible para el piloto.
+function spCostoTexto(cost) {
+  if (!cost || typeof cost.totalUsd !== 'number') return '';
+  const f = n => '$' + (n < 0.01 ? n.toFixed(4) : n.toFixed(3));
+  const t = cost.transcription || {}, s = cost.scoring || {};
+  return `Esta transcripción costó ≈ <b>${f(cost.totalUsd)}</b> `
+    + `(transcripción ${f(t.usd || 0)} · evaluación ${f(s.usd || 0)}) · estimado`;
+}
+
+
 // ---- grabación (WAV completo, no fragmentos de MediaRecorder) ----
 // El permiso se pide una sola vez y el stream queda vivo: así, al mantener
 // pulsado el botón, la grabación empieza en el mismo instante y no se pierde
