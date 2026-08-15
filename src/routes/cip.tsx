@@ -418,45 +418,49 @@ function Counter() {
 function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string } }) {
   return (
     <section className="band bg-hero overflow-hidden">
-      <div className="sheet grid items-center gap-10 md:grid-cols-[1.15fr_.85fr]">
-        <div>
-          {brand.logo ? (
-            <img
-              src={brand.logo}
-              alt="Colegio de Ingenieros del Perú"
-              width={220}
-              height={64}
-              className="mb-7 h-16 w-auto object-contain"
-            />
-          ) : null}
-          <p className="eyebrow text-white/70">Plataforma construida · El Colegio debe activarla</p>
-          <h1 className="title">
-            Que todos los ingenieros del Perú
-            <br />
-            <span className="acc">hablen inglés</span>
-          </h1>
-          <p className="lede mt-5 text-white/85">
-            Un curso de inglés completo, de cero a nivel avanzado, con la marca del Colegio — y con
-            inglés técnico de ingeniería incluido. La plataforma ya está construida; el Colegio debe
-            asegurarse de que los colegiados la quieren para encender el acceso.
-          </p>
-          <ul className="badges">
-            {BADGES.map((b) => (
-              <li key={b.t} className={b.hot ? "hot" : undefined}>
-                {b.t}
-              </li>
-            ))}
-          </ul>
+      <div className="sheet">
+        <div className="grid items-center gap-10 md:grid-cols-[1.15fr_.85fr]">
+          <div>
+            {brand.logo ? (
+              <img
+                src={brand.logo}
+                alt="Colegio de Ingenieros del Perú"
+                width={220}
+                height={64}
+                className="mb-7 h-16 w-auto object-contain"
+              />
+            ) : null}
+            <p className="eyebrow text-white/70">
+              Plataforma construida · El Colegio debe activarla
+            </p>
+            <h1 className="title">
+              Que todos los ingenieros del Perú
+              <br />
+              <span className="acc">hablen inglés</span>
+            </h1>
+            <p className="lede mt-5 text-white/85">
+              Un curso de inglés completo, de cero a nivel avanzado, con la marca del Colegio — y
+              con inglés técnico de ingeniería incluido. La plataforma ya está construida; el
+              Colegio debe asegurarse de que los colegiados la quieren para encender el acceso.
+            </p>
+            <ul className="badges">
+              {BADGES.map((b) => (
+                <li key={b.t} className={b.hot ? "hot" : undefined}>
+                  {b.t}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="hidden flex-col items-center gap-3 md:flex">
+            <BotiFull />
+          </div>
+        </div>
 
-
-
-          <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
+        <div className="mx-auto mt-10 w-full max-w-[620px] text-center">
+          <div className="card p-4 text-left" style={{ boxShadow: "var(--shadow)" }}>
             <EmailForm id="hero" cta="Firmar mi preinscripción" />
           </div>
           <Counter />
-        </div>
-        <div className="hidden flex-col items-center gap-3 md:flex">
-          <BotiFull />
         </div>
       </div>
     </section>
