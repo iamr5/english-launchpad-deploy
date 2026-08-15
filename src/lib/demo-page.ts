@@ -318,7 +318,18 @@ export function renderDemoNotFound(slug: string): Response {
 async function inject(
   tpl: string,
   cfg: DemoConfig,
-  opts: { head?: boolean; view?: "parent" | "teacher"; page?: DemoSubpage } = {},
+  opts: {
+    head?: boolean;
+    view?: "parent" | "teacher";
+    page?: DemoSubpage;
+    /**
+     * Si se pinta la bienvenida. Por defecto va con las cabeceras, que es como
+     * se comportaba: el demo la tiene y el panel no. La app de una cuenta la
+     * quiere sin las otras —es una página privada, no se comparte por WhatsApp—
+     * así que aquí se separan.
+     */
+    splash?: boolean;
+  } = {},
 ) {
   const mascot = resolveMascot(cfg);
   // Pase para pedir el contenido del curso. Va dentro de la pagina, asi que solo
@@ -371,9 +382,7 @@ async function inject(
         opts.view ? `<body${attrs ?? ""} class="solo solo-${opts.view}">` : m,
       )
       .replace(/<section class="view( on)?" id="(parent|teacher)">/g, (m, _on, id) =>
-        opts.view
-          ? `<section class="view${id === opts.view ? " on" : ""}" id="${id}">`
-          : m,
+        opts.view ? `<section class="view${id === opts.view ? " on" : ""}" id="${id}">` : m,
       )
       // El tema cierra el <head>: antes lo pisaría el :root de la plantilla.
       .replace(
@@ -383,7 +392,7 @@ async function inject(
       )
       .replace("<!--MASCOT-SCRIPTS-->", mascotScripts(mascot))
       // El splash solo en la app; el panel de progreso no se abre en frío.
-      .replace("<!--SPLASH-->", () => (opts.head ? splashHTML(cfg) : ""))
+      .replace("<!--SPLASH-->", () => ((opts.splash ?? opts.head) ? splashHTML(cfg) : ""))
       // El icono de la barra, resuelto antes de servir: si se deja el de la
       // plantilla, se ve a Boti mientras arranca el JS.
       .replace(/<img class="appbar-en"[^>]*>/, () => appbarIcon(cfg, mascot))
@@ -423,6 +432,50 @@ export async function renderDemoDashboard(
   return new Response(await inject(dashboardTemplate, cfg, { head: true, view, page }), {
     headers: SIN_CACHE,
   });
+}
+
+// La app y el panel de una cuenta con sesión son páginas privadas: no se
+// comparten por enlace y no deben acabar en un buscador. Por eso no llevan las
+// cabeceras para redes (og:*) y sí `noindex`, y por eso la caché es privada.
+const PRIVADO = {
+  "Content-Type": "text/html; charset=utf-8",
+  "Cache-Control": "private, no-store, must-revalidate",
+  "X-Robots-Tag": "noindex, nofollow",
+};
+
+/** Un <title> propio y `noindex`, para las páginas que van tras el login. */
+function privateHead(tpl: string, title: string) {
+  return tpl
+    .replace("<head>", `<head><meta name="robots" content="noindex,nofollow">`)
+    .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(title)}</title>`);
+}
+
+/**
+ * La app del alumno con la marca de SU institución.
+ *
+ * Es la misma plantilla que sirve un demo, con la misma inyección: lo único que
+ * cambia es de dónde sale la configuración —de la cuenta que entra, no del slug
+ * de la URL—. Eso es deliberado: lo que la institución vio y aprobó en su demo
+ * es literalmente lo que ve después su alumno al iniciar sesión, sin una
+ * segunda plantilla que mantener al día.
+ */
+export async function renderOrgApp(cfg: DemoConfig): Promise<Response> {
+  const title = cfg.institution ? `Inglés · ${cfg.institution}` : "Inglés para moverte";
+  const html = privateHead(await inject(template, cfg, { splash: true }), title);
+  return new Response(html, { headers: PRIVADO });
+}
+
+/** El panel de seguimiento de una cuenta con sesión, con su marca. */
+export async function renderOrgDashboard(
+  cfg: DemoConfig,
+  view: "parent" | "teacher",
+): Promise<Response> {
+  const title =
+    view === "teacher"
+      ? `Panel de seguimiento${cfg.institution ? " · " + cfg.institution : ""}`
+      : `Progreso del alumno${cfg.institution ? " · " + cfg.institution : ""}`;
+  const html = privateHead(await inject(dashboardTemplate, cfg, { view }), title);
+  return new Response(html, { headers: PRIVADO });
 }
 
 export async function renderDemoPage(cfg: DemoConfig): Promise<Response> {

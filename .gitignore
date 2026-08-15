@@ -35,3 +35,27 @@ dist-ssr
 # repo: git los ve como submodulos y los commitea como gitlinks rotos (sin
 # .gitmodules, apuntando a commits que solo existen en local).
 .claude/worktrees/
+
+# ── App nativa (Capacitor) ────────────────────────────────────────────────
+# El proyecto android/ SÍ va al repositorio: lleva el icono, el nombre y los
+# permisos, y regenerarlo perdería todo eso. Lo que se ignora es lo que produce
+# la compilación y lo que depende de esta máquina.
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/app/release/
+*.keystore
+*.jks
+!android/gradle/wrapper/gradle-wrapper.jar
+
+# El proyecto de iOS lo genera `npx cap add ios` en un Mac. Sus artefactos:
+ios/App/Pods/
+ios/App/App/public/
+ios/App/build/
+ios/.gradle/
+DerivedData/

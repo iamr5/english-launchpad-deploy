@@ -93,6 +93,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/head.png", type: "image/png" },
+      // El manifiesto es lo que convierte el sitio en instalable: sin él, ni
+      // «añadir a pantalla de inicio» en Android ni el empaquetado como TWA.
+      // Ver MOBILE.md.
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/head.png" },
     ],
   }),
   shellComponent: RootShell,

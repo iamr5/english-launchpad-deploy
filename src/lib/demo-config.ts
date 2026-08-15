@@ -239,8 +239,6 @@ export type DemoConfig = {
     headerFont?: string;
   };
 
-
-
   /**
    * Pantalla de bienvenida. Sale en cada carga, antes del demo, y se puede
    * saltar tocando. Es lo primero que ve quien abre el enlace, así que lleva la
@@ -283,7 +281,6 @@ export type DemoConfig = {
     /** Color de la frase. Vacío = blanco al 90%, como hoy. */
     phraseColor?: string;
   };
-
 
   colors: {
     /** Color principal: cabeceras de módulo, chips, acentos. */
@@ -525,6 +522,7 @@ export const RESERVED_SLUGS = new Set([
   "demo-assets",
   "demo-dashboard",
   "demos",
+  "instituciones",
   "login",
   "lovable",
   "presentacion",
@@ -611,6 +609,31 @@ export function rowToConfig(row: {
   } as DemoConfig;
 }
 
+/**
+ * Apila varias configuraciones parciales sobre los valores de fábrica, de la
+ * más general a la más concreta.
+ *
+ * Existe porque una institución tiene DOS capas y un demo sólo una: hereda la
+ * marca del demo con el que se le vendió y encima pone lo suyo. Ver
+ * src/lib/org-config.server.ts. La mezcla es la misma que usa rowToConfig(),
+ * así que no puede desviarse de ella.
+ */
+export function layeredConfig(
+  identity: { slug: string; institution: string; published?: boolean },
+  ...layers: (unknown | null | undefined)[]
+): DemoConfig {
+  let out = DEFAULTS;
+  for (const l of layers) {
+    if (l && typeof l === "object") out = merge(out, l as DeepPartial<typeof DEFAULTS>);
+  }
+  return {
+    ...out,
+    slug: identity.slug,
+    institution: identity.institution,
+    published: identity.published ?? true,
+  } as DemoConfig;
+}
+
 // Pequeña caché en memoria: servir un demo no debería costar una consulta por
 // visita. El panel la invalida al guardar (POST /api/demos/invalidate) y además
 // caduca sola.
@@ -669,10 +692,35 @@ export async function getDemoConfig(slug: string): Promise<DemoConfig | null> {
  * viven en src/content/vocab/packs.js y las sirve el servidor.
  */
 export const VOCAB_PACKS: { key: string; n: string; e: string; d: string }[] = [
-  { key: "ingenieria", n: "Ingeniería", e: "⚙️", d: "Matemáticas, programación, construcción, energía, calidad." },
-  { key: "turismo", n: "Turismo y hotelería", e: "🧳", d: "Recepción, agencias, guías, restaurante, aeropuerto." },
+  {
+    key: "ingenieria",
+    n: "Ingeniería",
+    e: "⚙️",
+    d: "Matemáticas, programación, construcción, energía, calidad.",
+  },
+  {
+    key: "turismo",
+    n: "Turismo y hotelería",
+    e: "🧳",
+    d: "Recepción, agencias, guías, restaurante, aeropuerto.",
+  },
   { key: "salud", n: "Salud", e: "🩺", d: "Consulta, síntomas, farmacia, enfermería, urgencias." },
-  { key: "negocios", n: "Negocios y finanzas", e: "💼", d: "Reuniones, ventas, contabilidad, banca, comercio." },
-  { key: "derecho", n: "Derecho", e: "⚖️", d: "Contratos, tribunales, laboral, propiedad, cumplimiento." },
-  { key: "educacion", n: "Educación", e: "🎓", d: "Aula, evaluación, universidad, investigación, tutoría." },
+  {
+    key: "negocios",
+    n: "Negocios y finanzas",
+    e: "💼",
+    d: "Reuniones, ventas, contabilidad, banca, comercio.",
+  },
+  {
+    key: "derecho",
+    n: "Derecho",
+    e: "⚖️",
+    d: "Contratos, tribunales, laboral, propiedad, cumplimiento.",
+  },
+  {
+    key: "educacion",
+    n: "Educación",
+    e: "🎓",
+    d: "Aula, evaluación, universidad, investigación, tutoría.",
+  },
 ];

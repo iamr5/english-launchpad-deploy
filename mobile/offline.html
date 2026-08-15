@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sin conexión — AprendoEnglish</title>
+<style>
+  :root { --accent:#7C1C56; --ink:#1A1A1A; --muted:#5C5159; --canvas:#F4F4F6; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; }
+  body {
+    display:flex; align-items:center; justify-content:center; padding:28px;
+    background:var(--canvas); color:var(--ink);
+    font:16px/1.55 ui-rounded,'SF Pro Rounded','Segoe UI',system-ui,sans-serif;
+    padding-top:calc(28px + env(safe-area-inset-top));
+    padding-bottom:calc(28px + env(safe-area-inset-bottom));
+  }
+  .c { max-width:340px; text-align:center; }
+  .icono {
+    width:76px; height:76px; margin:0 auto 20px; border-radius:50%;
+    background:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:34px; box-shadow:0 4px 0 rgba(0,0,0,.07);
+  }
+  h1 { font-size:21px; margin:0 0 8px; }
+  p { color:var(--muted); margin:0 0 22px; }
+  button {
+    width:100%; border:0; cursor:pointer; font:inherit; font-weight:700; color:#fff;
+    background:var(--accent); padding:13px 20px; border-radius:14px;
+    box-shadow:0 4px 0 #5A123E;
+  }
+  button:active { transform:translateY(2px); box-shadow:0 2px 0 #5A123E; }
+  .nota { margin-top:18px; font-size:13px; color:var(--muted); }
+</style>
+</head>
+<body>
+  <div class="c">
+    <div class="icono">📶</div>
+    <h1>Sin conexión</h1>
+    <p>No hemos podido cargar tu curso. Revisa el wifi o los datos y vuelve a intentarlo.</p>
+    <button type="button" onclick="reintentar()">Reintentar</button>
+    <p class="nota">Tu progreso está guardado. No se pierde nada.</p>
+  </div>
+<script>
+  // La app vive en el servidor (se pinta con la marca de cada institución), así
+  // que reintentar es volver a pedirla. Si sigue sin haber red, el webview
+  // vuelve aquí solo.
+  function reintentar() { location.replace('https://aprendoenglish.com/app'); }
+  // Y en cuanto el sistema avisa de que hay red otra vez, sin tocar nada.
+  window.addEventListener('online', reintentar);
+</script>
+</body>
+</html>

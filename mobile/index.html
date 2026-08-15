@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AprendoEnglish</title>
+<style>
+  html,body{margin:0;height:100%;background:#F4F4F6}
+  .s{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  .r{width:34px;height:34px;border-radius:50%;border:3px solid #E0E0E6;border-top-color:#7C1C56;
+     animation:g .8s linear infinite}
+  @keyframes g{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+  <div class="s"><div class="r"></div></div>
+<script>
+  // Capacitor carga `server.url` directamente, así que esta página casi nunca
+  // se ve. Existe porque webDir tiene que traer un index.html, y porque si
+  // algún día se quita `server.url` del config esto sigue llevando a la app en
+  // vez de dejar una pantalla en blanco.
+  location.replace('https://aprendoenglish.com/app');
+</script>
+</body>
+</html>

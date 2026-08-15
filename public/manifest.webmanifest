@@ -1,0 +1,19 @@
+{
+  "name": "AprendoEnglish",
+  "short_name": "AprendoEnglish",
+  "description": "Tu curso de inglés: lecciones, vocabulario y práctica diaria.",
+  "lang": "es",
+  "dir": "ltr",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F4F6",
+  "theme_color": "#7C1C56",
+  "categories": ["education"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
