@@ -217,6 +217,42 @@ const PAGE_CSS = `
   color:#eef2fb; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18); }
 .cipp .badges li::before{ content:""; width:6px; height:6px; border-radius:50%;
   background:var(--cip); box-shadow:0 0 0 3px color-mix(in srgb,var(--cip) 30%,transparent); }
+.cipp .badges li.hot{ color:#fff; font-weight:800; font-size:13px; padding:8px 15px 8px 12px;
+  background:var(--cip); border:2px solid color-mix(in srgb,#fff 45%,var(--cip));
+  box-shadow:0 0 0 0 color-mix(in srgb,var(--cip) 55%,transparent);
+  animation:cipPulse 2.6s ease-out infinite; }
+.cipp .badges li.hot::before{ background:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.35); }
+@keyframes cipPulse{
+  0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cip) 55%,transparent); }
+  70%{ box-shadow:0 0 0 12px transparent; }
+  100%{ box-shadow:0 0 0 0 transparent; } }
+
+/* fichas de cifras */
+.cipp .mcard{ position:relative; background:#fff; border:1px solid var(--line); border-radius:18px;
+  padding:20px 14px 18px; text-align:center; box-shadow:var(--shadow-sm); }
+.cipp .mcard img{ display:block; margin:0 auto 10px; width:40px; height:40px; }
+.cipp .mcard b{ display:block; font-family:var(--black); font-weight:400; letter-spacing:-.03em;
+  font-size:clamp(26px,3.4vw,38px); line-height:1; color:var(--cip); }
+.cipp .mcard span{ display:block; margin-top:8px; font-size:12.8px; font-weight:800; color:var(--ink); }
+.cipp .mcard em{ display:block; margin-top:3px; font-style:normal; font-size:11.8px; font-weight:600; color:var(--muted); }
+
+/* promesa bajo el formulario, con brillo */
+.cipp .promise{ position:relative; overflow:hidden; margin-top:12px; display:flex; align-items:center;
+  gap:12px; text-align:center; justify-content:center;
+  border-radius:14px; padding:12px 14px; border:1.5px solid color-mix(in srgb,var(--cip) 32%,var(--line));
+  background:color-mix(in srgb,var(--cip) 7%,#fff); }
+.cipp .promise .ico{ flex:0 0 auto; display:grid; place-items:center; width:34px; height:34px;
+  border-radius:11px; color:#fff; background:var(--cip); }
+.cipp .promise p{ min-width:0; font-size:13.2px; font-weight:600; line-height:1.4; color:var(--ink-2); text-align:left; }
+.cipp .promise p b{ font-weight:800; color:var(--ink); }
+.cipp .promise::after{ content:""; position:absolute; top:0; bottom:0; width:38%; left:-45%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);
+  animation:cipShimmer 3.6s ease-in-out infinite; pointer-events:none; }
+@keyframes cipShimmer{ 0%{ left:-45%; } 55%{ left:110%; } 100%{ left:110%; } }
+@media (prefers-reduced-motion:reduce){
+  .cipp .promise::after{ animation:none; display:none; }
+  .cipp .badges li.hot{ animation:none; } }
+
 
 
 
