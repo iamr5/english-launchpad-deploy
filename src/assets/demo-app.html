@@ -7329,7 +7329,12 @@ function circlesHomeHTML() {
 function wireCirclesHome() {
   const b = document.getElementById('sc-home-btn');
   if (!b) return;
-  b.onclick = () => (b.getAttribute('data-go') === 'now' ? (openCircles(), scMatchNow()) : openCircles());
+  b.onclick = () => {
+    const st = scLoad();
+    if (!st.onboarded) return openCircles();
+    scLanding();
+    if (b.getAttribute('data-go') === 'now') scMatchNow();
+  };
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
