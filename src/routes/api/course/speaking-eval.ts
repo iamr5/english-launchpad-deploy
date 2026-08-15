@@ -206,11 +206,13 @@ async function score(
     datos.acceptedVariants ? `Variantes aceptables: ${datos.acceptedVariants}` : "",
     "Evalúa cumplimiento, fluidez aparente y gramática usando únicamente la transcripción.",
     "No asegures que una palabra fue mal pronunciada: una transcripción distinta no es evidencia acústica suficiente. Llama problemWords a palabras para revisar y explica la señal observable en evidence.",
+    "Marca en unintelligible cada fragmento de la transcripción que no sea inglés reconocible (español, sonidos sin sentido, muletillas, texto dudoso), copiándolo literal y con su motivo. Si casi todo es así, pon mostlyUnintelligible en true y no apruebes.",
     "Sé exigente pero alentador, y ajusta el listón al nivel indicado: en A1 basta con hacerse entender.",
     "Escribe el titular y el consejo en español; la versión mejorada, en inglés.",
     "Aprueba (passed) si las tres notas llegan a 60 o más.",
   ].join("\n");
 
+  const model = "openai/gpt-5.6-sol";
   const r = await fetch(`${GATEWAY}/responses`, {
     method: "POST",
     headers: {
@@ -219,7 +221,7 @@ async function score(
       "X-Lovable-AIG-SDK": "fetch",
     },
     body: JSON.stringify({
-      model: "openai/gpt-5.6-sol",
+      model,
       input: prompt,
       stream: true,
       store: false,
@@ -237,15 +239,18 @@ async function score(
     const detalle = await r.text().catch(() => "");
     throw Object.assign(new Error(`evaluacion ${r.status} ${detalle}`), { status: r.status });
   }
-  const texto = await drainSSE(r.body, (e) =>
+  const drained = await drainSSE(r.body, (e) =>
     e["type"] === "response.output_text.delta" ? (e["delta"] as string) : undefined,
   );
   return {
-    feedback: JSON.parse(texto) as Record<string, unknown>,
+    feedback: JSON.parse(drained.text) as Record<string, unknown>,
     latencyMs: Date.now() - started,
     runId: r.headers.get("X-Lovable-AIG-Run-ID"),
+    model,
+    cost: costOf(model, drained.usage),
   };
 }
+
 
 export const Route = createFileRoute("/api/course/speaking-eval")({
   server: {
