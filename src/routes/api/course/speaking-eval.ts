@@ -147,6 +147,32 @@ const SCHEMA = {
       description: "Señales observables en la transcripción que justifican el feedback (máx 4).",
       items: { type: "string" },
     },
+    unintelligible: {
+      type: "array",
+      description:
+        "Fragmentos de la transcripción que NO son inglés reconocible: palabras en español, sonidos sin sentido, relleno o audio dudoso. Copia el texto tal cual aparece en la transcripción. Vacío si todo es inglés.",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          text: { type: "string", description: "El fragmento exacto de la transcripción." },
+          reason: {
+            type: "string",
+            enum: ["spanish", "not-english", "unclear", "filler"],
+            description: "spanish = está en español; not-english = no es una palabra inglesa; unclear = no se entiende; filler = muletilla.",
+          },
+          suggestion: {
+            type: ["string", "null"],
+            description: "Cómo se diría en inglés, o null si no aplica.",
+          },
+        },
+        required: ["text", "reason", "suggestion"],
+      },
+    },
+    mostlyUnintelligible: {
+      type: "boolean",
+      description: "true si la mayor parte de la grabación no es inglés reconocible.",
+    },
   },
   required: [
     "pronunciation",
@@ -158,8 +184,11 @@ const SCHEMA = {
     "betterVersion",
     "problemWords",
     "evidence",
+    "unintelligible",
+    "mostlyUnintelligible",
   ],
 } as const;
+
 
 async function score(
   key: string,
