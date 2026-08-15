@@ -28,7 +28,7 @@ export const Route = createFileRoute("/cip")({
       {
         property: "og:description",
         content:
-          "Curso completo A1–C1 con marca del Colegio: 45 lecciones con 391 partes, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Plataforma lista, esperando el visto bueno del CIP.",
+          "Curso completo A1–C1 con marca del Colegio: 45 lecciones con 391 microlecciones, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Plataforma lista, esperando el visto bueno del CIP.",
       },
       { property: "og:image", content: "https://aprendoenglish.com/social-preview.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
