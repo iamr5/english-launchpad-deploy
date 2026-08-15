@@ -18,8 +18,37 @@
 --   org_members  la pertenencia ya resuelta. Una cuenta, una institución.
 --   org_invites  código de alta para quien no cae por dominio.
 --
--- La resolución de la marca vive en src/lib/org-config.ts y NO consulta esto
--- desde el navegador: la sirve el servidor al montar la página de la app.
+-- La resolución de la marca vive en src/lib/org-config.server.ts y NO consulta
+-- esto desde el navegador: la sirve el servidor al montar la página de la app.
+
+-- ── Antes de nada: devolver has_role a `authenticated` ────────────────────
+--
+-- La migración 20260814231929 hizo:
+--
+--   REVOKE EXECUTE ON FUNCTION public.has_role(...) FROM PUBLIC, anon, authenticated;
+--   GRANT  EXECUTE ON FUNCTION public.has_role(...) TO service_role;
+--
+-- Quitarlo de PUBLIC y de anon está bien y se deja como está. Quitárselo a
+-- `authenticated` es otra cosa: has_role se llama DESDE LAS POLÍTICAS de RLS
+-- —las de `demos`, y las de este archivo— y esas expresiones se evalúan con el
+-- rol de quien consulta. Sin EXECUTE, la política no puede resolverse y la
+-- consulta muere con «permission denied for function has_role»: el panel de
+-- /demos deja de poder leer o guardar nada.
+--
+-- No es una hipótesis. Es exactamente lo que ya pasó una vez: la migración
+-- 20260724234048 hizo el mismo REVOKE, y 20260803120100_demos.sql tuvo que
+-- volver a conceder el permiso, con este comentario escrito al lado:
+--
+--   «has_role se usa desde las políticas de abajo; el REVOKE de la migración
+--    20260724234048 quitó el permiso por defecto, así que se concede
+--    explícitamente.»
+--
+-- Se vuelve a conceder aquí, y esta migración va la última a propósito para que
+-- sea la que mande. Que la función siga siendo SECURITY DEFINER es lo que hace
+-- que esto sea seguro: `authenticated` puede PREGUNTAR si un usuario tiene un
+-- rol, pero sigue sin poder leer la tabla user_roles.
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_guardian_of(uuid, uuid) TO authenticated;
 
 -- ── Instituciones ─────────────────────────────────────────────────────────
 

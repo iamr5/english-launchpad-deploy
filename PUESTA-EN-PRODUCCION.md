@@ -24,7 +24,7 @@ ingenieros entraban… y veían la app genérica.
 
 Las mismas piezas de `/demos`, pero resueltas desde **la cuenta que entra**.
 
-**Base de datos** — `supabase/migrations/20260814190000_orgs.sql`
+**Base de datos** — `supabase/migrations/20260815000000_orgs.sql`
 
 - `orgs` — una institución real. Puede **heredar la marca del demo** con el que
   se le vendió (`brand_slug`) y poner lo suyo encima.
@@ -68,6 +68,36 @@ decide el servidor por los roles y viaja firmada dentro del pase.
 
 ---
 
+## ⚠ Un arreglo que venía de la rama de tu compañero
+
+Al traerme sus 75 commits me encontré la migración `20260814231929`, que hace:
+
+```sql
+REVOKE EXECUTE ON FUNCTION public.has_role(...) FROM PUBLIC, anon, authenticated;
+```
+
+Quitarlo de `PUBLIC` y de `anon` está bien. Quitárselo a **`authenticated`** no:
+`has_role` se llama desde las políticas de RLS de la tabla `demos`, y esas
+expresiones se evalúan con el rol de quien consulta. Sin ese permiso, la
+política no se puede resolver y la consulta muere con *permission denied for
+function has_role* — es decir, **`/demos` deja de poder leer o guardar nada**.
+
+No es una hipótesis: ya pasó una vez. La migración `20260724234048` hizo el
+mismo REVOKE y `20260803120100_demos.sql` tuvo que volver a conceder el permiso,
+con el motivo escrito en un comentario al lado.
+
+Mi migración va **la última a propósito** y vuelve a conceder el permiso. Que
+`has_role` siga siendo `SECURITY DEFINER` es lo que hace que sea seguro:
+`authenticated` puede *preguntar* si alguien tiene un rol, pero sigue sin poder
+leer `user_roles`.
+
+Dicho de otro modo: si hubieras aplicado la rama de tu compañero sin esto,
+`/demos` se habría quedado sin funcionar. Merece la pena que se lo comentes,
+porque el REVOKE probablemente venga de un aviso de seguridad automático y
+volverá a aparecer.
+
+---
+
 ## Lo que tienes que hacer
 
 ### 1 · Aplicar la migración
@@ -78,7 +108,7 @@ está previsto).
 
 En Lovable, pídele:
 
-> Aplica la migración `supabase/migrations/20260814190000_orgs.sql` a Supabase.
+> Aplica la migración `supabase/migrations/20260815000000_orgs.sql` a Supabase.
 
 O desde tu máquina, si tienes la CLI: `supabase db push`.
 
