@@ -6965,7 +6965,7 @@ function resetAllData() {
   if (window._goalTimer) { clearInterval(window._goalTimer); window._goalTimer = null; }
   PROGRESS = {};
   try {
-    [PK, PROFILE_KEY, SUMMARY_KEY, 'ae_share', 'placement_log_v1'].forEach(k => localStorage.removeItem(k));
+    [PK, PROFILE_KEY, SUMMARY_KEY, 'ae_share', 'placement_log_v1', SC_KEY].forEach(k => localStorage.removeItem(k));
   } catch (e) {}
   location.replace(location.pathname + location.search);
 }
