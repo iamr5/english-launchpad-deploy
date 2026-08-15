@@ -717,6 +717,33 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
   .mod-head{padding:20px}
   .mod-body{padding:4px 20px 22px}
 }
+
+/* ---------- demos reales embebidos: anula la maqueta estática ---------- */
+.demo-screen.live-embed{display:block;grid-template-columns:none;min-height:0;padding:0;background:#f4f7fb}
+.demo-screen.live-embed iframe.live{display:block;width:100%;height:660px;border:0;background:#f4f7fb}
+.demo-screen.live-embed.teacher iframe.live{height:780px}
+.teacher-col{margin-top:26px}
+.device-shell.phone{width:300px}
+.phone-bezel{min-height:0}
+.phone-bezel iframe.live{display:block;width:100%;height:620px;border:0;background:#f4f7fb}
+.device-label{flex-wrap:wrap}
+.device-tools{display:inline-flex;gap:7px;margin-left:auto}
+.dbtn{appearance:none;cursor:pointer;text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);
+  font:800 10.5px/1 var(--disp);letter-spacing:.04em;padding:7px 11px;border-radius:999px;box-shadow:var(--shadow-sm)}
+.dbtn:hover{border-color:var(--sky-deep);color:var(--sky-deep)}
+.demo-modal{position:fixed;inset:0;z-index:9999;background:rgba(12,18,37,.82);display:none;
+  padding:clamp(12px,3vw,36px);flex-direction:column;gap:12px}
+.demo-modal.open{display:flex}
+.demo-modal header{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff}
+.demo-modal header b{font:900 14px/1 var(--disp)}
+.demo-modal .body{flex:1;min-height:0;display:flex;justify-content:center}
+.demo-modal iframe{width:100%;height:100%;border:0;border-radius:16px;background:#fff}
+.demo-modal.phone iframe{width:min(420px,100%);border-radius:26px}
+@media(max-width:640px){
+  .demo-screen.live-embed iframe.live{height:520px}
+  .demo-screen.live-embed.teacher iframe.live{height:600px}
+}
+@media print{.device-tools,.demo-modal{display:none!important}}
 </style>
 </head>
 <body>
@@ -796,83 +823,43 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 </div>
 <div class="device-stage">
 <div class="device-col">
-<div class="device-label"><b>Previsualizador web</b><span>Experiencia de escritorio</span></div>
+<div class="device-label"><b>Previsualizador web</b><span>Experiencia de escritorio</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/democip" data-title="Demo del colegiado · web">Ampliar</button><a class="dbtn" href="/democip" target="_blank" rel="noopener">Abrir ↗</a></span></div>
 <div class="device-shell web">
 <div class="browser-bar">
 <div class="browser-dots"><i></i><i></i><i></i></div>
-<div class="browser-url">Entorno institucional · Colegio de Ingenieros del Perú</div>
+<div class="browser-url">aprendoenglish.com/democip</div>
 </div>
-<div class="demo-screen">
-<aside class="demo-sidebar">
-<div class="demo-brand"><div class="cip-mark"><b>CIP</b><span>Colegio de Ingenieros del Perú</span></div></div>
-<div class="demo-nav">
-<span class="active">⌂   Inicio</span>
-<span>▶   Mis lecciones</span>
-<span>◎   Mi progreso</span>
-<span>★   Práctica</span>
-</div>
-<div class="student"><b>Ing. Alex Huapaya</b>Colegiado · CIP 123456</div>
-</aside>
-<main class="demo-main">
-<div class="demo-top">
-<div class="hello">Good evening, Alex 👋<small>Continúa donde te quedaste y mantén tu práctica esta semana.</small></div>
-<div class="demo-avatar">AH</div>
-</div>
-<div class="demo-hero-card">
-<div>
-<span class="ey">Tu ruta de aprendizaje · B1</span>
-<h4>¿Ya pasó… o sigue pasando?</h4>
-<p>Presente perfecto frente a pasado simple · práctica guiada y corrección inmediata.</p>
-</div>
-<div class="demo-progress-ring"><b>68%</b></div>
-</div>
-<div class="demo-section-title"><b>Continúa practicando</b><span>Ver ruta completa →</span></div>
-<div class="lesson-grid">
-<div class="lesson-card"><div class="lesson-icon">01</div><b>Present perfect</b><span>12 min · Gramática</span><div class="mini-bar"><i style="width:86%"></i></div></div>
-<div class="lesson-card"><div class="lesson-icon">02</div><b>Listening practice</b><span>10 min · Comprensión</span><div class="mini-bar"><i style="width:44%"></i></div></div>
-<div class="lesson-card"><div class="lesson-icon">03</div><b>Site &amp; safety</b><span>11 min · Inglés técnico</span><div class="mini-bar"><i style="width:22%"></i></div></div>
-</div>
-</main>
-</div>
+<div class="demo-screen live-embed"><iframe class="live" loading="lazy" data-src="/democip" title="Demo del colegiado · Colegio de Ingenieros del Perú"></iframe></div>
 </div>
 </div>
 <div class="device-col phone-wrap">
 <div>
-<div class="device-label"><b>Previsualizador app</b><span>Experiencia móvil</span></div>
+<div class="device-label"><b>Previsualizador app</b><span>Experiencia móvil</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/democip" data-title="Demo del colegiado · app" data-phone="1">Ampliar</button><a class="dbtn" href="/democip" target="_blank" rel="noopener">Abrir ↗</a></span></div>
 <div class="device-shell phone">
 <div class="phone-bezel">
 <div class="phone-notch"></div>
-<div class="phone-status"><span>9:41</span><span>● ● ●</span></div>
-<div class="phone-content">
-<div class="phone-brand"><div class="cip-mark"><b>CIP</b><span>Colegio de Ingenieros del Perú</span></div></div>
-<div class="phone-greet">Hello, Alex 👋<small>Tu práctica de inglés, estés donde estés.</small></div>
-<div class="phone-card">
-<span class="ey">Continúa tu ruta · B1</span>
-<h4>Present perfect vs. past simple</h4>
-<p>Te faltan 4 actividades para completar esta microlección.</p>
-<div class="phone-progress"><i></i></div>
-</div>
-<div class="phone-sub">Para hoy</div>
-<div class="phone-lessons">
-<div class="phone-lesson"><div class="ic">▶</div><div><b>Escucha y reconstruye</b><span>4 min · Listening</span></div><strong>›</strong></div>
-<div class="phone-lesson"><div class="ic">Aa</div><div><b>Detecta el error</b><span>5 min · Use of English</span></div><strong>›</strong></div>
-<div class="phone-lesson"><div class="ic">✎</div><div><b>Produce la respuesta</b><span>3 min · Writing</span></div><strong>›</strong></div>
-</div>
-</div>
-<div class="phone-nav">
-<span class="active"><b>⌂</b>Inicio</span>
-<span><b>▶</b>Lecciones</span>
-<span><b>◎</b>Progreso</span>
-<span><b>★</b>Práctica</span>
+<iframe class="live" loading="lazy" data-src="/democip" title="Demo del colegiado en móvil · Colegio de Ingenieros del Perú"></iframe>
 </div>
 </div>
 </div>
 </div>
+</div>
+<div class="device-col teacher-col">
+<div class="device-label"><b>Lo que ve el Colegio</b><span>Reporte institucional</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/democip/dashboard" data-title="Panel institucional">Ampliar</button><a class="dbtn" href="/democip/dashboard" target="_blank" rel="noopener">Abrir ↗</a></span></div>
+<div class="device-shell web">
+<div class="browser-bar">
+<div class="browser-dots"><i></i><i></i><i></i></div>
+<div class="browser-url">aprendoenglish.com/democip/dashboard</div>
+</div>
+<div class="demo-screen teacher live-embed"><iframe class="live" loading="lazy" data-src="/democip/dashboard" title="Panel institucional · Colegio de Ingenieros del Perú"></iframe></div>
 </div>
 </div>
 <div class="demo-caption">
 <span class="mark">i</span>
-<span><b>Una experiencia institucional en web y app.</b> El colegiado accede a un entorno de e-learning con la identidad de la Colegio de Ingenieros, integrado a su experiencia académica.</span>
+<span><b>Una experiencia institucional en web y app.</b> El colegiado accede a un entorno de e-learning con la identidad del Colegio de Ingenieros, integrado a su experiencia académica.</span>
 </div>
 </div>
 </section>
@@ -1574,5 +1561,37 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 </div>
 </div>
 </footer>
+<div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-label="Demo ampliado">
+<header><b id="demoModalTitle">Demo</b><button class="dbtn" type="button" data-close="1">Cerrar ✕</button></header>
+<div class="body"></div>
+</div>
+<script>
+(function(){
+  var m=document.getElementById('demoModal'),body=m.querySelector('.body'),t=document.getElementById('demoModalTitle');
+  function close(){m.classList.remove('open','phone');body.innerHTML='';document.body.style.overflow='';}
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-expand]');
+    if(b){
+      t.textContent=b.getAttribute('data-title')||'Demo';
+      m.classList.toggle('phone',b.hasAttribute('data-phone'));
+      body.innerHTML='<iframe src="'+b.getAttribute('data-expand')+'" title="'+t.textContent+'"></iframe>';
+      m.classList.add('open');document.body.style.overflow='hidden';return;
+    }
+    if(e.target.closest('[data-close]')||e.target===m) close();
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+
+  // Los demos se cargan al entrar en pantalla: la bienvenida de marca del CIP
+  // se ve cuando el lector llega, no mientras sigue arriba en el documento.
+  var lives=[].slice.call(document.querySelectorAll('iframe.live[data-src]'));
+  function cargar(f){ if(f.dataset.src){ f.src=f.dataset.src; delete f.dataset.src; } }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ cargar(e.target); io.unobserve(e.target); } });
+    },{rootMargin:'40px 0px'});
+    lives.forEach(function(f){io.observe(f);});
+  } else { lives.forEach(cargar); }
+})();
+</script>
 </body>
 </html>
