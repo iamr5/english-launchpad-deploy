@@ -2182,6 +2182,20 @@
     font-weight: 700; background: color-mix(in srgb, var(--blue) 8%, #fff);
     border: 2px solid color-mix(in srgb, var(--blue) 22%, #fff); color: var(--ink); }
   .sp-note { margin-top: 10px; font-size: 11.5px; font-weight: 700; color: var(--muted2); }
+  /* Lo que no sonó a inglés: ámbar rayado, bien distinto del rojo de "faltó". */
+  .sp-unintel { border-radius: 6px; padding: 0 3px; font-weight: 900; color: #7A4B00;
+    background: repeating-linear-gradient(135deg, #FFE9B8 0 6px, #FFD98A 6px 12px);
+    box-shadow: inset 0 -2px 0 #E0A62B; text-decoration: underline wavy #C9821A 2px;
+    text-underline-offset: 3px; cursor: help; }
+  .sp-cost { margin-top: 10px; padding: 9px 12px; border-radius: 12px; border: 2px dashed var(--line);
+    font-size: 11.5px; font-weight: 800; color: var(--muted); background: #FCFCFD; }
+  .sp-cost b { color: var(--ink); }
+  .sp-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; font-size: 11px; font-weight: 800; color: var(--muted2); }
+  .sp-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+  .sp-legend .lg-ok i { background: #3FAA24; }
+  .sp-legend .lg-bad i { background: #E5474A; }
+  .sp-legend .lg-un i { background: #E0A62B; }
+
 
   .pr-chips { display: flex; gap: 7px; overflow-x: auto; padding: 0 2px 12px; scrollbar-width: none; }
   .pr-chips::-webkit-scrollbar { display: none; }
