@@ -390,9 +390,12 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
           </p>
           <ul className="badges">
             {BADGES.map((b) => (
-              <li key={b}>{b}</li>
+              <li key={b.t} className={b.hot ? "hot" : undefined}>
+                {b.t}
+              </li>
             ))}
           </ul>
+
 
 
           <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
