@@ -6722,7 +6722,19 @@ function openSpeakingRun(mi) {
 
   fetchSpeaking(mod.id).then(items => {
     if (!items.length) { closeOverlay(); return toast('Todavía no hay speaking en este nivel.'); }
-    const round = shuffle(items.slice()).slice(0, 5);
+    // La tanda sube de dificultad: repetir → leer → guiado → diálogo → libre.
+    // Dentro de cada modo sí se elige al azar, para no repetir siempre lo mismo.
+    const ORDEN = ['repeat', 'read', 'guided', 'dialogue', 'free'];
+    const porModo = ORDEN.map(m => shuffle(items.filter(q => q.mode === m)));
+    const round = [];
+    porModo.forEach(grupo => { if (grupo.length && round.length < 5) round.push(grupo.shift()); });
+    // Si el nivel no tiene los cinco modos (A1 no tiene habla libre), se completa
+    // con los ejercicios más simples disponibles, siempre en orden ascendente.
+    for (let i = 0; round.length < 5 && i < porModo.length; i++) {
+      while (porModo[i].length && round.length < 5) round.push(porModo[i].shift());
+    }
+    round.sort((a, b) => ORDEN.indexOf(a.mode) - ORDEN.indexOf(b.mode));
+
     let idx = 0, results = [], answered = 0;
     _dismissGuard = () => answered > 0;
 
