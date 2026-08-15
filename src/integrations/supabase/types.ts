@@ -125,6 +125,140 @@ export type Database = {
         }
         Relationships: []
       }
+      org_domains: {
+        Row: {
+          created_at: string
+          match: string
+          org_id: string
+        }
+        Insert: {
+          created_at?: string
+          match: string
+          org_id: string
+        }
+        Update: {
+          created_at?: string
+          match?: string
+          org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_domains_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_invites: {
+        Row: {
+          code: string
+          created_at: string
+          expires_at: string | null
+          max_uses: number
+          org_id: string
+          uses: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expires_at?: string | null
+          max_uses?: number
+          org_id: string
+          uses?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expires_at?: string | null
+          max_uses?: number
+          org_id?: string
+          uses?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_invites_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_members: {
+        Row: {
+          joined_at: string
+          org_id: string
+          source: string
+          user_id: string
+        }
+        Insert: {
+          joined_at?: string
+          org_id: string
+          source?: string
+          user_id: string
+        }
+        Update: {
+          joined_at?: string
+          org_id?: string
+          source?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_members_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orgs: {
+        Row: {
+          active: boolean
+          brand_slug: string | null
+          config: Json
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          brand_slug?: string | null
+          config?: Json
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          brand_slug?: string | null
+          config?: Json
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orgs_brand_slug_fkey"
+            columns: ["brand_slug"]
+            isOneToOne: false
+            referencedRelation: "demos"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
       preinscripciones: {
         Row: {
           created_at: string
@@ -159,6 +293,7 @@ export type Database = {
           id: string
           level: number
           name: string | null
+          org_id: string | null
           role: Database["public"]["Enums"]["app_role"]
         }
         Insert: {
@@ -167,6 +302,7 @@ export type Database = {
           id: string
           level?: number
           name?: string | null
+          org_id?: string | null
           role?: Database["public"]["Enums"]["app_role"]
         }
         Update: {
@@ -175,9 +311,18 @@ export type Database = {
           id?: string
           level?: number
           name?: string | null
+          org_id?: string | null
           role?: Database["public"]["Enums"]["app_role"]
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "orgs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       progress: {
         Row: {
@@ -338,6 +483,10 @@ export type Database = {
         Args: { _guardian: string; _student: string }
         Returns: boolean
       }
+      my_org_id: { Args: never; Returns: string }
+      org_for_email: { Args: { _email: string }; Returns: string }
+      redeem_org_invite: { Args: { _code: string }; Returns: string }
+      resync_org_members: { Args: never; Returns: number }
     }
     Enums: {
       app_role: "student" | "parent" | "teacher" | "admin"
