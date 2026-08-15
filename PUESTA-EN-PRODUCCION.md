@@ -100,42 +100,55 @@ volverá a aparecer.
 
 ## Lo que tienes que hacer
 
-### 1 · Aplicar la migración
+### 1 · Aplicar la migración — ✅ HECHO
 
-Es el único paso obligatorio. Sin él, `/instituciones` responderá "no existe la
-tabla" y la app seguirá saliendo con la marca de fábrica (no se rompe nada —
-está previsto).
+Lovable la aplicó y volvió a escribirla como migración propia
+(`20260815011809_…sql`, la misma sin comentarios). Están las cuatro tablas, las
+funciones, el disparador, las políticas, la semilla del CIP y —importante— el
+`GRANT EXECUTE` de `has_role` que arregla lo de la rama del compañero.
 
-En Lovable, pídele:
+Que queden las dos migraciones no molesta: ambas son idempotentes
+(`CREATE TABLE IF NOT EXISTS`, `CREATE OR REPLACE`, `ON CONFLICT DO NOTHING`),
+así que aplicarlas en orden en un entorno nuevo funciona igual.
 
-> Aplica la migración `supabase/migrations/20260815000000_orgs.sql` a Supabase.
+Los tipos también se regeneraron, así que se quitaron los `as any` que hacían
+falta para compilar contra un esquema que aún no conocía estas tablas.
 
-O desde tu máquina, si tienes la CLI: `supabase db push`.
+### 2 · El secreto de firma — no hay que hacer nada
 
-Después, regenera los tipos para que dejen de hacer falta los `as any` de
-`orgs.data.ts` y `org-config.server.ts`:
+Se intentó poner `APP_SHELL_SECRET` a mano y resultó que Lovable no expone las
+variables de entorno en ningún menú de ajustes: las inyecta su propio
+despliegue. (Se ve claro en que `.env` está versionado y NO contiene
+`SUPABASE_SERVICE_ROLE_KEY`, y aun así `client.server.ts` la lee en caliente y
+producción funciona.)
 
-> Regenera `src/integrations/supabase/types.ts` desde el esquema de Supabase.
+Así que el pase ya no depende de esa variable. Si no está, se deriva de
+`SUPABASE_SERVICE_ROLE_KEY`, que ya está en el entorno del servidor, es secreta
+y es estable. Ver `secret()` en [`src/lib/app-token.ts`](src/lib/app-token.ts).
 
-### 2 · Poner un secreto de firma
+Esto además tapa un fallo silencioso: antes, olvidarse de la variable dejaba el
+pase firmado con una cadena escrita en el repositorio y **nada** lo delataba,
+porque todo seguía funcionando igual.
 
-En las variables de entorno del despliegue (Cloudflare):
+Si algún día quieres una clave propia —por ejemplo para poder invalidar todos
+los pases sin rotar la clave de servicio— pídesela a Lovable en el chat:
 
-```
-APP_SHELL_SECRET=<una cadena larga y aleatoria>
-```
+> Añade un secreto `APP_SHELL_SECRET` con este valor: `<pega el tuyo>`
 
-Sin él funciona igual, pero el pase se firma con una cadena por defecto que está
-escrita en el código — o sea, previsible. Genera una así:
+y genéralo con:
 
 ```sh
 node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
 ```
 
-Aprovecha y pon también `COURSE_TOKEN_SECRET`, que tiene el mismo problema
-desde antes.
+**Pendiente, aparte:** `COURSE_TOKEN_SECRET` (en
+[`src/lib/course-token.ts`](src/lib/course-token.ts)) sigue con el problema
+original — si no está la variable, firma con una cadena del repositorio. No se
+tocó a la vez porque cambiarla invalida los pases del curso que estén en uso, y
+un alumno a mitad de lección se comería un 401 hasta recargar. Conviene
+arreglarlo igual, en un momento de poco tráfico.
 
-### 3 · Dar de alta tus instituciones
+### 3 · Dar de alta tus instituciones ← ESTÁS AQUÍ
 
 En `aprendoenglish.com/instituciones`, por cada cliente:
 
