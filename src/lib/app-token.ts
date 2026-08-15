@@ -18,12 +18,30 @@
 
 const enc = new TextEncoder();
 
+/**
+ * Con qué se firma el pase.
+ *
+ * El orden importa, y el segundo escalón es el que evita un fallo silencioso:
+ *
+ *  1. APP_SHELL_SECRET, si alguien se molestó en ponerlo.
+ *  2. Si no, se deriva de SUPABASE_SERVICE_ROLE_KEY. Esa clave YA está en el
+ *     entorno del servidor —la usa client.server.ts—, es secreta y es estable,
+ *     así que da una firma imprevisible sin que haya que configurar nada.
+ *     No se usa tal cual sino con una etiqueta delante: así el material de
+ *     firma de esto no es el mismo que el de ningún otro uso de esa clave.
+ *  3. Y sólo si tampoco hay clave de servicio —o sea, en local— una cadena
+ *     fija, que es previsible y está bien que lo sea mientras se desarrolla.
+ *
+ * Lo que se gana con el paso 2: antes, olvidarse de la variable dejaba el pase
+ * firmado con una cadena escrita en el repositorio y NADA lo delataba, porque
+ * todo seguía funcionando igual. Ahora, en producción, no hay forma de acabar
+ * en el escalón 3 sin que la app entera esté ya rota por otro motivo.
+ */
 function secret() {
-  return (
-    (typeof process !== "undefined" && process.env && process.env.APP_SHELL_SECRET) ||
-    (typeof process !== "undefined" && process.env && process.env.COURSE_TOKEN_SECRET) ||
-    "aprendoenglish-shell-pase-por-defecto"
-  );
+  const env = (typeof process !== "undefined" && process.env) || ({} as Record<string, string>);
+  if (env.APP_SHELL_SECRET) return env.APP_SHELL_SECRET;
+  if (env.SUPABASE_SERVICE_ROLE_KEY) return `app-shell-token-v1:${env.SUPABASE_SERVICE_ROLE_KEY}`;
+  return "aprendoenglish-shell-pase-por-defecto";
 }
 
 const b64url = (b: ArrayBuffer | Uint8Array) => {

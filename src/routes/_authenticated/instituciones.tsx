@@ -22,6 +22,7 @@ import {
   suggestOrgSlug,
   type OrgRow,
 } from "@/lib/orgs.data";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -252,7 +253,7 @@ function FilaOrg({
   const [topeUsos, setTopeUsos] = useState(0);
 
   const guardar = useMutation({
-    mutationFn: (patch: Partial<OrgRow>) => saveOrg(org.id, patch),
+    mutationFn: (patch: TablesUpdate<"orgs">) => saveOrg(org.id, patch),
     onSuccess: () => {
       onCambio();
       toast.success("Guardado.");

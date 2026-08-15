@@ -96,10 +96,7 @@ export const redeemInvite = createServerFn({ method: "POST" })
   .handler(async ({ data, context }): Promise<{ ok: boolean; institution: string | null }> => {
     if (!/^[A-Z0-9-]{4,24}$/.test(data.code)) return { ok: false, institution: null };
 
-    // Sin los tipos generados: types.ts lo escribe la plataforma y aún no
-    // conoce ni la tabla `orgs` ni esta función.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const db = context.supabase as any;
+    const db = context.supabase;
 
     const { data: orgId, error } = await db.rpc("redeem_org_invite", { _code: data.code });
     if (error || !orgId) return { ok: false, institution: null };

@@ -17,14 +17,8 @@
 // resolver la institución de un usuario cualquiera es justo lo que RLS impide
 // hacer desde el navegador.
 
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabaseAdmin as db } from "@/integrations/supabase/client.server";
 import { DEFAULTS, layeredConfig, type DemoConfig } from "./demo-config";
-
-// Sin los tipos generados: src/integrations/supabase/types.ts lo escribe la
-// plataforma y todavía no conoce orgs ni org_members. Escribirlos a mano aquí
-// sería una copia que se queda vieja en el primer regenerado.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabaseAdmin as any;
 
 /** La institución a la que pertenece una cuenta, sin resolver la marca. */
 export type OrgRow = {

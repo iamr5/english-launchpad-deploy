@@ -1,40 +1,16 @@
 // Acceso a las tablas de instituciones desde el panel. Como demos.data.ts: va
 // con la sesión del usuario y es RLS quien comprueba que sea administrador,
 // no este archivo.
-//
-// El cliente va sin tipar contra Database a propósito: src/integrations/
-// supabase/types.ts lo genera la plataforma y todavía no conoce estas tablas.
-// Tiparlo a mano aquí sería una copia que se queda vieja en el primer
-// regenerado.
 
-import { supabase } from "@/integrations/supabase/client";
+import { supabase as db } from "@/integrations/supabase/client";
+import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 
-/** El mismo cliente, sin los tipos generados. Ver la nota de arriba. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = supabase as any;
-
-export type OrgRow = {
-  id: string;
-  slug: string;
-  name: string;
-  brand_slug: string | null;
-  config: Record<string, unknown>;
-  active: boolean;
-  notes: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
-export type DomainRow = { match: string; org_id: string; created_at: string };
-
-export type InviteRow = {
-  code: string;
-  org_id: string;
-  max_uses: number;
-  uses: number;
-  expires_at: string | null;
-  created_at: string;
-};
+// Las filas salen del esquema generado, no escritas a mano: así una columna
+// nueva o un tipo que cambie aparece aquí solo, en vez de quedarse una copia
+// vieja que compila pero miente.
+export type OrgRow = Tables<"orgs">;
+export type DomainRow = Tables<"org_domains">;
+export type InviteRow = Tables<"org_invites">;
 
 export async function fetchOrgs(): Promise<OrgRow[]> {
   const { data, error } = await db.from("orgs").select("*").order("name");
@@ -83,7 +59,7 @@ export async function createOrg(row: { slug: string; name: string; brand_slug?: 
   return data as OrgRow;
 }
 
-export async function saveOrg(id: string, patch: Partial<OrgRow>) {
+export async function saveOrg(id: string, patch: TablesUpdate<"orgs">) {
   const { data, error } = await db.from("orgs").update(patch).eq("id", id).select().single();
   if (error) throw error;
   return data as OrgRow;
