@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getCourse, getPlacement, getPracticeIndex } from "@/lib/course-data.server";
+import {
+  getCourse,
+  getPlacement,
+  getPracticeIndex,
+  getSpeakingIndex,
+} from "@/lib/course-data.server";
+
 import { getVocabIndex } from "@/lib/vocab-data.server";
 import { verifyCourseToken } from "@/lib/course-token";
 
@@ -62,8 +68,10 @@ export const Route = createFileRoute("/api/course/bundle")({
             course: getCourse(),
             placement: getPlacement(),
             practiceIndex: getPracticeIndex(),
+            speakingIndex: getSpeakingIndex(),
             vocabIndex: getVocabIndex(packs, url.searchParams.get("vmax") || ""),
           },
+
           {
             headers: {
               // Que no se quede en ninguna caché intermedia: cada visita pasa

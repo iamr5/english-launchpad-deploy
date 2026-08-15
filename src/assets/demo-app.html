@@ -388,6 +388,40 @@
     border: 2px solid var(--line); border-radius: 14px; -webkit-appearance: none; }
   .vbuscar:focus { outline: none; border-color: var(--accent); }
   .vocab-vacio { padding: 26px 4px; text-align: center; color: var(--muted); font-size: 14px; }
+
+  /* ===== English for Engineering =====
+     Capa profesional encima del inglés general: el alumno elige su(s)
+     especialidad(es) y ve sólo el vocabulario y las situaciones de su rama. */
+  .e4e-card { display: flex; align-items: center; gap: 12px; width: 100%; box-sizing: border-box;
+    margin: 0 0 16px; padding: 14px; text-align: left; cursor: pointer;
+    background: linear-gradient(135deg, #123B63, #1B5C93); color: #fff;
+    border: none; border-radius: 18px; box-shadow: 0 4px 0 #0C2942; font: inherit; }
+  .e4e-card:active { transform: translateY(2px); box-shadow: 0 2px 0 #0C2942; }
+  .e4e-card b { display: block; font-size: 16px; font-weight: 800; }
+  .e4e-card small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.35; color: #D6E7F7; }
+  .e4e-card .e4e-go { margin-left: auto; font-size: 12px; font-weight: 800; letter-spacing: .3px;
+    background: rgba(255,255,255,.16); border-radius: 999px; padding: 6px 11px; white-space: nowrap; }
+  .e4e-top { display: flex; align-items: center; gap: 10px; margin: 2px 2px 14px; }
+  .e4e-top b { display: block; font-size: 19px; font-weight: 800; color: var(--ink); }
+  .e4e-top small { display: block; margin-top: 2px; font-size: 13px; line-height: 1.4; color: var(--muted); }
+  .e4e-back { width: 34px; height: 34px; flex: 0 0 34px; border-radius: 10px; border: 2px solid var(--line);
+    background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235C5159' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='M15 18l-6-6 6-6'/></svg>") center/18px no-repeat; }
+  .e4e-h { margin: 20px 2px 10px; font-size: 13px; font-weight: 800; letter-spacing: .5px;
+    text-transform: uppercase; color: var(--muted); }
+  .e4e-specs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .e4e-specs button { font: inherit; font-size: 13px; font-weight: 800; color: var(--ink);
+    background: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 8px 13px; cursor: pointer; }
+  .e4e-specs button.on { color: #fff; background: var(--blue); border-color: var(--blue); }
+  .e4e-hint { margin: 10px 2px 0; font-size: 12.5px; line-height: 1.4; color: var(--muted); }
+  .e4e-sit { display: flex; align-items: center; gap: 12px; width: 100%; box-sizing: border-box;
+    margin-bottom: 10px; padding: 13px; text-align: left; font: inherit; cursor: pointer;
+    background: #fff; border: 2px solid var(--line); border-radius: 16px; }
+  .e4e-sit b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); }
+  .e4e-sit small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
+  .e4e-sit .e4e-n { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 50%; display: grid;
+    place-items: center; font-size: 13px; font-weight: 800; color: #123B63; background: #DDF4FF; }
+  .e4e-sit .e4e-ok { flex: 0 0 auto; font-size: 11px; font-weight: 800; color: #2E7D1A; }
+
   .vsec { margin-bottom: 22px; }
   .vsec-h { margin: 0 2px 10px; font-size: 17px; font-weight: 800; color: var(--ink);
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -1219,6 +1253,8 @@
   .debug-fab.mq { bottom: 130px; }
   .debug-fab.undo { bottom: 182px; }
   .debug-fab.wipe { bottom: 234px; }
+  .debug-fab.speaking { bottom: 286px; }
+  .debug-fab.speaking.on { background: var(--ok, #3FAA24); opacity: 1; border-style: solid; }
   /* The FABs are above the quiz overlay/sheet (z-index:50) and pinned
      bottom-right — exactly where the quiz's Confirmar/Siguiente button sits. Hide
      them whenever a sheet (mini-quiz, cierre, dialog) or the final-quiz screen is
@@ -2074,6 +2110,79 @@
   .pr-empty { margin: 2px; padding: 20px 18px; background: #fff; border: 2px solid var(--line);
     border-radius: 18px; text-align: center; }
   .pr-intro .pr-sub { display: block; margin-top: 6px; font-size: 12px; font-weight: 700; color: var(--muted2); }
+
+  /* ===== Speaking: hablar en voz alta =====
+     Vive dentro de la biblioteca de práctica (su propia estantería) y usa el
+     mismo motor de quizzes: renderSpeaking() es un tipo más de ejercicio. */
+  .sp-shelf { margin: 0 2px 18px; padding: 14px 14px 12px; border: 2px solid var(--line);
+    border-bottom-width: 4px; border-radius: 18px; background: #fff; }
+  .sp-shelf-h { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+  .sp-shelf-h b { font-size: 16px; font-weight: 900; color: var(--ink); }
+  .sp-shelf small { display: block; font-size: 12px; line-height: 1.45; color: var(--muted); }
+  .sp-mic-badge { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px;
+    border-radius: 999px; background: color-mix(in srgb, var(--blue) 14%, #fff); }
+  .sp-levels { display: flex; gap: 8px; margin-top: 11px; overflow-x: auto; scrollbar-width: none; }
+  .sp-levels::-webkit-scrollbar { display: none; }
+  .sp-lvl { flex: 0 0 auto; min-width: 84px; padding: 10px 12px; border-radius: 14px; cursor: pointer;
+    border: 2px solid var(--line); border-bottom-width: 4px; background: #fff; text-align: left; }
+  .sp-lvl:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .sp-lvl b { display: block; font-size: 14px; font-weight: 900; }
+  .sp-lvl span { display: block; margin-top: 1px; font-size: 11px; font-weight: 700; color: var(--muted2); }
+
+  .sp-target { margin: 4px 0 2px; padding: 13px 14px; border-radius: 14px; border: 2px solid var(--line);
+    background: #FBFAFC; font-size: 17px; font-weight: 800; line-height: 1.4; color: var(--ink); }
+  .sp-target .w { padding: 1px 2px; border-radius: 5px; }
+  .sp-target .w.ok { background: color-mix(in srgb, #3FAA24 18%, #fff); color: #2E7D1A; }
+  .sp-target .w.bad { background: color-mix(in srgb, #E5474A 16%, #fff); color: #C1373A; }
+  .sp-en { margin: 2px 0 8px; font-size: 13.5px; font-weight: 800; line-height: 1.4; color: var(--muted); }
+  .sp-trad { margin: 7px 0 2px; font-size: 13.5px; line-height: 1.45; font-weight: 700; color: var(--muted); }
+  .sp-trad b { color: var(--ink); }
+  .sp-gloss { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+  .sp-gloss span { padding: 5px 9px; border-radius: 999px; border: 2px solid var(--line);
+    background: #fff; font-size: 11.5px; font-weight: 700; color: var(--muted); }
+  .sp-gloss b { color: var(--ink); font-weight: 900; }
+  .sp-mic { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  .sp-timer { margin-top: 4px; font-size: 13px; font-weight: 900; color: #C1373A; font-variant-numeric: tabular-nums; }
+  .sp-transcript { margin-top: 14px; padding: 14px 15px; border-radius: 15px;
+    border: 2px solid var(--line); background: #fff; }
+  .sp-transcript.vacio { border-color: color-mix(in srgb, #E5474A 45%, var(--line)); }
+  .sp-transcript .lbl, .sp-audio-row .lbl { display: block; font-size: 10.5px; font-weight: 900;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted2); margin-bottom: 6px; }
+  .sp-transcript p { margin: 0; font-size: 16px; line-height: 1.55; font-weight: 700; color: var(--ink);
+    user-select: text; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .sp-audio-row { display: flex; align-items: flex-end; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .sp-audio-row > div { flex: 1 1 220px; min-width: 0; }
+  .sp-audio-row audio { width: 100%; }
+  .sp-details { margin-top: 12px; font-size: 12px; line-height: 1.5; color: var(--muted2); font-weight: 700; }
+  .sp-details summary { cursor: pointer; font-weight: 900; color: var(--muted); }
+  .sp-details > div { margin-top: 6px; overflow-wrap: anywhere; }
+  .sp-task { margin: 4px 0 2px; padding: 12px 14px; border-radius: 14px; font-size: 14px; line-height: 1.45;
+    border: 2px dashed var(--line); background: #FBFAFC; color: var(--ink); font-weight: 700; }
+  .sp-row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .sp-mic { display: inline-flex; align-items: center; justify-content: center; width: 66px; height: 66px;
+    flex: 0 0 auto; border-radius: 999px; border: none; cursor: pointer; color: #fff;
+    background: var(--blue); box-shadow: 0 4px 0 color-mix(in srgb, var(--blue) 65%, #000); }
+  .sp-mic:active { transform: translateY(3px); box-shadow: none; }
+  .sp-mic[disabled] { opacity: .5; cursor: default; }
+  .sp-mic.rec { background: #E5474A; box-shadow: 0 4px 0 #A32C2E; animation: spPulse 1.1s ease-in-out infinite; }
+  @keyframes spPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  .sp-hint { font-size: 12.5px; line-height: 1.45; font-weight: 700; color: var(--muted); }
+  .sp-wave { display: flex; align-items: flex-end; gap: 3px; height: 26px; margin-top: 10px; }
+  .sp-wave i { width: 4px; border-radius: 3px; background: var(--blue); height: 6px;
+    animation: spWave .9s ease-in-out infinite; }
+  @keyframes spWave { 0%, 100% { height: 6px; opacity: .5; } 50% { height: 24px; opacity: 1; } }
+  .sp-score { display: flex; gap: 8px; margin-top: 12px; }
+  .sp-score div { flex: 1; padding: 9px 6px; border-radius: 12px; border: 2px solid var(--line);
+    text-align: center; }
+  .sp-score b { display: block; font-size: 17px; font-weight: 900; color: var(--ink); }
+  .sp-score span { font-size: 10.5px; font-weight: 800; color: var(--muted2); text-transform: uppercase; }
+  .sp-said { margin-top: 12px; font-size: 13px; line-height: 1.45; color: var(--muted); font-weight: 700; }
+  .sp-said i { color: var(--ink); font-style: italic; }
+  .sp-advice { margin-top: 10px; padding: 11px 13px; border-radius: 13px; font-size: 13px; line-height: 1.45;
+    font-weight: 700; background: color-mix(in srgb, var(--blue) 8%, #fff);
+    border: 2px solid color-mix(in srgb, var(--blue) 22%, #fff); color: var(--ink); }
+  .sp-note { margin-top: 10px; font-size: 11.5px; font-weight: 700; color: var(--muted2); }
+
   .pr-chips { display: flex; gap: 7px; overflow-x: auto; padding: 0 2px 12px; scrollbar-width: none; }
   .pr-chips::-webkit-scrollbar { display: none; }
   .pr-chip { flex: 0 0 auto; padding: 7px 13px; border-radius: 999px; border: 2px solid var(--line);
@@ -2302,6 +2411,9 @@
 <button class="debug-fab wipe" title="Borrar TODO (progreso + perfil) y ver el onboarding" aria-label="Borrar todos los datos" onclick="resetAllData()">
   <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
 </button>
+<button class="debug-fab speaking" id="debug-speaking" title="Activar Speaking" aria-label="Activar Speaking" onclick="toggleDebugSpeaking()">
+  <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21H8v2h8v-2h-3v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+</button>
 
 <!-- Mascota. El servidor sustituye este marcador por el pack que use el demo:
      'ozito' (capas SVG + CSS) o 'boti' (SVG + resortes en JS). Ver
@@ -2340,7 +2452,9 @@ const CFG = {
                            kind: 'robot guía', fullName: 'Boti', headIcon: 'mascots/boti/boti_head.svg',
                            artboard: { width: 757.6, height: 1139.5 } },
   map: DEMO.map || {},
+  features: Object.assign({ placement: true, share: true, dashboard: true, speaking: false }, DEMO.features || {}),
 };
+let DEBUG_SPEAKING = false;
 
 // Un icono puede ser un emoji o una imagen subida. iconHTML() decide cual.
 function iconHTML(v, cls) {
@@ -2764,6 +2878,8 @@ async function loadCourse() {
   allLessons = course.modules.flatMap(m => m.lessons);
   attachPracticeIndex(data.practiceIndex || {});
   VOCAB = data.vocabIndex || [];
+  SPEAKING_INDEX = data.speakingIndex || {};
+
 }
 
 // Banco de práctica: ejercicios extra por bloque de teoría, escritos aparte del
@@ -3334,9 +3450,17 @@ document.addEventListener('click', (e) => {
   if (_dbgTaps >= 7) {
     _dbgTaps = 0;
     const on = document.body.classList.toggle('debug-fabs');
+    if (!on && DEBUG_SPEAKING) { DEBUG_SPEAKING = false; renderPractice(); }
     toast(on ? 'Modo debug activado' : 'Modo debug desactivado');
   }
 });
+function toggleDebugSpeaking() {
+  DEBUG_SPEAKING = !DEBUG_SPEAKING;
+  const b = document.getElementById('debug-speaking');
+  if (b) { b.classList.toggle('on', DEBUG_SPEAKING); b.title = DEBUG_SPEAKING ? 'Desactivar Speaking' : 'Activar Speaking'; }
+  renderPractice();
+  toast(DEBUG_SPEAKING ? 'Speaking de prueba activado' : 'Speaking oculto');
+}
 
 function pbar(progress, completed, color) {
   const pct = Math.round(progress * 100);
@@ -3888,16 +4012,21 @@ function vocabChip(id) {
 function renderVocab() {
   const el = document.getElementById('vocab-body');
   if (!el) return;
-  if (VOPEN) renderVocabTema(el); else renderVocabIndice(el);
+  if (VE4E) renderE4E(el); else if (VOPEN) renderVocabTema(el); else renderVocabIndice(el);
 }
+
+
+let VE4E_BACK = false;  // se entró al tema desde English for Engineering
 
 function openVocabChip(id, tanda) {
   const found = vocabChip(id);
   if (!found) return;
   const sc = document.querySelector('#screen-course .scroll');
   if (!VOPEN) VSCROLL = sc ? sc.scrollTop : 0;
+  VE4E_BACK = VE4E; VE4E = false;
   VOPEN = id;
   VTANDA = (typeof tanda === 'number') ? tanda : null;
+
   PROGRESS['__vocabLast'] = id; saveProgress(PROGRESS);
   renderVocab();
   if (sc) sc.scrollTop = 0;           // el tema empieza por arriba
@@ -3922,7 +4051,9 @@ function abrirTanda(i) {
 function closeVocabChip() {
   if (VTANDA !== null) { VTANDA = null; renderVocab(); return; }
   VOPEN = null;
+  if (VE4E_BACK) { VE4E_BACK = false; VE4E = true; }
   renderVocab();
+
   // Se vuelve al punto exacto del indice: bajar otra vez hasta el tema que
   // acabas de cerrar es el tipo de trabajo que nadie deberia repetir.
   const sc = document.querySelector('#screen-course .scroll');
@@ -3955,6 +4086,223 @@ function toggleVsec(nombre) {
     if (h) h.setAttribute('aria-expanded', VABIERTAS[k] ? 'true' : 'false');
   }
 }
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// ENGLISH FOR ENGINEERING — capa profesional sobre el inglés general
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// No es un curso aparte: es una vista que filtra el banco de ingeniería que ya
+// existe por la especialidad del colegiado, y le añade situaciones reales de
+// trabajo (correo, reunión, charla de seguridad, lectura técnica) armadas con
+// el mismo motor de quizzes de toda la app.
+
+let VE4E = false;   // true mientras se está dentro de English for Engineering
+
+// Ramas del CIP → temas del banco de ingeniería. Un tema puede estar en varias:
+// la física y las unidades le sirven a todos.
+const E4E_SPECS = [
+  { id: 'civil', n: 'Civil / Obra', chips: ['inge-construccion-y-obra', 'inge-materiales-y-estructuras', 'inge-planos-y-diseno'] },
+  { id: 'mecanica', n: 'Mecánica', chips: ['inge-mecanica-y-maquinas', 'inge-materiales-y-estructuras', 'inge-fisica-y-unidades'] },
+  { id: 'electrica', n: 'Eléctrica / Electrónica', chips: ['inge-electrica-y-electronica', 'inge-fisica-y-unidades'] },
+  { id: 'sistemas', n: 'Sistemas / Software', chips: ['inge-programacion-y-software', 'inge-datos-y-bases-de-datos'] },
+  { id: 'industrial', n: 'Industrial', chips: ['inge-calidad-y-mantenimiento', 'inge-gestion-de-proyectos', 'inge-seguridad-industrial'] },
+  { id: 'minas', n: 'Minas / Energía', chips: ['inge-seguridad-industrial', 'inge-mecanica-y-maquinas', 'inge-fisica-y-unidades'] },
+];
+
+// Lo que necesita cualquier ingeniero, sin importar la rama.
+const E4E_TRONCO = ['inge-gestion-de-proyectos', 'inge-seguridad-industrial', 'inge-fisica-y-unidades'];
+
+// Situaciones reales: cada una es una ronda corta con el motor de siempre.
+const E4E_SITS = [
+  {
+    id: 'email', n: 'Escribir un correo al proveedor',
+    d: 'Pedir una cotización, un plazo y una ficha técnica sin sonar brusco.',
+    qs: [
+      { type: 'mc', question: 'Vas a pedir una cotización por correo. ¿Cómo abres?', options: ['Could you please send us a quotation for the following items?', 'Send me the price now.', 'I want prices.', 'Give quotation fast.'], correctIndex: 0 },
+      { type: 'mc', question: '¿Cómo pides el plazo de entrega?', options: ['What is your lead time for delivery?', 'When you bring things?', 'How much time you take?', 'Delivery when?'], correctIndex: 0 },
+      { type: 'writing', question: 'Escribe: «Adjunto encontrará las especificaciones técnicas.»', accepted: ['Please find attached the technical specifications.', 'Attached you will find the technical specifications.', 'Please find the technical specifications attached.'] },
+      { type: 'mc', question: '¿Cómo cierras pidiendo respuesta pronta, con cortesía?', options: ['We look forward to your reply.', 'Answer me quickly.', 'Reply now please.', 'I wait your answer today.'], correctIndex: 0 },
+    ],
+  },
+  {
+    id: 'reunion', n: 'Reunión de obra / avance semanal',
+    d: 'Reportar avance, avisar de un retraso y pedir una decisión.',
+    qs: [
+      { type: 'mc', question: 'Reportas el avance de la semana. ¿Cuál suena profesional?', options: ["We're currently 15% behind schedule on the foundation works.", 'The work is slow, sorry.', 'We do less than plan.', 'Foundation is late much.'], correctIndex: 0 },
+      { type: 'mc', question: '¿Cómo explicas la causa del retraso?', options: ['The delay was caused by a shortage of materials on site.', 'No materials, so late.', 'Because materials there are not.', 'Materials problem make delay.'], correctIndex: 0 },
+      { type: 'writing', question: 'Escribe: «Necesitamos su aprobación antes del viernes.»', accepted: ['We need your approval before Friday.', 'We need your approval by Friday.'] },
+      { type: 'mc', question: 'No entendiste un dato en la llamada. ¿Qué dices?', options: ['Sorry, could you repeat the figure for the concrete volume?', 'What? Again.', 'Repeat please the number, I not hear.', 'Say again that.'], correctIndex: 0 },
+    ],
+  },
+  {
+    id: 'seguridad', n: 'Charla de seguridad (toolbox talk)',
+    d: 'Dar una instrucción clara y reportar un incidente sin ambigüedad.',
+    qs: [
+      { type: 'mc', question: 'Instrucción obligatoria de EPP en obra:', options: ['Hard hats and safety boots must be worn at all times.', 'Please use the helmet if you want.', 'Helmet is good idea here.', 'You can wear boots maybe.'], correctIndex: 0 },
+      { type: 'mc', question: '«Riesgo de caída de objetos» en un letrero:', options: ['Danger: falling objects', 'Careful things fall', 'Attention objects down', 'Warning: objects are falling down now'], correctIndex: 0 },
+      { type: 'writing', question: 'Escribe: «Reporte cualquier incidente de inmediato.»', accepted: ['Report any incident immediately.', 'Report any incidents immediately.'] },
+      { type: 'mc', question: 'Antes de intervenir un tablero eléctrico, el procedimiento es:', options: ['lockout / tagout', 'close and open', 'switch off later', 'power control system'], correctIndex: 0 },
+    ],
+  },
+  {
+    id: 'lectura', n: 'Leer una ficha técnica',
+    d: 'Entender tolerancias, unidades y advertencias de un manual en inglés.',
+    qs: [
+      { type: 'mc', question: '«Torque the bolts to 45 N·m ± 5%» significa:', options: ['Ajusta los pernos a 45 N·m con una tolerancia de 5%', 'Ajusta los pernos cada 45 minutos', 'Usa 45 pernos con 5% de holgura', 'Afloja los pernos 45 N·m'], correctIndex: 0 },
+      { type: 'mc', question: '«Failure to comply may void the warranty» significa:', options: ['Incumplir puede anular la garantía', 'La falla se cubre con garantía', 'Cumplir extiende la garantía', 'La garantía obliga a reparar la falla'], correctIndex: 0 },
+      { type: 'mc', question: 'En un plano, «scale 1:50» quiere decir:', options: ['1 unidad del plano equivale a 50 reales', '50 unidades del plano equivalen a 1 real', 'El plano mide 50 cm', 'Hay 50 vistas del plano'], correctIndex: 0 },
+      { type: 'writing', question: 'Escribe: «El material debe cumplir la norma.»', accepted: ['The material must comply with the standard.', 'The material must meet the standard.'] },
+    ],
+  },
+];
+
+function e4eState() { return PROGRESS['__e4e'] = PROGRESS['__e4e'] || { specs: {}, sits: {} }; }
+function e4eSpecOn(id) { return !!e4eState().specs[id]; }
+function e4eSitOk(id) { return !!e4eState().sits[id]; }
+
+/** Los temas de ingeniería que existen de verdad en este demo. */
+function e4eChipsDisponibles() {
+  const out = {};
+  VOCAB.forEach(sec => sec.chips.forEach(c => { if (/^inge-/.test(c.id)) out[c.id] = { sec, chip: c }; }));
+  return out;
+}
+function e4eHay() { return Object.keys(e4eChipsDisponibles()).length > 0; }
+
+/** Temas a mostrar: los de las ramas elegidas, o el tronco común si no eligió. */
+function e4eChipsElegidos() {
+  const disp = e4eChipsDisponibles();
+  const st = e4eState();
+  const ids = [];
+  E4E_SPECS.forEach(s => { if (st.specs[s.id]) s.chips.forEach(id => { if (!ids.includes(id)) ids.push(id); }); });
+  const base = ids.length ? ids : E4E_TRONCO;
+  return base.filter(id => disp[id]).map(id => disp[id]);
+}
+
+function openE4E() {
+  const sc = document.querySelector('#screen-course .scroll');
+  VSCROLL = sc ? sc.scrollTop : 0;
+  VE4E = true; VOPEN = null; VTANDA = null;
+  renderVocab();
+  if (sc) sc.scrollTop = 0;
+}
+function closeE4E() {
+  VE4E = false;
+  renderVocab();
+  const sc = document.querySelector('#screen-course .scroll');
+  if (sc) sc.scrollTop = VSCROLL;
+}
+function e4eToggleSpec(id) {
+  const st = e4eState();
+  if (st.specs[id]) delete st.specs[id]; else st.specs[id] = 1;
+  saveProgress(PROGRESS);
+  renderVocab();
+}
+
+function renderE4E(el) {
+  const st = e4eState();
+  const elegidos = e4eChipsElegidos();
+  const nSpecs = Object.keys(st.specs).length;
+  const palabras = elegidos.reduce((a, f) => a + f.chip.c, 0);
+  el.innerHTML = `<div class="e4e-top">
+      <button class="e4e-back" onclick="closeE4E()" aria-label="Volver"></button>
+      <div><b>English for Engineering</b>
+        <small>Sobre el mismo inglés general: el vocabulario y las situaciones de tu especialidad.</small></div>
+    </div>
+    <div class="e4e-h">Tu especialidad</div>
+    <div class="e4e-specs">${E4E_SPECS.map(s =>
+      `<button class="${st.specs[s.id] ? 'on' : ''}" aria-pressed="${st.specs[s.id] ? 'true' : 'false'}"
+        onclick="e4eToggleSpec('${s.id}')">${escapeHtml(s.n)}</button>`).join('')}</div>
+    <p class="e4e-hint">${nSpecs
+      ? 'Puedes marcar más de una. Abajo verás sólo los temas de esas ramas.'
+      : 'Elige una o varias. Mientras tanto ves el tronco común: lo que necesita cualquier ingeniero.'}</p>
+
+    <div class="e4e-h">Vocabulario de tu rama${palabras ? ` · ${prNum(palabras)} palabras` : ''}</div>
+    ${elegidos.length
+      ? elegidos.map(f => {
+          const c = f.chip, h = chipHeard(c), pc = Math.round(h / c.c * 100);
+          const tn = tandasDe(c.c), tok = tandasOkN(c.id);
+          return `<button class="vrow${tok >= tn ? ' full' : ''}" onclick="openVocabChip('${c.id}')">
+            ${iconSvg(iconTema(c.n, f.sec.s, f.sec.esp))}
+            <span class="vrow-t"><b>${escapeHtml(c.n)}</b>
+              <span class="vrow-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pc}"><i style="width:${pc}%"></i></span>
+              <span class="vrow-c">${h}/${c.c} palabras · ${tok}/${tn} ${tn === 1 ? 'tanda' : 'tandas'}</span>
+            </span>
+            <span class="vt-go">${V_ARROW}</span>
+          </button>`;
+        }).join('')
+      : `<div class="vocab-vacio">Este demo aún no trae el banco de ingeniería.</div>`}
+
+    <div class="e4e-h">Situaciones reales de trabajo</div>
+    ${E4E_SITS.map((s, i) => `<button class="e4e-sit" onclick="openE4ESit('${s.id}')">
+        <span class="e4e-n">${i + 1}</span>
+        <span><b>${escapeHtml(s.n)}</b><small>${escapeHtml(s.d)}</small></span>
+        ${e4eSitOk(s.id) ? '<span class="e4e-ok">✓ hecho</span>' : ''}
+      </button>`).join('')}
+    <p class="e4e-hint">Cada situación son ${E4E_SITS[0].qs.length} ejercicios con el mismo motor de la ruta:
+      fallas una, la repasas al final.</p>`;
+}
+
+/** Una situación, con la hoja y las dos vueltas del mini-quiz de siempre. */
+function openE4ESit(id) {
+  const sit = E4E_SITS.find(s => s.id === id);
+  if (!sit) return;
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  let round, redo, idx, results, failedQs, answered = 0;
+  _dismissGuard = () => answered > 0;
+  function startRound(qs, isRedo) { round = qs; redo = isRedo; idx = 0; results = []; failedQs = []; step(); }
+  function step() {
+    sheet.classList.remove('result');
+    sheet.innerHTML = `<div class="handle"></div>
+      <div class="q-top"><div class="segs" id="mq-segs"></div><span class="q-counter" id="mq-counter"></span></div>
+      <div class="quiz-host" id="mq-host"></div>`;
+    const pintado = renderQuiz(document.getElementById('mq-host'), round[idx],
+      () => { answered++; results[idx] = true; advance(); },
+      () => { answered++; results[idx] = false; failedQs.push(round[idx]); advance(); });
+    if (!pintado) return skipBroken();
+    quizProgress(document.getElementById('mq-segs'), document.getElementById('mq-counter'), round.length, idx, results);
+  }
+  function skipBroken() {
+    round.splice(idx, 1);
+    if (!round.length) { closeOverlay(); toast('Esa situación tuvo un problema. Prueba con otra.'); return; }
+    if (idx >= round.length) return finish();
+    step();
+  }
+  function advance() { if (idx < round.length - 1) { idx++; step(); } else finish(); }
+  function finish() {
+    if (!failedQs.length) return pass();
+    if (redo) return showFail();
+    return showRedo(failedQs.slice());
+  }
+  function result(iconName, iconColor, cls, title, sub, btnCls, btnLabel, onAction) {
+    sheet.classList.add('result');
+    sheet.innerHTML = `<div class="handle"></div><div class="center-col">
+      <div class="result-icon ${cls}">${icon(iconName, cls === 'ok' ? 40 : 38, iconColor)}</div>
+      <div class="result-title">${title}</div>
+      <div class="result-sub">${sub}</div>
+      <button class="btn ${btnCls}" id="mq-action">${btnLabel}</button>
+      </div>`;
+    document.getElementById('mq-action').onclick = onAction;
+  }
+  function pass() {
+    result('check', '#2E7D1A', 'ok', '¡Situación resuelta!', escapeHtml(sit.n), 'green', 'Continuar', () => {
+      stopSpeak(); closeOverlay();
+      e4eState().sits[sit.id] = 1; touchDay(); saveProgress(PROGRESS);
+      renderVocab();
+    });
+  }
+  function showRedo(failed) {
+    const one = failed.length === 1;
+    result('refresh', '#5C5159', 'no', 'Repasemos',
+      `Fallaste ${failed.length} ${one ? 'ejercicio' : 'ejercicios'}.`,
+      'amber', `Repasar${one ? '' : ` (${failed.length})`}`, () => { stopSpeak(); startRound(shuffle(failed), true); });
+  }
+  function showFail() {
+    result('refresh', '#5C5159', 'no', 'Casi lo tienes', 'Repite la situación completa.',
+      'blue', 'Reintentar', () => { stopSpeak(); startRound(sit.qs.slice(), false); });
+  }
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+  startRound(sit.qs.slice(), false);
+}
+
 
 // Un tema pasa el filtro segun su estado, que es el mismo que pinta su fila.
 function chipEstado(c) {
@@ -4025,12 +4373,21 @@ function renderVocabIndice(el) {
     </button>`;
   }
   const fil = [['todos', 'Todos'], ['curso', 'En curso'], ['nuevos', 'Sin empezar'], ['listos', 'Dominados']];
+  // La capa profesional va arriba del todo: es lo que distingue a este curso.
+  const e4e = e4eHay() ? `<button class="e4e-card" onclick="openE4E()">
+      ${iconSvg('ingenieria', 'vico big')}
+      <span><b>English for Engineering</b>
+        <small>Elige tu especialidad y practica el inglés de tu trabajo: vocabulario técnico y situaciones reales.</small></span>
+      <span class="e4e-go">Entrar</span>
+    </button>` : '';
   el.innerHTML = `<div class="vocab-intro">
       <b>Tu biblioteca de palabras</b>
       <small>${prNum(t.temas)} temas · ${prNum(t.total)} palabras. Cada tema va en tandas de diez, con su examen al final de cada tanda.</small>
       <span class="vi-count">${prNum(t.heard)} de ${prNum(t.total)} escuchadas</span>
     </div>
+    ${e4e}
     ${sigue}
+
     <input class="vbuscar" type="search" placeholder="Buscar un tema…" value="${escapeHtml(VFILTRO)}"
            aria-label="Buscar un tema" oninput="filtrarVocab(this.value)">
     <div class="vfil">${fil.map(([k, n]) => `<button data-f="${k}" class="${VFILTER === k ? 'on' : ''}" onclick="vocabFiltro('${k}')">${n}</button>`).join('')}</div>
@@ -5417,7 +5774,8 @@ function renderWriting(host, q, onCorrect, onIncorrect) {
 function renderQuiz(host, q, onCorrect, onIncorrect) {
   clearAutoNext(host);
   try {
-    if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
+    if (q.type === 'speaking') renderSpeaking(host, q, onCorrect, onIncorrect);
+    else if (q.type === 'mc') renderMC(host, q, onCorrect, onIncorrect);
     else if (q.type === 'rebuild') renderRebuild(host, q, onCorrect, onIncorrect);
     else if (q.type === 'writing') renderWriting(host, q, onCorrect, onIncorrect);
     else renderTap(host, q, onCorrect, onIncorrect);
@@ -5728,10 +6086,12 @@ function renderPracticeLibrary(el) {
       <span class="pr-sub">Llevas ${prNum(totHechas)} ejercicios practicados</span>
 
     </div>
+    ${speakingShelfHTML()}
     <div class="pr-chips">${chips.join('')}</div>` +
     (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
       <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
 
+  el.querySelectorAll('.sp-lvl').forEach(b => b.onclick = () => openSpeakingRun(+b.getAttribute('data-sp')));
   el.querySelectorAll('.pr-chip').forEach(b => b.onclick = () => {
     PRACTICE_FILTER = +b.getAttribute('data-m');
     renderPractice();
@@ -5892,8 +6252,442 @@ function openPracticeQuiz(lesson, block, bank) {
 }
 
 
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// SPEAKING — hablar en voz alta, A1 → C1
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+//
+// Dos motores, y el ejercicio decide cuál:
+//
+//   · repetir / leer  → el navegador reconoce la voz y se compara palabra por
+//     palabra con la frase modelo. No sale nada del dispositivo, no cuesta nada.
+//   · habla libre     → se graba un WAV corto y lo evalúa la IA
+//     (/api/course/speaking-eval): transcribe, puntúa y aconseja.
+//
+// La evaluación con IA tiene tope diario por alumno (SP_AI_MAX). Pasado el tope
+// el ejercicio NO se bloquea: cae al reconocimiento del navegador.
+
+var SPEAKING_INDEX = {}; // var: se asigna al llegar el bundle, antes de este punto      // { 'modulo-1': 10, … } — sólo cuántos hay
+const SPEAKING_BANK = {};     // los ejercicios ya descargados, por módulo
+const _spPend = {};
+const SP_AI_MAX = 20;         // evaluaciones con IA por alumno y día
+
+function fetchSpeaking(modId) {
+  if (SPEAKING_BANK[modId]) return Promise.resolve(SPEAKING_BANK[modId]);
+  if (_spPend[modId]) return _spPend[modId];
+  const url = '/api/course/speaking?t=' + encodeURIComponent(DEMO.courseToken || '')
+    + '&ids=' + encodeURIComponent(modId);
+  _spPend[modId] = fetch(url, { credentials: 'same-origin' })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('speaking ' + r.status)))
+    .then(j => {
+      const items = ((j.speaking || {})[modId] || []).map(q => Object.assign({ type: 'speaking' }, q));
+      SPEAKING_BANK[modId] = items;
+      return items;
+    })
+    .catch(e => { delete _spPend[modId]; throw e; });
+  return _spPend[modId];
+}
+
+// Cuota de IA del día. Se guarda aparte del progreso: es un contador de gasto,
+// no de aprendizaje, y "Borrar TODO" no debería regalar evaluaciones.
+function spAiLeft() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('sp-ai') || '{}');
+    if (raw.d !== dayKey()) return SP_AI_MAX;
+    return Math.max(0, SP_AI_MAX - (raw.n || 0));
+  } catch (e) { return SP_AI_MAX; }
+}
+function spAiSpend() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('sp-ai') || '{}');
+    const n = raw.d === dayKey() ? (raw.n || 0) + 1 : 1;
+    localStorage.setItem('sp-ai', JSON.stringify({ d: dayKey(), n }));
+  } catch (e) {}
+}
+
+// ---- reconocimiento del navegador (coste cero) ----
+// continuous = true: el navegador ya no corta la toma cuando cree que
+// terminaste de hablar; quien decide cuándo parar es el alumno soltando el botón.
+function spRecognizer() {
+  const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!R) return null;
+  const r = new R();
+  r.lang = 'en-US'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
+  return r;
+}
+
+const spNorm = s => String(s || '').toLowerCase().replace(/[^a-z0-9' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+
+// Compara lo dicho con la frase modelo, palabra por palabra y en orden. Devuelve
+// qué palabras se reconocieron y el porcentaje de acierto.
+function spCompare(target, heard) {
+  const t = spNorm(target).split(' ').filter(Boolean);
+  const h = spNorm(heard).split(' ').filter(Boolean);
+  const hits = new Array(t.length).fill(false);
+  let j = 0;
+  for (let i = 0; i < t.length; i++) {
+    const k = h.indexOf(t[i], j);
+    if (k !== -1) { hits[i] = true; j = k + 1; }
+  }
+  // Segunda pasada: palabras dichas fuera de orden también cuentan.
+  const sobrantes = h.slice();
+  for (let i = 0; i < t.length; i++) {
+    if (hits[i]) continue;
+    const k = sobrantes.indexOf(t[i]);
+    if (k !== -1) { hits[i] = true; sobrantes.splice(k, 1); }
+  }
+  const ok = hits.filter(Boolean).length;
+  return { hits, pct: t.length ? Math.round(ok / t.length * 100) : 0, words: t };
+}
+
+// ---- grabación (WAV completo, no fragmentos de MediaRecorder) ----
+// El permiso se pide una sola vez y el stream queda vivo: así, al mantener
+// pulsado el botón, la grabación empieza en el mismo instante y no se pierde
+// la primera palabra esperando al navegador.
+let SP_STREAM = null;
+async function spMicReady() {
+  if (SP_STREAM && SP_STREAM.getTracks().some(t => t.readyState === 'live')) return SP_STREAM;
+  SP_STREAM = await navigator.mediaDevices.getUserMedia({ audio: true });
+  return SP_STREAM;
+}
+async function spRecorder() {
+  const stream = await spMicReady();
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const source = ctx.createMediaStreamSource(stream);
+  const node = ctx.createScriptProcessor(4096, 1, 1);
+  const pcm = [];
+  node.onaudioprocess = e => pcm.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+  source.connect(node); node.connect(ctx.destination);
+  return {
+    async stop() {
+      node.disconnect(); source.disconnect(); // el stream sigue vivo para el siguiente intento
+      const rate = ctx.sampleRate;
+      await ctx.close();
+      return spWav(pcm, rate);
+    },
+  };
+}
+
+// PCM → WAV mono 16 kHz, 16 bits. Bajar a 16 kHz recorta el archivo a un tercio
+// sin que la transcripción pierda nada.
+function spWav(chunks, rate) {
+  let n = 0; chunks.forEach(c => n += c.length);
+  const all = new Float32Array(n);
+  let o = 0; chunks.forEach(c => { all.set(c, o); o += c.length; });
+  const paso = Math.max(1, Math.round(rate / 16000));
+  const out = new Int16Array(Math.floor(all.length / paso));
+  for (let i = 0; i < out.length; i++) {
+    const v = Math.max(-1, Math.min(1, all[i * paso]));
+    out[i] = v < 0 ? v * 0x8000 : v * 0x7FFF;
+  }
+  const sr = Math.round(rate / paso);
+  const buf = new ArrayBuffer(44 + out.length * 2), dv = new DataView(buf);
+  const txt = (p, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(p + i, s.charCodeAt(i)); };
+  txt(0, 'RIFF'); dv.setUint32(4, 36 + out.length * 2, true); txt(8, 'WAVE');
+  txt(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+  dv.setUint32(24, sr, true); dv.setUint32(28, sr * 2, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
+  txt(36, 'data'); dv.setUint32(40, out.length * 2, true);
+  new Int16Array(buf, 44).set(out);
+  return new Blob([buf], { type: 'audio/wav' });
+}
+
+async function spEvaluate(blob, q) {
+  const fd = new FormData();
+  fd.append('audio', blob, 'recording.wav');
+  fd.append('level', q.level || 'A2');
+  if (q.task) fd.append('task', q.task);
+  if (q.target) fd.append('target', q.target);
+  if (q.requirements) fd.append('requirements', JSON.stringify(q.requirements));
+  if (q.acceptedVariants) fd.append('acceptedVariants', JSON.stringify(q.acceptedVariants));
+  const r = await fetch('/api/course/speaking-eval?t=' + encodeURIComponent(DEMO.courseToken || ''), {
+    method: 'POST', body: fd, credentials: 'same-origin',
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error(j.error || 'eval'), { code: j.error });
+  spAiSpend();
+  return j;
+}
+
+function micSvg(size) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>`;
+}
+
+// El ejercicio hablado. Misma firma que el resto de tipos: lo pinta renderQuiz.
+function spAuthToken() {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i) || '';
+      if (!key.startsWith('sb-') || !key.endsWith('-auth-token')) continue;
+      const raw = JSON.parse(localStorage.getItem(key) || '{}');
+      const token = raw.access_token || (raw.currentSession && raw.currentSession.access_token);
+      if (token) return token;
+    }
+  } catch (e) {}
+  return '';
+}
+
+async function spSaveAttempt(blob, q, attemptNo, durationMs, localResult, aiResult) {
+  const token = spAuthToken();
+  if (!token) return { saved: false, reason: 'signed_out' };
+  const fd = new FormData();
+  fd.append('audio', blob, 'recording.wav');
+  fd.append('exerciseId', q.id || 'unknown'); fd.append('level', q.level || 'A1'); fd.append('mode', q.mode || 'repeat');
+  fd.append('demoSlug', DEMO.slug || 'demo'); fd.append('attemptNumber', String(attemptNo)); fd.append('durationMs', String(durationMs));
+  fd.append('localTranscript', localResult.transcript || ''); fd.append('aiTranscript', aiResult.transcript || '');
+  fd.append('localScore', String(localResult.score || 0)); fd.append('pronunciationScore', String(aiResult.pronunciation || 0));
+  fd.append('fluencyScore', String(aiResult.fluency || 0)); fd.append('grammarScore', String(aiResult.grammar || 0));
+  fd.append('passed', String(!!aiResult.passed)); fd.append('problemWords', JSON.stringify(aiResult.problemWords || []));
+  fd.append('wordDifferences', JSON.stringify(localResult.differences || []));
+  fd.append('feedback', JSON.stringify({ headline: aiResult.headline || '', advice: aiResult.advice || '', evidence: aiResult.evidence || [], betterVersion: aiResult.betterVersion || null }));
+  fd.append('localLatencyMs', String(localResult.latencyMs || 0)); fd.append('aiLatencyMs', String((aiResult.metrics && aiResult.metrics.totalMs) || 0));
+  fd.append('usage', JSON.stringify(aiResult.usage || {}));
+  const r = await fetch('/api/course/speaking-attempts', { method: 'POST', headers: { Authorization: 'Bearer ' + token }, body: fd });
+  return { saved: r.ok, reason: r.ok ? '' : 'save_failed' };
+}
+
+// Una sola toma alimenta los dos evaluadores del piloto: reconocimiento local e IA.
+// El permiso se resuelve antes de mostrar el estado de grabación, evitando el 0% falso.
+function renderSpeaking(host, q, onCorrect, onIncorrect) {
+  const libre = ['free', 'guided', 'dialogue'].includes(q.mode);
+  const kicker = libre ? 'Habla libremente' : (q.mode === 'read' ? 'Lee en voz alta' : 'Repite en voz alta');
+  let rec = null, recog = null, cerrado = false, attemptNo = 0, beganAt = 0;
+  let localText = '', recognitionDone = Promise.resolve(), grabando = false, procesando = false;
+  let audioUrl = '', micListo = false, cronoT = null, topeT = null;
+  const MAX_MS = 60000; // corte de seguridad: nadie pierde la toma por olvidar parar
+
+  const consigna = libre ? (q.taskEs || q.promptEs || q.task || '') : (q.promptEs || q.prompt || '');
+  const glosas = (q.gloss || []).slice(0, 8);
+
+  host.innerHTML = `<div class="q-kicker">${kicker}</div>
+    <div class="q-question">${escapeHtml(consigna)}</div>
+    ${q.prompt && q.promptEs ? `<div class="sp-en">${escapeHtml(libre ? (q.task || q.prompt) : q.prompt)}</div>` : ''}
+    ${libre ? '' : `<div class="sp-target" id="sp-t">${escapeHtml(q.target || '')}</div>
+         <div class="sp-trad"><b>Significa:</b> ${escapeHtml(q.es || q.modelEs || '')}</div>
+         ${glosas.length ? `<div class="sp-gloss">${glosas.map(g => `<span><b>${escapeHtml(g.w)}</b> ${escapeHtml(g.es)}</span>`).join('')}</div>` : ''}
+         <button class="btn blue" id="sp-listen" type="button" style="margin-top:10px">Escuchar el modelo</button>`}
+    <div class="sp-row">
+      <button class="sp-mic" id="sp-mic" type="button" aria-label="Grabar tu respuesta">${micSvg(30)}</button>
+      <div>
+        <div class="sp-hint" id="sp-hint">Toca el micrófono para grabar y tócalo otra vez cuando termines.</div>
+        <div class="sp-timer" id="sp-timer" hidden>0:00</div>
+      </div>
+    </div><div id="sp-fb"></div>`;
+
+  const listen = document.getElementById('sp-listen');
+  if (listen) listen.onclick = () => speak(q.target, null, null, 0.85, true);
+  const mic = document.getElementById('sp-mic'), hint = document.getElementById('sp-hint'), fb = document.getElementById('sp-fb');
+  const crono = document.getElementById('sp-timer');
+  function ondas() { fb.innerHTML = '<div class="sp-wave">' + Array.from({ length: 14 }, (_, i) => `<i style="animation-delay:${(i % 7) * .07}s"></i>`).join('') + '</div>'; }
+  function cleanupAudio() { if (audioUrl) { URL.revokeObjectURL(audioUrl); audioUrl = ''; } }
+  function pararCrono() { clearInterval(cronoT); clearTimeout(topeT); cronoT = topeT = null; crono.hidden = true; }
+  function reposo(txt) { grabando = false; procesando = false; pararCrono(); mic.classList.remove('rec'); mic.disabled = false; hint.textContent = txt; }
+
+  // El permiso se resuelve antes de grabar nada: nunca se evalúa una toma vacía.
+  async function pedirPermiso() {
+    mic.disabled = true; hint.textContent = 'Esperando tu permiso para usar el micrófono…';
+    try { await spMicReady(); micListo = true; reposo('Listo. Toca el micrófono para empezar a grabar.'); }
+    catch (e) { reposo('No pudimos usar el micrófono. Permite el acceso en tu navegador y vuelve a intentarlo.'); }
+  }
+
+  async function startAttempt() {
+    if (cerrado || grabando || procesando) return;
+    if (!micListo) return pedirPermiso();
+    grabando = true; fb.innerHTML = ''; mic.disabled = true;
+    try { rec = await spRecorder(); }
+    catch (e) { micListo = false; return reposo('Perdimos el micrófono. Tócalo para volver a darle permiso.'); }
+    attemptNo++; beganAt = Date.now(); localText = '';
+    mic.disabled = false; mic.classList.add('rec');
+    hint.textContent = 'Grabando… toca otra vez cuando termines.'; ondas();
+    crono.hidden = false; crono.textContent = '0:00';
+    cronoT = setInterval(() => {
+      const s = Math.floor((Date.now() - beganAt) / 1000);
+      crono.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    }, 250);
+    topeT = setTimeout(() => { if (grabando) stopAttempt(); }, MAX_MS);
+    const localStarted = Date.now();
+    recog = spRecognizer();
+    if (recog) {
+      recognitionDone = new Promise(resolve => {
+        recog.onresult = e => {
+          for (let i = e.resultIndex; i < e.results.length; i++) {
+            if (e.results[i].isFinal) localText += ' ' + e.results[i][0].transcript;
+          }
+        };
+        recog.onerror = () => resolve(); recog.onend = () => resolve();
+        try { recog.start(); } catch (e) { resolve(); }
+      }).then(() => Date.now() - localStarted);
+    } else recognitionDone = Promise.resolve(0);
+  }
+
+  async function stopAttempt() {
+    if (!grabando) return;
+    const dur = Date.now() - beganAt;
+    grabando = false; pararCrono(); mic.classList.remove('rec');
+    if (!rec) return reposo('Toca el micrófono para grabar.');
+    if (dur < 500) {
+      try { await rec.stop(); } catch (e) {}
+      try { if (recog) recog.stop(); } catch (e) {}
+      fb.innerHTML = '';
+      return reposo('Fue muy corto: graba de nuevo y para recién cuando termines de hablar.');
+    }
+    procesando = true; mic.disabled = true;
+    hint.textContent = 'Transcribiendo tu audio…';
+    fb.innerHTML = '<div class="sp-said">Enviando tu grabación a transcribir y evaluar…</div>';
+    try { if (recog) recog.stop(); } catch (e) {}
+    try {
+      const blobPromise = rec.stop();
+      const localLatencyPromise = recognitionDone;
+      const blob = await blobPromise;
+      if (blob.size < 4096) throw Object.assign(new Error('vacío'), { code: 'empty_audio' });
+      cleanupAudio(); audioUrl = URL.createObjectURL(blob);
+      const localLatency = await localLatencyPromise;
+      const cmpLocal = q.target ? spCompare(q.target, localText.trim()) : { pct: localText.trim() ? 100 : 0, words: [], hits: [] };
+      const localResult = { transcript: localText.trim(), score: cmpLocal.pct, latencyMs: localLatency,
+        differences: (cmpLocal.words || []).filter((w, i) => !cmpLocal.hits[i]) };
+      const ai = await spEvaluate(blob, q);
+      const saved = await spSaveAttempt(blob, q, attemptNo, dur, localResult, ai).catch(() => ({ saved: false, reason: 'save_failed' }));
+      procesando = false;
+      showComparison(localResult, ai, saved);
+    } catch (e) {
+      const reason = e.code === 'empty_audio' || e.code === 'no_speech' ? 'No se oyó una respuesta completa.' : 'No pudimos terminar la transcripción.';
+      fb.innerHTML = `<div class="sp-advice">${reason} No perderás el ejercicio: vuelve a intentarlo.</div>`;
+      reposo('Toca el micrófono para grabar de nuevo.');
+    }
+  }
+
+  // El resultado gira alrededor de la transcripción de la IA: se lee entera
+  // mientras se escucha la propia grabación y se compara con el modelo.
+  function showComparison(localResult, ai, saved) {
+    const ok = !!ai.passed;
+    const dicho = (ai.transcript || '').trim();
+    const cmp = (q.target && dicho) ? spCompare(q.target, dicho) : null;
+    const review = (ai.problemWords || []).slice(0, 6);
+    const metrics = ai.metrics || {};
+    if (cmp) {
+      const t = document.getElementById('sp-t');
+      if (t) t.innerHTML = cmp.words.map((w, i) => `<span class="w ${cmp.hits[i] ? 'ok' : 'bad'}">${escapeHtml(w)}</span>`).join(' ');
+    }
+    const faltantes = cmp ? cmp.words.filter((w, i) => !cmp.hits[i]) : [];
+    fb.innerHTML = `
+      <div class="sp-transcript ${dicho ? '' : 'vacio'}">
+        <span class="lbl">Lo que se te entendió</span>
+        <p>${dicho ? escapeHtml(dicho) : 'La transcripción llegó vacía: no se reconoció voz en la grabación. Vuelve a grabar más cerca del micrófono.'}</p>
+      </div>
+      <div class="sp-audio-row">
+        <div><span class="lbl">Tu grabación</span><audio id="sp-playback" controls src="${audioUrl}"></audio></div>
+        ${q.target ? `<button class="btn blue" id="sp-listen2" type="button">Escuchar el modelo</button>` : ''}
+      </div>
+      <div class="sp-note">Escúchate mientras lees la transcripción: donde no coinciden, ahí está lo que falta pronunciar.</div>
+      ${cmp ? `<div class="sp-score" style="margin-top:12px"><div><b>${cmp.pct}%</b><span>Palabras del modelo</span></div>
+        <div><b>${ai.pronunciation ?? '–'}</b><span>Pronunciación*</span></div>
+        <div><b>${ai.fluency ?? '–'}</b><span>Fluidez</span></div>
+        <div><b>${ai.grammar ?? '–'}</b><span>Gramática</span></div></div>`
+        : `<div class="sp-score" style="margin-top:12px"><div><b>${ai.pronunciation ?? '–'}</b><span>Pronunciación*</span></div>
+        <div><b>${ai.fluency ?? '–'}</b><span>Fluidez</span></div>
+        <div><b>${ai.grammar ?? '–'}</b><span>Gramática</span></div></div>`}
+      <div class="sp-advice"><b>${escapeHtml(ai.headline || '')}</b><br>${escapeHtml(ai.advice || '')}
+        ${ai.betterVersion ? `<br><br>Mejor así: <i>${escapeHtml(ai.betterVersion)}</i>` : ''}
+        ${faltantes.length ? `<br><br>No se te entendió: <b>${faltantes.slice(0, 8).map(escapeHtml).join(', ')}</b>` : ''}
+        ${review.length ? `<br><br>Palabras para revisar: <b>${review.map(escapeHtml).join(', ')}</b>` : ''}</div>
+      <details class="sp-details"><summary>Ver comparación local vs IA</summary>
+        <div><b>Navegador:</b> ${escapeHtml(localResult.transcript || 'no produjo transcripción')} · ${localResult.score}% del modelo · ${localResult.latencyMs || 0} ms</div>
+        <div><b>IA:</b> ${escapeHtml(dicho || '—')} · ${metrics.totalMs || 0} ms</div>
+        <div>*La nota de pronunciación se infiere de la transcripción, no es análisis fonético.${saved.saved ? ' Intento guardado en tu historial privado.' : ' Inicia sesión para conservar audio e historial.'}</div>
+      </details>
+      ${ok ? `<button class="btn green" id="sp-next" style="margin-top:12px">Continuar</button>`
+        : `<button class="btn amber" id="sp-retry" style="margin-top:12px">Reintentar hasta lograrlo</button>`}`;
+    const l2 = document.getElementById('sp-listen2');
+    if (l2) l2.onclick = () => speak(q.target, null, null, 0.85, true);
+    if (ok) {
+      cerrado = true; mic.disabled = true; pararCrono();
+      document.getElementById('sp-next').onclick = () => { cleanupAudio(); onCorrect(); };
+    } else {
+      reposo('Escucha el modelo y toca el micrófono para volver a grabar.');
+      document.getElementById('sp-retry').onclick = () => {
+        cleanupAudio(); fb.innerHTML = '';
+        if (q.target) { const t = document.getElementById('sp-t'); if (t) t.textContent = q.target; }
+        reposo('Toca el micrófono para grabar de nuevo.');
+      };
+    }
+  }
+
+  // Un toque empieza, otro toque termina: el alumno decide cuándo para.
+  mic.addEventListener('click', () => { if (grabando) stopAttempt(); else startAttempt(); });
+}
+
+
+
+// La estantería de Speaking dentro de la biblioteca de práctica: un nivel por
+// tarjeta, y al tocarla corre una tanda de 5 ejercicios hablados.
+function speakingShelfHTML() {
+  if (!DEBUG_SPEAKING) return '';
+  const mods = (course && course.modules) || [];
+  const tarjetas = mods.map((mod, mi) => {
+    const n = SPEAKING_INDEX[mod.id] || 0;
+    if (!n) return '';
+    const nivel = mod.level || PR_CEFR[mi] || ('M' + (mi + 1));
+    return `<button class="sp-lvl" type="button" data-sp="${mi}">
+      <b style="color:${modAccent(mi)}">${escapeHtml(nivel)}</b>
+      <span>${n} ejercicios</span></button>`;
+  }).join('');
+  if (!tarjetas) return '';
+  return `<div class="sp-shelf">
+    <div class="sp-shelf-h"><span class="sp-mic-badge" style="color:var(--blue)">${micSvg(17)}</span>
+      <b>Speaking</b></div>
+    <small>Habla en voz alta y recibe corrección. Al repetir frases te corrige tu propio dispositivo;
+      en las respuestas libres te escucha nuestro tutor y te dice qué mejorar.</small>
+    <div class="sp-levels">${tarjetas}</div>
+  </div>`;
+}
+
+function openSpeakingRun(mi) {
+  if (!DEBUG_SPEAKING) return;
+  const mod = course.modules[mi];
+  if (!mod) return;
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  sheet.innerHTML = `<div class="handle"></div><div class="center-col" style="padding:34px 0">
+    <div class="pr-spin"></div><div class="result-sub">Preparando tu práctica de speaking…</div></div>`;
+  sheet.dataset.dismissible = 'true'; overlay.classList.add('active');
+
+  fetchSpeaking(mod.id).then(items => {
+    if (!items.length) { closeOverlay(); return toast('Todavía no hay speaking en este nivel.'); }
+    const round = shuffle(items.slice()).slice(0, 5);
+    let idx = 0, results = [], answered = 0;
+    _dismissGuard = () => answered > 0;
+
+    function step() {
+      sheet.classList.remove('result');
+      sheet.innerHTML = `<div class="handle"></div>
+        <div class="q-top"><div class="segs" id="sp-segs"></div><span class="q-counter" id="sp-counter"></span></div>
+        <div class="quiz-host" id="sp-host"></div>`;
+      const pintado = renderQuiz(document.getElementById('sp-host'), round[idx],
+        () => { answered++; results[idx] = true; avanzar(); },
+        () => { answered++; results[idx] = false; avanzar(); });
+      if (!pintado) { round.splice(idx, 1); return round.length ? step() : (closeOverlay(), toast('Esa tanda tuvo un problema.')); }
+      quizProgress(document.getElementById('sp-segs'), document.getElementById('sp-counter'), round.length, idx, results);
+    }
+    function avanzar() { if (idx < round.length - 1) { idx++; step(); } else fin(); }
+    function fin() {
+      touchDay();
+      const bien = results.filter(Boolean).length;
+      _dismissGuard = null;
+      sheet.classList.add('result');
+      sheet.innerHTML = `<div class="handle"></div><div class="center-col">
+        <div class="result-icon ok">${icon('check', 40, '#2E7D1A')}</div>
+        <div class="result-title">Practicaste tu speaking</div>
+        <div class="result-sub">${bien} de ${round.length} bien dichas. Hablar es lo que más rápido mejora: vuelve mañana.</div>
+        <button class="btn green" id="sp-done">Continuar</button></div>`;
+      document.getElementById('sp-done').onclick = closeOverlay;
+    }
+    step();
+  }, e => { console.error('[speaking]', e); closeOverlay(); toast('No se pudo cargar el speaking. Inténtalo de nuevo.'); });
+}
+
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // SHEETS / DIALOGS
+
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 let _dismissGuard = null; // when set, returns true if dismissing the sheet needs confirmation
 function closeOverlay() {
