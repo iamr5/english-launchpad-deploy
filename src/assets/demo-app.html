@@ -2182,6 +2182,20 @@
     font-weight: 700; background: color-mix(in srgb, var(--blue) 8%, #fff);
     border: 2px solid color-mix(in srgb, var(--blue) 22%, #fff); color: var(--ink); }
   .sp-note { margin-top: 10px; font-size: 11.5px; font-weight: 700; color: var(--muted2); }
+  /* Lo que no sonó a inglés: ámbar rayado, bien distinto del rojo de "faltó". */
+  .sp-unintel { border-radius: 6px; padding: 0 3px; font-weight: 900; color: #7A4B00;
+    background: repeating-linear-gradient(135deg, #FFE9B8 0 6px, #FFD98A 6px 12px);
+    box-shadow: inset 0 -2px 0 #E0A62B; text-decoration: underline wavy #C9821A 2px;
+    text-underline-offset: 3px; cursor: help; }
+  .sp-cost { margin-top: 10px; padding: 9px 12px; border-radius: 12px; border: 2px dashed var(--line);
+    font-size: 11.5px; font-weight: 800; color: var(--muted); background: #FCFCFD; }
+  .sp-cost b { color: var(--ink); }
+  .sp-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; font-size: 11px; font-weight: 800; color: var(--muted2); }
+  .sp-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+  .sp-legend .lg-ok i { background: #3FAA24; }
+  .sp-legend .lg-bad i { background: #E5474A; }
+  .sp-legend .lg-un i { background: #E0A62B; }
+
 
   .pr-chips { display: flex; gap: 7px; overflow-x: auto; padding: 0 2px 12px; scrollbar-width: none; }
   .pr-chips::-webkit-scrollbar { display: none; }
@@ -6340,6 +6354,49 @@ function spCompare(target, heard) {
   return { hits, pct: t.length ? Math.round(ok / t.length * 100) : 0, words: t };
 }
 
+// Resalta dentro de la transcripción los trozos que la IA no reconoció como
+// inglés. Devuelve HTML ya escapado: se recorre el texto marcando coincidencias.
+const SP_UN_MOTIVO = { spanish: 'Esto está en español', 'not-english': 'No es una palabra en inglés',
+  unclear: 'No se entendió', filler: 'Muletilla / relleno' };
+function spMarkUnintelligible(texto, lista) {
+  const src = String(texto || '');
+  const marcas = (lista || [])
+    .map(u => ({ t: String((u && u.text) || '').trim(), r: (u && u.reason) || 'unclear', s: (u && u.suggestion) || '' }))
+    .filter(u => u.t.length > 1);
+  if (!marcas.length) return escapeHtml(src);
+  const bajo = src.toLowerCase();
+  const rangos = [];
+  marcas.forEach(u => {
+    let from = 0, k;
+    while ((k = bajo.indexOf(u.t.toLowerCase(), from)) !== -1) {
+      rangos.push({ a: k, b: k + u.t.length, u });
+      from = k + u.t.length;
+    }
+  });
+  if (!rangos.length) return escapeHtml(src);
+  rangos.sort((x, y) => x.a - y.a);
+  let out = '', pos = 0;
+  rangos.forEach(r => {
+    if (r.a < pos) return;
+    out += escapeHtml(src.slice(pos, r.a));
+    const tip = (SP_UN_MOTIVO[r.u.r] || 'No se reconoció como inglés') + (r.u.s ? ` · en inglés: ${r.u.s}` : '');
+    out += `<span class="sp-unintel" title="${escapeHtml(tip)}">${escapeHtml(src.slice(r.a, r.b))}</span>`;
+    pos = r.b;
+  });
+  out += escapeHtml(src.slice(pos));
+  return out;
+}
+
+// Costo estimado del intento, en formato legible para el piloto.
+function spCostoTexto(cost) {
+  if (!cost || typeof cost.totalUsd !== 'number') return '';
+  const f = n => '$' + (n < 0.01 ? n.toFixed(4) : n.toFixed(3));
+  const t = cost.transcription || {}, s = cost.scoring || {};
+  return `Esta transcripción costó ≈ <b>${f(cost.totalUsd)}</b> `
+    + `(transcripción ${f(t.usd || 0)} · evaluación ${f(s.usd || 0)}) · estimado`;
+}
+
+
 // ---- grabación (WAV completo, no fragmentos de MediaRecorder) ----
 // El permiso se pide una sola vez y el stream queda vivo: así, al mantener
 // pulsado el botón, la grabación empieza en el mismo instante y no se pierde
@@ -6560,11 +6617,14 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
   // El resultado gira alrededor de la transcripción de la IA: se lee entera
   // mientras se escucha la propia grabación y se compara con el modelo.
   function showComparison(localResult, ai, saved) {
-    const ok = !!ai.passed;
+    const unintel = Array.isArray(ai.unintelligible) ? ai.unintelligible.filter(u => u && u.text) : [];
+    const todoMal = !!ai.mostlyUnintelligible;
+    const ok = !!ai.passed && !todoMal;
     const dicho = (ai.transcript || '').trim();
     const cmp = (q.target && dicho) ? spCompare(q.target, dicho) : null;
     const review = (ai.problemWords || []).slice(0, 6);
     const metrics = ai.metrics || {};
+    const costo = spCostoTexto(ai.cost);
     if (cmp) {
       const t = document.getElementById('sp-t');
       if (t) t.innerHTML = cmp.words.map((w, i) => `<span class="w ${cmp.hits[i] ? 'ok' : 'bad'}">${escapeHtml(w)}</span>`).join(' ');
@@ -6573,8 +6633,11 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
     fb.innerHTML = `
       <div class="sp-transcript ${dicho ? '' : 'vacio'}">
         <span class="lbl">Lo que se te entendió</span>
-        <p>${dicho ? escapeHtml(dicho) : 'La transcripción llegó vacía: no se reconoció voz en la grabación. Vuelve a grabar más cerca del micrófono.'}</p>
+        <p>${dicho ? spMarkUnintelligible(dicho, unintel) : 'La transcripción llegó vacía: no se reconoció voz en la grabación. Vuelve a grabar más cerca del micrófono.'}</p>
       </div>
+      ${dicho ? `<div class="sp-legend"><span class="lg-ok"><i></i>dicho bien</span>
+        <span class="lg-bad"><i></i>faltó del modelo</span>
+        <span class="lg-un"><i></i>no sonó a inglés</span></div>` : ''}
       <div class="sp-audio-row">
         <div><span class="lbl">Tu grabación</span><audio id="sp-playback" controls src="${audioUrl}"></audio></div>
         ${q.target ? `<button class="btn blue" id="sp-listen2" type="button">Escuchar el modelo</button>` : ''}
@@ -6589,15 +6652,21 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
         <div><b>${ai.grammar ?? '–'}</b><span>Gramática</span></div></div>`}
       <div class="sp-advice"><b>${escapeHtml(ai.headline || '')}</b><br>${escapeHtml(ai.advice || '')}
         ${ai.betterVersion ? `<br><br>Mejor así: <i>${escapeHtml(ai.betterVersion)}</i>` : ''}
+        ${todoMal ? `<br><br><b>Casi nada de la grabación sonó a inglés.</b> Vuelve a intentarlo diciéndolo en inglés, despacio.` : ''}
+        ${unintel.length ? `<br><br>No sonó a inglés: ${unintel.slice(0, 6).map(u =>
+          `<b>${escapeHtml(u.text)}</b>${u.suggestion ? ` → <i>${escapeHtml(u.suggestion)}</i>` : ''}`).join(', ')}` : ''}
         ${faltantes.length ? `<br><br>No se te entendió: <b>${faltantes.slice(0, 8).map(escapeHtml).join(', ')}</b>` : ''}
         ${review.length ? `<br><br>Palabras para revisar: <b>${review.map(escapeHtml).join(', ')}</b>` : ''}</div>
+      ${costo ? `<div class="sp-cost">${costo}${typeof spAiLeft === 'function' ? ` · te quedan ${spAiLeft()} evaluaciones hoy` : ''}</div>` : ''}
       <details class="sp-details"><summary>Ver comparación local vs IA</summary>
         <div><b>Navegador:</b> ${escapeHtml(localResult.transcript || 'no produjo transcripción')} · ${localResult.score}% del modelo · ${localResult.latencyMs || 0} ms</div>
         <div><b>IA:</b> ${escapeHtml(dicho || '—')} · ${metrics.totalMs || 0} ms</div>
+        ${ai.cost ? `<div><b>Tokens:</b> transcripción ${(ai.cost.transcription || {}).audioTokens || 0} audio + ${(ai.cost.transcription || {}).inputTokens || 0} texto → ${(ai.cost.transcription || {}).outputTokens || 0} · evaluación ${(ai.cost.scoring || {}).inputTokens || 0} → ${(ai.cost.scoring || {}).outputTokens || 0}</div>` : ''}
         <div>*La nota de pronunciación se infiere de la transcripción, no es análisis fonético.${saved.saved ? ' Intento guardado en tu historial privado.' : ' Inicia sesión para conservar audio e historial.'}</div>
       </details>
       ${ok ? `<button class="btn green" id="sp-next" style="margin-top:12px">Continuar</button>`
         : `<button class="btn amber" id="sp-retry" style="margin-top:12px">Reintentar hasta lograrlo</button>`}`;
+
     const l2 = document.getElementById('sp-listen2');
     if (l2) l2.onclick = () => speak(q.target, null, null, 0.85, true);
     if (ok) {
@@ -6653,7 +6722,19 @@ function openSpeakingRun(mi) {
 
   fetchSpeaking(mod.id).then(items => {
     if (!items.length) { closeOverlay(); return toast('Todavía no hay speaking en este nivel.'); }
-    const round = shuffle(items.slice()).slice(0, 5);
+    // La tanda sube de dificultad: repetir → leer → guiado → diálogo → libre.
+    // Dentro de cada modo sí se elige al azar, para no repetir siempre lo mismo.
+    const ORDEN = ['repeat', 'read', 'guided', 'dialogue', 'free'];
+    const porModo = ORDEN.map(m => shuffle(items.filter(q => q.mode === m)));
+    const round = [];
+    porModo.forEach(grupo => { if (grupo.length && round.length < 5) round.push(grupo.shift()); });
+    // Si el nivel no tiene los cinco modos (A1 no tiene habla libre), se completa
+    // con los ejercicios más simples disponibles, siempre en orden ascendente.
+    for (let i = 0; round.length < 5 && i < porModo.length; i++) {
+      while (porModo[i].length && round.length < 5) round.push(porModo[i].shift());
+    }
+    round.sort((a, b) => ORDEN.indexOf(a.mode) - ORDEN.indexOf(b.mode));
+
     let idx = 0, results = [], answered = 0;
     _dismissGuard = () => answered > 0;
 

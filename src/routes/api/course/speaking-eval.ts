@@ -29,7 +29,33 @@ function tooMany(ip: string) {
   return recent.length > MAX_PER_HOUR;
 }
 
-/** Lee un cuerpo SSE entero y devuelve la concatenación de un campo por evento. */
+// Precios de referencia por millón de tokens (USD). Se actualizan aquí y en
+// ningún otro sitio; el número que ve el alumno se presenta como estimado.
+const PRICES: Record<string, { in: number; audioIn: number; out: number }> = {
+  "openai/gpt-4o-transcribe": { in: 2.5, audioIn: 6, out: 10 },
+  "openai/gpt-5.6-sol": { in: 1.25, audioIn: 1.25, out: 10 },
+};
+
+type Usage = Record<string, unknown> | null;
+
+function num(v: unknown) {
+  return typeof v === "number" && Number.isFinite(v) ? v : 0;
+}
+
+/** Costo estimado en USD a partir del uso que reporta el gateway. */
+function costOf(model: string, usage: Usage) {
+  const p = PRICES[model];
+  if (!p || !usage) return { usd: 0, inputTokens: 0, audioTokens: 0, outputTokens: 0 };
+  const details = (usage["input_token_details"] || {}) as Record<string, unknown>;
+  const audioTokens = num(details["audio_tokens"]);
+  const inputTokens = Math.max(0, num(usage["input_tokens"]) - audioTokens);
+  const outputTokens = num(usage["output_tokens"]);
+  const usd =
+    (inputTokens * p.in + audioTokens * p.audioIn + outputTokens * p.out) / 1_000_000;
+  return { usd: Math.round(usd * 1e6) / 1e6, inputTokens, audioTokens, outputTokens };
+}
+
+/** Lee un cuerpo SSE entero: concatena un campo por evento y guarda el `usage`. */
 async function drainSSE(
   body: ReadableStream<Uint8Array>,
   pick: (evt: Record<string, unknown>) => string | undefined,
@@ -38,6 +64,12 @@ async function drainSSE(
   const dec = new TextDecoder();
   let buf = "";
   let out = "";
+  let usage: Usage = null;
+  const anota = (evt: Record<string, unknown>) => {
+    const u = (evt["usage"] ||
+      ((evt["response"] as Record<string, unknown> | undefined) || {})["usage"]) as Usage;
+    if (u && typeof u === "object") usage = u;
+  };
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -49,20 +81,23 @@ async function drainSSE(
       const raw = line.slice(5).trim();
       if (!raw || raw === "[DONE]") continue;
       try {
-        const piece = pick(JSON.parse(raw));
+        const evt = JSON.parse(raw) as Record<string, unknown>;
+        anota(evt);
+        const piece = pick(evt);
         if (piece) out += piece;
       } catch {
         /* fragmento no-JSON: se ignora */
       }
     }
   }
-  return out;
+  return { text: out, usage };
 }
 
 async function transcribe(file: Blob, name: string, key: string) {
   const started = Date.now();
+  const model = "openai/gpt-4o-transcribe";
   const form = new FormData();
-  form.append("model", "openai/gpt-4o-transcribe");
+  form.append("model", model);
   form.append("file", file, name);
   form.append("language", "en");
   form.append("stream", "true");
@@ -75,21 +110,18 @@ async function transcribe(file: Blob, name: string, key: string) {
     const detalle = await r.text().catch(() => "");
     throw Object.assign(new Error(`transcripcion ${r.status} ${detalle}`), { status: r.status });
   }
-  const transcript = (
-    await drainSSE(r.body, (e) =>
-      e["type"] === "transcript.text.delta"
-        ? (e["delta"] as string)
-        : e["type"] === "transcript.text.done"
-          ? undefined
-          : undefined,
-    )
-  ).trim();
+  const drained = await drainSSE(r.body, (e) =>
+    e["type"] === "transcript.text.delta" ? (e["delta"] as string) : undefined,
+  );
   return {
-    transcript,
+    transcript: drained.text.trim(),
     latencyMs: Date.now() - started,
     runId: r.headers.get("X-Lovable-AIG-Run-ID"),
+    model,
+    cost: costOf(model, drained.usage),
   };
 }
+
 
 const SCHEMA = {
   type: "object",
@@ -115,6 +147,32 @@ const SCHEMA = {
       description: "Señales observables en la transcripción que justifican el feedback (máx 4).",
       items: { type: "string" },
     },
+    unintelligible: {
+      type: "array",
+      description:
+        "Fragmentos de la transcripción que NO son inglés reconocible: palabras en español, sonidos sin sentido, relleno o audio dudoso. Copia el texto tal cual aparece en la transcripción. Vacío si todo es inglés.",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          text: { type: "string", description: "El fragmento exacto de la transcripción." },
+          reason: {
+            type: "string",
+            enum: ["spanish", "not-english", "unclear", "filler"],
+            description: "spanish = está en español; not-english = no es una palabra inglesa; unclear = no se entiende; filler = muletilla.",
+          },
+          suggestion: {
+            type: ["string", "null"],
+            description: "Cómo se diría en inglés, o null si no aplica.",
+          },
+        },
+        required: ["text", "reason", "suggestion"],
+      },
+    },
+    mostlyUnintelligible: {
+      type: "boolean",
+      description: "true si la mayor parte de la grabación no es inglés reconocible.",
+    },
   },
   required: [
     "pronunciation",
@@ -126,8 +184,11 @@ const SCHEMA = {
     "betterVersion",
     "problemWords",
     "evidence",
+    "unintelligible",
+    "mostlyUnintelligible",
   ],
 } as const;
+
 
 async function score(
   key: string,
@@ -145,11 +206,13 @@ async function score(
     datos.acceptedVariants ? `Variantes aceptables: ${datos.acceptedVariants}` : "",
     "Evalúa cumplimiento, fluidez aparente y gramática usando únicamente la transcripción.",
     "No asegures que una palabra fue mal pronunciada: una transcripción distinta no es evidencia acústica suficiente. Llama problemWords a palabras para revisar y explica la señal observable en evidence.",
+    "Marca en unintelligible cada fragmento de la transcripción que no sea inglés reconocible (español, sonidos sin sentido, muletillas, texto dudoso), copiándolo literal y con su motivo. Si casi todo es así, pon mostlyUnintelligible en true y no apruebes.",
     "Sé exigente pero alentador, y ajusta el listón al nivel indicado: en A1 basta con hacerse entender.",
     "Escribe el titular y el consejo en español; la versión mejorada, en inglés.",
     "Aprueba (passed) si las tres notas llegan a 60 o más.",
   ].join("\n");
 
+  const model = "openai/gpt-5.6-sol";
   const r = await fetch(`${GATEWAY}/responses`, {
     method: "POST",
     headers: {
@@ -158,7 +221,7 @@ async function score(
       "X-Lovable-AIG-SDK": "fetch",
     },
     body: JSON.stringify({
-      model: "openai/gpt-5.6-sol",
+      model,
       input: prompt,
       stream: true,
       store: false,
@@ -176,15 +239,18 @@ async function score(
     const detalle = await r.text().catch(() => "");
     throw Object.assign(new Error(`evaluacion ${r.status} ${detalle}`), { status: r.status });
   }
-  const texto = await drainSSE(r.body, (e) =>
+  const drained = await drainSSE(r.body, (e) =>
     e["type"] === "response.output_text.delta" ? (e["delta"] as string) : undefined,
   );
   return {
-    feedback: JSON.parse(texto) as Record<string, unknown>,
+    feedback: JSON.parse(drained.text) as Record<string, unknown>,
     latencyMs: Date.now() - started,
     runId: r.headers.get("X-Lovable-AIG-Run-ID"),
+    model,
+    cost: costOf(model, drained.usage),
   };
 }
+
 
 export const Route = createFileRoute("/api/course/speaking-eval")({
   server: {
@@ -246,11 +312,20 @@ export const Route = createFileRoute("/api/course/speaking-eval")({
                 totalMs: transcription.latencyMs + scored.latencyMs,
                 audioBytes: audio.size,
               },
+              cost: {
+                currency: "USD",
+                estimated: true,
+                transcription: { model: transcription.model, ...transcription.cost },
+                scoring: { model: scored.model, ...scored.cost },
+                totalUsd:
+                  Math.round((transcription.cost.usd + scored.cost.usd) * 1e6) / 1e6,
+              },
               usage: {
                 transcriptionRunId: transcription.runId,
                 scoringRunId: scored.runId,
                 aiCalls: 2,
               },
+
             },
             { headers: { "Cache-Control": "private, no-store" } },
           );
