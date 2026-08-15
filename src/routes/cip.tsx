@@ -57,20 +57,21 @@ export const Route = createFileRoute("/cip")({
 });
 
 const METRICS = [
-  { n: "45", l: "microlecciones A1 → C1" },
-  { n: "8.127", l: "ejercicios de práctica" },
-  { n: "11.040", l: "palabras de vocabulario" },
-  { n: "779", l: "de ellas, de ingeniería" },
+  { n: "391", l: "partes de lección", s: "en 45 lecciones A1 → C1", i: "/demo-assets/ob-books.svg" },
+  { n: "8.127", l: "ejercicios de práctica", s: "corregidos al instante", i: "/demo-assets/ob-thunder.svg" },
+  { n: "11.040", l: "palabras de vocabulario", s: "con definición en español", i: "/demo-assets/ob-words.svg" },
+  { n: "779", l: "términos de ingeniería", s: "dentro del vocabulario", i: "/demo-assets/ob-work.svg" },
 ];
 
 /** Etiquetas cortas bajo el titular: qué incluye el programa. */
-const BADGES = [
-  "Niveles A1 a C1 (MCER)",
-  "Incluye inglés técnico",
-  "Test de ubicación",
-  "Certificado por nivel",
-  "Con la marca del CIP",
+const BADGES: { t: string; hot?: boolean }[] = [
+  { t: "Niveles A1 a C1 (MCER)" },
+  { t: "Incluye inglés técnico por especialidad", hot: true },
+  { t: "Test de ubicación" },
+  { t: "Certificado por nivel" },
+  { t: "Con la marca del CIP" },
 ];
+
 
 /** Capturas reales de la plataforma (tomadas del demo del CIP). */
 const SHOTS = [
