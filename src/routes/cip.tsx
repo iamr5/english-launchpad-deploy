@@ -28,7 +28,7 @@ export const Route = createFileRoute("/cip")({
       {
         property: "og:description",
         content:
-          "Curso completo A1–C1 con marca del Colegio: 45 microlecciones, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Plataforma lista, esperando el visto bueno del CIP.",
+          "Curso completo A1–C1 con marca del Colegio: 45 lecciones con 391 partes, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Plataforma lista, esperando el visto bueno del CIP.",
       },
       { property: "og:image", content: "https://aprendoenglish.com/social-preview.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -57,20 +57,21 @@ export const Route = createFileRoute("/cip")({
 });
 
 const METRICS = [
-  { n: "45", l: "microlecciones A1 → C1" },
-  { n: "8.127", l: "ejercicios de práctica" },
-  { n: "11.040", l: "palabras de vocabulario" },
-  { n: "779", l: "de ellas, de ingeniería" },
+  { n: "391", l: "partes de lección", s: "en 45 lecciones A1 → C1", i: "/demo-assets/ob-books.svg" },
+  { n: "8.127", l: "ejercicios de práctica", s: "corregidos al instante", i: "/demo-assets/ob-thunder.svg" },
+  { n: "11.040", l: "palabras de vocabulario", s: "con definición en español", i: "/demo-assets/ob-words.svg" },
+  { n: "779", l: "términos de ingeniería", s: "dentro del vocabulario", i: "/demo-assets/ob-work.svg" },
 ];
 
 /** Etiquetas cortas bajo el titular: qué incluye el programa. */
-const BADGES = [
-  "Niveles A1 a C1 (MCER)",
-  "Incluye inglés técnico",
-  "Test de ubicación",
-  "Certificado por nivel",
-  "Con la marca del CIP",
+const BADGES: { t: string; hot?: boolean }[] = [
+  { t: "Niveles A1 a C1 (MCER)" },
+  { t: "Incluye inglés técnico por especialidad", hot: true },
+  { t: "Test de ubicación" },
+  { t: "Certificado por nivel" },
+  { t: "Con la marca del CIP" },
 ];
+
 
 /** Capturas reales de la plataforma (tomadas del demo del CIP). */
 const SHOTS = [
@@ -104,8 +105,9 @@ const TECH = [
   },
   {
     e: "/demo-assets/ob-words.svg",
-    t: "Corrección de escritura con IA",
-    d: "Acepta varias formas correctas de decir la misma frase, no una sola respuesta memorizada.",
+    t: "Escritura corregida al instante",
+    d: "Reconoce las distintas formas correctas de decir lo mismo: si tu frase está bien construida, cuenta como bien, aunque no sea palabra por palabra la del ejemplo.",
+
   },
   {
     e: "/demo-assets/streak.svg",
@@ -215,6 +217,42 @@ const PAGE_CSS = `
   color:#eef2fb; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18); }
 .cipp .badges li::before{ content:""; width:6px; height:6px; border-radius:50%;
   background:var(--cip); box-shadow:0 0 0 3px color-mix(in srgb,var(--cip) 30%,transparent); }
+.cipp .badges li.hot{ color:#fff; font-weight:800; font-size:13px; padding:8px 15px 8px 12px;
+  background:var(--cip); border:2px solid color-mix(in srgb,#fff 45%,var(--cip));
+  box-shadow:0 0 0 0 color-mix(in srgb,var(--cip) 55%,transparent);
+  animation:cipPulse 2.6s ease-out infinite; }
+.cipp .badges li.hot::before{ background:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.35); }
+@keyframes cipPulse{
+  0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cip) 55%,transparent); }
+  70%{ box-shadow:0 0 0 12px transparent; }
+  100%{ box-shadow:0 0 0 0 transparent; } }
+
+/* fichas de cifras */
+.cipp .mcard{ position:relative; background:#fff; border:1px solid var(--line); border-radius:18px;
+  padding:20px 14px 18px; text-align:center; box-shadow:var(--shadow-sm); }
+.cipp .mcard img{ display:block; margin:0 auto 10px; width:40px; height:40px; }
+.cipp .mcard b{ display:block; font-family:var(--black); font-weight:400; letter-spacing:-.03em;
+  font-size:clamp(26px,3.4vw,38px); line-height:1; color:var(--cip); }
+.cipp .mcard span{ display:block; margin-top:8px; font-size:12.8px; font-weight:800; color:var(--ink); }
+.cipp .mcard em{ display:block; margin-top:3px; font-style:normal; font-size:11.8px; font-weight:600; color:var(--muted); }
+
+/* promesa bajo el formulario, con brillo */
+.cipp .promise{ position:relative; overflow:hidden; margin-top:12px; display:flex; align-items:center;
+  gap:12px; text-align:center; justify-content:center;
+  border-radius:14px; padding:12px 14px; border:1.5px solid color-mix(in srgb,var(--cip) 32%,var(--line));
+  background:color-mix(in srgb,var(--cip) 7%,#fff); }
+.cipp .promise .ico{ flex:0 0 auto; display:grid; place-items:center; width:34px; height:34px;
+  border-radius:11px; color:#fff; background:var(--cip); }
+.cipp .promise p{ min-width:0; font-size:13.2px; font-weight:600; line-height:1.4; color:var(--ink-2); text-align:left; }
+.cipp .promise p b{ font-weight:800; color:var(--ink); }
+.cipp .promise::after{ content:""; position:absolute; top:0; bottom:0; width:38%; left:-45%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);
+  animation:cipShimmer 3.6s ease-in-out infinite; pointer-events:none; }
+@keyframes cipShimmer{ 0%{ left:-45%; } 55%{ left:110%; } 100%{ left:110%; } }
+@media (prefers-reduced-motion:reduce){
+  .cipp .promise::after{ animation:none; display:none; }
+  .cipp .badges li.hot{ animation:none; } }
+
 
 
 
@@ -321,9 +359,19 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
           {state === "sending" ? "Enviando…" : cta}
         </button>
       </div>
-      <p className="mt-2 text-xs font-medium text-[#5f6b82]">
-        Sin costo y sin compromiso. Sólo usamos tu correo para avisarte si el programa se activa.
-      </p>
+      <div className="promise">
+        <span className="ico" aria-hidden>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="4" y="10" width="16" height="10" rx="2.5" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+        </span>
+        <p>
+          <b>Sin costo y sin compromiso.</b> Sólo usamos tu correo para avisarte si el programa se
+          activa.
+        </p>
+      </div>
+
       {state === "error" && (
         <p className="mt-2 text-sm font-semibold text-red-600">
           No pudimos registrarte. Revisa el correo e inténtalo otra vez.
@@ -389,9 +437,12 @@ function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string }
           </p>
           <ul className="badges">
             {BADGES.map((b) => (
-              <li key={b}>{b}</li>
+              <li key={b.t} className={b.hot ? "hot" : undefined}>
+                {b.t}
+              </li>
             ))}
           </ul>
+
 
 
           <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
@@ -438,15 +489,18 @@ function Steps() {
 function Metrics() {
   return (
     <section className="band bg-paper !py-10">
-      <div className="sheet grid grid-cols-2 gap-8 md:grid-cols-4">
+      <div className="sheet grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
         {METRICS.map((m) => (
-          <div key={m.l} className="metric text-center">
+          <div key={m.l} className="mcard">
+            <img src={m.i} alt="" aria-hidden width={40} height={40} loading="lazy" />
             <b>{m.n}</b>
             <span>{m.l}</span>
+            <em>{m.s}</em>
           </div>
         ))}
       </div>
     </section>
+
   );
 }
 
