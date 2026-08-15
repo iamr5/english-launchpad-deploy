@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Programa de inglés A1–C1 para el ingeniero colegiado · Colegio de Ingenieros del Perú</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&amp;family=Archivo+Black&amp;family=Libre+Caslon+Text:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#16233F;--ink-2:#22345A;--ink-0:#0c1225;
+  --sky:#4C93E4;--sky-deep:#2f79cf;--sky-soft:#A9CDF2;--sky-wash:#E7F1FC;
+  --cream:#FBF3DD;--paper:#FEFBF4;--coral:#E85560;--muted:#5f6b82;--line:#e7dcc2;
+  --shadow:0 18px 50px -22px rgba(22,35,63,.35);--shadow-sm:0 8px 24px -14px rgba(22,35,63,.4);
+  --disp:'Archivo',system-ui,sans-serif;--black:'Archivo Black','Archivo',system-ui,sans-serif;
+  --serif:'Libre Caslon Text',Georgia,serif;--body:'Archivo',system-ui,sans-serif;
+  --measure:74ch;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.55;
+  -webkit-font-smoothing:antialiased;font-size:16px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* ---------- estructura de página ---------- */
+.sheet{max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,72px)}
+.band{position:relative}
+.band::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(22,35,63,.05) 1.2px,transparent 1.3px);background-size:26px 26px;opacity:.45}
+.band>*{position:relative;z-index:2}
+.bg-paper{background:var(--paper)}
+.bg-cream{background:radial-gradient(900px 500px at 12% 110%,#fff,transparent 55%),var(--cream)}
+.bg-navy{background:radial-gradient(900px 520px at 80% -15%,#25406f,transparent 60%),
+  radial-gradient(700px 500px at -5% 115%,#1b2c52,transparent 55%),var(--ink);color:#eaf1fb}
+.bg-navy::before{background-image:radial-gradient(rgba(255,255,255,.05) 1.2px,transparent 1.3px);opacity:.55}
+.bg-hero{background:radial-gradient(1100px 700px at 72% 8%,#1c2c52,transparent 62%),
+  radial-gradient(800px 600px at 8% 108%,#161f3c,transparent 58%),var(--ink-0);color:#eef2fb}
+.bg-hero::before{background-image:radial-gradient(rgba(255,255,255,.045) 1.2px,transparent 1.3px);opacity:.7}
+section.band{padding:clamp(46px,6.4vw,88px) 0}
+
+/* ---------- tipografía base ---------- */
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:800 11.5px/1 var(--disp);letter-spacing:.24em;
+  text-transform:uppercase;color:var(--sky-deep);margin-bottom:18px}
+.bg-navy .eyebrow,.bg-hero .eyebrow{color:var(--sky-soft)}
+.eyebrow .bar{width:26px;height:2px;background:currentColor;opacity:.55;border-radius:2px}
+h2.head{font-family:var(--disp);font-weight:900;line-height:1.06;font-size:clamp(25px,3.5vw,42px);
+  letter-spacing:-.025em;max-width:22ch;text-wrap:balance}
+h3.sub{font-family:var(--disp);font-weight:800;font-size:clamp(17px,1.75vw,21px);line-height:1.2;
+  letter-spacing:-.01em;margin:32px 0 10px;max-width:40ch}
+h4.min{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:-.005em;margin:20px 0 6px}
+p{max-width:var(--measure);margin-bottom:13px;font-size:15.4px;color:var(--ink-2);line-height:1.62}
+.bg-navy p,.bg-hero p{color:#c8d6ea}
+.lead{font-size:clamp(15.5px,1.4vw,18.5px);line-height:1.55;color:var(--muted);max-width:64ch;
+  margin-top:14px;font-weight:500}
+.bg-navy .lead{color:#b9c7de}
+b,strong{font-weight:700;color:var(--ink)}
+.bg-navy b,.bg-navy strong,.bg-hero b{color:#fff}
+em,i{font-family:var(--serif);font-style:italic}
+.hl{color:var(--coral)}.hl-b{color:var(--sky-deep)}.bg-navy .hl-b,.bg-hero .hl-b{color:var(--sky-soft)}
+.note{margin-top:16px;font-size:12.5px;color:var(--muted);max-width:88ch;line-height:1.55}
+.bg-navy .note{color:#9fb2d0}
+a{color:var(--sky-deep);text-decoration:none}
+a:focus-visible,[tabindex]:focus-visible{outline:2.5px solid var(--coral);outline-offset:3px;border-radius:4px}
+
+/* ---------- portada ---------- */
+.cover{min-height:96vh;display:flex;flex-direction:column;justify-content:center;padding:clamp(44px,7vw,90px) 0}
+.cover .lockup{display:flex;align-items:center;gap:clamp(16px,2.6vw,34px);flex-wrap:wrap;margin-bottom:clamp(34px,5vw,58px)}
+.cover .lockup img.ae{width:clamp(168px,20vw,244px);height:auto;display:block}
+.cover .lockup .x{font-family:var(--disp);font-weight:800;font-size:clamp(22px,2.6vw,34px);color:var(--sky-soft);opacity:.8}
+.cover .lockup img.uap{width:clamp(120px,14vw,180px);height:auto;display:block;border-radius:12px}
+.doc-kind{font:800 11px/1 var(--disp);letter-spacing:.3em;text-transform:uppercase;color:var(--sky-soft);
+  display:block;margin-bottom:22px}
+h1.title{font-family:var(--black);font-weight:400;line-height:.98;font-size:clamp(38px,7.2vw,86px);
+  letter-spacing:-.035em;max-width:15ch;color:#fff;text-wrap:balance}
+h1.title .acc{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--sky-soft);letter-spacing:-.005em}
+.cover .standfirst{margin-top:26px;font-size:clamp(16px,1.8vw,22px);line-height:1.45;color:#c3cfe6;
+  font-weight:500;max-width:46ch}
+.cover .standfirst b{color:#fff;font-weight:800}
+.colofon{margin-top:clamp(40px,6vw,70px);display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));
+  gap:1px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.13);border-radius:16px;overflow:hidden;max-width:900px}
+.colofon div{background:rgba(9,14,30,.55);padding:16px 18px}
+.colofon dt{font:800 10px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase;color:var(--sky-soft);margin-bottom:7px}
+.colofon dd{font-size:13.4px;color:#e6eefa;font-weight:600;line-height:1.35}
+
+/* ---------- índice ---------- */
+.toc{list-style:none;margin-top:22px;max-width:760px;border-top:1px solid var(--line)}
+.toc li{border-bottom:1px solid var(--line)}
+.toc a{display:flex;align-items:baseline;gap:16px;padding:13px 4px;color:var(--ink);transition:background .18s,padding .18s}
+.toc a:hover{background:#fff;padding-left:12px}
+.toc .n{font-family:var(--black);font-size:13px;color:var(--sky-deep);min-width:30px;letter-spacing:-.02em}
+.toc .t{font-family:var(--disp);font-weight:700;font-size:16px;flex:1}
+.toc .d{font-size:12.4px;color:var(--muted);font-weight:600;text-align:right;max-width:40%}
+
+/* ---------- numeración de sección ---------- */
+.sec-no{font-family:var(--black);font-size:12.5px;letter-spacing:.02em;color:var(--sky-deep);
+  border:1px solid var(--sky-soft);border-radius:8px;padding:5px 10px;background:var(--sky-wash)}
+.bg-navy .sec-no{color:var(--sky-soft);border-color:rgba(169,205,242,.4);background:rgba(169,205,242,.13)}
+
+/* ---------- statement ---------- */
+.statement{margin:28px 0 6px;background:#fff;border:1px solid var(--line);border-left:5px solid var(--coral);
+  border-radius:20px;padding:24px 28px;box-shadow:var(--shadow);font-family:var(--disp);font-weight:700;
+  font-size:clamp(17px,2vw,23px);line-height:1.34;color:var(--ink);max-width:60ch}
+.bg-cream .statement{background:#fffdf8}
+.bg-navy .statement{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.14);
+  border-left-color:var(--coral);color:#fff;box-shadow:none}
+
+/* ---------- tarjetas ---------- */
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px;margin-top:26px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px;margin-top:26px}
+.mini{background:#fff;border:1px solid var(--line);border-radius:18px;padding:21px 22px;box-shadow:var(--shadow-sm)}
+.bg-cream .mini{background:#fffdf8}
+.bg-navy .mini{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.13);box-shadow:none}
+.mini .ic{width:40px;height:40px;border-radius:12px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;margin-bottom:12px;font-family:var(--black);font-size:15px}
+.bg-navy .mini .ic{background:rgba(169,205,242,.18);color:var(--sky-soft)}
+.mini h3{font-family:var(--disp);font-weight:800;font-size:16.5px;margin-bottom:6px;line-height:1.2}
+.bg-navy .mini h3{color:#fff}
+.mini p{font-size:13.6px;color:var(--muted);line-height:1.5;margin:0}
+.bg-navy .mini p{color:#b9c7de}
+
+/* ---------- ficha de módulo ---------- */
+.module{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);
+  overflow:hidden;margin-top:26px}
+.bg-cream .module{background:#fffdf8}
+.mod-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  padding:24px 28px;background:var(--ink);color:#fff}
+.mod-head .lvl-chip{font-family:var(--black);font-size:clamp(24px,3vw,34px);line-height:1;letter-spacing:-.03em;
+  color:#fff;display:flex;align-items:baseline;gap:12px}
+.mod-head .lvl-chip .mo{font-family:var(--disp);font-weight:800;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--sky-soft)}
+.mod-head .mt{font-family:var(--disp);font-weight:800;font-size:17px;margin-top:6px;color:#fff}
+.mod-head .ms{font-size:13px;color:#b9c7de;margin-top:3px;font-weight:600}
+.mod-metrics{display:flex;gap:9px;flex-wrap:wrap}
+.mod-metrics span{background:rgba(169,205,242,.15);border:1px solid rgba(169,205,242,.3);border-radius:11px;
+  padding:9px 13px;font-size:12px;font-weight:700;color:#e6eefa;line-height:1.25;text-align:center}
+.mod-metrics span b{display:block;font-family:var(--disp);font-weight:800;font-size:19px;color:#fff}
+.mod-body{padding:8px 28px 26px}
+
+/* ---------- tablas ---------- */
+table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px}
+caption{text-align:left;font:800 10.5px/1.4 var(--disp);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--sky-deep);padding:18px 0 2px}
+th{text-align:left;font-family:var(--disp);font-weight:800;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:2px solid var(--line);vertical-align:bottom}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2);line-height:1.45}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-family:var(--black);font-size:12.5px;color:var(--sky-deep);width:42px;letter-spacing:-.02em;
+  padding-top:13px;white-space:nowrap}
+td.tit{font-weight:600;color:var(--ink)}
+td.lang{font-weight:700;color:var(--ink)}
+.bg-navy caption{color:var(--sky-soft)}
+.bg-navy th{color:var(--sky-soft);border-bottom-color:rgba(255,255,255,.2)}
+.bg-navy td{color:#c8d6ea;border-bottom-color:rgba(255,255,255,.1)}
+.bg-navy td.lang,.bg-navy td.tit{color:#fff}
+.tag-new{display:inline-block;font:800 9.5px/1 var(--disp);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--coral);border:1px solid var(--coral);border-radius:99px;padding:4px 8px;margin-left:7px;
+  vertical-align:middle;white-space:nowrap}
+.table-wrap{overflow-x:auto}
+
+/* ---------- rationale ---------- */
+.rationale{margin-top:24px;padding-top:20px;border-top:1.5px dashed var(--sky-deep)}
+.rationale .rl{font:800 10.5px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--sky-deep);display:block;margin-bottom:12px}
+.rationale p{font-size:14.6px;max-width:82ch}
+
+/* ---------- contraste ---------- */
+.contrast{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:15px;margin-top:26px}
+.ct{border-radius:20px;padding:22px 24px;border:1px solid var(--line);background:#fffdf8}
+.ct .lb{font-weight:800;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px;
+  display:inline-flex;align-items:center;gap:8px;color:var(--muted)}
+.ct.yes{background:var(--ink);border-color:var(--ink);color:#fff}
+.ct.yes .lb{color:var(--sky-soft)}
+.ct p{font-size:14.6px;line-height:1.5;color:var(--ink-2);margin:0;max-width:none}
+.ct.yes p{color:#dbe6f5}
+.ct .mk{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:11px}
+.ct .mk{background:#ece5d3;color:var(--muted)}
+.ct.yes .mk{background:var(--coral);color:#fff}
+
+/* ---------- barras de tipología ---------- */
+.dist{margin-top:24px;display:flex;flex-direction:column;gap:15px;max-width:820px}
+.dist-row .t{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:6px}
+.dist-row .t b{font-family:var(--disp);font-size:14.5px;font-weight:800}
+.dist-row .t code{font-family:var(--disp);font-weight:800;font-size:11.5px;letter-spacing:.06em;
+  background:var(--sky-wash);color:var(--sky-deep);border-radius:6px;padding:3px 8px;margin-right:8px}
+.dist-row .t span{font-size:12.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+.bar-track{height:11px;border-radius:99px;background:var(--sky-wash);overflow:hidden}
+.bg-cream .bar-track{background:#f0e6ce}
+.bar-fill{height:100%;min-width:6px;border-radius:99px;background:linear-gradient(90deg,var(--sky),var(--sky-deep))}
+.bar-fill.low{background:linear-gradient(90deg,#f5a2a8,var(--coral))}
+
+/* ---------- píldoras ---------- */
+.strip{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.strip span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 18px;
+  font-weight:700;font-size:13.5px;color:var(--ink)}
+.bg-cream .strip span{background:#fffdf8}
+.bg-navy .strip span{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);color:#e6eefa}
+.pillars{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.pill{background:var(--ink);color:#fff;border-radius:999px;padding:11px 20px;font-weight:700;font-size:14px}
+.pill.sky{background:var(--sky-deep)}.pill.coral{background:var(--coral)}
+
+/* ---------- listas ---------- */
+ul.clean{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:11px;max-width:var(--measure)}
+ul.clean li{display:flex;gap:13px;align-items:flex-start;font-size:15px;color:var(--ink-2);line-height:1.55}
+ul.clean li .ck{width:23px;height:23px;border-radius:8px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;flex:none;font-weight:800;font-size:12px;margin-top:2px}
+.bg-navy ul.clean li{color:#c8d6ea}
+.bg-navy ul.clean li .ck{background:rgba(169,205,242,.18);color:var(--sky-soft)}
+ul.clean li.no .ck{background:#ece5d3;color:var(--muted)}
+
+/* ---------- cierre ---------- */
+.sign{margin-top:34px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;
+  border-top:1px solid rgba(255,255,255,.16);padding-top:26px}
+.sign img{width:150px;height:auto;opacity:.95}
+.sign p{font-size:13px;color:#9fb2d0;max-width:52ch;margin:0}
+
+/* ---------- pie ---------- */
+.footer{border-top:1px solid var(--line);padding:22px 0 40px;font-size:11.5px;color:var(--muted);
+  display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-weight:600}
+
+/* ---------- suma aditiva ---------- */
+.sum{display:flex;align-items:stretch;gap:12px;flex-wrap:wrap;margin-top:28px}
+.sum .node{flex:1 1 210px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px 24px;box-shadow:var(--shadow-sm)}
+.bg-cream .sum .node{background:#fffdf8}
+.sum .node.res{background:var(--ink);border-color:var(--ink);color:#fff;flex:1.35 1 260px;box-shadow:var(--shadow)}
+.sum .op{display:grid;place-items:center;font-family:var(--black);font-size:26px;color:var(--coral);flex:none;padding:0 2px}
+.sum .lb{font:800 10px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase;color:var(--sky-deep);margin-bottom:11px;display:block}
+.sum .node.res .lb{color:var(--sky-soft)}
+.sum .k{font-family:var(--disp);font-weight:800;font-size:clamp(21px,2.5vw,29px);line-height:1.05;letter-spacing:-.02em}
+.sum .node.res .k{color:#fff}
+.sum .k .u{font-size:13px;font-weight:700;color:var(--muted);display:block;margin-top:5px;letter-spacing:0}
+.sum .node.res .k .u{color:var(--sky-soft)}
+.sum .d{font-size:12.8px;color:var(--muted);margin-top:11px;line-height:1.45}
+.sum .node.res .d{color:#c4d3ea}
+.slot{color:var(--coral);border-bottom:2px dashed var(--coral);padding-bottom:1px}
+@media (max-width:700px){.sum .op{width:100%;padding:2px 0;font-size:20px}}
+
+
+/* ---------- tesis de portada ---------- */
+.cover-thesis{margin-top:22px;display:flex;gap:9px;flex-wrap:wrap;max-width:900px}
+.cover-thesis span{display:inline-flex;align-items:center;min-height:38px;padding:9px 14px;border-radius:999px;
+  border:1px solid rgba(169,205,242,.22);background:rgba(169,205,242,.08);color:#c9d8ed;
+  font-size:12.5px;font-weight:600;line-height:1.25}
+.cover-thesis b{color:#fff}
+
+
+
+/* ---------- previsualización web + app ---------- */
+.demo-band{padding-top:clamp(42px,5.4vw,70px)!important;padding-bottom:clamp(48px,6vw,76px)!important}
+.demo-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:25px}
+.demo-intro .copy{max-width:720px}
+.demo-intro .lead{margin-bottom:0}
+.demo-proof{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:999px;background:#fff;
+  border:1px solid var(--line);font-size:11.5px;font-weight:800;color:var(--muted);box-shadow:var(--shadow-sm)}
+.demo-proof .dot{width:8px;height:8px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 4px rgba(232,85,96,.12)}
+
+.device-stage{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(260px,.62fr);gap:24px;
+  align-items:end;margin-top:12px}
+.device-label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.device-label b{font-family:var(--disp);font-size:13.5px;font-weight:900}
+.device-label span{font-size:11px;font-weight:700;color:var(--muted)}
+.device-shell{position:relative;background:#fff;border:1px solid #d9e0eb;box-shadow:0 28px 65px -32px rgba(22,35,63,.5)}
+.device-shell.web{border-radius:18px;overflow:hidden}
+.browser-bar{height:40px;background:#f4f6f9;border-bottom:1px solid #e2e7ef;display:flex;align-items:center;
+  gap:11px;padding:0 14px}
+.browser-dots{display:flex;gap:6px}.browser-dots i{width:8px;height:8px;border-radius:50%;background:#c7ced9;display:block}
+.browser-url{height:22px;border-radius:7px;background:#fff;border:1px solid #e2e7ef;flex:1;max-width:440px;
+  display:flex;align-items:center;padding:0 10px;font-size:9.5px;color:#8b96a8;font-weight:700}
+.browser-url:before{content:"🔒";font-size:8px;margin-right:5px}
+
+.demo-screen{background:#f4f7fb;min-height:418px;display:grid;grid-template-columns:190px 1fr}
+.demo-sidebar{background:#101d39;color:#fff;padding:21px 16px;display:flex;flex-direction:column}
+.demo-brand{background:#fff;border-radius:11px;padding:10px 11px;height:50px;display:flex;align-items:center;justify-content:center;
+  margin-bottom:22px}
+.demo-brand img{display:block;max-width:100%;max-height:32px;object-fit:contain}
+.demo-nav{display:flex;flex-direction:column;gap:7px}
+.demo-nav span{padding:9px 10px;border-radius:9px;color:#aebdd3;font-size:10.5px;font-weight:700}
+.demo-nav span.active{background:rgba(76,147,228,.18);color:#fff}
+.demo-sidebar .student{margin-top:auto;padding:12px 10px;border-top:1px solid rgba(255,255,255,.12);font-size:9.5px;color:#aebdd3}
+.demo-sidebar .student b{display:block;color:#fff;font-size:10.5px;margin-bottom:2px}
+
+.demo-main{padding:24px 25px 26px;min-width:0}
+.demo-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}
+.demo-top .hello{font-family:var(--disp);font-weight:900;font-size:21px;letter-spacing:-.02em;color:var(--ink);line-height:1.08}
+.demo-top .hello small{display:block;font-family:var(--body);font-size:10.5px;color:var(--muted);font-weight:600;
+  letter-spacing:0;margin-top:6px}
+.demo-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--sky-wash);
+  color:var(--sky-deep);font-weight:900;font-size:11px}
+.demo-hero-card{background:linear-gradient(135deg,#142444,#223f70);color:#fff;border-radius:17px;padding:19px 20px;
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;box-shadow:0 16px 35px -28px rgba(22,35,63,.8)}
+.demo-hero-card .ey{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--sky-soft)}
+.demo-hero-card h4{font-family:var(--disp);font-size:18px;line-height:1.12;margin:6px 0;color:#fff}
+.demo-hero-card p{font-size:10.5px;line-height:1.42;color:#c8d6ea;margin:0;max-width:46ch}
+.demo-progress-ring{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--coral) 0 68%,rgba(255,255,255,.12) 68% 100%);position:relative}
+.demo-progress-ring:after{content:"";position:absolute;width:49px;height:49px;border-radius:50%;background:#1a3158}
+.demo-progress-ring b{position:relative;z-index:2;color:#fff;font-size:11px}
+.demo-section-title{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
+.demo-section-title b{font-family:var(--disp);font-size:12px}.demo-section-title span{font-size:9.5px;color:var(--sky-deep);font-weight:800}
+.lesson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.lesson-card{background:#fff;border:1px solid #e1e7ef;border-radius:12px;padding:12px;min-width:0}
+.lesson-card .lesson-icon{width:29px;height:29px;border-radius:8px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;font-weight:900;font-size:10px;margin-bottom:9px}
+.lesson-card b{font-size:10.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson-card span{font-size:8.8px;color:var(--muted);display:block;margin-top:3px}
+.lesson-card .mini-bar{height:4px;background:#edf1f6;border-radius:99px;margin-top:9px;overflow:hidden}
+.lesson-card .mini-bar i{display:block;height:100%;background:var(--sky-deep);border-radius:99px}
+
+.phone-wrap{display:flex;justify-content:center}
+.device-shell.phone{width:272px;border-radius:38px;padding:10px;background:#111a2d;border-color:#111a2d;overflow:hidden}
+.phone-bezel{background:#f4f7fb;border-radius:29px;overflow:hidden;min-height:525px;position:relative}
+.phone-notch{position:absolute;z-index:5;top:8px;left:50%;transform:translateX(-50%);width:84px;height:20px;
+  background:#111a2d;border-radius:0 0 12px 12px}
+.phone-status{height:32px;padding:9px 15px 0;display:flex;justify-content:space-between;font-size:8px;font-weight:800;color:#24334f}
+.phone-content{padding:11px 15px 72px}
+.phone-brand{height:42px;background:#fff;border:1px solid #e3e8f0;border-radius:11px;padding:7px 11px;display:flex;align-items:center;
+  justify-content:center;margin:3px 0 15px}
+.phone-brand img{max-height:27px;max-width:100%;object-fit:contain}
+.phone-greet{font-family:var(--disp);font-size:18px;font-weight:900;letter-spacing:-.02em;color:var(--ink);line-height:1.05}
+.phone-greet small{font-family:var(--body);font-size:9.5px;color:var(--muted);display:block;margin-top:5px;font-weight:600}
+.phone-card{margin-top:15px;background:linear-gradient(150deg,#162848,#2a5188);border-radius:17px;padding:15px;color:#fff}
+.phone-card .ey{font-size:8px;color:var(--sky-soft);font-weight:800;text-transform:uppercase;letter-spacing:.12em}
+.phone-card h4{font-family:var(--disp);font-size:15px;color:#fff;margin:6px 0 5px}
+.phone-card p{font-size:9px;line-height:1.4;color:#c8d6ea;margin:0}
+.phone-progress{height:6px;background:rgba(255,255,255,.14);border-radius:99px;margin-top:12px;overflow:hidden}
+.phone-progress i{display:block;width:68%;height:100%;background:var(--coral);border-radius:99px}
+.phone-sub{font-family:var(--disp);font-size:11px;font-weight:900;margin:17px 0 9px}
+.phone-lessons{display:flex;flex-direction:column;gap:8px}
+.phone-lesson{background:#fff;border:1px solid #e2e7ef;border-radius:12px;padding:10px;display:grid;grid-template-columns:31px 1fr auto;
+  align-items:center;gap:9px}
+.phone-lesson .ic{width:31px;height:31px;border-radius:9px;background:var(--sky-wash);display:grid;place-items:center;color:var(--sky-deep);
+  font-size:9px;font-weight:900}
+.phone-lesson b{font-size:9.5px;display:block}.phone-lesson span{font-size:8px;color:var(--muted);display:block;margin-top:2px}
+.phone-lesson strong{font-size:13px;color:var(--sky-deep)}
+.phone-nav{position:absolute;bottom:0;left:0;right:0;height:57px;background:#fff;border-top:1px solid #e3e8f0;
+  display:grid;grid-template-columns:repeat(4,1fr);align-items:center}
+.phone-nav span{text-align:center;font-size:7px;color:#8a95a7;font-weight:800}.phone-nav span b{display:block;font-size:13px;line-height:1;margin-bottom:3px}
+.phone-nav span.active{color:var(--sky-deep)}
+
+.demo-caption{margin-top:18px;display:flex;align-items:flex-start;gap:10px;padding:13px 15px;border-radius:14px;
+  background:#fff;border:1px solid var(--line);font-size:11.5px;line-height:1.5;color:var(--muted)}
+.demo-caption b{color:var(--ink)}
+.demo-caption .mark{width:22px;height:22px;border-radius:7px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;flex:none;font-weight:900}
+
+@media(max-width:860px){
+  .device-stage{grid-template-columns:1fr}
+  .phone-wrap{justify-content:flex-start}
+}
+@media(max-width:640px){
+  .demo-screen{grid-template-columns:1fr;min-height:0}
+  .demo-sidebar{display:none}
+  .lesson-grid{grid-template-columns:1fr}
+  .device-shell.phone{width:min(100%,300px)}
+}
+@media print{
+  .device-stage{grid-template-columns:1.5fr .65fr;gap:12pt}
+  .demo-screen{min-height:300pt}
+  .device-shell.phone{width:180pt}
+  .phone-bezel{min-height:350pt}
+}
+
+/* ---------- oportunidad institucional ---------- */
+.opportunity{margin-top:28px;max-width:920px;border:1px solid rgba(169,205,242,.2);border-radius:24px;
+  background:linear-gradient(135deg,rgba(76,147,228,.14),rgba(255,255,255,.045));overflow:hidden}
+.opportunity-top{padding:17px 22px;border-bottom:1px solid rgba(169,205,242,.16);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.opportunity-kicker{font:800 10.5px/1 var(--disp);letter-spacing:.19em;text-transform:uppercase;color:var(--sky-soft)}
+.opportunity-owner{font-size:12px;font-weight:700;color:#dce7f6}
+.opportunity-main{padding:22px}
+.opportunity-main h2{font-family:var(--disp);font-weight:900;font-size:clamp(21px,2.8vw,32px);
+  line-height:1.12;letter-spacing:-.02em;color:#fff;max-width:27ch}
+.opportunity-main h2 em{font-family:var(--serif);font-weight:400;color:var(--sky-soft)}
+.opportunity-main>p{margin-top:12px;margin-bottom:0;color:#c7d5e8;font-size:14.5px;max-width:72ch;line-height:1.55}
+.opportunity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.12);
+  border-top:1px solid rgba(255,255,255,.12)}
+.opportunity-item{background:rgba(8,14,30,.52);padding:17px 19px}
+.opportunity-item .n{display:block;font-family:var(--black);font-size:12px;color:var(--coral);margin-bottom:7px}
+.opportunity-item b{display:block;font-family:var(--disp);font-size:13.5px;color:#fff;margin-bottom:4px}
+.opportunity-item span{display:block;font-size:11.8px;color:#aebfd7;line-height:1.4}
+.brand-example{margin-top:14px;display:inline-flex;align-items:center;gap:9px;padding:9px 12px;border-radius:10px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:12px;color:#dfe8f6}
+.brand-example strong{color:#fff}
+.institutional-note{margin:26px 0 4px;border-left:5px solid var(--sky-deep);background:#fff;
+  border-radius:0 18px 18px 0;padding:19px 23px;box-shadow:var(--shadow-sm);max-width:82ch}
+.institutional-note .label{display:block;font:800 10px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--sky-deep);margin-bottom:8px}
+.institutional-note p{margin:0;font-size:15px;line-height:1.55}
+
+@media(max-width:760px){
+  .opportunity-grid{grid-template-columns:1fr}
+  .opportunity-main h2{max-width:none}
+}
+
+/* ---------- matriz de encaje académico ---------- */
+.fit-panel{margin-top:26px;border:1px solid var(--line);border-radius:24px;background:#fff;
+  box-shadow:var(--shadow);overflow:hidden}
+.fit-label{display:block;padding:16px 22px;background:var(--ink);color:var(--sky-soft);
+  font:800 10.5px/1 var(--disp);letter-spacing:.17em;text-transform:uppercase}
+.fit-panel .table-wrap{padding:0 18px 14px}
+.fit-matrix{margin-top:0}
+.fit-matrix th{padding-top:16px}
+.fit-matrix th.ae-head{color:var(--sky-deep)}
+.fit-matrix td{padding-top:15px;padding-bottom:15px}
+.fit-matrix .fit-q{font-family:var(--disp);font-weight:800;color:var(--ink);min-width:245px;max-width:330px}
+.fit-matrix .ae-cell{background:linear-gradient(90deg,rgba(231,241,252,.72),rgba(231,241,252,.25))}
+.status{display:flex;align-items:flex-start;gap:9px;min-width:150px}
+.status .ico{width:23px;height:23px;border-radius:50%;display:grid;place-items:center;flex:none;
+  font:900 14px/1 var(--disp);margin-top:1px}
+.status b{display:block;font-family:var(--disp);font-size:13.5px;line-height:1.2;margin-bottom:3px}
+.status small{display:block;color:var(--muted);font-size:11.6px;line-height:1.35;font-weight:500}
+.status.yes .ico{background:#e8f5ed;color:#187647;border:1px solid #bfe2ce}
+.status.no .ico{background:#f5f1e7;color:#756b57;border:1px solid #e4dccb}
+.status.no b{color:#5f6674}
+
+.product-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:16px}
+.product-card{border:1px solid var(--line);border-radius:19px;padding:19px 20px;background:#fffdf8}
+.product-card.featured{background:var(--ink);border-color:var(--ink);box-shadow:var(--shadow-sm)}
+.product-name{display:block;font-family:var(--disp);font-weight:900;font-size:17px;color:var(--ink);margin-bottom:3px}
+.product-role{display:block;font:800 10px/1.25 var(--disp);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:12px}
+.product-card p{font-size:13.2px;line-height:1.5;margin:0;color:var(--ink-2)}
+.product-card.featured .product-name,.product-card.featured p,.product-card.featured b{color:#fff}
+.product-card.featured .product-role{color:var(--sky-soft)}
+
+.fit-statement{margin-top:16px;border-radius:20px;padding:20px 23px;background:var(--sky-wash);
+  border:1px solid var(--sky-soft);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+  font-family:var(--disp);font-size:clamp(16px,1.8vw,21px);line-height:1.35}
+.fit-statement span{color:var(--muted);font-weight:650}
+.fit-statement b{font-weight:900;color:var(--ink)}
+
+@media (max-width:820px){
+  .product-notes{grid-template-columns:1fr}
+}
+@media (max-width:700px){
+  .fit-panel .table-wrap{padding:0 10px 10px}
+  .fit-matrix .fit-q{min-width:210px}
+  .cover-thesis span{width:100%;border-radius:12px}
+}
+
+
+/* ---------- estructura de propuesta ---------- */
+.value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:26px}
+.value-card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:20px 20px 18px;box-shadow:var(--shadow-sm)}
+.value-card .num{font-family:var(--black);font-size:11px;color:var(--coral);letter-spacing:.04em;margin-bottom:12px}
+.value-card h3{font-family:var(--disp);font-weight:900;font-size:16px;line-height:1.15;margin-bottom:7px;color:var(--ink)}
+.value-card p{font-size:12.8px;line-height:1.5;margin:0;color:var(--muted)}
+.value-card strong{color:var(--ink)}
+
+.hero-proof{margin-top:26px;border-radius:22px;background:var(--ink);padding:23px 25px;color:#fff;display:flex;
+  align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap}
+.hero-proof .copy{max-width:680px}
+.hero-proof .label{font:800 10px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase;color:var(--sky-soft);display:block;margin-bottom:8px}
+.hero-proof b{font-family:var(--disp);font-size:clamp(18px,2.2vw,25px);line-height:1.2;color:#fff}
+.hero-proof .proof-pill{padding:11px 16px;border-radius:999px;background:rgba(169,205,242,.13);border:1px solid rgba(169,205,242,.28);
+  color:#e9f1fb;font-weight:800;font-size:12px;white-space:nowrap}
+
+.stake-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.stake{border:1px solid var(--line);border-radius:18px;padding:18px 19px;background:#fffdf8}
+.stake .who{font:800 10px/1 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:var(--sky-deep);margin-bottom:9px}
+.stake h3{font-family:var(--disp);font-weight:900;font-size:15px;margin-bottom:6px}
+.stake p{font-size:12.8px;line-height:1.5;margin:0;color:var(--muted)}
+
+.metric-wall{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.14);border-radius:20px;overflow:hidden;margin-top:27px}
+.metric-wall .m{background:rgba(7,13,28,.56);padding:21px 18px}
+.metric-wall .k{font-family:var(--black);font-size:clamp(24px,3vw,34px);color:#fff;line-height:1}
+.metric-wall .u{display:block;margin-top:7px;font-size:11px;color:var(--sky-soft);font-weight:800;line-height:1.25}
+.metric-wall .d{display:block;margin-top:7px;font-size:10.5px;color:#aebfd7;line-height:1.4}
+
+.flow-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.flow-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:19px}
+.flow-card .n{width:29px;height:29px;border-radius:9px;background:rgba(169,205,242,.16);display:grid;place-items:center;
+  color:var(--sky-soft);font-family:var(--black);font-size:11px;margin-bottom:11px}
+.flow-card h3{color:#fff;font-family:var(--disp);font-weight:900;font-size:15px;margin-bottom:6px}
+.flow-card p{color:#b9c7de;font-size:12.5px;line-height:1.5;margin:0}
+
+.check-wall{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:25px}
+.check-card{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px 19px}
+.check-card .ck{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;flex:none;background:#e8f5ed;color:#187647;
+  border:1px solid #bfe2ce;font-weight:900}
+.check-card b{display:block;font-family:var(--disp);font-size:14.5px;margin-bottom:4px}
+.check-card span{display:block;font-size:12.4px;color:var(--muted);line-height:1.45}
+
+.audit-note{margin-top:17px;padding:15px 18px;border-radius:15px;background:#fff;border:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.5}
+.audit-note b{color:var(--ink)}
+
+details.academic-detail{margin-top:18px;border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden}
+details.academic-detail>summary{cursor:pointer;list-style:none;padding:16px 19px;font-family:var(--disp);font-weight:900;font-size:14px;
+  display:flex;justify-content:space-between;align-items:center;gap:15px;color:var(--ink)}
+details.academic-detail>summary::-webkit-details-marker{display:none}
+details.academic-detail>summary:after{content:"+";width:26px;height:26px;border-radius:8px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;flex:none;font-size:17px}
+details.academic-detail[open]>summary:after{content:"–"}
+details.academic-detail .detail-body{padding:0 19px 20px;border-top:1px solid var(--line)}
+details.academic-detail .grid-3{margin-top:18px}
+details.academic-detail .module{margin-top:18px;box-shadow:none}
+
+.level-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:25px}
+.level-chip-card{border:1px solid var(--line);background:#fff;border-radius:17px;padding:17px}
+.level-chip-card .lv{font-family:var(--black);font-size:24px;color:var(--sky-deep);line-height:1}
+.level-chip-card b{display:block;font-size:12.5px;margin-top:8px}
+.level-chip-card span{display:block;font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+
+.practice-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+.practice-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:19px}
+.practice-card .ic{width:35px;height:35px;border-radius:11px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;font-family:var(--black);font-size:11px;margin-bottom:12px}
+.practice-card h3{font-family:var(--disp);font-weight:900;font-size:14.5px;margin-bottom:6px}
+.practice-card p{font-size:12.3px;line-height:1.45;color:var(--muted);margin:0}
+
+.coverage-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.coverage{background:#fffdf8;border:1px solid var(--line);border-radius:14px;padding:14px}
+.coverage b{display:block;font-family:var(--disp);font-size:13px}
+.coverage span{display:block;font-size:10.5px;color:var(--muted);margin-top:4px}
+
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:25px}
+.role-card{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:22px}
+.role-card .who{font:800 10px/1 var(--disp);letter-spacing:.15em;text-transform:uppercase;color:var(--sky-soft);margin-bottom:10px}
+.role-card h3{font-family:var(--disp);font-weight:900;font-size:17px;color:#fff;margin-bottom:7px}
+.role-card p{font-size:12.8px;line-height:1.5;color:#b9c7de;margin:0}
+
+.implementation{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:25px}
+.impl{background:#fff;border:1px solid var(--line);border-radius:18px;padding:19px}
+.impl .n{font-family:var(--black);font-size:11px;color:var(--coral);margin-bottom:11px}
+.impl h3{font-family:var(--disp);font-weight:900;font-size:14.5px;margin-bottom:6px}
+.impl p{font-size:12.2px;line-height:1.45;color:var(--muted);margin:0}
+
+.cta-panel{margin-top:27px;border-radius:24px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+  padding:25px 27px;max-width:880px}
+.cta-panel .label{font:800 10px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase;color:var(--sky-soft);display:block;margin-bottom:10px}
+.cta-panel h3{font-family:var(--disp);font-weight:900;font-size:clamp(20px,2.7vw,30px);line-height:1.15;color:#fff;max-width:30ch}
+.cta-panel p{font-size:13.5px;line-height:1.55;color:#c8d6ea;margin-top:11px;margin-bottom:0}
+.cta-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.cta-actions span{padding:10px 13px;border-radius:10px;background:rgba(169,205,242,.11);border:1px solid rgba(169,205,242,.22);
+  color:#e6eef9;font-size:11px;font-weight:800}
+
+@media(max-width:900px){
+  .value-grid,.metric-wall,.level-summary{grid-template-columns:repeat(2,1fr)}
+  .practice-grid,.implementation{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+  .value-grid,.stake-grid,.flow-3,.check-wall,.metric-wall,.level-summary,.practice-grid,.coverage-strip,.role-grid,.implementation{grid-template-columns:1fr}
+}
+
+
+/* ---------- resumen de experiencia e implementación ---------- */
+.get-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:26px}
+.get-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px 19px;box-shadow:var(--shadow-sm)}
+.get-card .ic{width:38px;height:38px;border-radius:12px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;font-family:var(--black);font-size:11px;margin-bottom:13px}
+.get-card h3{font-family:var(--disp);font-weight:900;font-size:15.5px;line-height:1.18;margin-bottom:7px;color:var(--ink)}
+.get-card p{font-size:12.6px;line-height:1.48;color:var(--muted);margin:0}
+
+.reward-band{margin-top:18px;background:linear-gradient(135deg,var(--ink),#243f70);border-radius:22px;
+  padding:24px 25px;color:#fff;display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:center}
+.reward-band .ey{font:800 10px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase;color:var(--sky-soft);display:block;margin-bottom:9px}
+.reward-band h3{font-family:var(--disp);font-weight:900;font-size:clamp(19px,2.5vw,28px);line-height:1.15;color:#fff;max-width:29ch}
+.reward-band p{font-size:13px;line-height:1.55;color:#c7d5e8;margin:10px 0 0}
+.reward-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.reward-stat{border-radius:14px;padding:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13)}
+.reward-stat b{display:block;color:#fff;font-family:var(--black);font-size:22px;line-height:1}
+.reward-stat span{display:block;color:#b9c8df;font-size:10px;line-height:1.35;margin-top:6px;font-weight:700}
+
+.launch-hero{margin-top:28px;border-radius:26px;padding:30px;background:linear-gradient(135deg,rgba(76,147,228,.14),rgba(232,85,96,.08));
+  border:1px solid rgba(169,205,242,.24)}
+.launch-hero .launch-label{font:800 10px/1 var(--disp);letter-spacing:.17em;text-transform:uppercase;color:var(--sky-soft);display:block;margin-bottom:11px}
+.launch-hero h3{font-family:var(--disp);font-weight:900;font-size:clamp(23px,3.4vw,40px);line-height:1.05;color:#fff;max-width:24ch;letter-spacing:-.025em}
+.launch-hero p{font-size:14px;line-height:1.55;color:#c8d6ea;max-width:68ch;margin-top:14px;margin-bottom:0}
+.launch-path{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+.launch-step{background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.14);border-radius:17px;padding:17px}
+.launch-step .n{font-family:var(--black);font-size:11px;color:var(--coral);margin-bottom:9px}
+.launch-step b{display:block;font-family:var(--disp);font-size:13.5px;color:#fff;margin-bottom:5px}
+.launch-step span{display:block;font-size:10.8px;color:#aebfd7;line-height:1.4}
+.history-line{margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14);
+  font-family:var(--serif);font-style:italic;font-size:clamp(17px,2vw,23px);line-height:1.45;color:#dfe9f6;max-width:52ch}
+
+@media(max-width:900px){
+  .get-grid{grid-template-columns:repeat(2,1fr)}
+  .reward-band{grid-template-columns:1fr}
+  .launch-path{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  .get-grid,.launch-path,.reward-stats{grid-template-columns:1fr}
+}
+
+
+/* ---------- vista interna de control de cambios ---------- */
+.chg{position:relative;border-left:4px solid var(--coral);background:rgba(232,85,96,.05);
+  border-radius:0 16px 16px 0;padding:20px 18px 16px 20px;margin:20px 0}
+.chg::before{content:attr(data-tag);position:absolute;top:-9px;left:16px;background:var(--coral);color:#fff;
+  font:800 8.5px/1 var(--disp);letter-spacing:.13em;text-transform:uppercase;padding:6px 10px;border-radius:99px;
+  white-space:nowrap;box-shadow:0 4px 12px -6px rgba(232,85,96,.9)}
+.bg-navy .chg,.bg-hero .chg{background:rgba(232,85,96,.15);border-left-color:#ff8a92}
+.bg-navy .chg::before,.bg-hero .chg::before{background:#ff8a92;color:#2a0d10}
+.chg>*:first-child{margin-top:0}
+.chg-i{background:rgba(232,85,96,.15);box-shadow:inset 0 -2px 0 var(--coral);border-radius:3px;padding:1px 3px}
+.bg-navy .chg-i,.bg-hero .chg-i{background:rgba(255,138,146,.22);box-shadow:inset 0 -2px 0 #ff8a92}
+.chg-bar{position:sticky;top:0;z-index:99;background:var(--coral);color:#fff;padding:11px 20px;
+  font:800 11.5px/1.45 var(--disp);display:flex;gap:16px;flex-wrap:wrap;
+  align-items:center;justify-content:space-between;box-shadow:0 6px 20px -12px rgba(0,0,0,.6)}
+.chg-bar em{font-family:var(--body);font-style:normal;font-weight:600;font-size:11px;opacity:.92}
+@media print{.chg-bar{position:static}}
+
+/* ---------- panel docente ---------- */
+.panel-screen{background:#f4f7fb;min-height:430px;display:grid;grid-template-columns:186px 1fr}
+.panel-main{padding:20px 22px 24px;min-width:0}
+.panel-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px}
+.panel-kpi{background:#fff;border:1px solid #e1e7ef;border-radius:12px;padding:12px 13px}
+.panel-kpi b{display:block;font-family:var(--black);font-size:19px;color:var(--ink);line-height:1}
+.panel-kpi span{display:block;font-size:8.4px;color:var(--muted);font-weight:700;margin-top:6px;line-height:1.3}
+.panel-kpi.alert b{color:var(--coral)}
+.panel-table{background:#fff;border:1px solid #e1e7ef;border-radius:13px;overflow:hidden}
+.panel-table .ph{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-bottom:1px solid #eef1f6}
+.panel-table .ph b{font-family:var(--disp);font-size:11px}
+.panel-table .ph span{font-size:8.5px;font-weight:800;color:var(--sky-deep)}
+.panel-row{display:grid;grid-template-columns:1.5fr 1fr 78px 60px;gap:9px;align-items:center;
+  padding:9px 13px;border-bottom:1px solid #f2f5f9;font-size:9px}
+.panel-row:last-child{border-bottom:none}
+.panel-row b{font-size:9.5px;color:var(--ink)}
+.panel-row .sub{display:block;color:var(--muted);font-size:8px;margin-top:2px}
+.panel-row .pb{height:5px;border-radius:99px;background:#edf1f6;overflow:hidden}
+.panel-row .pb i{display:block;height:100%;background:var(--sky-deep);border-radius:99px}
+.panel-row .pb.low i{background:var(--coral)}
+.panel-row .flag{font-size:7.5px;font-weight:800;padding:3px 6px;border-radius:99px;text-align:center;white-space:nowrap}
+.panel-row .flag.ok{background:#e8f5ed;color:#187647}
+.panel-row .flag.warn{background:#fdeaec;color:#b8323d}
+.panel-row .flag.mid{background:#fdf3e2;color:#8a6416}
+.panel-heat{margin-top:14px;background:#fff;border:1px solid #e1e7ef;border-radius:13px;padding:13px}
+.panel-heat b{font-family:var(--disp);font-size:11px;display:block;margin-bottom:10px}
+.heat-row{display:grid;grid-template-columns:118px 1fr 34px;gap:9px;align-items:center;margin-bottom:7px;font-size:8.5px}
+.heat-row:last-child{margin-bottom:0}
+.heat-bar{height:8px;border-radius:99px;background:#edf1f6;overflow:hidden}
+.heat-bar i{display:block;height:100%;border-radius:99px}
+.heat-row span{color:var(--muted);font-weight:800;text-align:right}
+.adapt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:24px}
+.adapt-card{border:1px solid var(--line);border-radius:19px;background:#fff;padding:20px}
+.adapt-card .ic{width:34px;height:34px;border-radius:11px;background:var(--sky-wash);color:var(--sky-deep);
+  display:grid;place-items:center;font-family:var(--black);font-size:11px;margin-bottom:12px}
+.adapt-card h3{font-family:var(--disp);font-weight:900;font-size:15px;margin-bottom:6px;line-height:1.18}
+.adapt-card p{font-size:12.6px;line-height:1.5;color:var(--muted);margin:0}
+.adapt-card strong{color:var(--ink)}
+@media(max-width:900px){.adapt-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.panel-screen{grid-template-columns:1fr}.panel-kpis{grid-template-columns:repeat(2,1fr)}
+  .panel-row{grid-template-columns:1fr 60px}.panel-row .pb,.panel-row .flag{display:none}
+  .adapt-grid{grid-template-columns:1fr}}
+
+
+
+
+/* ---------- tabla sobre banda oscura ---------- */
+.solo-table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px}
+.solo-table th{text-align:left;font:800 10px/1 var(--disp);letter-spacing:.15em;text-transform:uppercase;
+  color:var(--sky-soft);padding:0 16px 11px 0;border-bottom:1.5px solid rgba(169,205,242,.34)}
+.solo-table td{padding:14px 16px 14px 0;border-bottom:1px solid rgba(169,205,242,.16);
+  vertical-align:top;line-height:1.5;color:#c8d6ea}
+.solo-table tr:last-child td{border-bottom:none}
+.solo-table td:first-child{width:31%;color:#fff;font-weight:700}
+.solo-table td b{color:#fff}
+.solo-table .tick{color:var(--sky-soft);font-weight:800;margin-right:8px}
+@media(max-width:640px){
+  .solo-table,.solo-table tbody,.solo-table tr,.solo-table td{display:block;width:100%}
+  .solo-table thead{display:none}
+  .solo-table tr{padding:12px 0;border-bottom:1px solid rgba(169,205,242,.16)}
+  .solo-table td{border:none;padding:2px 0}
+  .solo-table td:first-child{width:auto;margin-bottom:4px}
+}
+/* ---------- badges ---------- */
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.badge{display:inline-flex;align-items:center;gap:7px;border:1.5px solid rgba(169,205,242,.42);
+  border-radius:99px;padding:7px 14px 7px 11px;background:rgba(169,205,242,.10);
+  font:800 10.5px/1 var(--disp);letter-spacing:.02em;color:var(--sky-soft);white-space:nowrap}
+.badge i{width:5px;height:5px;border-radius:50%;background:var(--sky-soft);display:block;flex:none}
+.badge.key{border-color:rgba(232,85,96,.55);background:rgba(232,85,96,.13);color:#ffb3b8}
+.badge.key i{background:#ffb3b8}
+.bg-paper .badges .badge,.bg-cream .badges .badge{border-color:var(--line);background:var(--sky-wash);color:var(--sky-deep)}
+.bg-paper .badges .badge i,.bg-cream .badges .badge i{background:var(--sky-deep)}
+.bg-paper .badges .badge.key,.bg-cream .badges .badge.key{border-color:rgba(232,85,96,.4);background:rgba(232,85,96,.08);color:var(--coral)}
+.bg-paper .badges .badge.key i,.bg-cream .badges .badge.key i{background:var(--coral)}
+@media(max-width:640px){.badge{font-size:9.5px;padding:6px 11px 6px 9px}}
+/* ---------- marca textual CIP ---------- */
+.cip-mark{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;
+  border:2px solid currentColor;border-radius:12px;padding:10px 16px;line-height:1}
+.cip-mark b{font-family:var(--black);font-size:15px;letter-spacing:.02em}
+.cip-mark span{font-family:var(--disp);font-weight:800;font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.75}
+.lockup .cip-mark{color:var(--ink);height:64px}
+.demo-brand .cip-mark,.phone-brand .cip-mark{color:var(--ink);border-width:1.5px;padding:6px 10px;border-radius:8px}
+.demo-brand .cip-mark b,.phone-brand .cip-mark b{font-size:9.5px}
+.demo-brand .cip-mark span,.phone-brand .cip-mark span{font-size:5.5px;letter-spacing:.12em}
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:22px}
+.spec-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:20px 19px;position:relative;overflow:hidden}
+.spec-card::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--sky-deep)}
+.spec-card h3{font-family:var(--disp);font-weight:900;font-size:15.5px;margin-bottom:4px}
+.spec-card .cnt{font-family:var(--black);font-size:12px;color:var(--sky-deep);margin-bottom:9px;display:block}
+.spec-card p{font-size:12.4px;line-height:1.5;color:var(--muted);margin:0}
+.spec-card em{font-style:normal;color:var(--ink);font-weight:600}
+@media(max-width:900px){.spec-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.spec-grid{grid-template-columns:1fr}}
+/* ---------- impresión ---------- */
+@page{size:A4;margin:14mm 13mm}
+@media print{
+  body{background:#fff;font-size:10.6pt}
+  .sheet{max-width:none;padding:0}
+  .band::before{display:none}
+  section.band{padding:16pt 0;break-inside:auto}
+  .cover{min-height:0;padding:0 0 18pt}
+  .bg-hero,.bg-navy{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page-break{break-before:page}
+  .module,.statement,.mini,.ct,.opportunity,.institutional-note,.device-shell,.demo-caption,.value-card,.hero-proof,.stake,.check-card,.metric-wall,.flow-card,.level-chip-card,.practice-card,.role-card,.impl,.cta-panel,table{break-inside:avoid}
+  .toc a:hover{background:none}
+  h2.head,h3.sub{break-after:avoid}
+}
+@media (max-width:640px){
+  .toc .d{display:none}
+  .mod-head{padding:20px}
+  .mod-body{padding:4px 20px 22px}
+}
+
+/* ---------- demos reales embebidos: anula la maqueta estática ---------- */
+.demo-screen.live-embed{display:block;grid-template-columns:none;min-height:0;padding:0;background:#f4f7fb}
+.demo-screen.live-embed iframe.live{display:block;width:100%;height:660px;border:0;background:#f4f7fb}
+.demo-screen.live-embed.teacher iframe.live{height:780px}
+.teacher-col{margin-top:26px}
+.device-shell.phone{width:300px}
+.phone-bezel{min-height:0}
+.phone-bezel iframe.live{display:block;width:100%;height:620px;border:0;background:#f4f7fb}
+.device-label{flex-wrap:wrap}
+.device-tools{display:inline-flex;gap:7px;margin-left:auto}
+.dbtn{appearance:none;cursor:pointer;text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);
+  font:800 10.5px/1 var(--disp);letter-spacing:.04em;padding:7px 11px;border-radius:999px;box-shadow:var(--shadow-sm)}
+.dbtn:hover{border-color:var(--sky-deep);color:var(--sky-deep)}
+.demo-modal{position:fixed;inset:0;z-index:9999;background:rgba(12,18,37,.82);display:none;
+  padding:clamp(12px,3vw,36px);flex-direction:column;gap:12px}
+.demo-modal.open{display:flex}
+.demo-modal header{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff}
+.demo-modal header b{font:900 14px/1 var(--disp)}
+.demo-modal .body{flex:1;min-height:0;display:flex;justify-content:center}
+.demo-modal iframe{width:100%;height:100%;border:0;border-radius:16px;background:#fff}
+.demo-modal.phone iframe{width:min(420px,100%);border-radius:26px}
+@media(max-width:640px){
+  .demo-screen.live-embed iframe.live{height:520px}
+  .demo-screen.live-embed.teacher iframe.live{height:600px}
+}
+@media print{.device-tools,.demo-modal{display:none!important}}
+</style>
+</head>
+<body>
+<!-- ==================== PORTADA ==================== -->
+<header class="band bg-hero cover">
+<div class="sheet">
+<div class="lockup">
+<img alt="AprendoEnglish.com" class="ae" src="data:image/webp;base64,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"/>
+<span class="x">+</span>
+<div class="cip-mark"><b>CIP</b><span>Colegio de Ingenieros del Perú</span></div>
+</div>
+<span class="doc-kind">Propuesta institucional · beneficio para el colegiado</span>
+<h1 class="title">Un programa completo de inglés <span class="acc">para el ingeniero colegiado</span></h1>
+<p class="standfirst">Una ruta de <b>A1 a C1</b> construida sobre el <b>Marco Común Europeo</b>, disponible en <b>web y app</b> con la identidad del <b>Colegio de Ingenieros del Perú</b>. Funciona de forma autónoma —sin aulas, sin horarios y sin un área académica que administrar— y sobre esa misma ruta incorpora el vocabulario técnico de cada rama de la ingeniería.</p>
+<div class="badges">
+<span class="badge"><i></i>Alineado al MCER · A1 a C1</span>
+<span class="badge"><i></i>45 lecciones · 391 partes · 8 127 ejercicios</span>
+<span class="badge key"><i></i>Incluye inglés técnico por especialidad</span>
+<span class="badge"><i></i>Preparación para Cambridge, IELTS y TOEFL</span>
+<span class="badge"><i></i>Web y app</span>
+</div>
+<div class="opportunity">
+<div class="opportunity-top">
+<span class="opportunity-kicker">La oportunidad para el Colegio</span>
+<span class="opportunity-owner">Un beneficio nuevo para el colegiado, sin estructura académica que crear</span>
+</div>
+<div class="opportunity-main">
+<h2>Un beneficio que el Colegio entrega <em>con su propio nombre</em>.</h2>
+<p>El inglés decide quién entra a un proyecto internacional, quién lee la norma en su idioma original y quién postula a un posgrado fuera del país. El Colegio puede ofrecer a sus colegiados <b>un programa completo de inglés general, de A1 a C1</b>, bajo su propia identidad y sin contratar profesores, habilitar aulas ni montar una escuela: la plataforma ubica, secuencia, corrige, acompaña y prepara para el examen internacional por sí sola. Y sobre esa misma ruta, cuando el colegiado ya maneja la estructura, el vocabulario que practica es el de su propia especialidad.</p>
+<div class="brand-example"><span>Ejemplo de presentación al colegiado:</span> <strong>“English Academy · Colegio de Ingenieros del Perú”</strong></div>
+</div>
+<div class="opportunity-grid">
+<div class="opportunity-item">
+<span class="n">01</span>
+<b>Bajo la marca del Colegio</b>
+<span>Logo, identidad visual y experiencia institucional en web y app.</span>
+</div>
+<div class="opportunity-item">
+<span class="n">02</span>
+<b>Para todos los colegiados</b>
+<span>Escalable a los Consejos Departamentales del país, sin límite de sede ni de horario.</span>
+</div>
+<div class="opportunity-item">
+<span class="n">03</span>
+<b>Sin carga operativa</b>
+<span>El programa se administra solo: ubicación, secuencia, corrección, seguimiento y preparación de examen.</span>
+</div>
+</div>
+</div>
+
+<div class="cover-thesis">
+<span><b>Un programa de inglés completo</b> · de A1 a C1, sobre el MCER y con Cambridge como referencia</span>
+<span><b>Funciona sin estructura académica</b> · el Colegio no crea escuela, entrega un beneficio listo</span>
+<span><b>Y además, el léxico de cada rama</b> · sobre la misma ruta, no como curso aparte</span>
+</div>
+
+<dl class="colofon">
+<div><dt>Dirigido a</dt><dd>Instituto de Estudios Profesionales<br/>de Ingeniería · IEPI</dd></div>
+<div><dt>Marcos de referencia</dt><dd>MCER (Consejo de Europa)<br/>Cambridge English Qualifications</dd></div>
+<div><dt>Extensión</dt><dd>5 módulos · 45 lecciones · 391 partes<br/>8 127 ejercicios · ≈145 h disponibles</dd></div>
+<div><dt>Naturaleza</dt><dd>Programa autónomo<br/>de educación continua</dd></div>
+<div><dt>Actualización</dt><dd>Revisión de agosto de 2026<br/>Según descriptores vigentes de Cambridge English / MCER y el conteo real del contenido publicado.</dd></div>
+
+</dl>
+</div>
+</header>
+<!-- ==================== PREVISUALIZACIÓN ==================== -->
+<section class="band bg-cream demo-band" id="demo-preview">
+<div class="sheet">
+<div class="demo-intro">
+<div class="copy">
+<span class="eyebrow"><span class="bar"></span>Antes del detalle académico</span>
+<h2 class="head">Primero, <span class="hl">veamos cómo lo viviría el colegiado</span>.</h2>
+<p class="lead">La misma experiencia institucional acompaña al colegiado desde su computador en la oficina o desde el celular en obra. Esta previsualización muestra cómo se presenta la propuesta bajo la identidad del Colegio de Ingenieros.</p>
+</div>
+<div class="demo-proof"><span class="dot"></span>Web + app · una sola experiencia</div>
+</div>
+<div class="device-stage">
+<div class="device-col">
+<div class="device-label"><b>Previsualizador web</b><span>Experiencia de escritorio</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/democip" data-title="Demo del colegiado · web">Ampliar</button><a class="dbtn" href="/democip" target="_blank" rel="noopener">Abrir ↗</a></span></div>
+<div class="device-shell web">
+<div class="browser-bar">
+<div class="browser-dots"><i></i><i></i><i></i></div>
+<div class="browser-url">aprendoenglish.com/democip</div>
+</div>
+<div class="demo-screen live-embed"><iframe class="live" loading="lazy" data-src="/democip" title="Demo del colegiado · Colegio de Ingenieros del Perú"></iframe></div>
+</div>
+</div>
+<div class="device-col phone-wrap">
+<div>
+<div class="device-label"><b>Previsualizador app</b><span>Experiencia móvil</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/democip" data-title="Demo del colegiado · app" data-phone="1">Ampliar</button><a class="dbtn" href="/democip" target="_blank" rel="noopener">Abrir ↗</a></span></div>
+<div class="device-shell phone">
+<div class="phone-bezel">
+<div class="phone-notch"></div>
+<iframe class="live" loading="lazy" data-src="/democip" title="Demo del colegiado en móvil · Colegio de Ingenieros del Perú"></iframe>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="device-col teacher-col">
+<div class="device-label"><b>Lo que ve el Colegio</b><span>Reporte institucional</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/democip/dashboard" data-title="Panel institucional">Ampliar</button><a class="dbtn" href="/democip/dashboard" target="_blank" rel="noopener">Abrir ↗</a></span></div>
+<div class="device-shell web">
+<div class="browser-bar">
+<div class="browser-dots"><i></i><i></i><i></i></div>
+<div class="browser-url">aprendoenglish.com/democip/dashboard</div>
+</div>
+<div class="demo-screen teacher live-embed"><iframe class="live" loading="lazy" data-src="/democip/dashboard" title="Panel institucional · Colegio de Ingenieros del Perú"></iframe></div>
+</div>
+</div>
+<div class="demo-caption">
+<span class="mark">i</span>
+<span><b>Una experiencia institucional en web y app.</b> El colegiado accede a un entorno de e-learning con la identidad del Colegio de Ingenieros, integrado a su experiencia académica.</span>
+</div>
+</div>
+</section>
+<!-- ==================== ÍNDICE ==================== -->
+<section class="band bg-paper" id="indice">
+<div class="sheet">
+<span class="eyebrow"><span class="bar"></span>Contenido</span>
+<h2 class="head">Plataforma, contenido e implementación</h2>
+<ol class="toc">
+<li><a href="#proposito"><span class="n">01</span><span class="t">La oportunidad</span><span class="d">E-learning institucional para el Colegio</span></a></li>
+<li><a href="#complemento"><span class="n">02</span><span class="t">Un programa autónomo</span><span class="d">Sin aulas, sin horarios y sin área académica</span></a></li>
+<li><a href="#marco"><span class="n">03</span><span class="t">Encaje académico</span><span class="d">Alineamiento y estructura académica</span></a></li>
+<li><a href="#arquitectura"><span class="n">04</span><span class="t">Lo que recibe el colegiado</span><span class="d">8 127 ejercicios · 45 lecciones (391 partes) · 11 040 palabras</span></a></li>
+<li><a href="#modulos"><span class="n">05</span><span class="t">Programa por nivel</span><span class="d">A1 · A2 · B1 · B2 · C1</span></a></li>
+<li><a href="#alineacion"><span class="n">06</span><span class="t">MCER + Cambridge</span><span class="d">Correspondencia académica revisable</span></a></li>
+<li><a href="#tipologia"><span class="n">07</span><span class="t">Experiencia de práctica</span><span class="d">Ruta guiada, práctica libre y vocabulario</span></a></li>
+<li><a href="#panel"><span class="n">08</span><span class="t">Panel institucional</span><span class="d">Lo que ve y exporta el IEPI</span></a></li>
+<li><a href="#evaluacion"><span class="n">09</span><span class="t">Ubicación, medición y examen oficial</span><span class="d">Cómo se ubica, cómo se mide y cómo llega a certificar</span></a></li>
+<li><a href="#adaptacion"><span class="n">10</span><span class="t">Vocabulario por especialidad</span><span class="d">El léxico de cada rama, sobre la misma ruta MCER</span></a></li>
+<li><a href="#alcance"><span class="n">11</span><span class="t">Valor para el Colegio</span><span class="d">Institución · Consejos Departamentales · colegiados</span></a></li>
+<li><a href="#articulacion"><span class="n">12</span><span class="t">Implementación, datos y servicio</span><span class="d">Padrón · Ley 29733 · SLA · soporte</span></a></li>
+</ol>
+</div>
+</section>
+<!-- ==================== 01 · CONCATENACIÓN ==================== -->
+<section class="band bg-cream page-break" id="proposito">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">01</span>La oportunidad</span>
+<h2 class="head">Lo que el <span class="hl">IEPI puede poner en marcha</span>.</h2>
+<p class="lead">Una herramienta institucional de e-learning de inglés, disponible en web y app, bajo la identidad de la Colegio de Ingenieros y pensada para escalar la práctica más allá de cualquier horario.</p>
+<div class="value-grid">
+<article class="value-card"><div class="num">01</div><h3>Una experiencia con la marca del Colegio</h3><p>El colegiado entra a un entorno presentado como parte del CIP, con la misma identidad y el mismo respaldo institucional que el resto de los servicios que ya recibe.</p></article>
+<article class="value-card"><div class="num">02</div><h3>Disponible en web y app</h3><p>La práctica puede acompañar al colegiado fuera del campus y fuera del horario de trabajo, desde computador o celular.</p></article>
+<article class="value-card"><div class="num">03</div><h3>Escalable a todos los colegiados</h3><p>Una misma infraestructura puede convertirse en la capa digital de inglés de toda la comunidad de colegiados.</p></article>
+<article class="value-card"><div class="num">04</div><h3>Con respaldo académico visible</h3><p><strong>A1–C1, MCER y Cambridge</strong> como estructura de referencia para que el Colegio pueda validar lo que se enseña.</p></article>
+</div>
+<div class="hero-proof">
+<div class="copy"><span class="label">Plataforma institucional de inglés</span><b>El Colegio puede contar con su propio programa de inglés, de A1 a C1 y con vocabulario técnico incluido, disponible para toda su comunidad de colegiados en el país.</b></div>
+<div class="proof-pill">45 lecciones (391 partes) · 8 127 ejercicios · A1 a C1</div>
+</div>
+<div class="stake-grid">
+<article class="stake"><div class="who">Para el Colegio</div><h3>Una iniciativa institucional que puede liderar</h3><p>Define cómo se presenta, cómo se articula al programa y qué rol cumple dentro de la estrategia de inglés.</p></article>
+<article class="stake"><div class="who">Para los Consejos Departamentales</div><h3>Un beneficio con alcance nacional</h3><p>El mismo programa llega a cualquier departamento sin depender de que exista oferta local de inglés ni de una sede física donde dictarlo.</p></article>
+<article class="stake"><div class="who">Para el colegiado</div><h3>Inglés disponible todos los días</h3><p>Una ruta breve y accesible desde sus propios dispositivos, para practicar en los tiempos que un profesional en ejercicio realmente tiene.</p></article>
+</div>
+</div>
+</section>
+
+<section class="band bg-navy page-break" id="complemento">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">02</span>Un programa autónomo</span>
+<h2 class="head">El Colegio entrega el beneficio. <span class="hl-b">La plataforma hace el resto</span>.</h2>
+<p class="lead">No hace falta contratar profesores, habilitar aulas, armar horarios ni crear un área académica. El programa está diseñado para que un profesional adulto avance por su cuenta, con la plataforma cumpliendo las funciones que en un curso presencial haría un docente: ubicar, secuenciar, corregir, sostener el ritmo y preparar para el examen.</p>
+<div class="flow-3">
+<article class="flow-card"><div class="n">1</div><h3>Se ubica solo</h3><p>El colegiado rinde una prueba de ubicación de treinta minutos y el sistema lo coloca en el módulo que le corresponde. Nadie tiene que evaluarlo, entrevistarlo ni asignarlo a un grupo.</p></article>
+<article class="flow-card"><div class="n">2</div><h3>Avanza solo</h3><p>La ruta decide el orden. Cada microlección introduce una dificultad, la practica con corrección inmediata y la enlaza con la siguiente. El colegiado no diseña un plan de estudios: lo sigue.</p></article>
+<article class="flow-card"><div class="n">3</div><h3>Llega listo al examen</h3><p>Al cierre de cada nivel rinde una evaluación de avance y, cuando el resultado sostenido lo respalda, la plataforma le indica que está en condiciones de inscribirse a la certificación internacional y le abre los simulacros del formato.</p></article>
+</div>
+<div class="statement">El Colegio no monta una escuela de idiomas. Habilita un beneficio que ya está construido, ya está secuenciado y se sostiene sin supervisión académica.</div>
+<h3 class="sub" style="color:#fff">Lo que el programa resuelve por sí solo</h3>
+<div class="table-wrap">
+<table class="solo-table">
+<thead><tr><th>Función</th><th>Cómo se resuelve</th></tr></thead>
+<tbody>
+<tr><td>Ubicación y nivelación</td><td>Prueba adaptativa de hasta 40 ítems al ingreso, con asignación automática al módulo que corresponde.</td></tr>
+<tr><td>Secuencia de estudio</td><td>Ruta de 45 lecciones (391 partes) en orden fijo, con cada dificultad aislada y enlazada con la siguiente.</td></tr>
+<tr><td>Corrección y retroalimentación</td><td>Cada respuesta se corrige en el momento, con explicación del error y refuerzo del punto fallado.</td></tr>
+<tr><td>Ritmo y continuidad</td><td>Recordatorios, metas semanales y recuperación de la ruta cuando el colegiado se ausenta.</td></tr>
+<tr><td>Práctica oral</td><td><b>Encuentros de conversación entre colegiados</b>, agrupados por nivel y coordinados desde la plataforma, con guion y temas para cada sesión.</td></tr>
+<tr><td>Medición y examen</td><td>Evaluación de avance por nivel y simulacros con el formato de Cambridge, IELTS Academic y TOEFL iBT.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- ==================== 03 · ALINEAMIENTO ==================== -->
+<section class="band bg-paper" id="marco">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">03</span>Encaje institucional</span>
+<h2 class="head">Una estructura académica <span class="hl-b">visible y revisable</span>.</h2>
+<p class="lead">El programa presenta de forma explícita su estructura, progresión, niveles y referencias académicas, para facilitar su revisión y articulación con el curso de inglés del Colegio.</p>
+<div class="check-wall">
+<div class="check-card"><span class="ck">✓</span><div><b>Progresión MCER de A1 a C1</b><span>Cinco módulos organizados sobre la escala que el Colegio ya reconoce.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Cambridge como horizonte de logro</b><span>A2 Key, B1 Preliminary, B2 First y referencias de nivel avanzado.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Contenido identificable por punto de lengua</b><span>El Colegio puede ver qué trabaja cada microlección y contrastarlo con su propia secuencia.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Diseñado para sumarse al programa vigente</b><span>Se incorpora a la oferta de educación continua que el Colegio ya administra, sin exigir personal docente ni estructura académica propia.</span></div></div>
+</div>
+<div class="audit-note"><b>Estructura académica visible y revisable.</b> Los niveles, contenidos, correspondencias y criterios de organización están expuestos para su revisión directa.</div>
+<details class="academic-detail">
+<summary>Ver fundamento pedagógico del diseño <span style="font-weight:600;color:var(--muted)">Fundamento pedagógico</span></summary>
+<div class="detail-body">
+<p class="note" style="margin-top:17px">El fundamento pedagógico completo se presenta como referencia complementaria para la revisión académica.</p>
+<div class="grid-3">
+<div class="mini"><div class="ic">I</div><h3>Carga cognitiva controlada</h3><p>Cada microlección aísla una dificultad. Cuando una regla tiene una sola excepción, la excepción se presenta al final y sin competencia, no mezclada con el resto del paradigma.</p></div>
+<div class="mini"><div class="ic">II</div><h3>Currículo en espiral</h3><p>Los puntos críticos se retoman en un nivel superior con mayor exigencia, no se presentan dos veces desde cero. El presente perfecto y el estilo indirecto son los dos ejes de esa espiral.</p></div>
+<div class="mini"><div class="ic">III</div><h3>Enseñanza por contraste</h3><p>Las formas que compiten entre sí se presentan enfrentadas, no aisladas. Presentar el presente continuo solo hace que el colegiado lo generalice; presentarlo frente al presente simple obliga a elegir, que es lo que el examen evalúa.</p></div>
+<div class="mini"><div class="ic">IV</div><h3>Atención a la forma</h3><p>Una forma no se adquiere hasta que el colegiado la advierte conscientemente en el input. Un tercio de los ejercicios está diseñado para forzar esa atención en contextos donde el significado ya está resuelto.</p></div>
+<div class="mini"><div class="ic">V</div><h3>Foco en la transferencia del español</h3><p>El programa está escrito para hispanohablantes. Los errores que se atacan no son genéricos: son los que produce el contraste entre un sistema verbal flexivo y uno que casi no marca la persona.</p></div>
+<div class="mini"><div class="ic">VI</div><h3>La forma abastece a la función</h3><p>Las unidades funcionales se sitúan después de las estructurales, para que la función llegue a la sesión con el andamiaje formal ya disponible y no tenga que construirlo ahí.</p></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+<!-- ==================== 03 · ARQUITECTURA ==================== -->
+<section class="band bg-navy page-break" id="arquitectura">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">04</span>Lo que recibe el colegiado</span>
+<h2 class="head">Una capa de práctica ya construida, <span class="hl-b">lista para ponerse en manos del colegiado</span>.</h2>
+<p class="lead">La plataforma cuenta con una base amplia de práctica para acompañar al colegiado durante el semestre en tramos breves y recurrentes.</p>
+<div class="metric-wall">
+<div class="m"><span class="k">8 127</span><span class="u">ejercicios construidos</span><span class="d">Práctica activa con corrección inmediata en los cuatro formatos.</span></div>
+<div class="m"><span class="k">391</span><span class="u">partes de lección</span><span class="d">Repartidas en 45 lecciones; unidades breves y fáciles de distribuir a lo largo del ciclo.</span></div>
+<div class="m"><span class="k">≈145 h</span><span class="u">de práctica disponible</span><span class="d">Volumen total del banco: el colegiado toma los tramos que necesita según su nivel.</span></div>
+<div class="m"><span class="k">12–15</span><span class="u">min por tramo</span><span class="d">Entre 15 y 20 ejercicios, repetible varias veces por semana.</span></div>
+<div class="m"><span class="k">11 040</span><span class="u">palabras de vocabulario</span><span class="d">Banco general más seis bancos por carrera; el de Ingeniería aporta 779 términos.</span></div>
+<div class="m"><span class="k">5</span><span class="u">niveles</span><span class="d">A1, A2, B1, B2 y C1.</span></div>
+</div>
+
+<div class="audit-note" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16);color:#c8d6ea;margin-top:14px">
+<b style="color:#fff">Para planificar el ciclo.</b> La unidad real de uso es el tramo de 12 a 15 minutos. Un colegiado que resuelve tres tramos por semana durante un ciclo de 16 semanas acumula <b style="color:#fff">entre 10 y 12 horas de práctica activa adicional</b> a las horas de clase, con corrección inmediata en cada respuesta y registro consultable en el panel institucional. El banco completo permite sostener ese ritmo durante varios ciclos sin repetir ejercicios.</div>
+
+
+<h3 class="sub" style="color:#fff">Y un banco de vocabulario de 11 040 palabras</h3>
+<p>Además de la ruta de lecciones, el colegiado dispone de un <b>banco léxico de 11 040 palabras</b> —banco general más seis bancos por carrera, de los cuales el de Ingeniería aporta 779 términos— con su práctica asociada. Es la diferencia entre dominar la estructura de la lengua y tener con qué llenarla: un colegiado puede manejar bien el presente perfecto y aun así quedarse mudo por falta de vocabulario.</p>
+<div class="grid-3">
+<div class="mini"><div class="ic">◆</div><h3>Léxico general de la escala</h3><p>Vocabulario de alta frecuencia organizado por nivel MCER, alineado con las listas de referencia de las cualificaciones Cambridge y con los campos semánticos de cada microlección.</p></div>
+<div class="mini"><div class="ic">▣</div><h3>Vocabulario de ingeniería</h3><p>Bloques especializados por rama —civil, industrial, sistemas, mecánica-eléctrica, minas y ambiental—, de modo que el colegiado practique desde A2 con el léxico que aparece en su propio trabajo.</p></div>
+<div class="mini"><div class="ic">↻</div><h3>Práctica con repaso programado</h3><p>Cada palabra se trabaja en los mismos formatos que el resto del banco y reaparece con la frecuencia necesaria para fijarla, sin que el colegiado tenga que administrar por su cuenta qué repasar.</p></div>
+</div>
+
+<h3 class="sub" style="color:#fff">Una rutina simple para el colegiado</h3>
+<div class="flow-3">
+<article class="flow-card"><div class="n">1</div><h3>Entiende</h3><p>Recibe el punto de lengua en bloques breves, con foco claro y sin convertir cada práctica en una clase extensa.</p></article>
+<article class="flow-card"><div class="n">2</div><h3>Practica</h3><p>Resuelve ejercicios de reconocimiento, corrección, escucha y producción para pasar de entender a responder.</p></article>
+<article class="flow-card"><div class="n">3</div><h3>Consolida</h3><p>La corrección inmediata permite repetir y fijar el contenido antes de volver a la siguiente sesión presencial o virtual.</p></article>
+</div>
+</div>
+</section>
+<!-- ==================== 04 · MÓDULOS ==================== -->
+<section class="band bg-paper page-break" id="modulos">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">05</span>Programa por nivel</span>
+<h2 class="head">Contenido listo de A1 a C1, <span class="hl-b">disponible desde el primer día</span>.</h2>
+<p class="lead">La estructura general se presenta de forma resumida y cada nivel puede abrirse para consultar su programa completo.</p>
+<p class="note">El banco global contiene <b>8 127 ejercicios</b> repartidos en los cuatro formatos de práctica. Las cifras por nivel son el conteo real del contenido publicado, no una proyección. Ponemos a disposición del equipo académico el programa detallado y el banco completo del nivel que el Colegio desee revisar.</p>
+<div class="level-summary">
+<div class="level-chip-card"><span class="lv">A1</span><b>10 lecciones</b><span>2 251 ejercicios · Base verbal y fonológica.</span></div>
+<div class="level-chip-card"><span class="lv">A2</span><b>12 lecciones</b><span>2 224 ejercicios · Ampliación del sistema y uso funcional.</span></div>
+<div class="level-chip-card"><span class="lv">B1</span><b>8 lecciones</b><span>1 385 ejercicios · Cohesión, registro y estrategia.</span></div>
+<div class="level-chip-card"><span class="lv">B2</span><b>8 lecciones</b><span>1 233 ejercicios · Matiz, eficacia y preparación B2 First.</span></div>
+<div class="level-chip-card"><span class="lv">C1</span><b>7 lecciones</b><span>1 034 ejercicios · Gestión de información y nivel avanzado.</span></div>
+</div>
+
+<div class="institutional-note">
+<span class="label">El programa crece dondel Colegio lo necesite</span>
+<p>La estructura actual es un punto de partida, no un catálogo cerrado. Si el Colegio identifica que su cuello de botella está en un nivel concreto —habitualmente B1 y B2, donde se juega el requisito de grado—, ese nivel se profundiza con microlecciones adicionales y su banco de ejercicios en los cuatro formatos, dentro del acuerdo y sin costo por contenido.</p>
+<p style="margin-top:10px">A modo de referencia, la ampliación disponible para B1 comprende cuantificadores y determinantes, modales de probabilidad, orden de la oración compleja, léxico académico, lectura inferencial y una segunda unidad de estrategia de examen. Para B2: transformación con palabra clave, <em>phrasal verbs</em> de alta frecuencia, colocaciones, formación de palabras, determinantes en texto extenso y una segunda unidad de comprensión lectora con textos largos. El Colegio define cuáles entran y en qué orden; el calendario de entrega se fija en el acuerdo.</p>
+</div>
+
+<details class="academic-detail"><summary>A1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">10 lecciones · 2 251 ejercicios</span></summary><div class="detail-body"><article class="module">
+<div class="mod-head">
+<div>
+<div class="lvl-chip"><span class="mo">Módulo 1</span>A1</div>
+<div class="mt">Primeros pasos</div>
+<div class="ms">Instalación del sistema verbal básico y conciencia fonológica temprana</div>
+</div>
+<div class="mod-metrics"><span><b>10</b>lecciones</span><span><b>2 251</b>ejercicios</span></div>
+</div>
+<div class="mod-body">
+<div class="table-wrap">
+<table>
+<caption>Secuencia de lecciones</caption>
+<thead><tr><th>#</th><th>Punto de lengua</th><th>Título de la microlección</th></tr></thead>
+<tbody>
+<tr><td class="num">01</td><td class="lang">Presente simple</td><td class="tit">¿Cómo cuento lo que hago cada día?</td></tr>
+<tr><td class="num">02</td><td class="lang">Verbo <em>to be</em></td><td class="tit">¿Quién soy yo?</td></tr>
+<tr><td class="num">03</td><td class="lang">Contracciones con <em>to be</em></td><td class="tit">El arte del camuflaje</td></tr>
+<tr><td class="num">04</td><td class="lang">Demostrativos <em>this/that</em>, artículos y genitivo sajón</td><td class="tit">Esto es un gato</td></tr>
+<tr><td class="num">05</td><td class="lang"><em>There is/are</em> y preposiciones de lugar</td><td class="tit">¿Dónde estoy?</td></tr>
+<tr><td class="num">06</td><td class="lang">Interrogativos WH‑ en presente</td><td class="tit">¿Quién eres tú?</td></tr>
+<tr><td class="num">07</td><td class="lang">Saludos, fórmulas de cortesía e imperativos</td><td class="tit">Supervivencia en el camino</td></tr>
+<tr><td class="num">08</td><td class="lang">Pronunciación</td><td class="tit">El arte de usar bien la lengua</td></tr>
+<tr><td class="num">09</td><td class="lang">Registro coloquial e interacción social informal</td><td class="tit">Registro coloquial peruano</td></tr>
+<tr><td class="num">10</td><td class="lang">Evaluación final del módulo</td><td class="tit">Simulacro A1</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rationale">
+<span class="rl">Fundamento del ordenamiento</span>
+<p>La primera microlección no presenta el paradigma verbal completo de una sola vez. Recorre las personas gramaticales <b>de la más próxima a la más distante</b> —<em>I</em>, <em>we</em>, <em>you</em>, <em>they</em> y finalmente <em>he/she/it</em>— por dos razones. La primera es afectiva: el colegiado empieza a producir enunciados sobre sí mismo, que es el terreno donde tiene algo que decir. La segunda es de carga cognitiva: las cinco primeras personas comparten forma verbal, de modo que el patrón «sujeto + verbo base» queda automatizado antes de que aparezca la única excepción del paradigma.</p>
+<p>Cuando llega la <em>‑s</em> de tercera persona, ya no compite con otras cinco reglas por la atención del colegiado: es <b>la</b> dificultad, aislada y señalada. Esa <em>‑s</em> es, además, el error fosilizado más frecuente del hispanohablante, precisamente porque el español marca la persona en la desinencia verbal y el inglés apenas lo hace. Aislarla al cierre del módulo y trabajarla de forma intensiva es una decisión deliberada.</p>
+<p>La microlección 3, sobre contracciones, se sitúa inmediatamente después de <em>to be</em> por una razón de comprensión auditiva: un colegiado que solo ha visto <em>I am</em> no reconoce <em>I'm</em> cuando lo escucha, y el inglés hablado real es mayoritariamente contracto. Postergar las contracciones equivale a garantizar que el colegiado no entienda nada fuera del material de estudio.</p>
+<p>Situar la pronunciación en la microlección 8, todavía en A1, es poco habitual y responde a un criterio de prevención: la conciencia fonológica temprana evita la fosilización articulatoria. Corregir la pronunciación en B1 exige un esfuerzo desproporcionado frente al de instalarla desde el principio.</p>
+
+<p>Los contenidos de menor carga no ocupan microlección propia sino que se integran donde tienen sentido comunicativo: los plurales y los numerales entran en la microlección 4, junto a demostrativos y artículos; los adjetivos posesivos en la 2, con <em>to be</em>; los adverbios de frecuencia en la 1, con el presente simple. Darles unidad separada multiplicaría el número de microlecciones sin añadir dificultad real, y el criterio del módulo es que cada unidad aísle una dificultad genuina.</p>
+
+</div>
+</div>
+</article></div></details><details class="academic-detail"><summary>A2 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">12 lecciones · 2 224 ejercicios</span></summary><div class="detail-body"><article class="module">
+<div class="mod-head">
+<div>
+<div class="lvl-chip"><span class="mo">Módulo 2</span>A2</div>
+<div class="mt">A2 en acción</div>
+<div class="ms">Ampliación del sistema verbal y primeras unidades funcionales</div>
+</div>
+<div class="mod-metrics"><span><b>12</b>lecciones</span><span><b>2 224</b>ejercicios</span></div>
+</div>
+<div class="mod-body">
+<div class="table-wrap">
+<table>
+<caption>Secuencia de lecciones</caption>
+<thead><tr><th>#</th><th>Punto de lengua</th><th>Título de la microlección</th></tr></thead>
+<tbody>
+<tr><td class="num">01</td><td class="lang">Presente continuo frente a presente simple</td><td class="tit">¿Qué está pasando ahora?</td></tr>
+<tr><td class="num">02</td><td class="lang">Pasado simple</td><td class="tit">Historias del pasado</td></tr>
+<tr><td class="num">03</td><td class="lang">Futuro con <em>going to</em> y <em>will</em></td><td class="tit">¿Cómo hablo del futuro?</td></tr>
+<tr><td class="num">04</td><td class="lang">Comparativos y superlativos</td><td class="tit">¡Qué diferente!</td></tr>
+<tr><td class="num">05</td><td class="lang">Modal <em>can / can't</em></td><td class="tit">¿Qué puedo hacer?</td></tr>
+<tr><td class="num">06</td><td class="lang">Modales <em>should</em> frente a <em>must</em></td><td class="tit">¿Debo o tengo que?</td></tr>
+<tr><td class="num">07</td><td class="lang">Verbos de gusto + <em>‑ing</em></td><td class="tit">Me gusta o no me gusta</td></tr>
+<tr><td class="num">08</td><td class="lang">Preguntas WH‑ en presente y pasado</td><td class="tit">¿Quién, cómo, cuándo?</td></tr>
+<tr><td class="num">09</td><td class="lang">Léxico funcional: compras</td><td class="tit">¡Vamos de compras!</td></tr>
+<tr><td class="num">10</td><td class="lang">Léxico funcional: salud</td><td class="tit">¡Me siento mal!</td></tr>
+<tr><td class="num">11</td><td class="lang">Léxico funcional: viajes e indicaciones</td><td class="tit">¡A viajar!</td></tr>
+<tr><td class="num">12</td><td class="lang">Escritura básica de correos y notas</td><td class="tit">Mensajes que conectan</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rationale">
+<span class="rl">Fundamento del ordenamiento</span>
+<p>La arquitectura del módulo separa deliberadamente la construcción del sistema de su puesta en uso. Las lecciones 1 a 8 levantan la maquinaria —tiempos, modales, comparación y preguntas— y las cuatro últimas la ponen a trabajar en situaciones concretas: comprar, enfermarse, viajar y escribir.</p>
+<p>Las unidades funcionales del cierre no son material de relleno. <b>Compras, salud y viajes figuran entre los temas del listado oficial de A2 Key</b> —<em>Shopping</em>, <em>Health, medicine and exercise</em> y <em>Travel and holidays</em>—, de modo que el módulo queda alineado con el examen sin necesidad de presentarse como preparación para él.</p>
+<p>El contraste de la primera microlección —presente continuo <b>frente a</b> presente simple— responde al mismo principio enunciado en la sección 02: presentado en oposición, el continuo obliga a elegir; presentado aisladamente, se generaliza a todo contexto.</p>
+<p><b>Sobre el alcance del módulo.</b> El presente perfecto, la voz pasiva y el estilo indirecto figuran en la especificación de A2 pero no están todavía publicados como microlección propia: son la ampliación natural de este módulo y pueden incorporarse a pedido de la Coordinación. Se declaran aquí para que el mapa académico no prometa más de lo que hoy está construido.</p>
+</div>
+</div>
+</article></div></details><details class="academic-detail"><summary>B1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">8 lecciones · 1 385 ejercicios</span></summary><div class="detail-body"><article class="module">
+<div class="mod-head">
+<div>
+<div class="lvl-chip"><span class="mo">Módulo 3</span>B1</div>
+<div class="mt">Rumbo al B1</div>
+<div class="ms">De la oración al texto: cohesión, registro y estrategia de examen</div>
+</div>
+<div class="mod-metrics"><span><b>8</b>lecciones</span><span><b>1 385</b>ejercicios</span></div>
+</div>
+<div class="mod-body">
+<div class="table-wrap">
+<table>
+<caption>Secuencia de lecciones</caption>
+<thead><tr><th>#</th><th>Punto de lengua</th><th>Título de la microlección</th></tr></thead>
+<tbody>
+<tr><td class="num">01</td><td class="lang">Presente perfecto frente a pasado simple</td><td class="tit">¿Ya pasó… o sigue pasando?</td></tr>
+<tr><td class="num">02</td><td class="lang"><em>used to</em>, <em>would</em>, <em>be used to</em></td><td class="tit">Hábitos de ayer, costumbres de hoy</td></tr>
+<tr><td class="num">03</td><td class="lang">Condicionales 0, 1 y 2</td><td class="tit">¿Qué pasaría si…?</td></tr>
+<tr><td class="num">04</td><td class="lang">Estilo indirecto con desplazamiento temporal</td><td class="tit">¿Cómo cuento lo que otros dijeron?</td></tr>
+<tr><td class="num">05</td><td class="lang">Léxico: trabajo, estudios, tecnología y relaciones</td><td class="tit">Tu maletín de palabras</td></tr>
+<tr><td class="num">06</td><td class="lang">Registro: correspondencia formal e informal</td><td class="tit">¿Le escribo con traje o con jeans?</td></tr>
+<tr><td class="num">07</td><td class="lang">Conectores discursivos</td><td class="tit">¿Cómo uno mis ideas?</td></tr>
+<tr><td class="num">08</td><td class="lang">Estrategia de examen: reading, listening y writing</td><td class="tit">La carrera del PET</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rationale">
+<span class="rl">Fundamento del ordenamiento</span>
+<p>En este módulo el programa cambia de naturaleza, y ese cambio es intencional. B1 es el nivel en que el colegiado deja de producir <b>oraciones</b> y empieza a producir <b>textos</b>. Por eso las microlecciones 6 y 7 —registro y conectores— son las de mayor peso del módulo aunque no introduzcan ninguna estructura nueva: enseñan a articular las estructuras que el colegiado ya posee.</p>
+<p>La metáfora del traje y los jeans para explicar el registro responde a un criterio de anclaje concreto. El registro es una noción sociolingüística abstracta que, enunciada en abstracto, no se retiene; asociada a una imagen física, se comprende de inmediato y permanece disponible en el momento de escribir.</p>
+<p>Con el presente perfecto ya introducido en A2, la primera microlección cumple lo que su título anuncia: un <b>contraste</b> entre dos tiempos que el colegiado conoce por separado. Es currículo en espiral en sentido estricto —se regresa al mismo punto con mayor exigencia—, y no una segunda presentación desde cero. Lo mismo ocurre con la microlección 4: el estilo indirecto de A2 se limitaba a <em>say</em> y <em>tell</em> en presente; aquí entra el desplazamiento temporal —<em>«I am tired» → She said she was tired</em>—, que es la dificultad real del fenómeno.</p>
+</div>
+</div>
+</article></div></details><details class="academic-detail"><summary>B2 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">8 lecciones · 1 233 ejercicios</span></summary><div class="detail-body"><article class="module">
+<div class="mod-head">
+<div>
+<div class="lvl-chip"><span class="mo">Módulo 4</span>B2</div>
+<div class="mt">Rumbo al B2 First</div>
+<div class="ms">De la corrección a la eficacia: matiz, énfasis y habla natural</div>
+</div>
+<div class="mod-metrics"><span><b>8</b>lecciones</span><span><b>1 233</b>ejercicios</span></div>
+</div>
+<div class="mod-body">
+<div class="table-wrap">
+<table>
+<caption>Secuencia de lecciones</caption>
+<thead><tr><th>#</th><th>Punto de lengua</th><th>Título de la microlección</th></tr></thead>
+<tbody>
+<tr><td class="num">01</td><td class="lang">Voz pasiva avanzada y pasiva de reporte</td><td class="tit">¿Quién hizo qué?</td></tr>
+<tr><td class="num">02</td><td class="lang">Modales de certeza y conectores lógicos</td><td class="tit">Opiniones con peso</td></tr>
+<tr><td class="num">03</td><td class="lang">Tercer condicional y condicionales mixtos</td><td class="tit">¿Y si hubiera…?</td></tr>
+<tr><td class="num">04</td><td class="lang">Redacción formal y estructurada</td><td class="tit">Escribir como profesional</td></tr>
+<tr><td class="num">05</td><td class="lang">Comprensión auditiva avanzada: acentos y habla rápida</td><td class="tit">Escuchar el mundo real</td></tr>
+<tr><td class="num">06</td><td class="lang">Producción oral estructurada</td><td class="tit">¿Cómo hablo con estrategia?</td></tr>
+<tr><td class="num">07</td><td class="lang">Inversión y estructuras enfáticas</td><td class="tit">Cuando el orden cambia el peso</td></tr>
+<tr><td class="num">08</td><td class="lang">Evaluación final de módulo</td><td class="tit">Simulador de examen</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rationale">
+<span class="rl">Fundamento del ordenamiento</span>
+<p>El giro de B2 es el que va de la <b>corrección</b> a la <b>eficacia</b>. En A2 y B1 la pregunta que guía al colegiado es «¿está bien dicho?»; aquí pasa a ser «¿dice lo que quiero decir, con el matiz que quiero darle?». Por eso la microlección 2 —modales de certeza y conectores lógicos— es el centro del módulo: enseña a <b>matizar</b>, que es exactamente lo que las escalas de evaluación de B2 First premian en producción escrita y oral. Un candidato que escribe <em>the method is faster but its reliability is unproven</em> en lugar de <em>the method is good</em> se sitúa en una banda superior.</p>
+<p>El tercer condicional y los condicionales mixtos de la microlección 3 no son gramática ornamental: son el instrumento para expresar arrepentimiento, crítica e hipótesis contrafactual, que es el terreno de buena parte de las tareas de opinión del examen.</p>
+<p>La microlección 5, sobre acentos y habla rápida, atiende el punto donde se concentra el mayor número de caídas. La prueba de comprensión auditiva de Cambridge emplea hablantes con acentos diversos a velocidad natural, no la locución cuidada de los materiales de estudio. Es también el punto en que más rinde la práctica repetida: la comprensión auditiva mejora por exposición acumulada, y por eso el banco de escucha es uno de los cuatro formatos con mayor peso.</p>
+</div>
+</div>
+</article></div></details><details class="academic-detail"><summary>C1 · Ver sílabo completo <span style="font-weight:600;color:var(--muted)">7 lecciones · 1 034 ejercicios</span></summary><div class="detail-body"><article class="module">
+<div class="mod-head">
+<div>
+<div class="lvl-chip"><span class="mo">Módulo 5</span>C1</div>
+<div class="mt">Rumbo a C1 Advanced</div>
+<div class="ms">Estrategia de gestión de la información bajo presión temporal</div>
+</div>
+<div class="mod-metrics"><span><b>7</b>lecciones</span><span><b>1 034</b>ejercicios</span></div>
+</div>
+<div class="mod-body">
+<div class="table-wrap">
+<table>
+<caption>Secuencia de lecciones</caption>
+<thead><tr><th>#</th><th>Competencia</th><th>Título de la microlección</th></tr></thead>
+<tbody>
+<tr><td class="num">01</td><td class="lang">Lectura crítica y escaneo de textos académicos</td><td class="tit">¿Lo esencial sin leer cada palabra?</td></tr>
+<tr><td class="num">02</td><td class="lang">Producción académica: ensayos e informes</td><td class="tit">Escribir como un académico</td></tr>
+<tr><td class="num">03</td><td class="lang">Comprensión auditiva C1: inferencia, tono y acentos</td><td class="tit">¿Entiendes lo que no se dice?</td></tr>
+<tr><td class="num">04</td><td class="lang">Producción oral académica: exposición, debate y entrevista</td><td class="tit">Tu presentación final</td></tr>
+<tr><td class="num">05</td><td class="lang">Estrategia C1 Advanced: <em>Use of English</em> y <em>Reading</em></td><td class="tit">La mecánica del examen</td></tr>
+<tr><td class="num">06</td><td class="lang">Transferencia a <b>IELTS Academic</b> y TOEFL iBT</td><td class="tit">Qué cambia cuando cambia el examen</td></tr>
+<tr><td class="num">07</td><td class="lang">Evaluación final de nivel</td><td class="tit">Simulador C1</td></tr>
+</tbody>
+</table>
+</div>
+<div class="rationale">
+<span class="rl">Fundamento del ordenamiento</span>
+
+<p>El módulo se organiza por competencia estratégica y no por puntos gramaticales. <b>A partir de B2, la diferencia entre un usuario y otro está en qué logra hacer con las estructuras bajo presión de tiempo, no en cuáles conoce.</b> Un colegiado de C1 ya dispone del repertorio formal; lo que desarrolla en este módulo es administrarlo con eficacia, que es exactamente lo que miden las cualificaciones de nivel avanzado.</p>
+<p>Por la misma razón, el módulo se organiza en torno a <b>C1 Advanced</b> como examen de referencia único, con una unidad final de transferencia que explica qué cambia al pasar a IELTS Academic o TOEFL iBT. Concentrar la preparación en un formato y enseñar a trasladarla rinde más que repartir el módulo entre tres exámenes con tareas y escalas distintas.</p>
+
+<p>El eje pasa a ser la <b>estrategia</b>: escanear en lugar de leer palabra por palabra, inferir lo no dicho, estructurar una intervención oral antes de emitirla. Son destrezas de gestión de la información bajo presión temporal, que es lo que distingue a un usuario C1 de un B2 con buen vocabulario.</p>
+</div>
+</div>
+</article></div></details>
+</div>
+</section>
+<!-- ==================== 05 · ALINEACIÓN ==================== -->
+<section class="band bg-cream page-break" id="alineacion">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">06</span>MCER + Cambridge</span>
+<h2 class="head">Un alineamiento que el equipo académico <span class="hl">puede revisar de un vistazo</span>.</h2>
+<p class="lead">Detrás de la experiencia digital existe una estructura académica reconocible y compatible con los objetivos de inglés del Colegio.</p>
+<div class="hero-proof" style="margin-top:22px">
+<div class="copy"><span class="label">Alineamiento académico</span><b>La plataforma es una extensión digital del programa, para acompañar al colegiado siempre y llegar a más colegiados con un mejor nivel de inglés.</b></div>
+<div class="proof-pill">MCER · Cambridge English Qualifications</div>
+</div>
+<div class="table-wrap">
+<table>
+<caption>Tabla de correspondencias</caption>
+<thead><tr><th>Módulo</th><th>MCER</th><th>Examen de referencia</th><th>Cobertura del programa</th></tr></thead>
+<tbody>
+<tr>
+<td class="lang">Módulo 1</td><td>A1</td><td>Sin examen de referencia en la escala de adultos</td>
+<td>Base estructural y fonológica sobre la que se apoya el resto de la escala.</td>
+</tr>
+<tr>
+<td class="lang">Módulo 2</td><td>A2</td><td>A2 Key</td>
+<td>Cobertura gramatical y léxica completa. Tres de las unidades funcionales corresponden a temas del listado oficial del examen.</td>
+</tr>
+<tr>
+<td class="lang">Módulo 3</td><td>B1</td><td>B1 Preliminary</td>
+<td>Cobertura de estructuras y de estrategia para lectura, escucha y escritura. La prueba oral no forma parte del alcance medido; se practica en los encuentros entre colegiados.</td>
+</tr>
+<tr>
+<td class="lang">Módulo 4</td><td>B2</td><td>B2 First</td>
+<td>Cobertura de estructuras, de comprensión lectora y de criterios de banda en producción escrita. La producción oral se practica en los encuentros entre colegiados.</td>
+</tr>
+<tr>
+<td class="lang">Módulo 5</td><td>C1</td><td><b>C1 Advanced</b> como referencia · transferencia a IELTS Academic y TOEFL iBT</td>
+<td>Cobertura estratégica de <em>Reading</em> y <em>Use of English</em>. En este nivel la competencia se describe por desempeño y no por inventario de estructuras.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="note">La correspondencia describe contenidos y orientación de preparación. La evaluación y certificación oficial continúan correspondiendo a las instancias acreditadas pertinentes.</p>
+</div>
+</section>
+<!-- ==================== 06 · TIPOLOGÍA ==================== -->
+<section class="band bg-paper page-break" id="tipologia">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">07</span>Experiencia de práctica</span>
+<h2 class="head">Cada minuto en pantalla <span class="hl-b">es práctica activa</span>.</h2>
+<p class="lead">La plataforma combina cuatro formatos que llevan al colegiado a reconocer, detectar, escuchar y producir. Cada minuto frente a la pantalla se traduce en respuestas dadas y corregidas, que es donde ocurre el aprendizaje.</p>
+<div class="practice-grid">
+<article class="practice-card"><div class="ic">A</div><h3>Opción múltiple</h3><p><b>1 983 ejercicios.</b> Reconocer la forma correcta e inferir sobre textos breves.</p></article>
+<article class="practice-card"><div class="ic">!</div><h3>Detección de error</h3><p><b>1 957 ejercicios.</b> Localizar qué está mal y prestar atención a la forma. Entra a partir de A2.</p></article>
+<article class="practice-card"><div class="ic">▶</div><h3>Escucha y reconstrucción</h3><p><b>1 921 ejercicios.</b> Procesar audio y reconstruir la estructura correcta.</p></article>
+<article class="practice-card"><div class="ic">✎</div><h3>Producción controlada</h3><p><b>2 266 ejercicios.</b> Responder sin opciones a la vista y recuperar activamente lo aprendido.</p></article>
+</div>
+<h3 class="sub">Cuatro formatos, con el mismo volumen de práctica</h3>
+<div class="coverage-strip">
+<div class="coverage"><b>1 983 ejercicios</b><span>Opción múltiple · reconocimiento e inferencia</span></div>
+<div class="coverage"><b>1 957 ejercicios</b><span>Detección de error · atención a la forma</span></div>
+<div class="coverage"><b>1 921 ejercicios</b><span>Escucha y reconstrucción · comprensión auditiva</span></div>
+<div class="coverage"><b>2 266 ejercicios</b><span>Producción escrita · recuperación activa</span></div>
+</div>
+<div class="hero-proof" style="margin-top:18px">
+<div class="copy"><span class="label">Volumen total de práctica</span><b>8 127 ejercicios repartidos en los cuatro formatos, con la producción escrita como el bloque más grande.</b></div>
+<div class="proof-pill">4 formatos · 8 127 ejercicios</div>
+</div>
+
+<h3 class="sub">Cómo funciona la corrección</h3>
+<div class="grid-2">
+<div class="mini">
+<h3>Producción controlada, no texto libre</h3>
+<p>El colegiado escribe una respuesta breve sin alternativas a la vista: completar, transformar o reformular. La corrección trabaja con un <b>conjunto de respuestas aceptadas</b> por ítem, que contempla variantes ortográficas, contracción y forma plena, orden alterno cuando es admisible y sinónimos autorizados por el autor.</p>
+<p>Para la escritura extensa —un correo técnico, un resumen de informe— la plataforma entrega consigna, texto modelo y una lista de verificación con los criterios del nivel MCER correspondiente, de modo que el colegiado compare su producción con un referente concreto sin depender de que alguien la revise.</p>
+</div>
+<div class="mini">
+<h3>Cada formato entra donde rinde</h3>
+<p>Los cuatro formatos no se reparten por igual en todos los niveles. La <b>detección de error</b> exige que el colegiado ya tenga un modelo estable de la forma correcta, de modo que entra a partir de A2 y crece hacia arriba, donde coincide además con la tarea de <em>Use of English</em> de B2 First y C1 Advanced.</p>
+<p>En A1 el peso se concentra en opción múltiple y escucha, que es lo que instala el modelo. Distribución del formato de detección: <b>A2 15 % · B1 25 % · B2 32 % · C1 32 %</b> de los ejercicios de cada nivel.</p>
+</div>
+</div>
+
+
+<h3 class="sub">Dos maneras de practicar</h3>
+<p>El colegiado no está obligado a avanzar en línea recta. Los ejercicios pueden resolverse siguiendo la ruta del programa o de forma libre, y ambas cosas conviven en la misma cuenta.</p>
+<div class="grid-2">
+<div class="mini">
+<h3>Ruta guiada</h3>
+<p>El colegiado avanza microlección por microlección en el orden del programa, con los ejercicios que corresponden a cada punto de lengua. Es el modo por defecto y el que sostiene la progresión de nivel.</p>
+<p>Aquí el avance se mide contra la secuencia del programa, y es lo que alimenta el porcentaje de progreso, los recordatorios semanales y la habilitación del examen de salida.</p>
+</div>
+<div class="mini">
+<h3>Práctica libre</h3>
+<p>El colegiado puede resolver ejercicios por su cuenta, sin esperar a llegar al punto correspondiente de la ruta: elige el nivel, el punto de lengua, el formato o el campo de vocabulario que quiera trabajar y practica todo lo que necesite.</p>
+<p>En este modo el banco se abre por completo y el colegiado accede a <b>8 127 ejercicios</b>, incluidas las del banco léxico y las de los bloques especializados por carrera. Quien quiere prepararse para una entrevista, un examen o un curso concreto tiene con qué hacerlo sin salir de la plataforma.</p>
+</div>
+</div>
+<div class="hero-proof" style="margin-top:18px">
+<div class="copy"><span class="label">Ruta y práctica libre</span><b>La secuencia académica la fija el Colegio; el volumen adicional queda disponible para el colegiado que quiera ir más allá.</b></div>
+<div class="proof-pill">8 127 ejercicios en práctica libre</div>
+</div>
+
+
+<h3 class="sub">La práctica oral: entre colegiados</h3>
+<p>Un profesional que estudia por su cuenta suele quedarse sin con quién hablar, y ese es el punto donde la mayoría abandona. La respuesta del programa no es una máquina: son <b>encuentros de conversación entre los propios colegiados</b>, agrupados por nivel y convocados desde la plataforma.</p>
+<div class="grid-2">
+<div class="mini">
+<h3>Cómo funcionan</h3>
+<p>La plataforma agrupa a colegiados de un mismo nivel MCER y les propone un horario. Cada encuentro es virtual, dura entre treinta y cuarenta y cinco minutos y llega con <b>guion, tema y roles preparados</b>: presentar un avance de obra, explicar un retraso, sostener una reunión de coordinación, exponer una propuesta técnica.</p>
+<p>No requiere un profesor. La estructura la pone el material, y la conversación la sostienen los participantes, que es exactamente lo que necesitan practicar.</p>
+</div>
+<div class="mini">
+<h3>Lo que gana el Colegio, además del inglés</h3>
+<p>Cada encuentro pone en contacto a ingenieros de distintas ramas, distintos departamentos y distintas etapas de carrera que de otro modo no coincidirían. Un civil de Arequipa conversando con una industrial de Lima sobre su trabajo, en inglés.</p>
+<p>Para una orden profesional eso vale por sí mismo: <b>el programa de idiomas termina generando comunidad entre colegiados</b>, que es un objetivo institucional en sí y una razón adicional para sostener el beneficio en el tiempo.</p>
+</div>
+</div>
+<div class="audit-note" style="border-left:5px solid var(--coral);border-radius:0 15px 15px 0"><b>Servicio adicional · conversación asistida por IA.</b> Para quien quiera practicar fuera de los horarios de encuentro, existe un módulo de conversación con reconocimiento de voz que sostiene diálogos y devuelve retroalimentación automática de pronunciación y fluidez, disponible las veinticuatro horas. <b>No está incluido en el programa base y se cotiza aparte</b>, con un costo adicional por colegiado activo. El Colegio puede habilitarlo para todos, ofrecerlo como mejora opcional al colegiado, o no incluirlo.</div>
+<p class="note">Los cuatro formatos cubren reconocimiento, atención a la forma, comprensión auditiva y producción controlada. La fluidez oral se trabaja en los encuentros entre colegiados, y la escritura extensa con consigna, texto modelo y lista de verificación.</p>
+
+</div>
+</section>
+
+<section class="band bg-cream page-break" id="panel">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">08</span>Panel institucional</span>
+<h2 class="head">El Colegio ve el programa <span class="hl">funcionando</span>.</h2>
+<p class="lead">El IEPI dispone de un panel con el estado real del programa: cuántos colegiados se inscribieron, cuántos siguen activos, cómo avanzan por nivel y por Consejo Departamental, y cuántos alcanzaron el estándar para rendir un examen internacional. Es la información que permite sustentar el beneficio ante el Consejo Nacional.</p>
+<div class="device-label" style="max-width:none"><b>Previsualizador · vista institucional</b><span>Programa de inglés · Consejo Departamental de Lima</span></div>
+<div class="device-shell web">
+<div class="browser-bar">
+<div class="browser-dots"><i></i><i></i><i></i></div>
+<div class="browser-url">Panel institucional · Colegio de Ingenieros del Perú</div>
+</div>
+<div class="panel-screen">
+<aside class="demo-sidebar">
+<div class="demo-brand" style="height:44px"><b style="font:800 9px/1.25 var(--disp);color:var(--ink);text-align:center">UNIVERSIDAD<br/>AUTÓNOMA DEL PERÚ</b></div>
+<div class="demo-nav">
+<span class="active">▦   Resumen del programa</span>
+<span>◎   Avance por colegiado</span>
+<span>⚑   Actividad y retención</span>
+<span>▤   Consejos Departamentales</span>
+<span>⤓   Exportar</span>
+</div>
+<div class="student"><b>IEPI</b>Colegio de Ingenieros del Perú</div>
+</aside>
+<main class="panel-main">
+<div class="panel-kpis">
+<div class="panel-kpi"><b>1 248</b><span>Colegiados inscritos</span></div>
+<div class="panel-kpi"><b>892</b><span>Activos este mes</span></div>
+<div class="panel-kpi"><b>64 %</b><span>Avance medio del nivel</span></div>
+<div class="panel-kpi"><b>317</b><span>Listos para examen oficial</span></div>
+</div>
+<div class="panel-table">
+<div class="ph"><b>Avance por Consejo Departamental</b><span>Ordenar · Exportar</span></div>
+<div class="panel-row"><div><b>Lima</b><span class="sub">512 colegiados · 71 % activos</span></div><div class="pb"><i style="width:71%"></i></div><span class="flag ok">Al día</span><b>71 %</b></div>
+<div class="panel-row"><div><b>Arequipa</b><span class="sub">186 colegiados · 68 % activos</span></div><div class="pb"><i style="width:68%"></i></div><span class="flag ok">Al día</span><b>68 %</b></div>
+<div class="panel-row"><div><b>La Libertad</b><span class="sub">143 colegiados · 52 % activos</span></div><div class="pb"><i style="width:52%"></i></div><span class="flag mid">En curso</span><b>52 %</b></div>
+<div class="panel-row"><div><b>Cusco</b><span class="sub">97 colegiados · 44 % activos</span></div><div class="pb low"><i style="width:44%"></i></div><span class="flag mid">En curso</span><b>44 %</b></div>
+</div>
+<div class="panel-heat">
+<b>Distribución de colegiados por nivel MCER</b>
+<div class="heat-row"><span style="text-align:left;color:var(--ink);font-weight:700">A1 · Inicial</span><div class="heat-bar"><i style="width:28%;background:var(--sky-deep)"></i></div><span>28 %</span></div>
+<div class="heat-row"><span style="text-align:left;color:var(--ink);font-weight:700">A2 · Básico</span><div class="heat-bar"><i style="width:34%;background:var(--sky-deep)"></i></div><span>34 %</span></div>
+<div class="heat-row"><span style="text-align:left;color:var(--ink);font-weight:700">B1 · Intermedio</span><div class="heat-bar"><i style="width:23%;background:#e8a13c"></i></div><span>23 %</span></div>
+<div class="heat-row"><span style="text-align:left;color:var(--ink);font-weight:700">B2 · Intermedio alto</span><div class="heat-bar"><i style="width:11%;background:#2f8f5b"></i></div><span>11 %</span></div>
+</div>
+</main>
+</div>
+</div>
+<div class="demo-caption"><span class="mark">i</span><div><b>El caso de uso concreto.</b> Al cierre del trimestre, el Colegio puede informar al Consejo Nacional cuántos colegiados usaron el beneficio, en qué departamentos tuvo más acogida, cuántos subieron de nivel y cuántos quedaron en condiciones de rendir una certificación internacional. El beneficio se sustenta con datos, no con impresiones.</div></div>
+<h3 class="sub">Qué permite el panel</h3>
+<div class="check-wall">
+<div class="check-card"><span class="ck">✓</span><div><b>Medir la acogida del beneficio</b><span>Inscritos, activos por semana y por mes, y tasa de continuidad. Es el dato que responde a la pregunta de si el beneficio está siendo usado.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Comparar entre Consejos Departamentales</b><span>Participación y avance por departamento y por sede, para dirigir la difusión donde hace falta en lugar de repetirla en todo el país.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Seguir la progresión por nivel</b><span>Cuántos colegiados están en cada banda MCER y cuántos subieron de nivel en el periodo. Es la medida real del impacto del programa.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Seguir la preparación para examen</b><span>Cuántos colegiados alcanzaron el estándar de cada nivel y quedaron en condiciones de inscribirse a Cambridge, IELTS o TOEFL.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Exportar a CSV y XLSX</b><span>Todos los cortes anteriores, por periodo, listos para el informe de gestión o para el reporte al Consejo Nacional.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Reactivar a quien se detuvo</b><span>Identificación de colegiados inactivos y envío de recordatorio automático, sin que nadie del Colegio tenga que hacer seguimiento manual.</span></div></div>
+</div>
+</div>
+</section>
+
+
+<section class="band bg-paper page-break" id="evaluacion">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">09</span>Ubicación, medición y examen oficial</span>
+<h2 class="head">Cómo entra el colegiado, cómo se mide <span class="hl-b">y cómo llega al examen oficial</span>.</h2>
+<p class="lead">El programa ubica al colegiado, mide su avance y lo lleva hasta la puerta de una certificación internacional. Conviene decirlo con todas sus letras: <b>la plataforma no emite certificados</b>. Quienes certifican son Cambridge, IELTS y TOEFL, y el valor del programa está en llevar al colegiado preparado hasta ese examen.</p>
+<div class="grid-3">
+<div class="mini"><div class="ic">01</div><h3>Prueba de ubicación</h3><p><b>Hasta 40 ítems</b>, en unos 30 minutos. Es adaptativa: si el colegiado acumula errores seguidos, la prueba se detiene antes de completar los 40 porque el nivel ya quedó determinado, y nadie pierde tiempo respondiendo preguntas muy por encima de su dominio. Cubre gramática, léxico y comprensión auditiva, devuelve una banda MCER de A1 a C1 y ubica automáticamente en el módulo correspondiente, sin que nadie del Colegio tenga que intervenir en el proceso.</p></div>
+<div class="mini"><div class="ic">02</div><h3>Evaluación de avance por nivel</h3><p>Prueba fija de 60 ítems, 50 minutos, aplicada al cierre de cada módulo con banco rotativo para reducir la copia. Mide <em>reading</em>, <em>listening</em> y <em>use of English</em>, y entrega banda MCER de referencia con desglose por destreza, registrada automáticamente en el panel institucional. Es una medida de progreso interna, no un certificado.</p></div>
+<div class="mini"><div class="ic">03</div><h3>Camino al examen internacional</h3><p>Cuando el desempeño sostenido del colegiado alcanza el estándar del nivel, la plataforma lo señala y habilita simulacros con el formato real de <b>B2 First</b>, <b>C1 Advanced</b>, <b>IELTS Academic</b> y <b>TOEFL iBT</b>. La inscripción y la certificación se hacen ante el centro autorizado correspondiente.</p></div>
+</div>
+<div class="grid-2">
+<div class="mini"><h3>Cómo está construido el examen</h3><p>Los ítems fueron redactados y revisados por especialistas contra los descriptores del MCER y las especificaciones publicadas de las cualificaciones Cambridge, con análisis de dificultad sobre el banco y calibración de las bandas de corte. El instrumento se revisa anualmente y el informe técnico está disponible para el equipo académico del Colegio.</p></div>
+<div class="mini"><h3>Por qué esto conviene al Colegio</h3><p>Un certificado emitido por un proveedor privado tiene poco peso ante un empleador o un proceso de admisión; una certificación Cambridge, IELTS o TOEFL lo tiene todo. Por eso el programa no compite con esas instituciones: conduce hasta ellas. El colegiado que termina B2 no se lleva un papel nuestro, se lleva la preparación para obtener uno que el mercado sí reconoce.</p></div>
+</div>
+</div>
+</section>
+
+
+<section class="band bg-cream page-break" id="adaptacion">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">10</span>Vocabulario por especialidad</span>
+<h2 class="head">El mismo programa de inglés, <span class="hl">con el léxico de cada rama</span>.</h2>
+<p class="lead">La base es un programa de inglés general: gramática, comprensión, escucha y producción, en la secuencia del MCER que describen las secciones anteriores. Lo que añadimos es que, a partir de A2, el vocabulario con el que se practica esa misma ruta puede ser el de la propia disciplina del colegiado —leer una especificación, entender una norma, escribir un correo que explique un retraso— en lugar de un léxico genérico.</p>
+<div class="badges" style="margin-bottom:6px">
+<span class="badge"><i></i>La ruta MCER no cambia</span>
+<span class="badge"><i></i>Se activa desde A2</span>
+<span class="badge key"><i></i>Seis ramas cubiertas</span>
+<span class="badge"><i></i>Ampliable a otras especialidades</span>
+</div>
+<div class="spec-grid">
+<article class="spec-card"><h3>Ingeniería civil</h3><span class="cnt">Obra, estructuras y contratos</span><p>Léxico de <em>site works</em>, encofrado, vaciado, acero de refuerzo, ensayos de materiales, planos y cortes, hitos de cronograma, órdenes de cambio y actas de obra. Incluye la lectura de especificaciones y el vocabulario contractual que aparece en los proyectos con financiamiento internacional.</p></article>
+<article class="spec-card"><h3>Ingeniería industrial</h3><span class="cnt">Procesos, calidad y cadena de suministro</span><p>Vocabulario de <em>lean</em>, control estadístico, indicadores de producción, auditoría de calidad, compras, inventarios y logística. Orientado a quien coordina con proveedores del exterior o reporta a una casa matriz.</p></article>
+<article class="spec-card"><h3>Sistemas e informática</h3><span class="cnt">Desarrollo, infraestructura y datos</span><p>Terminología de arquitectura de software, bases de datos, redes, seguridad, gestión de incidentes y metodologías ágiles. Es la rama con mayor exposición a documentación en inglés y a equipos distribuidos.</p></article>
+<article class="spec-card"><h3>Mecánica y eléctrica</h3><span class="cnt">Mantenimiento, energía y equipos</span><p>Léxico de mantenimiento preventivo y correctivo, fichas técnicas de equipos, sistemas de potencia, instrumentación, tableros y protocolos de puesta en marcha, con las expresiones que aparecen en manuales de fabricante.</p></article>
+<article class="spec-card"><h3>Minas, geología y metalurgia</h3><span class="cnt">Operación, seguridad y reportes</span><p>Vocabulario de operación mina, perforación y voladura, procesamiento, control de leyes, geotecnia y reportes a inversionistas. Incluye seguridad y salud ocupacional, que en esta rama se documenta casi siempre en inglés.</p></article>
+<article class="spec-card"><h3>Ambiental y sanitaria</h3><span class="cnt">Estudios, normativa y monitoreo</span><p>Terminología de estudios de impacto, monitoreo de calidad de agua y aire, tratamiento de efluentes, gestión de residuos y estándares internacionales, para quien trabaja con normativa y consultoras extranjeras.</p></article>
+</div>
+<div class="statement">El colegiado aprende inglés, no una jerga. Lo que cambia es que las palabras con las que practica son las que ya usa todos los días en su trabajo.</div>
+<h3 class="sub">Cómo se integra a la ruta</h3>
+<div class="grid-2">
+<div class="mini">
+<h3>Es una capa de vocabulario, no un curso aparte</h3>
+<p>Al inscribirse, el colegiado indica su rama. A partir de A2 los ejercicios de vocabulario y las lecturas de su ruta se alimentan del bloque correspondiente, <b>sin salir de la secuencia MCER ni abrir un programa paralelo</b>. Un ingeniero civil y uno de sistemas siguen exactamente la misma progresión gramatical, con distinto contenido léxico. Quien prefiera practicar solo con vocabulario general también puede hacerlo: la capa técnica se activa y se desactiva.</p>
+<p>El colegiado puede además consultar cualquier otro bloque desde la práctica libre, algo frecuente en quienes cambian de rubro o trabajan en proyectos multidisciplinarios.</p>
+</div>
+<div class="mini">
+<h3>El Colegio decide qué se prioriza</h3>
+<p>La distribución de colegiados por capítulo no es uniforme, y el programa lo refleja: el Colegio indica qué ramas concentran más demanda y esos bloques se profundizan primero. Si hay especialidades que hoy no están cubiertas con la misma extensión —agronómica, pesquera, química, naval—, <b>se desarrollan e incorporan al banco</b> con sus ejercicios en los cuatro formatos.</p>
+<p>El alcance y el calendario se acuerdan en la etapa de puesta en marcha y quedan documentados como anexo del acuerdo, de modo que lo que se firma incluye la configuración del Colegio y no una plataforma genérica.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==================== 11 · REPARTO ==================== -->
+<section class="band bg-navy page-break" id="alcance">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">11</span>Valor para el Colegio</span>
+<h2 class="head">Una misma herramienta, <span class="hl-b">tres impactos distintos</span>.</h2>
+<p class="lead">El programa tiene sentido cuando sirve a la vez a la institución que lo entrega, a los Consejos que lo difunden y al profesional que lo usa.</p>
+<div class="role-grid">
+<article class="role-card"><div class="who">Para el Colegio</div><h3>Un beneficio propio, medible y sin operación</h3><p>Se entrega bajo la identidad del CIP, se sustenta con datos ante el Consejo Nacional y no exige contratar personal docente ni habilitar infraestructura.</p></article>
+<article class="role-card"><div class="who">Para los Consejos Departamentales</div><h3>Alcance nacional sin sede física</h3><p>Un colegiado de Cusco, Piura o Loreto accede exactamente al mismo programa que uno de Lima, sin depender de la oferta de inglés que haya en su ciudad.</p></article>
+<article class="role-card"><div class="who">Para el colegiado</div><h3>Inglés que se traduce en oportunidad</h3><p>Acceso a proyectos internacionales, a documentación técnica en su idioma original, a posgrados fuera del país y a posiciones que hoy quedan fuera de alcance por el idioma.</p></article>
+</div>
+<div class="statement">El Colegio de Ingenieros del Perú ofrece a sus colegiados un programa completo de inglés con su propia marca, con el vocabulario de cada especialidad incorporado, disponible en todo el país y sin necesidad de construir una escuela para sostenerlo.</div>
+</div>
+</section>
+<!-- ==================== 08 · ARTICULACIÓN ==================== -->
+<section class="band bg-cream page-break" id="articulacion">
+<div class="sheet">
+<span class="eyebrow"><span class="sec-no">12</span>Implementación, datos y servicio</span>
+<h2 class="head">Todo lo necesario para poner el programa <span class="hl">en manos del colegiado</span>.</h2>
+<p class="lead">La plataforma se integra al padrón de colegiados, con un marco de protección de datos, un nivel de servicio comprometido y acompañamiento para el equipo que administra el beneficio.</p>
+
+<h3 class="sub">Integración con los sistemas del Colegio</h3>
+<div class="check-wall">
+<div class="check-card"><span class="ck">✓</span><div><b>Validación contra el padrón</b><span>Verificación del número de colegiatura y del estado de habilitación al momento del registro, vía API o carga programada. Solo accede quien está habilitado, y el acceso se suspende solo si deja de estarlo.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Inicio de sesión institucional</b><span>SSO por SAML 2.0 u OpenID Connect si el Colegio dispone de directorio propio, o registro con número de colegiatura y verificación por correo si prefiere no integrar sistemas.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Puesta en marcha sin desarrollo</b><span>El programa puede lanzarse con una carga inicial del padrón mientras la integración por API se implementa, de modo que la disponibilidad del beneficio no dependa del calendario del área de sistemas.</span></div></div>
+<div class="check-card"><span class="ck">✓</span><div><b>Accesibilidad</b><span>Conformidad WCAG 2.1 nivel AA, con auditoría externa disponible para el equipo del Colegio.</span></div></div>
+</div>
+<h3 class="sub">Protección de datos personales</h3>
+<div class="grid-2">
+<div class="mini"><h3>Roles y marco legal</h3><p>El <b>Colegio de Ingenieros del Perú es el titular del banco de datos y responsable del tratamiento</b>; AprendoEnglish actúa como <b>encargado</b> y trata los datos únicamente conforme a sus instrucciones. Se suscribe un acuerdo de encargo de tratamiento conforme a la <b>Ley 29733</b> y su reglamento, con inscripción del banco de datos ante la Autoridad Nacional de Protección de Datos Personales si el Colegio lo requiere.</p></div>
+<div class="mini"><h3>Alojamiento y ciclo de vida</h3><p>Infraestructura en AWS con cifrado en tránsito y en reposo, y copias diarias con retención de 30 días. <b>No se ceden datos a terceros ni se emplean para entrenar modelos.</b> Al término del acuerdo, el Colegio recibe la exportación completa en CSV y JSON, y la eliminación se certifica por escrito.</p></div>
+</div>
+<h3 class="sub">Servicio, soporte y continuidad</h3>
+<div class="value-grid">
+<article class="value-card"><div class="num">01</div><h3>Lanzamiento y difusión</h3><p><strong>Incluidos.</strong> Piezas de comunicación para el colegiado, guía de inicio, sesión informativa virtual abierta a los Consejos Departamentales y acompañamiento durante las primeras semanas de inscripción.</p></article>
+<article class="value-card"><div class="num">02</div><h3>Soporte al colegiado</h3><p>Mesa de ayuda directa al usuario final por correo y WhatsApp, de lunes a sábado de 8 a 20 h, de modo que <strong>el Colegio no atiende consultas de la plataforma</strong>. Disponibilidad comprometida del 99,5 % mensual.</p></article>
+<article class="value-card"><div class="num">03</div><h3>Mantenimiento del contenido</h3><p>Revisión anual del banco contra las especificaciones vigentes de Cambridge, IELTS y TOEFL, con actualización sin costo cuando un formato de examen cambia. El material se mantiene vigente durante toda la vigencia del acuerdo.</p></article>
+<article class="value-card"><div class="num">04</div><h3>Informe de gestión</h3><p>Reporte trimestral de uso, avance por nivel y colegiados en condiciones de rendir examen oficial, listo para presentar al Consejo Nacional, con un responsable de cuenta asignado para revisarlo y ajustar la difusión donde la participación sea baja.</p></article>
+</div>
+
+<h3 class="sub">Y esto es lo que recibe el colegiado</h3>
+<div class="get-grid">
+<article class="get-card">
+<div class="ic">CIP</div>
+<h3>Una plataforma con la identidad del Colegio</h3>
+<p>Experiencia white-label con nombre, logotipo, colores y presencia institucional del Colegio.</p>
+</article>
+<article class="get-card">
+<div class="ic">W+A</div>
+<h3>Web + app para acompañar al colegiado siempre</h3>
+<p>Una misma experiencia accesible desde el computador de la oficina y desde el celular en obra.</p>
+</article>
+<article class="get-card">
+<div class="ic">A1</div>
+<h3>Contenido estructurado de A1 a C1</h3>
+<p>45 lecciones (391 partes) organizadas sobre el MCER y con Cambridge como referencia académica.</p>
+</article>
+<article class="get-card">
+<div class="ic">7.2K</div>
+<h3>8 127 ejercicios de práctica activa</h3>
+<p>Repartidos en cuatro formatos: opción múltiple, detección de error, escucha y reconstrucción y producción escrita.</p>
+</article>
+
+<article class="get-card">
+<div class="ic">8K</div>
+<h3>Un banco léxico de 11 040 palabras</h3>
+<p>Vocabulario general de la escala MCER más los bloques técnicos de cada rama de la ingeniería.</p>
+</article>
+<article class="get-card">
+<div class="ic">◎</div>
+<h3>Ruta guiada y práctica libre</h3>
+<p>Sigue la secuencia del programa o practica por su cuenta, con 8 127 ejercicios disponibles en modo libre.</p>
+</article>
+<article class="get-card">
+<div class="ic">⚙</div>
+<h3>Vocabulario técnico de su especialidad</h3>
+<p>Sobre la misma ruta MCER, bloques de léxico por rama de la ingeniería activables desde A2.</p>
+</article>
+
+</div>
+<div class="reward-band">
+<div>
+<span class="ey">Un programa de inglés para todo el Colegio</span>
+<h3>Más alcance, más práctica y una experiencia que los colegiados reconocen como propia.</h3>
+<p>El inglés deja de depender de que exista un curso cerca: la práctica ocurre cualquier día de la semana desde una plataforma institucional disponible en los dispositivos que el colegiado ya usa.</p>
+</div>
+<div class="reward-stats">
+<div class="reward-stat"><b>8 127</b><span>ejercicios totales</span></div>
+<div class="reward-stat"><b>11 040</b><span>palabras en el banco léxico</span></div>
+<div class="reward-stat"><b>A1–C1</b><span>ruta completa</span></div>
+<div class="reward-stat"><b>Web + app</b><span>una sola experiencia</span></div>
+</div>
+</div>
+<div class="statement">Una experiencia institucional de inglés que acompaña al colegiado durante toda la semana y permite extender el alcance del programa a toda la comunidad de colegiados.</div>
+</div>
+</section>
+<!-- ==================== CIERRE ==================== -->
+<section class="band bg-hero" id="cierre">
+<div class="sheet">
+<span class="eyebrow"><span class="bar"></span>Hagámoslo realidad</span>
+<h2 class="head">Pongamos el inglés al alcance <span class="hl-b">de todos los colegiados</span>.</h2>
+<p class="lead">Un programa completo de A1 a C1 con la identidad del Colegio, en web y app, con 45 lecciones (391 partes) sobre el MCER, 11 040 palabras de vocabulario y una capa de léxico técnico para cada rama de la ingeniería.</p>
+<div class="launch-hero">
+<span class="launch-label">Colegio de Ingenieros del Perú × AprendoEnglish</span>
+<h3>Un beneficio de educación continua disponible todos los días, en todo el país.</h3>
+<p>La tecnología, la experiencia digital y el contenido ya están construidos. La implementación permite convertirlos en un beneficio institucional del Colegio, con su marca y con el vocabulario técnico de cada especialidad, puesto al alcance de todos sus colegiados.</p>
+<div class="launch-path">
+<div class="launch-step"><div class="n">01</div><b>Definición del beneficio</b><span>Acordar alcance, especialidades prioritarias y condiciones de acceso del colegiado.</span></div>
+<div class="launch-step"><div class="n">02</div><b>Identidad del Colegio</b><span>Aplicar nombre, marca y experiencia institucional en web y app.</span></div>
+<div class="launch-step"><div class="n">03</div><b>Activación</b><span>Validación contra el padrón, habilitación de accesos y pruebas de registro.</span></div>
+<div class="launch-step"><div class="n">04</div><b>Lanzamiento nacional</b><span>Difusión a los Consejos Departamentales y apertura de inscripciones.</span></div>
+</div>
+<div class="history-line">El Colegio pone la institucionalidad, la marca y el alcance nacional. Nosotros ponemos el programa completo de inglés, el vocabulario de cada especialidad y la infraestructura que lo sostiene.</div>
+</div>
+</div>
+</section>
+<footer class="band bg-paper">
+<div class="sheet">
+<div class="footer">
+<span>AprendoEnglish · Programa A1–C1 · Dosier académico</span>
+<span>Preparado para el equipo académico de inglés de la Colegio de Ingenieros del Perú</span>
+</div>
+</div>
+</footer>
+<div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-label="Demo ampliado">
+<header><b id="demoModalTitle">Demo</b><button class="dbtn" type="button" data-close="1">Cerrar ✕</button></header>
+<div class="body"></div>
+</div>
+<script>
+(function(){
+  var m=document.getElementById('demoModal'),body=m.querySelector('.body'),t=document.getElementById('demoModalTitle');
+  function close(){m.classList.remove('open','phone');body.innerHTML='';document.body.style.overflow='';}
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-expand]');
+    if(b){
+      t.textContent=b.getAttribute('data-title')||'Demo';
+      m.classList.toggle('phone',b.hasAttribute('data-phone'));
+      body.innerHTML='<iframe src="'+b.getAttribute('data-expand')+'" title="'+t.textContent+'"></iframe>';
+      m.classList.add('open');document.body.style.overflow='hidden';return;
+    }
+    if(e.target.closest('[data-close]')||e.target===m) close();
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+
+  // Los demos se cargan al entrar en pantalla: la bienvenida de marca del CIP
+  // se ve cuando el lector llega, no mientras sigue arriba en el documento.
+  var lives=[].slice.call(document.querySelectorAll('iframe.live[data-src]'));
+  function cargar(f){ if(f.dataset.src){ f.src=f.dataset.src; delete f.dataset.src; } }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ cargar(e.target); io.unobserve(e.target); } });
+    },{rootMargin:'40px 0px'});
+    lives.forEach(function(f){io.observe(f);});
+  } else { lives.forEach(cargar); }
+})();
+</script>
+</body>
+</html>
