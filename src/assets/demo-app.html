@@ -1255,6 +1255,8 @@
   .debug-fab.wipe { bottom: 234px; }
   .debug-fab.speaking { bottom: 286px; }
   .debug-fab.speaking.on { background: var(--ok, #3FAA24); opacity: 1; border-style: solid; }
+  .debug-fab.circles { bottom: 338px; }
+  .debug-fab.circles.on { background: var(--ok, #3FAA24); opacity: 1; border-style: solid; }
   /* The FABs are above the quiz overlay/sheet (z-index:50) and pinned
      bottom-right — exactly where the quiz's Confirmar/Siguiente button sits. Hide
      them whenever a sheet (mini-quiz, cierre, dialog) or the final-quiz screen is
@@ -2129,6 +2131,71 @@
   .sp-lvl b { display: block; font-size: 14px; font-weight: 900; }
   .sp-lvl span { display: block; margin-top: 1px; font-size: 11px; font-weight: 700; color: var(--muted2); }
 
+  /* ===== Speaking Circles: "Speaking con otros" (maqueta simulada) ===== */
+  .sc-shelf { margin: 0 2px 18px; padding: 14px; border: 2px solid var(--line); border-bottom-width: 4px;
+    border-radius: 18px; background: #fff; }
+  .sc-shelf-h { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+  .sc-shelf-h b { font-size: 16px; font-weight: 900; color: var(--ink); }
+  .sc-shelf small { display: block; font-size: 12px; line-height: 1.45; color: var(--muted); }
+  .sc-live { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 5px 10px;
+    border-radius: 999px; background: color-mix(in srgb, #3FAA24 12%, #fff); color: #2E7D1A;
+    font-size: 12px; font-weight: 800; }
+  .sc-dot { width: 8px; height: 8px; border-radius: 50%; background: #3FAA24; animation: scPulse 1.6s infinite; }
+  @keyframes scPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.8); } }
+  .sc-row { display: flex; gap: 8px; margin-top: 11px; flex-wrap: wrap; }
+  .sc-btn { flex: 1 1 140px; padding: 11px 12px; border-radius: 14px; cursor: pointer; font-size: 13px; font-weight: 800;
+    border: 2px solid var(--line); border-bottom-width: 4px; background: #fff; color: var(--ink); text-align: center; }
+  .sc-btn.pri { background: var(--blue); border-color: color-mix(in srgb, var(--blue) 70%, #000); color: #fff; }
+  .sc-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .sc-head { display: flex; align-items: center; gap: 10px; margin: 2px 0 10px; }
+  .sc-head b { font-size: 18px; font-weight: 900; color: var(--ink); }
+  .sc-back { background: none; border: 0; padding: 4px 0; font-size: 13px; font-weight: 800; color: var(--muted2); cursor: pointer; }
+  .sc-sec { margin: 14px 0 6px; font-size: 12px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--muted2); }
+  .sc-card { padding: 12px 13px; border: 2px solid var(--line); border-bottom-width: 3px; border-radius: 14px;
+    background: #fff; margin-bottom: 8px; width: 100%; text-align: left; cursor: pointer; display: block; }
+  .sc-card b { display: block; font-size: 14px; font-weight: 900; color: var(--ink); }
+  .sc-card small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+  .sc-card:active { transform: translateY(2px); border-bottom-width: 1px; }
+  .sc-static { cursor: default; }
+  .sc-static:active { transform: none; border-bottom-width: 3px; }
+  .sc-people { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+  .sc-av { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px 4px 4px; border-radius: 999px;
+    background: #F6F5F8; font-size: 12px; font-weight: 800; color: var(--ink); }
+  .sc-av i { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+    border-radius: 50%; color: #fff; font-size: 11px; font-style: normal; font-weight: 900; }
+  .sc-av.talk { background: color-mix(in srgb, var(--blue) 16%, #fff); }
+  .sc-pill { display: inline-block; padding: 4px 9px; border-radius: 999px; background: #F6F5F8;
+    font-size: 11px; font-weight: 800; color: var(--muted2); margin: 0 5px 5px 0; cursor: pointer; border: 2px solid transparent; }
+  .sc-pill.on { background: color-mix(in srgb, var(--blue) 14%, #fff); border-color: var(--blue); color: var(--blueDark); }
+  .sc-mission { padding: 12px 13px; border-radius: 14px; border: 2px solid var(--line); background: #FBFAFC; }
+  .sc-mission b { display: block; font-size: 14px; font-weight: 900; color: var(--ink); }
+  .sc-mission ul { margin: 7px 0 0; padding-left: 18px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+  .sc-timer { font-size: 26px; font-weight: 900; color: var(--blueDark); text-align: center; margin: 8px 0 2px; }
+  .sc-log { margin-top: 10px; max-height: 168px; overflow-y: auto; }
+  .sc-line { margin-bottom: 7px; font-size: 13px; line-height: 1.45; color: var(--ink); }
+  .sc-line b { font-weight: 900; color: var(--blueDark); }
+  .sc-cue { margin-top: 9px; padding: 9px 11px; border-radius: 12px; font-size: 12.5px; font-weight: 800;
+    background: color-mix(in srgb, #F4A720 16%, #fff); color: #8A5A00; }
+  .sc-menu { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .sc-menu button { padding: 6px 10px; border-radius: 999px; border: 2px solid var(--line); background: #fff;
+    font-size: 11.5px; font-weight: 800; color: var(--muted2); cursor: pointer; }
+  .sc-faces { display: flex; justify-content: center; gap: 12px; margin: 10px 0; }
+  .sc-faces button { font-size: 26px; background: none; border: 0; cursor: pointer; opacity: .5; }
+  .sc-faces button.on { opacity: 1; transform: scale(1.15); }
+  .sc-chat { max-height: 150px; overflow-y: auto; margin-top: 6px; }
+  .sc-msg { margin-bottom: 6px; font-size: 12.5px; color: var(--ink); }
+  .sc-msg b { color: var(--blueDark); font-weight: 900; }
+  .sc-msg.me { text-align: right; color: var(--muted); }
+  .sc-input { display: flex; gap: 6px; margin-top: 8px; }
+  .sc-input input { flex: 1; padding: 9px 11px; border: 2px solid var(--line); border-radius: 12px; font: inherit; font-size: 13px; }
+  .sc-home { margin: 0 2px 12px; padding: 12px 13px; border-radius: 16px; border: 2px solid var(--line);
+    border-bottom-width: 4px; background: #fff; display: flex; align-items: center; gap: 10px; }
+  .sc-home .t { flex: 1; }
+  .sc-home b { display: block; font-size: 13.5px; font-weight: 900; color: var(--ink); }
+  .sc-home small { display: block; font-size: 12px; color: var(--muted); }
+  .sc-home button { padding: 9px 14px; border-radius: 12px; border: 0; background: var(--blue); color: #fff;
+    font-size: 13px; font-weight: 800; cursor: pointer; }
+
   .sp-target { margin: 4px 0 2px; padding: 13px 14px; border-radius: 14px; border: 2px solid var(--line);
     background: #FBFAFC; font-size: 17px; font-weight: 800; line-height: 1.4; color: var(--ink); }
   .sp-target .w { padding: 1px 2px; border-radius: 5px; }
@@ -2428,6 +2495,9 @@
 <button class="debug-fab speaking" id="debug-speaking" title="Activar Speaking" aria-label="Activar Speaking" onclick="toggleDebugSpeaking()">
   <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21H8v2h8v-2h-3v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
 </button>
+<button class="debug-fab circles" id="debug-circles" title="Activar Speaking con otros" aria-label="Activar Speaking con otros" onclick="toggleDebugCircles()">
+  <svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm-8 0a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm0 2c-2.3 0-7 1.2-7 3.5V19h9v-2.5c0-.9.5-1.7 1.3-2.3A12 12 0 0 0 8 13zm8 0c-.6 0-1.3.1-2 .2 1.1.8 1.9 1.8 1.9 3.3V19h7v-2.5c0-2.3-4.7-3.5-6.9-3.5z"/></svg>
+</button>
 
 <!-- Mascota. El servidor sustituye este marcador por el pack que use el demo:
      'ozito' (capas SVG + CSS) o 'boti' (SVG + resortes en JS). Ver
@@ -2469,6 +2539,7 @@ const CFG = {
   features: Object.assign({ placement: true, share: true, dashboard: true, speaking: false }, DEMO.features || {}),
 };
 let DEBUG_SPEAKING = false;
+let DEBUG_CIRCLES = false;
 
 // Un icono puede ser un emoji o una imagen subida. iconHTML() decide cual.
 function iconHTML(v, cls) {
@@ -3465,6 +3536,7 @@ document.addEventListener('click', (e) => {
     _dbgTaps = 0;
     const on = document.body.classList.toggle('debug-fabs');
     if (!on && DEBUG_SPEAKING) { DEBUG_SPEAKING = false; renderPractice(); }
+    if (!on && DEBUG_CIRCLES) { DEBUG_CIRCLES = false; renderPractice(); renderCourse(); }
     toast(on ? 'Modo debug activado' : 'Modo debug desactivado');
   }
 });
@@ -3474,6 +3546,14 @@ function toggleDebugSpeaking() {
   if (b) { b.classList.toggle('on', DEBUG_SPEAKING); b.title = DEBUG_SPEAKING ? 'Desactivar Speaking' : 'Activar Speaking'; }
   renderPractice();
   toast(DEBUG_SPEAKING ? 'Speaking de prueba activado' : 'Speaking oculto');
+}
+function toggleDebugCircles() {
+  DEBUG_CIRCLES = !DEBUG_CIRCLES;
+  const b = document.getElementById('debug-circles');
+  if (b) { b.classList.toggle('on', DEBUG_CIRCLES); b.title = DEBUG_CIRCLES ? 'Desactivar Speaking con otros' : 'Activar Speaking con otros'; }
+  renderPractice();
+  renderCourse();
+  toast(DEBUG_CIRCLES ? 'Speaking con otros activado' : 'Speaking con otros oculto');
 }
 
 function pbar(progress, completed, color) {
@@ -3720,7 +3800,7 @@ function homeGreeting() {
       <span class="hh-st"><b>${racha}</b><i>días de racha</i></span>
       <span class="hh-st"><b>${fmtXp(xp)}</b><i>XP</i></span>
     </div>
-  </div>`;
+  </div>` + circlesHomeHTML();
 }
 
 function renderCourse() {
@@ -3764,6 +3844,7 @@ function renderCourse() {
       ${arrowFwd(20, '#1CB0F6', 2.6)}
     </button>`;
   document.getElementById('course-body').innerHTML = html;
+  wireCirclesHome();
   document.getElementById('course-foot').innerHTML = courseHero();
   document.querySelectorAll('.mod-card').forEach(c => c.onclick = () => {
     const m = course.modules[+c.getAttribute('data-mod')];
@@ -6101,11 +6182,15 @@ function renderPracticeLibrary(el) {
 
     </div>
     ${speakingShelfHTML()}
+    ${circlesShelfHTML()}
     <div class="pr-chips">${chips.join('')}</div>` +
     (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
       <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
 
   el.querySelectorAll('.sp-lvl').forEach(b => b.onclick = () => openSpeakingRun(+b.getAttribute('data-sp')));
+  const scNow = el.querySelector('#sc-shelf-now'), scPlan = el.querySelector('#sc-shelf-plan');
+  if (scNow) scNow.onclick = () => { const st = scLoad(); st.onboarded ? (scLanding(), scMatchNow()) : openCircles(); };
+  if (scPlan) scPlan.onclick = () => { const st = scLoad(); st.onboarded ? (scLanding(), scSchedule()) : openCircles(); };
   el.querySelectorAll('.pr-chip').forEach(b => b.onclick = () => {
     PRACTICE_FILTER = +b.getAttribute('data-m');
     renderPractice();
@@ -6767,6 +6852,492 @@ function openSpeakingRun(mi) {
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// SPEAKING CIRCLES — "Speaking con otros" (maqueta simulada)
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Es una MAQUETA: no hay matching real, ni presencia entre alumnos, ni audio en
+// vivo. Compañeros, disponibilidad, horarios y las intervenciones de la sala son
+// guionados, igual que el resto del demo. Vive escondida tras el modo debug
+// (DEBUG_CIRCLES) y su estado se guarda aparte, en SC_KEY.
+
+const SC_KEY = 'ae_circles_v1';
+function scLoad() { try { return JSON.parse(localStorage.getItem(SC_KEY)) || {}; } catch (e) { return {}; } }
+function scSave(s) { try { localStorage.setItem(SC_KEY, JSON.stringify(s)); } catch (e) {} }
+
+const SC_NAMES = ['Andrea', 'Jorge', 'María', 'Luis', 'Rocío', 'Diego', 'Camila', 'Sebastián',
+                  'Valeria', 'Renzo', 'Fiorella', 'Kevin'];
+const SC_COLORS = ['#1CB0F6', '#3FAA24', '#F4A720', '#9B5DE5', '#EF6C6C', '#12A594'];
+
+// Dos misiones por nivel. Cada una trae su objetivo comunicativo, frases útiles,
+// rondas y las intervenciones guionadas de los compañeros.
+const SC_MISSIONS = {
+  A1: [
+    { title: 'Getting to know each other', es: 'Presentarse y preguntar por el otro',
+      useful: ['My name is…', 'I’m from…', 'What do you do?', 'Nice to meet you.'],
+      rounds: ['Preséntate en 30 segundos', 'Pregúntale algo a otra persona', 'Cuenta algo que te guste hacer'],
+      lines: ['Hi! My name is {a}. I’m from Arequipa.', 'Nice to meet you! What do you do?',
+              'I’m a student. I like football.', 'Me too! I play on Sundays.'] },
+    { title: 'My week', es: 'Contar tu rutina de la semana',
+      useful: ['I usually…', 'On Mondays…', 'in the morning', 'after work'],
+      rounds: ['Cuenta tu lunes', 'Pregunta por el fin de semana', 'Di qué quieres cambiar'],
+      lines: ['On Mondays I work and then I study English.', 'What about the weekend, {a}?',
+              'I visit my family on Sundays.', 'Nice. I want to sleep more!'] },
+  ],
+  A2: [
+    { title: 'Planning a weekend trip', es: 'Ponerse de acuerdo para un viaje corto',
+      useful: ['Let’s…', 'How about…?', 'I’d prefer…', 'That sounds good.'],
+      rounds: ['Propón un destino', 'Pónganse de acuerdo en el presupuesto', 'Decidan el plan final'],
+      lines: ['How about Paracas? It’s only four hours.', 'Sounds good, but is it expensive?',
+              'We can share a room, {a}.', 'Perfect. Let’s book it.'] },
+    { title: 'At the restaurant', es: 'Pedir, sugerir y decidir juntos',
+      useful: ['I’ll have…', 'Could we…?', 'Shall we share…?', 'It’s on me.'],
+      rounds: ['Pide tu plato', 'Sugiere algo para compartir', 'Resuelvan la cuenta'],
+      lines: ['I’ll have the ceviche, please.', 'Shall we share a starter, {a}?',
+              'Good idea. And two lemonades.', 'Let’s split the bill.'] },
+  ],
+  B1: [
+    { title: 'Making suggestions at work', es: 'Sugerir y llegar a acuerdos en el trabajo',
+      useful: ['Why don’t we…?', 'I see your point, but…', 'What if we…?', 'Let’s agree on…'],
+      rounds: ['Presenta tu propuesta', 'Responde a la propuesta de otro', 'Lleguen a un acuerdo'],
+      lines: ['Why don’t we move the meeting to Friday?', 'I see your point, but Friday is busy.',
+              'What if we do it online instead, {a}?', 'That works for me.'] },
+    { title: 'Solving a small problem', es: 'Explicar un problema y proponer soluciones',
+      useful: ['The issue is…', 'It happened when…', 'We could try…', 'In my experience…'],
+      rounds: ['Describe el problema', 'Propón dos soluciones', 'Elijan una y expliquen por qué'],
+      lines: ['The issue is that the report is always late.', 'It happened last month too.',
+              'We could try a shared checklist, {a}.', 'In my experience that helps a lot.'] },
+  ],
+  B2: [
+    { title: 'Negotiating a budget', es: 'Negociar con argumentos y ceder cuando toca',
+      useful: ['From our side…', 'We’d be willing to…', 'On the other hand…', 'Let’s meet halfway.'],
+      rounds: ['Defiende tu prioridad', 'Escucha y responde a la otra parte', 'Cierren un acuerdo'],
+      lines: ['From our side, safety comes first.', 'On the other hand, the deadline is fixed.',
+              'We’d be willing to cut travel costs, {a}.', 'Let’s meet halfway then.'] },
+    { title: 'Disagreeing politely', es: 'Expresar desacuerdo sin romper la conversación',
+      useful: ['I’m afraid I disagree…', 'That’s a fair point, however…', 'Actually…', 'Correct me if I’m wrong.'],
+      rounds: ['Defiende una postura', 'Contradice con respeto', 'Resuman lo acordado'],
+      lines: ['I’m afraid I disagree with that approach.', 'That’s a fair point, however the data says otherwise.',
+              'Correct me if I’m wrong, {a}, but we tested it already.', 'True. Let’s revisit the numbers.'] },
+  ],
+  C1: [
+    { title: 'Leading a project review', es: 'Conducir una reunión y sintetizar decisiones',
+      useful: ['Let’s take stock of…', 'Bearing in mind…', 'To wrap up…', 'The key takeaway is…'],
+      rounds: ['Abre la reunión y fija la agenda', 'Modera la discusión', 'Cierra con decisiones y responsables'],
+      lines: ['Let’s take stock of where we are before we decide.', 'Bearing in mind the delay, I’d re-scope phase two.',
+              '{a}, could you summarise the risks?', 'To wrap up: two owners, one deadline.'] },
+    { title: 'Defending a technical decision', es: 'Argumentar una decisión técnica ante dudas',
+      useful: ['The rationale behind…', 'Admittedly…', 'That said…', 'The trade-off is…'],
+      rounds: ['Expón la decisión y su razón', 'Responde a la objeción más dura', 'Concluye con el trade-off'],
+      lines: ['The rationale behind the redesign is maintenance cost.', 'Admittedly, it slows us down this quarter.',
+              'That said, {a}, the trade-off pays off in a year.', 'Fair enough — let’s document it.'] },
+  ],
+};
+
+// El nivel del alumno: el último módulo desbloqueado que aún no termina.
+function scLevel() {
+  const mods = (course && course.modules) || [];
+  let idx = 0;
+  mods.forEach((m, i) => {
+    if (isLessonUnlocked(m.lessons[0].id) && !m.lessons.every(l => isLessonCompleted(l.id))) idx = i;
+  });
+  const mod = mods[idx];
+  return (mod && mod.level) || PR_CEFR[idx] || 'A1';
+}
+
+// Disponibilidad "en vivo": simulada, pero estable dentro de la misma hora para
+// que no baile entre pantallas.
+function scAvail() {
+  const h = new Date().getHours();
+  return 1 + ((h * 7 + new Date().getDate()) % 4); // 1..4
+}
+function scRandName(i) { return SC_NAMES[i % SC_NAMES.length]; }
+function scAvatar(name, i) {
+  const c = SC_COLORS[i % SC_COLORS.length];
+  return `<span class="sc-av"><i style="background:${c}">${escapeHtml(name[0])}</i>${escapeHtml(name)}</span>`;
+}
+function scCircle() {
+  const st = scLoad();
+  if (st.circle) return st.circle;
+  const n = 8 + (new Date().getDate() % 5); // 8–12
+  st.circle = SC_NAMES.slice(0, n);
+  scSave(st);
+  return st.circle;
+}
+function scMission() {
+  const list = SC_MISSIONS[scLevel()] || SC_MISSIONS.A1;
+  return list[Math.floor(Math.random() * list.length)];
+}
+function scSlots() {
+  const base = new Date();
+  const fmt = (d) => d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0') + (d.getHours() < 12 ? ' a. m.' : ' p. m.');
+  const mk = (addDays, hour, min, n) => {
+    const d = new Date(base); d.setDate(d.getDate() + addDays); d.setHours(hour, min, 0, 0);
+    return { when: (addDays === 0 ? 'Hoy' : addDays === 1 ? 'Mañana' : 'Sábado') + ' · ' + fmt(d), n, iso: d.toISOString() };
+  };
+  return [mk(0, 20, 0, 2), mk(0, 21, 0, 3), mk(1, 19, 30, 2), mk(2, 11, 0, 4)];
+}
+
+//— Andamio de pantallas dentro de la hoja ————————————————————————
+function scSheet(inner, dismissible) {
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  sheet.classList.remove('result');
+  sheet.dataset.dismissible = dismissible === false ? 'false' : 'true';
+  sheet.innerHTML = `<div class="handle"></div><div class="sc-wrap" id="sc-wrap">${inner}</div>`;
+  overlay.classList.add('active');
+  return document.getElementById('sc-wrap');
+}
+
+function openCircles() {
+  if (!DEBUG_CIRCLES) return;
+  const st = scLoad();
+  if (st.onboarded) scLanding(); else scOnboard(0, {});
+}
+
+//— Onboarding progresivo (3 pasos) ————————————————————————————
+function scOnboard(step, draft) {
+  const lvl = scLevel();
+  if (step === 0) {
+    const w = scSheet(`<div class="sc-head"><b>Speaking con otros</b></div>
+      <small style="display:block;font-size:13px;color:var(--muted);line-height:1.5">
+        Practica inglés en grupos pequeños con alumnos de un nivel parecido al tuyo.</small>
+      <div class="sc-card sc-static" style="margin-top:12px"><b>Así funciona</b>
+        <small>✓ Sesiones cortas · ✓ Actividades guiadas · ✓ Horarios flexibles · ✓ No necesitas profesor</small></div>
+      <div class="sc-card sc-static"><b>Te agruparemos con alumnos ${escapeHtml(lvl)}</b>
+        <small>Es el nivel en el que vas ahora mismo en tu ruta. <a href="#" id="sc-why">¿Por qué ${escapeHtml(lvl)}?</a></small></div>
+      <button class="btn green" id="sc-go" style="margin-top:12px">Quiero practicar</button>`);
+    w.querySelector('#sc-why').onclick = (e) => { e.preventDefault(); toast('Es el nivel de tu módulo activo en la ruta; cambia solo cuando avanzas.'); };
+    w.querySelector('#sc-go').onclick = () => scOnboard(1, draft);
+    return;
+  }
+  if (step === 1) {
+    const dias = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+    draft.days = draft.days || [];
+    draft.times = draft.times || [];
+    const w = scSheet(`<button class="sc-back" id="sc-b">‹ Atrás</button>
+      <div class="sc-head"><b>¿Cuándo sueles tener tiempo?</b></div>
+      <small style="font-size:12.5px;color:var(--muted)">Puedes cambiarlo cuando quieras.</small>
+      <div class="sc-sec">Días</div>
+      <div>${dias.map((d, i) => `<span class="sc-pill${draft.days.indexOf(i) >= 0 ? ' on' : ''}" data-d="${i}">${d}</span>`).join('')}</div>
+      <div class="sc-sec">Momentos</div>
+      <div>${['Mañana', 'Tarde', 'Noche'].map(t => `<span class="sc-pill${draft.times.indexOf(t) >= 0 ? ' on' : ''}" data-t="${t}">${t}</span>`).join('')}</div>
+      <button class="btn green" id="sc-go" style="margin-top:14px">Continuar</button>`);
+    w.querySelectorAll('[data-d]').forEach(p => p.onclick = () => {
+      const i = +p.getAttribute('data-d'), k = draft.days.indexOf(i);
+      if (k >= 0) draft.days.splice(k, 1); else draft.days.push(i);
+      p.classList.toggle('on');
+    });
+    w.querySelectorAll('[data-t]').forEach(p => p.onclick = () => {
+      const t = p.getAttribute('data-t'), k = draft.times.indexOf(t);
+      if (k >= 0) draft.times.splice(k, 1); else draft.times.push(t);
+      p.classList.toggle('on');
+    });
+    w.querySelector('#sc-b').onclick = () => scOnboard(0, draft);
+    w.querySelector('#sc-go').onclick = () => scOnboard(2, draft);
+    return;
+  }
+  const temas = ['Conversación cotidiana', 'Trabajo', 'Viajes', 'Entrevistas', 'Inglés profesional', 'Cualquier tema'];
+  draft.topics = draft.topics || [];
+  const w = scSheet(`<button class="sc-back" id="sc-b">‹ Atrás</button>
+    <div class="sc-head"><b>¿Qué te gustaría practicar?</b></div>
+    <small style="font-size:12.5px;color:var(--muted)">Opcional. El nivel y tu disponibilidad pesan más que el tema.</small>
+    <div style="margin-top:10px">${temas.map(t => `<span class="sc-pill${draft.topics.indexOf(t) >= 0 ? ' on' : ''}" data-t="${escapeHtml(t)}">${t}</span>`).join('')}</div>
+    <button class="btn green" id="sc-go" style="margin-top:14px">Listo</button>`);
+  w.querySelectorAll('[data-t]').forEach(p => p.onclick = () => {
+    const t = p.getAttribute('data-t'), k = draft.topics.indexOf(t);
+    if (k >= 0) draft.topics.splice(k, 1); else draft.topics.push(t);
+    p.classList.toggle('on');
+  });
+  w.querySelector('#sc-b').onclick = () => scOnboard(1, draft);
+  w.querySelector('#sc-go').onclick = () => {
+    const st = scLoad();
+    st.onboarded = true; st.days = draft.days; st.times = draft.times; st.topics = draft.topics;
+    st.sessions = st.sessions || []; st.history = st.history || [];
+    scSave(st);
+    toast('Ya estás dentro de tu Speaking Circle');
+    scLanding();
+  };
+}
+
+//— Landing ————————————————————————————————————————————————
+function scLanding() {
+  const st = scLoad(), lvl = scLevel(), miembros = scCircle(), disp = scAvail();
+  const sesiones = (st.sessions || []).filter(s => new Date(s.iso).getTime() > Date.now() - 3 * 3600e3);
+  const hist = st.history || [];
+  const mins = hist.reduce((a, h) => a + (h.min || 0), 0);
+  const w = scSheet(`<div class="sc-head"><b>Speaking con otros</b></div>
+    <div class="sc-row">
+      <button class="sc-btn pri" id="sc-now">🎙 Practicar ahora</button>
+      <button class="sc-btn" id="sc-plan">📅 Programar práctica</button>
+    </div>
+    <div class="sc-sec">Próximas prácticas</div>
+    ${sesiones.length ? sesiones.map((s, i) => `<button class="sc-card" data-s="${i}">
+        <b>${escapeHtml(s.when)}</b><small>${escapeHtml(s.title)} · ${s.n} confirmados</small></button>`).join('')
+      : `<div class="sc-card sc-static"><b>Todavía no tienes prácticas agendadas</b>
+        <small>Programa una o únete a la que esté abierta ahora.</small></div>`}
+    <div class="sc-sec">Mi círculo · ${escapeHtml(lvl)}</div>
+    <div class="sc-card sc-static">
+      <b>${miembros.length} participantes</b>
+      <small>${disp} quieren practicar ahora mismo</small>
+      <div class="sc-people">${miembros.map((n, i) => scAvatar(n, i)).join('')}</div>
+      <div style="margin-top:10px"><button class="sc-btn" id="sc-chat" style="flex:0 0 auto">Chat del círculo</button></div>
+    </div>
+    <div class="sc-sec">Historial</div>
+    <div class="sc-card sc-static"><b>${hist.length} prácticas · ${mins} min</b>
+      <small>${hist.length ? hist.slice(-3).reverse().map(h => escapeHtml(h.when + ' · ' + h.title + ' · ' + h.min + ' min')).join('<br>') : 'Cuando termines tu primera práctica aparecerá aquí.'}</small></div>`);
+  w.querySelector('#sc-now').onclick = scMatchNow;
+  w.querySelector('#sc-plan').onclick = scSchedule;
+  w.querySelector('#sc-chat').onclick = scChat;
+  w.querySelectorAll('[data-s]').forEach(b => b.onclick = () => scRoom((st.sessions || [])[+b.getAttribute('data-s')]));
+}
+
+//— Camino A: practicar ahora ————————————————————————————————
+function scMatchNow() {
+  const lvl = scLevel(), disp = scAvail();
+  const w = scSheet(`<div class="sc-head"><b>Buscando alumnos ${escapeHtml(lvl)}…</b></div>
+    <div class="sc-card sc-static"><b id="sc-count">0 de 3 encontrados</b>
+      <small>Puedes seguir usando la app: te avisamos cuando esté listo.</small>
+      <div class="sc-people" id="sc-found"></div></div>
+    <button class="sc-btn" id="sc-cancel" style="margin-top:12px">Cancelar</button>`);
+  let n = 0, cancel = false;
+  w.querySelector('#sc-cancel').onclick = () => { cancel = true; scLanding(); };
+  const tick = () => {
+    if (cancel || !document.getElementById('sc-count')) return;
+    if (n < Math.min(3, disp + 1)) {
+      n++;
+      document.getElementById('sc-count').textContent = n + ' de 3 encontrados';
+      document.getElementById('sc-found').insertAdjacentHTML('beforeend', scAvatar(scRandName(n + 2), n + 2));
+      setTimeout(tick, 900 + Math.random() * 700);
+      return;
+    }
+    if (n >= 3) {
+      const m = scMission();
+      scRoom({ when: 'Ahora', title: m.title, n: 3, mission: m });
+    } else {
+      scNoQuorum();
+    }
+  };
+  setTimeout(tick, 700);
+}
+
+function scNoQuorum() {
+  const w = scSheet(`<div class="sc-head"><b>Todavía no somos suficientes</b></div>
+    <div class="sc-card sc-static"><b>Ya te anotamos como disponible</b>
+      <small>Te avisamos apenas seamos tres de tu nivel. Nadie se queda esperando en blanco.</small></div>
+    <button class="btn green" id="sc-alt" style="margin-top:12px">Hacer speaking individual</button>
+    <button class="sc-btn" id="sc-plan" style="margin-top:8px">Programar para otro momento</button>`);
+  w.querySelector('#sc-alt').onclick = () => { closeOverlay(); showHomeTab('practice'); toast('Elige un nivel en la estantería de Speaking'); };
+  w.querySelector('#sc-plan').onclick = scSchedule;
+}
+
+//— Camino B: programar ————————————————————————————————————
+function scSchedule() {
+  const slots = scSlots();
+  const w = scSheet(`<button class="sc-back" id="sc-b">‹ Atrás</button>
+    <div class="sc-head"><b>¿Cuándo quieres practicar?</b></div>
+    <small style="font-size:12.5px;color:var(--muted)">Horarios con más personas de tu nivel.</small>
+    <div class="sc-sec">Sugeridos</div>
+    ${slots.map((s, i) => `<button class="sc-card" data-i="${i}"><b>${escapeHtml(s.when)}</b>
+      <small>${s.n} interesados</small></button>`).join('')}
+    <button class="sc-btn" id="sc-other" style="margin-top:6px">Proponer otro horario</button>`);
+  w.querySelector('#sc-b').onclick = scLanding;
+  w.querySelector('#sc-other').onclick = () => toast('En la versión real podrás proponer tu propio horario al círculo.');
+  w.querySelectorAll('[data-i]').forEach(b => b.onclick = () => {
+    const s = slots[+b.getAttribute('data-i')], m = scMission(), st = scLoad();
+    st.sessions = (st.sessions || []).concat([{ when: s.when, iso: s.iso, title: m.title, n: s.n + 1 }]);
+    scSave(st);
+    const w2 = scSheet(`<div class="sc-head"><b>Práctica confirmada</b></div>
+      <div class="sc-card sc-static"><b>${escapeHtml(s.when)}</b>
+        <small>${escapeHtml(m.title)} · ${s.n + 1} participantes</small></div>
+      <div class="sc-card sc-static"><b>Te avisaremos 10 minutos antes</b>
+        <small>Si alguien cancela, buscamos reemplazo sin cancelar la práctica.</small></div>
+      <button class="btn green" id="sc-ok" style="margin-top:12px">Listo</button>`);
+    w2.querySelector('#sc-ok').onclick = scLanding;
+    if (typeof renderCourse === 'function' && document.getElementById('course-body')) wireCirclesHome();
+  });
+}
+
+//— Sala de práctica (simulada) ————————————————————————————————
+function scRoom(sesion) {
+  const m = (sesion && sesion.mission) || scMission();
+  const yo = ((typeof loadProfile === 'function' && loadProfile()) || {}).name || 'Tú';
+  const gente = [scRandName(3), scRandName(6), yo];
+  let ronda = 0, seg = 45, hablado = 0, cerrado = false;
+  const w = scSheet(`<div id="sc-room">
+    <div class="sc-head"><b>Speaking practice</b></div>
+    <div class="sc-people">${gente.map((n, i) => `<span class="sc-av${n === yo ? ' talk' : ''}"><i style="background:${SC_COLORS[i]}">${escapeHtml(n[0])}</i>${escapeHtml(n)}</span>`).join('')}
+      <span class="sc-av"><i style="background:#8A8A8A">🎤</i>micrófono</span>
+      <span class="sc-av"><i style="background:#C9C9C9">📷</i>cámara opcional</span></div>
+    <div class="sc-timer" id="sc-clock">00:45</div>
+    <div class="sc-mission">
+      <b>${escapeHtml(m.title)} · ${escapeHtml(m.es)}</b>
+      <div id="sc-round" style="margin-top:6px;font-size:13px;font-weight:800;color:var(--blueDark)"></div>
+      <ul>${m.useful.map(u => `<li>${escapeHtml(u)}</li>`).join('')}</ul>
+    </div>
+    <div class="sc-cue" id="sc-cue">Suggested speaker: ${escapeHtml(gente[0])}</div>
+    <div class="sc-log" id="sc-log"></div>
+    <div class="sc-menu">
+      <button data-a="mute">Silenciar a alguien</button>
+      <button data-a="report">Reportar</button>
+      <button data-a="block">Bloquear</button>
+      <button data-a="leave">Salir</button>
+    </div>
+    <button class="btn green" id="sc-next" style="margin-top:10px">Siguiente ronda</button>
+  </div>`, false);
+
+  function pintaRonda() {
+    const r = document.getElementById('sc-round');
+    if (r) r.textContent = `Ronda ${ronda + 1} de ${m.rounds.length}: ${m.rounds[ronda]}`;
+  }
+  function linea(txt, quien, i) {
+    const log = document.getElementById('sc-log');
+    if (!log) return;
+    log.insertAdjacentHTML('beforeend', `<div class="sc-line"><b>${escapeHtml(quien)}:</b> ${escapeHtml(txt)}</div>`);
+    log.scrollTop = log.scrollHeight;
+  }
+  let li = 0;
+  const habla = setInterval(() => {
+    if (!document.getElementById('sc-room')) return clearInterval(habla);
+    const quien = gente[li % 2];
+    linea((m.lines[li % m.lines.length] || '').replace('{a}', yo), quien, li);
+    const cue = document.getElementById('sc-cue');
+    if (cue) cue.textContent = li % 3 === 2
+      ? `${gente[1]} hasn’t spoken much yet. ${gente[1]}, what do you think?`
+      : `Suggested speaker: ${gente[(li + 1) % 3]}`;
+    li++;
+  }, 4200);
+  const reloj = setInterval(() => {
+    if (!document.getElementById('sc-room')) return clearInterval(reloj);
+    seg--; hablado++;
+    const c = document.getElementById('sc-clock');
+    if (c) c.textContent = '00:' + String(Math.max(0, seg)).padStart(2, '0');
+    if (seg <= 0) siguiente();
+  }, 1000);
+
+  function siguiente() {
+    if (cerrado) return;
+    if (ronda < m.rounds.length - 1) { ronda++; seg = 45; pintaRonda(); linea('— ' + m.rounds[ronda] + ' —', 'Mission', 0); }
+    else fin();
+  }
+  function fin() {
+    cerrado = true;
+    clearInterval(habla); clearInterval(reloj);
+    scRecap(m, Math.max(1, Math.round(hablado / 60)), gente);
+  }
+  w.querySelector('#sc-next').onclick = siguiente;
+  w.querySelectorAll('[data-a]').forEach(b => b.onclick = () => {
+    const a = b.getAttribute('data-a');
+    if (a === 'leave') { cerrado = true; clearInterval(habla); clearInterval(reloj); return scLanding(); }
+    toast(a === 'mute' ? 'Silenciado solo para ti' : a === 'report' ? 'Reporte enviado al equipo' : 'No volverá a aparecer en tus prácticas');
+  });
+  pintaRonda();
+  linea('— ' + m.rounds[0] + ' —', 'Mission', 0);
+}
+
+//— Post-sesión ————————————————————————————————————————————
+function scRecap(m, min, gente) {
+  const st = scLoad();
+  st.history = (st.history || []).concat([{ when: 'Hoy', title: m.title, min: min }]);
+  st.sessions = (st.sessions || []).filter(s => s.title !== m.title);
+  scSave(st);
+  const mes = (st.history || []).reduce((a, h) => a + (h.min || 0), 0);
+  const w = scSheet(`<div class="sc-head"><b>¡Terminaste ${min} min de speaking!</b></div>
+    <div class="sc-card sc-static"><b>Hoy practicaste</b>
+      <small>${m.rounds.map(r => '✓ ' + escapeHtml(r)).join('<br>')}</small></div>
+    <div class="sc-sec">¿Cómo estuvo la práctica?</div>
+    <div class="sc-faces">${['😞', '😐', '🙂', '😄'].map((f, i) => `<button data-f="${i}">${f}</button>`).join('')}</div>
+    <div class="sc-sec">¿Practicarías con este grupo otra vez?</div>
+    <div class="sc-row"><button class="sc-btn" data-g="1">Sí</button><button class="sc-btn" data-g="0">Prefiero otras personas</button></div>
+    <div class="sc-card sc-static" style="margin-top:12px"><b>+${min} minutos de speaking</b>
+      <small>Total acumulado: ${mes} min</small></div>
+    <button class="btn green" id="sc-next2" style="margin-top:10px">Buscar próxima práctica</button>`);
+  w.querySelectorAll('[data-f]').forEach(b => b.onclick = () => {
+    w.querySelectorAll('[data-f]').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+  });
+  w.querySelectorAll('[data-g]').forEach(b => b.onclick = () => toast('Gracias, lo tendremos en cuenta al armar tu próximo grupo'));
+  w.querySelector('#sc-next2').onclick = scLanding;
+  touchDay();
+  if (document.getElementById('course-body')) wireCirclesHome();
+}
+
+//— Chat del círculo (guionado) ————————————————————————————————
+function scChat() {
+  const st = scLoad();
+  const msgs = st.chat || [
+    { q: 'Andrea', t: '¿Alguien puede hoy a las 8?' },
+    { q: 'Jorge', t: 'Yo sí, pero mejor 9.' },
+    { q: 'María', t: 'Me apunto a las 9 👋' },
+  ];
+  const w = scSheet(`<button class="sc-back" id="sc-b">‹ Atrás</button>
+    <div class="sc-head"><b>Chat del círculo</b></div>
+    <small style="font-size:12.5px;color:var(--muted)">El chat acompaña; los horarios se cierran desde “Programar práctica”.</small>
+    <div class="sc-chat" id="sc-msgs">${msgs.map(m => `<div class="sc-msg${m.q === 'Tú' ? ' me' : ''}"><b>${escapeHtml(m.q)}:</b> ${escapeHtml(m.t)}</div>`).join('')}</div>
+    <div class="sc-input"><input id="sc-in" placeholder="Escribe algo…"><button class="sc-btn pri" id="sc-send" style="flex:0 0 auto">Enviar</button></div>
+    <button class="sc-btn" id="sc-plan" style="margin-top:10px">Programar práctica</button>`);
+  const push = (q, t) => {
+    msgs.push({ q, t });
+    const c = document.getElementById('sc-msgs');
+    c.insertAdjacentHTML('beforeend', `<div class="sc-msg${q === 'Tú' ? ' me' : ''}"><b>${escapeHtml(q)}:</b> ${escapeHtml(t)}</div>`);
+    c.scrollTop = c.scrollHeight;
+    const s = scLoad(); s.chat = msgs; scSave(s);
+  };
+  w.querySelector('#sc-b').onclick = scLanding;
+  w.querySelector('#sc-plan').onclick = scSchedule;
+  w.querySelector('#sc-send').onclick = () => {
+    const inp = document.getElementById('sc-in');
+    if (!inp.value.trim()) return;
+    push('Tú', inp.value.trim());
+    inp.value = '';
+    setTimeout(() => push('Rocío', '¡Yo me sumo! Programémosla.'), 900);
+  };
+}
+
+//— Entradas: Práctica e Inicio ————————————————————————————————
+function circlesShelfHTML() {
+  if (!DEBUG_CIRCLES) return '';
+  const lvl = scLevel(), disp = scAvail();
+  return `<div class="sc-shelf">
+    <div class="sc-shelf-h"><span class="sp-mic-badge" style="color:var(--blue)">${micSvg(17)}</span>
+      <b>Speaking con otros</b></div>
+    <small>Practica conversaciones reales con alumnos de un nivel parecido al tuyo. Sesiones cortas,
+      con actividad guiada y sin profesor.</small>
+    <span class="sc-live"><span class="sc-dot"></span>${disp} alumnos ${escapeHtml(lvl)} disponibles ahora</span>
+    <div class="sc-row">
+      <button class="sc-btn pri" id="sc-shelf-now">Practicar ahora</button>
+      <button class="sc-btn" id="sc-shelf-plan">Programar práctica</button>
+    </div>
+  </div>`;
+}
+
+function circlesHomeHTML() {
+  if (!DEBUG_CIRCLES) return '';
+  const st = scLoad();
+  const prox = (st.sessions || []).filter(s => new Date(s.iso).getTime() > Date.now())[0];
+  if (prox) {
+    return `<div class="sc-home"><div class="t"><b>Tu próxima práctica</b>
+      <small>${escapeHtml(prox.when)} · ${escapeHtml(prox.title)} · ${prox.n} participantes</small></div>
+      <button id="sc-home-btn" data-go="ver">Ver</button></div>`;
+  }
+  const disp = scAvail();
+  if (disp >= 3) {
+    return `<div class="sc-home"><div class="t"><b>${disp} personas de tu nivel quieren practicar ahora</b>
+      <small>Speaking con otros · ${escapeHtml(scLevel())}</small></div>
+      <button id="sc-home-btn" data-go="now">Unirme</button></div>`;
+  }
+  return ''; // sin oportunidad real, no se muestra tarjeta
+}
+
+function wireCirclesHome() {
+  const b = document.getElementById('sc-home-btn');
+  if (!b) return;
+  b.onclick = () => {
+    const st = scLoad();
+    if (!st.onboarded) return openCircles();
+    scLanding();
+    if (b.getAttribute('data-go') === 'now') scMatchNow();
+  };
+}
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // SHEETS / DIALOGS
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -6898,7 +7469,7 @@ function resetAllData() {
   if (window._goalTimer) { clearInterval(window._goalTimer); window._goalTimer = null; }
   PROGRESS = {};
   try {
-    [PK, PROFILE_KEY, SUMMARY_KEY, 'ae_share', 'placement_log_v1'].forEach(k => localStorage.removeItem(k));
+    [PK, PROFILE_KEY, SUMMARY_KEY, 'ae_share', 'placement_log_v1', SC_KEY].forEach(k => localStorage.removeItem(k));
   } catch (e) {}
   location.replace(location.pathname + location.search);
 }
