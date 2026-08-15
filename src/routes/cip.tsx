@@ -105,8 +105,9 @@ const TECH = [
   },
   {
     e: "/demo-assets/ob-words.svg",
-    t: "Corrección de escritura con IA",
-    d: "Acepta varias formas correctas de decir la misma frase, no una sola respuesta memorizada.",
+    t: "Escritura corregida al instante",
+    d: "Reconoce las distintas formas correctas de decir lo mismo: si tu frase está bien construida, cuenta como bien, aunque no sea palabra por palabra la del ejemplo.",
+
   },
   {
     e: "/demo-assets/streak.svg",
