@@ -293,8 +293,7 @@ for mod, lvl in levels:
             idx += 1
             fi = n % len(frames[lvl])
             ci = (n // len(frames[lvl])) % 5
-            usa_ing = (idx * 100 // 500) % 100 < eng_ratio[lvl] if eng_ratio[lvl] else False
-            usa_ing = (n % 100) < eng_ratio[lvl]
+            usa_ing = (idx % 100) < eng_ratio[lvl]
             ctx = (contexts_eng if usa_ing else contexts_general)[lvl][ci]
             ctx_es = (contexts_eng_es if usa_ing else contexts_general_es)[lvl][ci]
             eid = f"sp-{lvl.lower()}-{idx:03d}"
