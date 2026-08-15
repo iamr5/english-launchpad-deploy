@@ -210,21 +210,21 @@ const PAGE_CSS = `
 .cipp .badge{ display:inline-block; border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:800;
   letter-spacing:.14em; text-transform:uppercase; }
 
-/* etiquetas de «qué incluye», bajo el titular */
+/* etiquetas de «qué incluye», bajo el titular (paleta del sílabo) */
 .cipp .badges{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
 .cipp .badges li{ display:inline-flex; align-items:center; gap:7px; border-radius:999px;
-  padding:6px 12px 6px 10px; font-size:12.5px; font-weight:700; letter-spacing:.01em;
-  color:#eef2fb; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18); }
+  padding:7px 13px 7px 11px; font-size:12.5px; font-weight:700; letter-spacing:.01em;
+  color:#dbe7f7; background:rgba(169,205,242,.13); border:1.5px solid rgba(169,205,242,.42); }
 .cipp .badges li::before{ content:""; width:6px; height:6px; border-radius:50%;
-  background:var(--cip); box-shadow:0 0 0 3px color-mix(in srgb,var(--cip) 30%,transparent); }
-.cipp .badges li.hot{ color:#fff; font-weight:800; font-size:13px; padding:8px 15px 8px 12px;
-  background:var(--cip); border:2px solid color-mix(in srgb,#fff 45%,var(--cip));
-  box-shadow:0 0 0 0 color-mix(in srgb,var(--cip) 55%,transparent);
-  animation:cipPulse 2.6s ease-out infinite; }
-.cipp .badges li.hot::before{ background:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.35); }
+  background:#a9cdf2; }
+.cipp .badges li.hot{ color:#ffb3b8; font-weight:800; font-size:13px; padding:8px 15px 8px 12px;
+  background:rgba(232,85,96,.13); border:1.5px solid rgba(232,85,96,.55);
+  box-shadow:0 0 0 0 rgba(232,85,96,.35);
+  animation:cipPulse 3.2s ease-out infinite; }
+.cipp .badges li.hot::before{ background:#ffb3b8; }
 @keyframes cipPulse{
-  0%{ box-shadow:0 0 0 0 color-mix(in srgb,var(--cip) 55%,transparent); }
-  70%{ box-shadow:0 0 0 12px transparent; }
+  0%{ box-shadow:0 0 0 0 rgba(232,85,96,.35); }
+  70%{ box-shadow:0 0 0 10px transparent; }
   100%{ box-shadow:0 0 0 0 transparent; } }
 
 /* fichas de cifras */
@@ -236,21 +236,25 @@ const PAGE_CSS = `
 .cipp .mcard span{ display:block; margin-top:8px; font-size:12.8px; font-weight:800; color:var(--ink); }
 .cipp .mcard em{ display:block; margin-top:3px; font-style:normal; font-size:11.8px; font-weight:600; color:var(--muted); }
 
-/* promesa bajo el formulario, con brillo */
-.cipp .promise{ position:relative; overflow:hidden; margin-top:12px; display:flex; align-items:center;
-  gap:12px; text-align:center; justify-content:center;
-  border-radius:14px; padding:12px 14px; border:1.5px solid color-mix(in srgb,var(--cip) 32%,var(--line));
-  background:color-mix(in srgb,var(--cip) 7%,#fff); }
-.cipp .promise .ico{ flex:0 0 auto; display:grid; place-items:center; width:34px; height:34px;
-  border-radius:11px; color:#fff; background:var(--cip); }
-.cipp .promise p{ min-width:0; font-size:13.2px; font-weight:600; line-height:1.4; color:var(--ink-2); text-align:left; }
-.cipp .promise p b{ font-weight:800; color:var(--ink); }
-.cipp .promise::after{ content:""; position:absolute; top:0; bottom:0; width:38%; left:-45%;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);
+/* caja del formulario, con brillo que recorre todo el bloque */
+.cipp .formglow{ position:relative; overflow:hidden; border-radius:16px;
+  padding:12px; border:1.5px solid color-mix(in srgb,var(--cip) 26%,var(--line));
+  background:color-mix(in srgb,var(--cip) 5%,#fff); }
+.cipp .formglow>*{ position:relative; z-index:2; }
+.cipp .formglow::after{ content:""; position:absolute; top:0; bottom:0; width:38%; left:-45%;
+  z-index:1; background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);
   animation:cipShimmer 3.6s ease-in-out infinite; pointer-events:none; }
 @keyframes cipShimmer{ 0%{ left:-45%; } 55%{ left:110%; } 100%{ left:110%; } }
+
+/* nota de privacidad, discreta */
+.cipp .promise{ display:flex; align-items:center; justify-content:center; gap:7px;
+  margin-top:10px; color:var(--muted); }
+.cipp .promise svg{ flex:0 0 auto; opacity:.7; }
+.cipp .promise p{ min-width:0; font-size:12px; font-weight:600; line-height:1.4; text-align:center; }
+.cipp .promise p b{ font-weight:700; }
+
 @media (prefers-reduced-motion:reduce){
-  .cipp .promise::after{ animation:none; display:none; }
+  .cipp .formglow::after{ animation:none; display:none; }
   .cipp .badges li.hot{ animation:none; } }
 
 
