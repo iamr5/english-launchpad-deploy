@@ -334,7 +334,8 @@ for mod, lvl in levels:
                 'cefrObjective': f'{lvl} spoken production and interaction',
                 'order': MODE_ORDER.index(mode),
             }
-            if target and len(target.split()) > max_target_words[lvl]:
+            tope = max_target_words[lvl] * (2 if mode == 'read' else 1)
+            if target and len(target.split()) > tope:
                 raise SystemExit(f'{eid}: frase modelo demasiado larga para {lvl}')
             lines.append("SPEAKING_BANK['%s'].push(%s);\n" % (mod, json.dumps(vals, ensure_ascii=False, separators=(',', ':'))))
     if idx != 500:
