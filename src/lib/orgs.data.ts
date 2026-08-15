@@ -82,6 +82,107 @@ export async function removeDomain(match: string) {
   if (error) throw error;
 }
 
+/**
+ * Saca las direcciones de un texto pegado de cualquier sitio.
+ *
+ * Está pensado para lo que pasa de verdad: alguien copia una columna de Excel,
+ * o pega la lista de destinatarios de un correo. Así que separa por saltos de
+ * línea, comas, puntos y comas, tabuladores y espacios, y aguanta las formas en
+ * las que suelen venir envueltas: «Ana Torres <ana@cip.org.pe>», «mailto:…»,
+ * comillas sueltas.
+ */
+export function parseEmails(raw: string): { ok: string[]; bad: string[] } {
+  const ok: string[] = [];
+  const bad: string[] = [];
+  const vistos = new Set<string>();
+
+  for (const trozo of raw.split(/[\s,;]+/)) {
+    let v = trozo.trim().toLowerCase();
+    if (!v) continue;
+    // «Ana Torres <ana@cip.org.pe>» deja el trozo «<ana@cip.org.pe>».
+    v = v.replace(/^["'<(]+|[">')]+$/g, "").replace(/^mailto:/, "");
+    if (!v) continue;
+
+    // Tiene que ser una dirección: un dominio suelto aquí casi siempre es un
+    // error de copiado, y metería a una empresa entera sin querer.
+    // El patrón es el mismo del CHECK de la tabla, para que no se acepte aquí
+    // algo que la base vaya a rechazar después.
+    if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(v)) {
+      // Sólo se avisa de lo que PARECÍA querer ser un correo: una dirección mal
+      // escrita («ana@cip») o un dominio suelto («cip.org.pe»). Los nombres y
+      // los números de la columna de al lado se tiran callando — al pegar
+      // «Ana Torres <ana@cip.org.pe>» no se ha perdido nada, y avisar de dos
+      // problemas que no existen sólo asusta.
+      const pareciaCorreo = v.includes("@") || /^[a-z0-9.-]+\.[a-z]{2,}$/.test(v);
+      if (pareciaCorreo && !bad.includes(v)) bad.push(v);
+      continue;
+    }
+    if (vistos.has(v)) continue;
+    vistos.add(v);
+    ok.push(v);
+  }
+  return { ok, bad };
+}
+
+export type ImportResult = {
+  /** Direcciones que han quedado asignadas a esta institución. */
+  asignadas: number;
+  /** De ésas, las que estaban en OTRA institución y se han movido. */
+  movidas: string[];
+  /** Lo que no parecía una dirección de correo. */
+  invalidas: string[];
+};
+
+/**
+ * Da de alta una lista de direcciones en una institución, de una vez.
+ *
+ * Es la forma en la que esto se usa de verdad: la institución manda su padrón
+ * en una hoja de cálculo y hay que meterlo entero, no de uno en uno.
+ *
+ * Una dirección que ya estuviera en otra institución **se mueve**, y se informa
+ * de cuáles: es lo que se quiere al corregir un padrón mal repartido, pero
+ * conviene enterarse de que ha pasado en vez de que ocurra en silencio.
+ */
+export async function addEmails(orgId: string, raw: string): Promise<ImportResult> {
+  const { ok, bad } = parseEmails(raw);
+  if (!ok.length) return { asignadas: 0, movidas: [], invalidas: bad };
+
+  // Quién estaba ya en otra institución, para poder contarlo.
+  const previas = new Map<string, string>();
+  for (const lote of trozos(ok, 200)) {
+    const { data } = await db.from("org_domains").select("match, org_id").in("match", lote);
+    for (const r of data ?? []) previas.set(r.match, r.org_id);
+  }
+  const movidas = ok.filter((m) => previas.has(m) && previas.get(m) !== orgId);
+
+  // En tandas: una sola petición con miles de filas se corta por tamaño.
+  for (const lote of trozos(ok, 500)) {
+    const { error } = await db.from("org_domains").upsert(
+      lote.map((match) => ({ match, org_id: orgId })),
+      { onConflict: "match" },
+    );
+    if (error) throw error;
+  }
+
+  return { asignadas: ok.length, movidas, invalidas: bad };
+}
+
+function trozos<T>(xs: T[], n: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < xs.length; i += n) out.push(xs.slice(i, i + n));
+  return out;
+}
+
+/** Cuántas direcciones tiene cada institución. El listado sólo enseña un puñado. */
+export async function countEmails(orgId: string): Promise<number> {
+  const { count, error } = await db
+    .from("org_domains")
+    .select("match", { count: "exact", head: true })
+    .eq("org_id", orgId);
+  if (error) throw error;
+  return count ?? 0;
+}
+
 export async function addInvite(orgId: string, code: string, maxUses: number) {
   const { error } = await db.from("org_invites").insert({
     code: code.trim().toUpperCase(),
