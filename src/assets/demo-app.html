@@ -2131,6 +2131,71 @@
   .sp-lvl b { display: block; font-size: 14px; font-weight: 900; }
   .sp-lvl span { display: block; margin-top: 1px; font-size: 11px; font-weight: 700; color: var(--muted2); }
 
+  /* ===== Speaking Circles: "Speaking con otros" (maqueta simulada) ===== */
+  .sc-shelf { margin: 0 2px 18px; padding: 14px; border: 2px solid var(--line); border-bottom-width: 4px;
+    border-radius: 18px; background: #fff; }
+  .sc-shelf-h { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+  .sc-shelf-h b { font-size: 16px; font-weight: 900; color: var(--ink); }
+  .sc-shelf small { display: block; font-size: 12px; line-height: 1.45; color: var(--muted); }
+  .sc-live { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 5px 10px;
+    border-radius: 999px; background: color-mix(in srgb, #3FAA24 12%, #fff); color: #2E7D1A;
+    font-size: 12px; font-weight: 800; }
+  .sc-dot { width: 8px; height: 8px; border-radius: 50%; background: #3FAA24; animation: scPulse 1.6s infinite; }
+  @keyframes scPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.8); } }
+  .sc-row { display: flex; gap: 8px; margin-top: 11px; flex-wrap: wrap; }
+  .sc-btn { flex: 1 1 140px; padding: 11px 12px; border-radius: 14px; cursor: pointer; font-size: 13px; font-weight: 800;
+    border: 2px solid var(--line); border-bottom-width: 4px; background: #fff; color: var(--ink); text-align: center; }
+  .sc-btn.pri { background: var(--blue); border-color: color-mix(in srgb, var(--blue) 70%, #000); color: #fff; }
+  .sc-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .sc-head { display: flex; align-items: center; gap: 10px; margin: 2px 0 10px; }
+  .sc-head b { font-size: 18px; font-weight: 900; color: var(--ink); }
+  .sc-back { background: none; border: 0; padding: 4px 0; font-size: 13px; font-weight: 800; color: var(--muted2); cursor: pointer; }
+  .sc-sec { margin: 14px 0 6px; font-size: 12px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--muted2); }
+  .sc-card { padding: 12px 13px; border: 2px solid var(--line); border-bottom-width: 3px; border-radius: 14px;
+    background: #fff; margin-bottom: 8px; width: 100%; text-align: left; cursor: pointer; display: block; }
+  .sc-card b { display: block; font-size: 14px; font-weight: 900; color: var(--ink); }
+  .sc-card small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+  .sc-card:active { transform: translateY(2px); border-bottom-width: 1px; }
+  .sc-static { cursor: default; }
+  .sc-static:active { transform: none; border-bottom-width: 3px; }
+  .sc-people { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+  .sc-av { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px 4px 4px; border-radius: 999px;
+    background: #F6F5F8; font-size: 12px; font-weight: 800; color: var(--ink); }
+  .sc-av i { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+    border-radius: 50%; color: #fff; font-size: 11px; font-style: normal; font-weight: 900; }
+  .sc-av.talk { background: color-mix(in srgb, var(--blue) 16%, #fff); }
+  .sc-pill { display: inline-block; padding: 4px 9px; border-radius: 999px; background: #F6F5F8;
+    font-size: 11px; font-weight: 800; color: var(--muted2); margin: 0 5px 5px 0; cursor: pointer; border: 2px solid transparent; }
+  .sc-pill.on { background: color-mix(in srgb, var(--blue) 14%, #fff); border-color: var(--blue); color: var(--blueDark); }
+  .sc-mission { padding: 12px 13px; border-radius: 14px; border: 2px solid var(--line); background: #FBFAFC; }
+  .sc-mission b { display: block; font-size: 14px; font-weight: 900; color: var(--ink); }
+  .sc-mission ul { margin: 7px 0 0; padding-left: 18px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+  .sc-timer { font-size: 26px; font-weight: 900; color: var(--blueDark); text-align: center; margin: 8px 0 2px; }
+  .sc-log { margin-top: 10px; max-height: 168px; overflow-y: auto; }
+  .sc-line { margin-bottom: 7px; font-size: 13px; line-height: 1.45; color: var(--ink); }
+  .sc-line b { font-weight: 900; color: var(--blueDark); }
+  .sc-cue { margin-top: 9px; padding: 9px 11px; border-radius: 12px; font-size: 12.5px; font-weight: 800;
+    background: color-mix(in srgb, #F4A720 16%, #fff); color: #8A5A00; }
+  .sc-menu { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .sc-menu button { padding: 6px 10px; border-radius: 999px; border: 2px solid var(--line); background: #fff;
+    font-size: 11.5px; font-weight: 800; color: var(--muted2); cursor: pointer; }
+  .sc-faces { display: flex; justify-content: center; gap: 12px; margin: 10px 0; }
+  .sc-faces button { font-size: 26px; background: none; border: 0; cursor: pointer; opacity: .5; }
+  .sc-faces button.on { opacity: 1; transform: scale(1.15); }
+  .sc-chat { max-height: 150px; overflow-y: auto; margin-top: 6px; }
+  .sc-msg { margin-bottom: 6px; font-size: 12.5px; color: var(--ink); }
+  .sc-msg b { color: var(--blueDark); font-weight: 900; }
+  .sc-msg.me { text-align: right; color: var(--muted); }
+  .sc-input { display: flex; gap: 6px; margin-top: 8px; }
+  .sc-input input { flex: 1; padding: 9px 11px; border: 2px solid var(--line); border-radius: 12px; font: inherit; font-size: 13px; }
+  .sc-home { margin: 0 2px 12px; padding: 12px 13px; border-radius: 16px; border: 2px solid var(--line);
+    border-bottom-width: 4px; background: #fff; display: flex; align-items: center; gap: 10px; }
+  .sc-home .t { flex: 1; }
+  .sc-home b { display: block; font-size: 13.5px; font-weight: 900; color: var(--ink); }
+  .sc-home small { display: block; font-size: 12px; color: var(--muted); }
+  .sc-home button { padding: 9px 14px; border-radius: 12px; border: 0; background: var(--blue); color: #fff;
+    font-size: 13px; font-weight: 800; cursor: pointer; }
+
   .sp-target { margin: 4px 0 2px; padding: 13px 14px; border-radius: 14px; border: 2px solid var(--line);
     background: #FBFAFC; font-size: 17px; font-weight: 800; line-height: 1.4; color: var(--ink); }
   .sp-target .w { padding: 1px 2px; border-radius: 5px; }
