@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SilaboCipRouteImport } from './routes/silabo-cip'
 import { Route as SilaboAutonomaRouteImport } from './routes/silabo-autonoma'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
@@ -50,6 +51,11 @@ import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
+const SilaboCipRoute = SilaboCipRouteImport.update({
+  id: '/silabo-cip',
+  path: '/silabo-cip',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SilaboAutonomaRoute = SilaboAutonomaRouteImport.update({
   id: '/silabo-autonoma',
   path: '/silabo-autonoma',
@@ -273,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
+  '/silabo-cip': typeof SilaboCipRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
   '/app': typeof AuthenticatedAppRoute
@@ -314,6 +321,7 @@ export interface FileRoutesByTo {
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
+  '/silabo-cip': typeof SilaboCipRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
   '/app': typeof AuthenticatedAppRoute
@@ -357,6 +365,7 @@ export interface FileRoutesById {
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
+  '/silabo-cip': typeof SilaboCipRoute
   '/$slug_/dashboard': typeof SlugDashboardRoute
   '/$slug_/padres': typeof SlugPadresRoute
   '/_authenticated/app': typeof AuthenticatedAppRoute
@@ -400,6 +409,7 @@ export interface FileRouteTypes {
     | '/presentacion-repsol'
     | '/presentation'
     | '/silabo-autonoma'
+    | '/silabo-cip'
     | '/$slug/dashboard'
     | '/$slug/padres'
     | '/app'
@@ -441,6 +451,7 @@ export interface FileRouteTypes {
     | '/presentacion-repsol'
     | '/presentation'
     | '/silabo-autonoma'
+    | '/silabo-cip'
     | '/$slug/dashboard'
     | '/$slug/padres'
     | '/app'
@@ -483,6 +494,7 @@ export interface FileRouteTypes {
     | '/presentacion-repsol'
     | '/presentation'
     | '/silabo-autonoma'
+    | '/silabo-cip'
     | '/$slug_/dashboard'
     | '/$slug_/padres'
     | '/_authenticated/app'
@@ -526,6 +538,7 @@ export interface RootRouteChildren {
   PresentacionRepsolRoute: typeof PresentacionRepsolRoute
   PresentationRoute: typeof PresentationRoute
   SilaboAutonomaRoute: typeof SilaboAutonomaRoute
+  SilaboCipRoute: typeof SilaboCipRoute
   SlugDashboardRoute: typeof SlugDashboardRoute
   SlugPadresRoute: typeof SlugPadresRoute
   ApiAppShellRoute: typeof ApiAppShellRoute
@@ -546,6 +559,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/silabo-cip': {
+      id: '/silabo-cip'
+      path: '/silabo-cip'
+      fullPath: '/silabo-cip'
+      preLoaderRoute: typeof SilaboCipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/silabo-autonoma': {
       id: '/silabo-autonoma'
       path: '/silabo-autonoma'
@@ -867,6 +887,7 @@ const rootRouteChildren: RootRouteChildren = {
   PresentacionRepsolRoute: PresentacionRepsolRoute,
   PresentationRoute: PresentationRoute,
   SilaboAutonomaRoute: SilaboAutonomaRoute,
+  SilaboCipRoute: SilaboCipRoute,
   SlugDashboardRoute: SlugDashboardRoute,
   SlugPadresRoute: SlugPadresRoute,
   ApiAppShellRoute: ApiAppShellRoute,
