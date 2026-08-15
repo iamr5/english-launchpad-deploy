@@ -344,37 +344,38 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
 
   return (
     <form onSubmit={submit} className="w-full">
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="tucorreo@ejemplo.com"
-          aria-label="Tu correo electrónico"
-          className="min-w-0 flex-1 rounded-xl border-2 border-[#e7dcc2] bg-white px-4 py-3.5 text-base text-[#16233F] outline-none focus:border-[var(--hi)]"
-        />
-        <button
-          type="submit"
-          disabled={state === "sending"}
-          className="rounded-xl px-6 py-3.5 text-base font-extrabold text-white transition active:translate-y-[2px] disabled:opacity-60"
-          style={{ background: "var(--cta)", boxShadow: "0 4px 0 var(--ctaLip)" }}
-        >
-          {state === "sending" ? "Enviando…" : cta}
-        </button>
+      <div className="formglow">
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="tucorreo@ejemplo.com"
+            aria-label="Tu correo electrónico"
+            className="min-w-0 flex-1 rounded-xl border-2 border-[#e7dcc2] bg-white px-4 py-3.5 text-base text-[#16233F] outline-none focus:border-[var(--hi)]"
+          />
+          <button
+            type="submit"
+            disabled={state === "sending"}
+            className="rounded-xl px-6 py-3.5 text-base font-extrabold text-white transition active:translate-y-[2px] disabled:opacity-60"
+            style={{ background: "var(--cta)", boxShadow: "0 4px 0 var(--ctaLip)" }}
+          >
+            {state === "sending" ? "Enviando…" : cta}
+          </button>
+        </div>
       </div>
       <div className="promise">
-        <span className="ico" aria-hidden>
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="4" y="10" width="16" height="10" rx="2.5" />
-            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-          </svg>
-        </span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <rect x="4" y="10" width="16" height="10" rx="2.5" />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+        </svg>
         <p>
           <b>Sin costo y sin compromiso.</b> Sólo usamos tu correo para avisarte si el programa se
           activa.
         </p>
       </div>
+
 
       {state === "error" && (
         <p className="mt-2 text-sm font-semibold text-red-600">
