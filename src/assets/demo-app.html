@@ -6617,11 +6617,14 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
   // El resultado gira alrededor de la transcripción de la IA: se lee entera
   // mientras se escucha la propia grabación y se compara con el modelo.
   function showComparison(localResult, ai, saved) {
-    const ok = !!ai.passed;
+    const unintel = Array.isArray(ai.unintelligible) ? ai.unintelligible.filter(u => u && u.text) : [];
+    const todoMal = !!ai.mostlyUnintelligible;
+    const ok = !!ai.passed && !todoMal;
     const dicho = (ai.transcript || '').trim();
     const cmp = (q.target && dicho) ? spCompare(q.target, dicho) : null;
     const review = (ai.problemWords || []).slice(0, 6);
     const metrics = ai.metrics || {};
+    const costo = spCostoTexto(ai.cost);
     if (cmp) {
       const t = document.getElementById('sp-t');
       if (t) t.innerHTML = cmp.words.map((w, i) => `<span class="w ${cmp.hits[i] ? 'ok' : 'bad'}">${escapeHtml(w)}</span>`).join(' ');
@@ -6630,8 +6633,11 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
     fb.innerHTML = `
       <div class="sp-transcript ${dicho ? '' : 'vacio'}">
         <span class="lbl">Lo que se te entendió</span>
-        <p>${dicho ? escapeHtml(dicho) : 'La transcripción llegó vacía: no se reconoció voz en la grabación. Vuelve a grabar más cerca del micrófono.'}</p>
+        <p>${dicho ? spMarkUnintelligible(dicho, unintel) : 'La transcripción llegó vacía: no se reconoció voz en la grabación. Vuelve a grabar más cerca del micrófono.'}</p>
       </div>
+      ${dicho ? `<div class="sp-legend"><span class="lg-ok"><i></i>dicho bien</span>
+        <span class="lg-bad"><i></i>faltó del modelo</span>
+        <span class="lg-un"><i></i>no sonó a inglés</span></div>` : ''}
       <div class="sp-audio-row">
         <div><span class="lbl">Tu grabación</span><audio id="sp-playback" controls src="${audioUrl}"></audio></div>
         ${q.target ? `<button class="btn blue" id="sp-listen2" type="button">Escuchar el modelo</button>` : ''}
@@ -6646,15 +6652,21 @@ function renderSpeaking(host, q, onCorrect, onIncorrect) {
         <div><b>${ai.grammar ?? '–'}</b><span>Gramática</span></div></div>`}
       <div class="sp-advice"><b>${escapeHtml(ai.headline || '')}</b><br>${escapeHtml(ai.advice || '')}
         ${ai.betterVersion ? `<br><br>Mejor así: <i>${escapeHtml(ai.betterVersion)}</i>` : ''}
+        ${todoMal ? `<br><br><b>Casi nada de la grabación sonó a inglés.</b> Vuelve a intentarlo diciéndolo en inglés, despacio.` : ''}
+        ${unintel.length ? `<br><br>No sonó a inglés: ${unintel.slice(0, 6).map(u =>
+          `<b>${escapeHtml(u.text)}</b>${u.suggestion ? ` → <i>${escapeHtml(u.suggestion)}</i>` : ''}`).join(', ')}` : ''}
         ${faltantes.length ? `<br><br>No se te entendió: <b>${faltantes.slice(0, 8).map(escapeHtml).join(', ')}</b>` : ''}
         ${review.length ? `<br><br>Palabras para revisar: <b>${review.map(escapeHtml).join(', ')}</b>` : ''}</div>
+      ${costo ? `<div class="sp-cost">${costo}${typeof spAiLeft === 'function' ? ` · te quedan ${spAiLeft()} evaluaciones hoy` : ''}</div>` : ''}
       <details class="sp-details"><summary>Ver comparación local vs IA</summary>
         <div><b>Navegador:</b> ${escapeHtml(localResult.transcript || 'no produjo transcripción')} · ${localResult.score}% del modelo · ${localResult.latencyMs || 0} ms</div>
         <div><b>IA:</b> ${escapeHtml(dicho || '—')} · ${metrics.totalMs || 0} ms</div>
+        ${ai.cost ? `<div><b>Tokens:</b> transcripción ${(ai.cost.transcription || {}).audioTokens || 0} audio + ${(ai.cost.transcription || {}).inputTokens || 0} texto → ${(ai.cost.transcription || {}).outputTokens || 0} · evaluación ${(ai.cost.scoring || {}).inputTokens || 0} → ${(ai.cost.scoring || {}).outputTokens || 0}</div>` : ''}
         <div>*La nota de pronunciación se infiere de la transcripción, no es análisis fonético.${saved.saved ? ' Intento guardado en tu historial privado.' : ' Inicia sesión para conservar audio e historial.'}</div>
       </details>
       ${ok ? `<button class="btn green" id="sp-next" style="margin-top:12px">Continuar</button>`
         : `<button class="btn amber" id="sp-retry" style="margin-top:12px">Reintentar hasta lograrlo</button>`}`;
+
     const l2 = document.getElementById('sp-listen2');
     if (l2) l2.onclick = () => speak(q.target, null, null, 0.85, true);
     if (ok) {
