@@ -3532,6 +3532,7 @@ document.addEventListener('click', (e) => {
     _dbgTaps = 0;
     const on = document.body.classList.toggle('debug-fabs');
     if (!on && DEBUG_SPEAKING) { DEBUG_SPEAKING = false; renderPractice(); }
+    if (!on && DEBUG_CIRCLES) { DEBUG_CIRCLES = false; renderPractice(); renderCourse(); }
     toast(on ? 'Modo debug activado' : 'Modo debug desactivado');
   }
 });
@@ -3541,6 +3542,14 @@ function toggleDebugSpeaking() {
   if (b) { b.classList.toggle('on', DEBUG_SPEAKING); b.title = DEBUG_SPEAKING ? 'Desactivar Speaking' : 'Activar Speaking'; }
   renderPractice();
   toast(DEBUG_SPEAKING ? 'Speaking de prueba activado' : 'Speaking oculto');
+}
+function toggleDebugCircles() {
+  DEBUG_CIRCLES = !DEBUG_CIRCLES;
+  const b = document.getElementById('debug-circles');
+  if (b) { b.classList.toggle('on', DEBUG_CIRCLES); b.title = DEBUG_CIRCLES ? 'Desactivar Speaking con otros' : 'Activar Speaking con otros'; }
+  renderPractice();
+  renderCourse();
+  toast(DEBUG_CIRCLES ? 'Speaking con otros activado' : 'Speaking con otros oculto');
 }
 
 function pbar(progress, completed, color) {
