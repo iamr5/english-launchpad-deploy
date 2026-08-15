@@ -29,7 +29,33 @@ function tooMany(ip: string) {
   return recent.length > MAX_PER_HOUR;
 }
 
-/** Lee un cuerpo SSE entero y devuelve la concatenación de un campo por evento. */
+// Precios de referencia por millón de tokens (USD). Se actualizan aquí y en
+// ningún otro sitio; el número que ve el alumno se presenta como estimado.
+const PRICES: Record<string, { in: number; audioIn: number; out: number }> = {
+  "openai/gpt-4o-transcribe": { in: 2.5, audioIn: 6, out: 10 },
+  "openai/gpt-5.6-sol": { in: 1.25, audioIn: 1.25, out: 10 },
+};
+
+type Usage = Record<string, unknown> | null;
+
+function num(v: unknown) {
+  return typeof v === "number" && Number.isFinite(v) ? v : 0;
+}
+
+/** Costo estimado en USD a partir del uso que reporta el gateway. */
+function costOf(model: string, usage: Usage) {
+  const p = PRICES[model];
+  if (!p || !usage) return { usd: 0, inputTokens: 0, audioTokens: 0, outputTokens: 0 };
+  const details = (usage["input_token_details"] || {}) as Record<string, unknown>;
+  const audioTokens = num(details["audio_tokens"]);
+  const inputTokens = Math.max(0, num(usage["input_tokens"]) - audioTokens);
+  const outputTokens = num(usage["output_tokens"]);
+  const usd =
+    (inputTokens * p.in + audioTokens * p.audioIn + outputTokens * p.out) / 1_000_000;
+  return { usd: Math.round(usd * 1e6) / 1e6, inputTokens, audioTokens, outputTokens };
+}
+
+/** Lee un cuerpo SSE entero: concatena un campo por evento y guarda el `usage`. */
 async function drainSSE(
   body: ReadableStream<Uint8Array>,
   pick: (evt: Record<string, unknown>) => string | undefined,
@@ -38,6 +64,12 @@ async function drainSSE(
   const dec = new TextDecoder();
   let buf = "";
   let out = "";
+  let usage: Usage = null;
+  const anota = (evt: Record<string, unknown>) => {
+    const u = (evt["usage"] ||
+      ((evt["response"] as Record<string, unknown> | undefined) || {})["usage"]) as Usage;
+    if (u && typeof u === "object") usage = u;
+  };
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -49,20 +81,23 @@ async function drainSSE(
       const raw = line.slice(5).trim();
       if (!raw || raw === "[DONE]") continue;
       try {
-        const piece = pick(JSON.parse(raw));
+        const evt = JSON.parse(raw) as Record<string, unknown>;
+        anota(evt);
+        const piece = pick(evt);
         if (piece) out += piece;
       } catch {
         /* fragmento no-JSON: se ignora */
       }
     }
   }
-  return out;
+  return { text: out, usage };
 }
 
 async function transcribe(file: Blob, name: string, key: string) {
   const started = Date.now();
+  const model = "openai/gpt-4o-transcribe";
   const form = new FormData();
-  form.append("model", "openai/gpt-4o-transcribe");
+  form.append("model", model);
   form.append("file", file, name);
   form.append("language", "en");
   form.append("stream", "true");
@@ -75,21 +110,18 @@ async function transcribe(file: Blob, name: string, key: string) {
     const detalle = await r.text().catch(() => "");
     throw Object.assign(new Error(`transcripcion ${r.status} ${detalle}`), { status: r.status });
   }
-  const transcript = (
-    await drainSSE(r.body, (e) =>
-      e["type"] === "transcript.text.delta"
-        ? (e["delta"] as string)
-        : e["type"] === "transcript.text.done"
-          ? undefined
-          : undefined,
-    )
-  ).trim();
+  const drained = await drainSSE(r.body, (e) =>
+    e["type"] === "transcript.text.delta" ? (e["delta"] as string) : undefined,
+  );
   return {
-    transcript,
+    transcript: drained.text.trim(),
     latencyMs: Date.now() - started,
     runId: r.headers.get("X-Lovable-AIG-Run-ID"),
+    model,
+    cost: costOf(model, drained.usage),
   };
 }
+
 
 const SCHEMA = {
   type: "object",
