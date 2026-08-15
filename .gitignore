@@ -37,21 +37,25 @@ dist-ssr
 .claude/worktrees/
 
 # ── App nativa (Capacitor) ────────────────────────────────────────────────
-# El proyecto android/ SÍ va al repositorio: lleva el icono, el nombre y los
-# permisos, y regenerarlo perdería todo eso. Lo que se ignora es lo que produce
-# la compilación y lo que depende de esta máquina.
-android/local.properties
-android/.gradle/
-android/build/
-android/app/build/
-android/capacitor-cordova-android-plugins/
-android/app/src/main/assets/public/
-android/app/src/main/assets/capacitor.config.json
-android/app/src/main/assets/capacitor.plugins.json
-android/app/release/
+#
+# El proyecto android/ NO va al repositorio, de momento. Hoy todo lo que hay
+# dentro sale de capacitor.config.ts y de mobile/: el identificador, el nombre y
+# la pantalla de sin conexión. Se regenera entero con
+#
+#     npx cap add android
+#
+# así que guardar cien archivos derivados sólo estorbaría en un repositorio que
+# además edita Lovable.
+#
+# EN CUANTO se toque el proyecto nativo a mano —iconos de lanzador propios,
+# permisos, un plugin— hay que quitar esta línea y commitearlo: a partir de ahí
+# regenerarlo perdería trabajo.
+android/
+
+# La clave de firma NUNCA va al repositorio. Perderla es no poder volver a
+# actualizar la app en Play; filtrarla es que otro publique en tu nombre.
 *.keystore
 *.jks
-!android/gradle/wrapper/gradle-wrapper.jar
 
 # El proyecto de iOS lo genera `npx cap add ios` en un Mac. Sus artefactos:
 ios/App/Pods/
