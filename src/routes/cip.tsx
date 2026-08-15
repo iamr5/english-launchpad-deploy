@@ -323,9 +323,19 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
           {state === "sending" ? "Enviando…" : cta}
         </button>
       </div>
-      <p className="mt-2 text-xs font-medium text-[#5f6b82]">
-        Sin costo y sin compromiso. Sólo usamos tu correo para avisarte si el programa se activa.
-      </p>
+      <div className="promise">
+        <span className="ico" aria-hidden>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="4" y="10" width="16" height="10" rx="2.5" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+        </span>
+        <p>
+          <b>Sin costo y sin compromiso.</b> Sólo usamos tu correo para avisarte si el programa se
+          activa.
+        </p>
+      </div>
+
       {state === "error" && (
         <p className="mt-2 text-sm font-semibold text-red-600">
           No pudimos registrarte. Revisa el correo e inténtalo otra vez.
