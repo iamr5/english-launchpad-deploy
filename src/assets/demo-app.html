@@ -6189,8 +6189,9 @@ function renderPracticeLibrary(el) {
 
   el.querySelectorAll('.sp-lvl').forEach(b => b.onclick = () => openSpeakingRun(+b.getAttribute('data-sp')));
   const scNow = el.querySelector('#sc-shelf-now'), scPlan = el.querySelector('#sc-shelf-plan');
-  if (scNow) scNow.onclick = () => { const st = scLoad(); st.onboarded ? (scLanding(), scMatchNow()) : openCircles(); };
-  if (scPlan) scPlan.onclick = () => { const st = scLoad(); st.onboarded ? (scLanding(), scSchedule()) : openCircles(); };
+  if (scNow) scNow.onclick = () => scStart('create');
+  if (scPlan) scPlan.onclick = () => scStart('join');
+
   el.querySelectorAll('.pr-chip').forEach(b => b.onclick = () => {
     PRACTICE_FILTER = +b.getAttribute('data-m');
     renderPractice();
