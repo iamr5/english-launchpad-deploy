@@ -51,6 +51,7 @@ import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as ApiPublicCirclesStateRouteImport } from './routes/api/public/circles/state'
+import { Route as ApiPublicCirclesNextTaskRouteImport } from './routes/api/public/circles/next-task'
 import { Route as ApiPublicCirclesMessageRouteImport } from './routes/api/public/circles/message'
 import { Route as ApiPublicCirclesJoinRouteImport } from './routes/api/public/circles/join'
 import { Route as ApiPublicCirclesCreateRouteImport } from './routes/api/public/circles/create'
@@ -267,6 +268,12 @@ const ApiPublicCirclesStateRoute = ApiPublicCirclesStateRouteImport.update({
   path: '/api/public/circles/state',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCirclesNextTaskRoute =
+  ApiPublicCirclesNextTaskRouteImport.update({
+    id: '/api/public/circles/next-task',
+    path: '/api/public/circles/next-task',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicCirclesMessageRoute = ApiPublicCirclesMessageRouteImport.update({
   id: '/api/public/circles/message',
   path: '/api/public/circles/message',
@@ -326,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
+  '/api/public/circles/next-task': typeof ApiPublicCirclesNextTaskRoute
   '/api/public/circles/state': typeof ApiPublicCirclesStateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -372,6 +380,7 @@ export interface FileRoutesByTo {
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
+  '/api/public/circles/next-task': typeof ApiPublicCirclesNextTaskRoute
   '/api/public/circles/state': typeof ApiPublicCirclesStateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -420,6 +429,7 @@ export interface FileRoutesById {
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
+  '/api/public/circles/next-task': typeof ApiPublicCirclesNextTaskRoute
   '/api/public/circles/state': typeof ApiPublicCirclesStateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -468,6 +478,7 @@ export interface FileRouteTypes {
     | '/api/public/circles/create'
     | '/api/public/circles/join'
     | '/api/public/circles/message'
+    | '/api/public/circles/next-task'
     | '/api/public/circles/state'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -514,6 +525,7 @@ export interface FileRouteTypes {
     | '/api/public/circles/create'
     | '/api/public/circles/join'
     | '/api/public/circles/message'
+    | '/api/public/circles/next-task'
     | '/api/public/circles/state'
     | '/lovable/email/transactional/preview'
   id:
@@ -561,6 +573,7 @@ export interface FileRouteTypes {
     | '/api/public/circles/create'
     | '/api/public/circles/join'
     | '/api/public/circles/message'
+    | '/api/public/circles/next-task'
     | '/api/public/circles/state'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -605,6 +618,7 @@ export interface RootRouteChildren {
   ApiPublicCirclesCreateRoute: typeof ApiPublicCirclesCreateRoute
   ApiPublicCirclesJoinRoute: typeof ApiPublicCirclesJoinRoute
   ApiPublicCirclesMessageRoute: typeof ApiPublicCirclesMessageRoute
+  ApiPublicCirclesNextTaskRoute: typeof ApiPublicCirclesNextTaskRoute
   ApiPublicCirclesStateRoute: typeof ApiPublicCirclesStateRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
@@ -905,6 +919,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicCirclesStateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/circles/next-task': {
+      id: '/api/public/circles/next-task'
+      path: '/api/public/circles/next-task'
+      fullPath: '/api/public/circles/next-task'
+      preLoaderRoute: typeof ApiPublicCirclesNextTaskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/circles/message': {
       id: '/api/public/circles/message'
       path: '/api/public/circles/message'
@@ -986,6 +1007,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicCirclesCreateRoute: ApiPublicCirclesCreateRoute,
   ApiPublicCirclesJoinRoute: ApiPublicCirclesJoinRoute,
   ApiPublicCirclesMessageRoute: ApiPublicCirclesMessageRoute,
+  ApiPublicCirclesNextTaskRoute: ApiPublicCirclesNextTaskRoute,
   ApiPublicCirclesStateRoute: ApiPublicCirclesStateRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
