@@ -50,6 +50,7 @@ import { Route as ApiCoursePracticeRouteImport } from './routes/api/course/pract
 import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
+import { Route as ApiPublicCirclesJoinRouteImport } from './routes/api/public/circles/join'
 import { Route as ApiPublicCirclesCreateRouteImport } from './routes/api/public/circles/create'
 
 const SilaboCipRoute = SilaboCipRouteImport.update({
@@ -259,6 +260,11 @@ const LovableEmailTransactionalPreviewRoute =
     path: '/lovable/email/transactional/preview',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicCirclesJoinRoute = ApiPublicCirclesJoinRouteImport.update({
+  id: '/api/public/circles/join',
+  path: '/api/public/circles/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicCirclesCreateRoute = ApiPublicCirclesCreateRouteImport.update({
   id: '/api/public/circles/create',
   path: '/api/public/circles/create',
@@ -306,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
+  '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -349,6 +356,7 @@ export interface FileRoutesByTo {
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
+  '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -394,6 +402,7 @@ export interface FileRoutesById {
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
+  '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -439,6 +448,7 @@ export interface FileRouteTypes {
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
     | '/api/public/circles/create'
+    | '/api/public/circles/join'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -482,6 +492,7 @@ export interface FileRouteTypes {
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
     | '/api/public/circles/create'
+    | '/api/public/circles/join'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -526,6 +537,7 @@ export interface FileRouteTypes {
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
     | '/api/public/circles/create'
+    | '/api/public/circles/join'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -567,6 +579,7 @@ export interface RootRouteChildren {
   ApiPublicPreinscripcionRoute: typeof ApiPublicPreinscripcionRoute
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
   ApiPublicCirclesCreateRoute: typeof ApiPublicCirclesCreateRoute
+  ApiPublicCirclesJoinRoute: typeof ApiPublicCirclesJoinRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -859,6 +872,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/circles/join': {
+      id: '/api/public/circles/join'
+      path: '/api/public/circles/join'
+      fullPath: '/api/public/circles/join'
+      preLoaderRoute: typeof ApiPublicCirclesJoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/circles/create': {
       id: '/api/public/circles/create'
       path: '/api/public/circles/create'
@@ -924,6 +944,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicPreinscripcionRoute: ApiPublicPreinscripcionRoute,
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
   ApiPublicCirclesCreateRoute: ApiPublicCirclesCreateRoute,
+  ApiPublicCirclesJoinRoute: ApiPublicCirclesJoinRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
