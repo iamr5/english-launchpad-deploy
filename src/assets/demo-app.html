@@ -6853,85 +6853,21 @@ function openSpeakingRun(mi) {
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-// SPEAKING CIRCLES — "Speaking con otros" (maqueta simulada)
+// SPEAKING CIRCLES — "Speaking con otros" (salas reales)
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-// Es una MAQUETA: no hay matching real, ni presencia entre alumnos, ni audio en
-// vivo. Compañeros, disponibilidad, horarios y las intervenciones de la sala son
-// guionados, igual que el resto del demo. Vive escondida tras el modo debug
-// (DEBUG_CIRCLES) y su estado se guarda aparte, en SC_KEY.
+// Ya no es una maqueta: la sala vive en el servidor (/api/public/circles/*).
+// Varias personas entran con el mismo código, escuchan la tarea, mandan notas
+// de voz o texto y se responden entre ellas. Si activas el relleno con bots,
+// unos compañeros generados responden y comentan para poder testear a solas.
+// Sigue escondido tras el modo debug (DEBUG_CIRCLES).
 
-const SC_KEY = 'ae_circles_v1';
+const SC_KEY = 'ae_circle_v2';
 function scLoad() { try { return JSON.parse(localStorage.getItem(SC_KEY)) || {}; } catch (e) { return {}; } }
 function scSave(s) { try { localStorage.setItem(SC_KEY, JSON.stringify(s)); } catch (e) {} }
+function scClear() { try { localStorage.removeItem(SC_KEY); } catch (e) {} }
 
-const SC_NAMES = ['Andrea', 'Jorge', 'María', 'Luis', 'Rocío', 'Diego', 'Camila', 'Sebastián',
-                  'Valeria', 'Renzo', 'Fiorella', 'Kevin'];
-const SC_COLORS = ['#1CB0F6', '#3FAA24', '#F4A720', '#9B5DE5', '#EF6C6C', '#12A594'];
-
-// Dos misiones por nivel. Cada una trae su objetivo comunicativo, frases útiles,
-// rondas y las intervenciones guionadas de los compañeros.
-const SC_MISSIONS = {
-  A1: [
-    { title: 'Getting to know each other', es: 'Presentarse y preguntar por el otro',
-      useful: ['My name is…', 'I’m from…', 'What do you do?', 'Nice to meet you.'],
-      rounds: ['Preséntate en 30 segundos', 'Pregúntale algo a otra persona', 'Cuenta algo que te guste hacer'],
-      lines: ['Hi! My name is {a}. I’m from Arequipa.', 'Nice to meet you! What do you do?',
-              'I’m a student. I like football.', 'Me too! I play on Sundays.'] },
-    { title: 'My week', es: 'Contar tu rutina de la semana',
-      useful: ['I usually…', 'On Mondays…', 'in the morning', 'after work'],
-      rounds: ['Cuenta tu lunes', 'Pregunta por el fin de semana', 'Di qué quieres cambiar'],
-      lines: ['On Mondays I work and then I study English.', 'What about the weekend, {a}?',
-              'I visit my family on Sundays.', 'Nice. I want to sleep more!'] },
-  ],
-  A2: [
-    { title: 'Planning a weekend trip', es: 'Ponerse de acuerdo para un viaje corto',
-      useful: ['Let’s…', 'How about…?', 'I’d prefer…', 'That sounds good.'],
-      rounds: ['Propón un destino', 'Pónganse de acuerdo en el presupuesto', 'Decidan el plan final'],
-      lines: ['How about Paracas? It’s only four hours.', 'Sounds good, but is it expensive?',
-              'We can share a room, {a}.', 'Perfect. Let’s book it.'] },
-    { title: 'At the restaurant', es: 'Pedir, sugerir y decidir juntos',
-      useful: ['I’ll have…', 'Could we…?', 'Shall we share…?', 'It’s on me.'],
-      rounds: ['Pide tu plato', 'Sugiere algo para compartir', 'Resuelvan la cuenta'],
-      lines: ['I’ll have the ceviche, please.', 'Shall we share a starter, {a}?',
-              'Good idea. And two lemonades.', 'Let’s split the bill.'] },
-  ],
-  B1: [
-    { title: 'Making suggestions at work', es: 'Sugerir y llegar a acuerdos en el trabajo',
-      useful: ['Why don’t we…?', 'I see your point, but…', 'What if we…?', 'Let’s agree on…'],
-      rounds: ['Presenta tu propuesta', 'Responde a la propuesta de otro', 'Lleguen a un acuerdo'],
-      lines: ['Why don’t we move the meeting to Friday?', 'I see your point, but Friday is busy.',
-              'What if we do it online instead, {a}?', 'That works for me.'] },
-    { title: 'Solving a small problem', es: 'Explicar un problema y proponer soluciones',
-      useful: ['The issue is…', 'It happened when…', 'We could try…', 'In my experience…'],
-      rounds: ['Describe el problema', 'Propón dos soluciones', 'Elijan una y expliquen por qué'],
-      lines: ['The issue is that the report is always late.', 'It happened last month too.',
-              'We could try a shared checklist, {a}.', 'In my experience that helps a lot.'] },
-  ],
-  B2: [
-    { title: 'Negotiating a budget', es: 'Negociar con argumentos y ceder cuando toca',
-      useful: ['From our side…', 'We’d be willing to…', 'On the other hand…', 'Let’s meet halfway.'],
-      rounds: ['Defiende tu prioridad', 'Escucha y responde a la otra parte', 'Cierren un acuerdo'],
-      lines: ['From our side, safety comes first.', 'On the other hand, the deadline is fixed.',
-              'We’d be willing to cut travel costs, {a}.', 'Let’s meet halfway then.'] },
-    { title: 'Disagreeing politely', es: 'Expresar desacuerdo sin romper la conversación',
-      useful: ['I’m afraid I disagree…', 'That’s a fair point, however…', 'Actually…', 'Correct me if I’m wrong.'],
-      rounds: ['Defiende una postura', 'Contradice con respeto', 'Resuman lo acordado'],
-      lines: ['I’m afraid I disagree with that approach.', 'That’s a fair point, however the data says otherwise.',
-              'Correct me if I’m wrong, {a}, but we tested it already.', 'True. Let’s revisit the numbers.'] },
-  ],
-  C1: [
-    { title: 'Leading a project review', es: 'Conducir una reunión y sintetizar decisiones',
-      useful: ['Let’s take stock of…', 'Bearing in mind…', 'To wrap up…', 'The key takeaway is…'],
-      rounds: ['Abre la reunión y fija la agenda', 'Modera la discusión', 'Cierra con decisiones y responsables'],
-      lines: ['Let’s take stock of where we are before we decide.', 'Bearing in mind the delay, I’d re-scope phase two.',
-              '{a}, could you summarise the risks?', 'To wrap up: two owners, one deadline.'] },
-    { title: 'Defending a technical decision', es: 'Argumentar una decisión técnica ante dudas',
-      useful: ['The rationale behind…', 'Admittedly…', 'That said…', 'The trade-off is…'],
-      rounds: ['Expón la decisión y su razón', 'Responde a la objeción más dura', 'Concluye con el trade-off'],
-      lines: ['The rationale behind the redesign is maintenance cost.', 'Admittedly, it slows us down this quarter.',
-              'That said, {a}, the trade-off pays off in a year.', 'Fair enough — let’s document it.'] },
-  ],
-};
+const SC_API = '/api/public/circles';
+const SC_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'];
 
 // El nivel del alumno: el último módulo desbloqueado que aún no termina.
 function scLevel() {
@@ -6944,37 +6880,31 @@ function scLevel() {
   return (mod && mod.level) || PR_CEFR[idx] || 'A1';
 }
 
-// Disponibilidad "en vivo": simulada, pero estable dentro de la misma hora para
-// que no baile entre pantallas.
-function scAvail() {
-  const h = new Date().getHours();
-  return 1 + ((h * 7 + new Date().getDate()) % 4); // 1..4
+function scMyName() {
+  const p = (typeof loadProfile === 'function' && loadProfile()) || {};
+  return (p.name || '').trim().slice(0, 24);
 }
-function scRandName(i) { return SC_NAMES[i % SC_NAMES.length]; }
-function scAvatar(name, i) {
-  const c = SC_COLORS[i % SC_COLORS.length];
-  return `<span class="sc-av"><i style="background:${c}">${escapeHtml(name[0])}</i>${escapeHtml(name)}</span>`;
+
+async function scPost(path, body) {
+  const r = await fetch(SC_API + path, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error(j.error || 'error'), { code: j.error, status: r.status });
+  return j;
 }
-function scCircle() {
-  const st = scLoad();
-  if (st.circle) return st.circle;
-  const n = 8 + (new Date().getDate() % 5); // 8–12
-  st.circle = SC_NAMES.slice(0, n);
-  scSave(st);
-  return st.circle;
-}
-function scMission() {
-  const list = SC_MISSIONS[scLevel()] || SC_MISSIONS.A1;
-  return list[Math.floor(Math.random() * list.length)];
-}
-function scSlots() {
-  const base = new Date();
-  const fmt = (d) => d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0') + (d.getHours() < 12 ? ' a. m.' : ' p. m.');
-  const mk = (addDays, hour, min, n) => {
-    const d = new Date(base); d.setDate(d.getDate() + addDays); d.setHours(hour, min, 0, 0);
-    return { when: (addDays === 0 ? 'Hoy' : addDays === 1 ? 'Mañana' : 'Sábado') + ' · ' + fmt(d), n, iso: d.toISOString() };
-  };
-  return [mk(0, 20, 0, 2), mk(0, 21, 0, 3), mk(1, 19, 30, 2), mk(2, 11, 0, 4)];
+
+function scError(code) {
+  return ({
+    not_found: 'No encontramos ese código. Revísalo con quien te lo pasó.',
+    bad_code: 'El código tiene 6 letras y números.',
+    bad_nickname: 'Escribe un apodo para que te reconozcan.',
+    nickname_taken: 'Ese apodo ya está en la sala; usa otro.',
+    expired: 'Esa sala ya caducó. Crea una nueva.',
+    full: 'La sala está llena.',
+    rate_limited: 'Demasiados intentos. Espera un momento.',
+    invalid_audio: 'La nota de voz es demasiado larga o pesada.',
+  })[code] || 'No se pudo conectar con el círculo. Inténtalo otra vez.';
 }
 
 //— Andamio de pantallas dentro de la hoja ————————————————————————
@@ -6990,321 +6920,306 @@ function scSheet(inner, dismissible) {
 function openCircles() {
   if (!DEBUG_CIRCLES) return;
   const st = scLoad();
-  if (st.onboarded) scLanding(); else scOnboard(0, {});
+  if (st.code && st.memberId && st.token) scRoom();
+  else scStart('create');
 }
 
-//— Onboarding progresivo (3 pasos) ————————————————————————————
-function scOnboard(step, draft) {
-  const lvl = scLevel();
-  if (step === 0) {
-    const w = scSheet(`<div class="sc-head"><b>Speaking con otros</b></div>
-      <small style="display:block;font-size:13px;color:var(--muted);line-height:1.5">
-        Practica inglés en grupos pequeños con alumnos de un nivel parecido al tuyo.</small>
-      <div class="sc-card sc-static" style="margin-top:12px"><b>Así funciona</b>
-        <small>✓ Sesiones cortas · ✓ Actividades guiadas · ✓ Horarios flexibles · ✓ No necesitas profesor</small></div>
-      <div class="sc-card sc-static"><b>Te agruparemos con alumnos ${escapeHtml(lvl)}</b>
-        <small>Es el nivel en el que vas ahora mismo en tu ruta. <a href="#" id="sc-why">¿Por qué ${escapeHtml(lvl)}?</a></small></div>
-      <button class="btn green" id="sc-go" style="margin-top:12px">Quiero practicar</button>`);
-    w.querySelector('#sc-why').onclick = (e) => { e.preventDefault(); toast('Es el nivel de tu módulo activo en la ruta; cambia solo cuando avanzas.'); };
-    w.querySelector('#sc-go').onclick = () => scOnboard(1, draft);
-    return;
-  }
-  if (step === 1) {
-    const dias = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
-    draft.days = draft.days || [];
-    draft.times = draft.times || [];
-    const w = scSheet(`<button class="sc-back" id="sc-b">‹ Atrás</button>
-      <div class="sc-head"><b>¿Cuándo sueles tener tiempo?</b></div>
-      <small style="font-size:12.5px;color:var(--muted)">Puedes cambiarlo cuando quieras.</small>
-      <div class="sc-sec">Días</div>
-      <div>${dias.map((d, i) => `<span class="sc-pill${draft.days.indexOf(i) >= 0 ? ' on' : ''}" data-d="${i}">${d}</span>`).join('')}</div>
-      <div class="sc-sec">Momentos</div>
-      <div>${['Mañana', 'Tarde', 'Noche'].map(t => `<span class="sc-pill${draft.times.indexOf(t) >= 0 ? ' on' : ''}" data-t="${t}">${t}</span>`).join('')}</div>
-      <button class="btn green" id="sc-go" style="margin-top:14px">Continuar</button>`);
-    w.querySelectorAll('[data-d]').forEach(p => p.onclick = () => {
-      const i = +p.getAttribute('data-d'), k = draft.days.indexOf(i);
-      if (k >= 0) draft.days.splice(k, 1); else draft.days.push(i);
-      p.classList.toggle('on');
-    });
-    w.querySelectorAll('[data-t]').forEach(p => p.onclick = () => {
-      const t = p.getAttribute('data-t'), k = draft.times.indexOf(t);
-      if (k >= 0) draft.times.splice(k, 1); else draft.times.push(t);
-      p.classList.toggle('on');
-    });
-    w.querySelector('#sc-b').onclick = () => scOnboard(0, draft);
-    w.querySelector('#sc-go').onclick = () => scOnboard(2, draft);
-    return;
-  }
-  const temas = ['Conversación cotidiana', 'Trabajo', 'Viajes', 'Entrevistas', 'Inglés profesional', 'Cualquier tema'];
-  draft.topics = draft.topics || [];
-  const w = scSheet(`<button class="sc-back" id="sc-b">‹ Atrás</button>
-    <div class="sc-head"><b>¿Qué te gustaría practicar?</b></div>
-    <small style="font-size:12.5px;color:var(--muted)">Opcional. El nivel y tu disponibilidad pesan más que el tema.</small>
-    <div style="margin-top:10px">${temas.map(t => `<span class="sc-pill${draft.topics.indexOf(t) >= 0 ? ' on' : ''}" data-t="${escapeHtml(t)}">${t}</span>`).join('')}</div>
-    <button class="btn green" id="sc-go" style="margin-top:14px">Listo</button>`);
-  w.querySelectorAll('[data-t]').forEach(p => p.onclick = () => {
-    const t = p.getAttribute('data-t'), k = draft.topics.indexOf(t);
-    if (k >= 0) draft.topics.splice(k, 1); else draft.topics.push(t);
-    p.classList.toggle('on');
-  });
-  w.querySelector('#sc-b').onclick = () => scOnboard(1, draft);
-  w.querySelector('#sc-go').onclick = () => {
-    const st = scLoad();
-    st.onboarded = true; st.days = draft.days; st.times = draft.times; st.topics = draft.topics;
-    st.sessions = st.sessions || []; st.history = st.history || [];
-    scSave(st);
-    toast('Ya estás dentro de tu Speaking Circle');
-    scLanding();
-  };
-}
-
-//— Landing ————————————————————————————————————————————————
-function scLanding() {
-  const st = scLoad(), lvl = scLevel(), miembros = scCircle(), disp = scAvail();
-  const sesiones = (st.sessions || []).filter(s => new Date(s.iso).getTime() > Date.now() - 3 * 3600e3);
-  const hist = st.history || [];
-  const mins = hist.reduce((a, h) => a + (h.min || 0), 0);
+//— Entrada: crear o entrar con código ————————————————————————————
+function scStart(tab) {
+  const lvl = scLevel(), nombre = scMyName() || 'Tú';
+  const crear = tab !== 'join';
   const w = scSheet(`<div class="sc-head"><b>Speaking con otros</b></div>
-    <div class="sc-row">
-      <button class="sc-btn pri" id="sc-now">🎙 Practicar ahora</button>
-      <button class="sc-btn" id="sc-plan">📅 Programar práctica</button>
+    <small style="display:block;font-size:12.5px;color:var(--muted);line-height:1.5">
+      Un círculo es una sala de conversación: se escucha la tarea, cada quien manda su nota de voz
+      y los demás responden. Comparte el código para que entren tus compañeros.</small>
+    <div class="sc-row" style="margin-top:12px">
+      <button class="sc-btn${crear ? ' pri' : ''}" data-tab="create">Crear círculo</button>
+      <button class="sc-btn${crear ? '' : ' pri'}" data-tab="join">Entrar con código</button>
     </div>
-    <div class="sc-sec">Próximas prácticas</div>
-    ${sesiones.length ? sesiones.map((s, i) => `<button class="sc-card" data-s="${i}">
-        <b>${escapeHtml(s.when)}</b><small>${escapeHtml(s.title)} · ${s.n} confirmados</small></button>`).join('')
-      : `<div class="sc-card sc-static"><b>Todavía no tienes prácticas agendadas</b>
-        <small>Programa una o únete a la que esté abierta ahora.</small></div>`}
-    <div class="sc-sec">Mi círculo · ${escapeHtml(lvl)}</div>
-    <div class="sc-card sc-static">
-      <b>${miembros.length} participantes</b>
-      <small>${disp} quieren practicar ahora mismo</small>
-      <div class="sc-people">${miembros.map((n, i) => scAvatar(n, i)).join('')}</div>
-      <div style="margin-top:10px"><button class="sc-btn" id="sc-chat" style="flex:0 0 auto">Chat del círculo</button></div>
-    </div>
-    <div class="sc-sec">Historial</div>
-    <div class="sc-card sc-static"><b>${hist.length} prácticas · ${mins} min</b>
-      <small>${hist.length ? hist.slice(-3).reverse().map(h => escapeHtml(h.when + ' · ' + h.title + ' · ' + h.min + ' min')).join('<br>') : 'Cuando termines tu primera práctica aparecerá aquí.'}</small></div>`);
-  w.querySelector('#sc-now').onclick = scMatchNow;
-  w.querySelector('#sc-plan').onclick = scSchedule;
-  w.querySelector('#sc-chat').onclick = scChat;
-  w.querySelectorAll('[data-s]').forEach(b => b.onclick = () => scRoom((st.sessions || [])[+b.getAttribute('data-s')]));
-}
+    <div class="sc-sec">Tu apodo en la sala</div>
+    <div class="sc-input"><input id="sc-nick" maxlength="24" value="${escapeHtml(nombre)}" placeholder="¿Cómo te llamamos?"></div>
+    <div id="sc-pane"></div>`);
 
-//— Camino A: practicar ahora ————————————————————————————————
-function scMatchNow() {
-  const lvl = scLevel(), disp = scAvail();
-  const w = scSheet(`<div class="sc-head"><b>Buscando alumnos ${escapeHtml(lvl)}…</b></div>
-    <div class="sc-card sc-static"><b id="sc-count">0 de 3 encontrados</b>
-      <small>Puedes seguir usando la app: te avisamos cuando esté listo.</small>
-      <div class="sc-people" id="sc-found"></div></div>
-    <button class="sc-btn" id="sc-cancel" style="margin-top:12px">Cancelar</button>`);
-  let n = 0, cancel = false;
-  w.querySelector('#sc-cancel').onclick = () => { cancel = true; scLanding(); };
-  const tick = () => {
-    if (cancel || !document.getElementById('sc-count')) return;
-    if (n < Math.min(3, disp + 1)) {
-      n++;
-      document.getElementById('sc-count').textContent = n + ' de 3 encontrados';
-      document.getElementById('sc-found').insertAdjacentHTML('beforeend', scAvatar(scRandName(n + 2), n + 2));
-      setTimeout(tick, 900 + Math.random() * 700);
-      return;
-    }
-    if (n >= 3) {
-      const m = scMission();
-      scRoom({ when: 'Ahora', title: m.title, n: 3, mission: m });
-    } else {
-      scNoQuorum();
-    }
+  const pane = w.querySelector('#sc-pane');
+  const pintaCrear = () => {
+    pane.innerHTML = `<div class="sc-sec">Nivel del círculo</div>
+      <div class="sc-row" id="sc-lvls">${SC_LEVELS.map(l => `<button class="sc-btn${l === lvl ? ' pri' : ''}" data-l="${l}" style="flex:1 1 52px">${l}</button>`).join('')}</div>
+      <div class="sc-sec">Tema</div>
+      <div class="sc-row" id="sc-topics">
+        <button class="sc-btn pri" data-t="general">Inglés general</button>
+        <button class="sc-btn" data-t="engineering">Inglés para ingeniería</button>
+      </div>
+      <label class="sc-check"><input type="checkbox" id="sc-bots" checked>
+        <span><b>Rellenar con compañeros bot</b><small>Para probar solo: responden la tarea y comentan lo que dices.</small></span></label>
+      <button class="btn green" id="sc-go" style="margin-top:12px">Crear círculo</button>`;
+    let nivel = lvl, tema = 'general';
+    pane.querySelectorAll('[data-l]').forEach(b => b.onclick = () => {
+      nivel = b.getAttribute('data-l');
+      pane.querySelectorAll('[data-l]').forEach(x => x.classList.toggle('pri', x === b));
+    });
+    pane.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
+      tema = b.getAttribute('data-t');
+      pane.querySelectorAll('[data-t]').forEach(x => x.classList.toggle('pri', x === b));
+    });
+    pane.querySelector('#sc-go').onclick = async (e) => {
+      const nick = (document.getElementById('sc-nick').value || '').trim();
+      if (!nick) return toast('Escribe tu apodo');
+      e.target.disabled = true; e.target.textContent = 'Creando…';
+      try {
+        const j = await scPost('/create', { nickname: nick, level: nivel, topic: tema, bots: document.getElementById('sc-bots').checked });
+        scSave({ code: j.code, memberId: j.memberId, token: j.token, nickname: nick, startedAt: Date.now(), voice: 0, ms: 0 });
+        scRoom(true);
+      } catch (err) {
+        e.target.disabled = false; e.target.textContent = 'Crear círculo';
+        toast(scError(err.code));
+      }
+    };
   };
-  setTimeout(tick, 700);
-}
-
-function scNoQuorum() {
-  const w = scSheet(`<div class="sc-head"><b>Todavía no somos suficientes</b></div>
-    <div class="sc-card sc-static"><b>Ya te anotamos como disponible</b>
-      <small>Te avisamos apenas seamos tres de tu nivel. Nadie se queda esperando en blanco.</small></div>
-    <button class="btn green" id="sc-alt" style="margin-top:12px">Hacer speaking individual</button>
-    <button class="sc-btn" id="sc-plan" style="margin-top:8px">Programar para otro momento</button>`);
-  w.querySelector('#sc-alt').onclick = () => { closeOverlay(); showHomeTab('practice'); toast('Elige un nivel en la estantería de Speaking'); };
-  w.querySelector('#sc-plan').onclick = scSchedule;
-}
-
-//— Camino B: programar ————————————————————————————————————
-function scSchedule() {
-  const slots = scSlots();
-  const w = scSheet(`<button class="sc-back" id="sc-b">‹ Atrás</button>
-    <div class="sc-head"><b>¿Cuándo quieres practicar?</b></div>
-    <small style="font-size:12.5px;color:var(--muted)">Horarios con más personas de tu nivel.</small>
-    <div class="sc-sec">Sugeridos</div>
-    ${slots.map((s, i) => `<button class="sc-card" data-i="${i}"><b>${escapeHtml(s.when)}</b>
-      <small>${s.n} interesados</small></button>`).join('')}
-    <button class="sc-btn" id="sc-other" style="margin-top:6px">Proponer otro horario</button>`);
-  w.querySelector('#sc-b').onclick = scLanding;
-  w.querySelector('#sc-other').onclick = () => toast('En la versión real podrás proponer tu propio horario al círculo.');
-  w.querySelectorAll('[data-i]').forEach(b => b.onclick = () => {
-    const s = slots[+b.getAttribute('data-i')], m = scMission(), st = scLoad();
-    st.sessions = (st.sessions || []).concat([{ when: s.when, iso: s.iso, title: m.title, n: s.n + 1 }]);
-    scSave(st);
-    const w2 = scSheet(`<div class="sc-head"><b>Práctica confirmada</b></div>
-      <div class="sc-card sc-static"><b>${escapeHtml(s.when)}</b>
-        <small>${escapeHtml(m.title)} · ${s.n + 1} participantes</small></div>
-      <div class="sc-card sc-static"><b>Te avisaremos 10 minutos antes</b>
-        <small>Si alguien cancela, buscamos reemplazo sin cancelar la práctica.</small></div>
-      <button class="btn green" id="sc-ok" style="margin-top:12px">Listo</button>`);
-    w2.querySelector('#sc-ok').onclick = scLanding;
-    if (typeof renderCourse === 'function' && document.getElementById('course-body')) wireCirclesHome();
+  const pintaEntrar = () => {
+    pane.innerHTML = `<div class="sc-sec">Código de la sala</div>
+      <div class="sc-input"><input id="sc-code" maxlength="6" placeholder="ABC123" style="text-transform:uppercase;letter-spacing:.18em;font-weight:900"></div>
+      <button class="btn green" id="sc-go" style="margin-top:12px">Entrar al círculo</button>`;
+    pane.querySelector('#sc-go').onclick = async (e) => {
+      const nick = (document.getElementById('sc-nick').value || '').trim();
+      const code = (document.getElementById('sc-code').value || '').trim().toUpperCase();
+      if (!nick) return toast('Escribe tu apodo');
+      if (code.length !== 6) return toast('El código tiene 6 caracteres');
+      e.target.disabled = true; e.target.textContent = 'Entrando…';
+      try {
+        const j = await scPost('/join', { code, nickname: nick });
+        scSave({ code: j.code, memberId: j.memberId, token: j.token, nickname: nick, startedAt: Date.now(), voice: 0, ms: 0 });
+        scRoom();
+      } catch (err) {
+        e.target.disabled = false; e.target.textContent = 'Entrar al círculo';
+        toast(scError(err.code));
+      }
+    };
+  };
+  w.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
+    w.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('pri', x === b));
+    b.getAttribute('data-tab') === 'create' ? pintaCrear() : pintaEntrar();
   });
+  crear ? pintaCrear() : pintaEntrar();
 }
 
-//— Sala de práctica (simulada) ————————————————————————————————
-function scRoom(sesion) {
-  const m = (sesion && sesion.mission) || scMission();
-  const yo = ((typeof loadProfile === 'function' && loadProfile()) || {}).name || 'Tú';
-  const gente = [scRandName(3), scRandName(6), yo];
-  let ronda = 0, seg = 45, hablado = 0, cerrado = false;
+//— La sala ————————————————————————————————————————————————
+let SC_POLL = 0;        // id de la ronda de sondeo activa
+let SC_REC = null;      // grabador en curso
+let SC_REPLY = null;    // mensaje al que estoy respondiendo
+
+function scRoom(recienCreada) {
+  const st = scLoad();
+  if (!st.code) return scStart('create');
+  const ronda = ++SC_POLL;
+  SC_REPLY = null;
   const w = scSheet(`<div id="sc-room">
-    <div class="sc-head"><b>Speaking practice</b></div>
-    <div class="sc-people">${gente.map((n, i) => `<span class="sc-av${n === yo ? ' talk' : ''}"><i style="background:${SC_COLORS[i]}">${escapeHtml(n[0])}</i>${escapeHtml(n)}</span>`).join('')}
-      <span class="sc-av"><i style="background:#8A8A8A">🎤</i>micrófono</span>
-      <span class="sc-av"><i style="background:#C9C9C9">📷</i>cámara opcional</span></div>
-    <div class="sc-timer" id="sc-clock">00:45</div>
-    <div class="sc-mission">
-      <b>${escapeHtml(m.title)} · ${escapeHtml(m.es)}</b>
-      <div id="sc-round" style="margin-top:6px;font-size:13px;font-weight:800;color:var(--blueDark)"></div>
-      <ul>${m.useful.map(u => `<li>${escapeHtml(u)}</li>`).join('')}</ul>
+    <div class="sc-head"><b>Círculo ${escapeHtml(st.code)}</b>
+      <button class="sc-code" id="sc-share" title="Compartir código">Compartir</button></div>
+    ${recienCreada ? `<div class="sc-card sc-static"><b>Pásales el código: ${escapeHtml(st.code)}</b>
+      <small>Cada persona abre el demo, toca “Speaking con otros” → “Entrar con código”.</small></div>` : ''}
+    <div class="sc-people" id="sc-members"></div>
+    <div class="sc-mission" id="sc-task"><b>Cargando la tarea…</b></div>
+    <div class="sc-log" id="sc-log"><div class="sc-line" style="color:var(--muted)">Conectando con la sala…</div></div>
+    <div class="sc-reply" id="sc-reply" hidden></div>
+    <div class="sc-rec">
+      <button class="sc-mic" id="sc-mic">${micSvg(22)}<span>Grabar respuesta</span></button>
+      <div class="sc-input"><input id="sc-text" maxlength="300" placeholder="…o escribe algo">
+        <button class="sc-btn pri" id="sc-send" style="flex:0 0 auto">Enviar</button></div>
     </div>
-    <div class="sc-cue" id="sc-cue">Suggested speaker: ${escapeHtml(gente[0])}</div>
-    <div class="sc-log" id="sc-log"></div>
-    <div class="sc-menu">
-      <button data-a="mute">Silenciar a alguien</button>
-      <button data-a="report">Reportar</button>
-      <button data-a="block">Bloquear</button>
-      <button data-a="leave">Salir</button>
+    <div class="sc-row">
+      <button class="sc-btn" id="sc-next">Siguiente tarea</button>
+      <button class="sc-btn" id="sc-leave">Salir del círculo</button>
     </div>
-    <button class="btn green" id="sc-next" style="margin-top:10px">Siguiente ronda</button>
   </div>`, false);
 
-  function pintaRonda() {
-    const r = document.getElementById('sc-round');
-    if (r) r.textContent = `Ronda ${ronda + 1} de ${m.rounds.length}: ${m.rounds[ronda]}`;
+  const estado = { since: '1970-01-01T00:00:00Z', vistos: {}, miembros: {}, taskIdx: -1, yo: st.memberId };
+
+  //— pintado ————————————————————————————————————————————
+  function pintaMiembros(list) {
+    const cont = document.getElementById('sc-members');
+    if (!cont) return;
+    cont.innerHTML = list.map(m => {
+      estado.miembros[m.id] = m;
+      const activo = Date.now() - new Date(m.last_seen_at).getTime() < 20000;
+      return `<span class="sc-av${m.id === estado.yo ? ' talk' : ''}"><i style="background:${m.color}">${escapeHtml((m.nickname || '?')[0])}</i>${escapeHtml(m.nickname)}${m.is_bot ? ' <em>bot</em>' : (activo ? '' : ' <em>ausente</em>')}</span>`;
+    }).join('');
   }
-  function linea(txt, quien, i) {
+  function pintaTarea(t) {
+    const cont = document.getElementById('sc-task');
+    if (!cont || estado.taskIdx === t.idx) return;
+    estado.taskIdx = t.idx;
+    cont.innerHTML = `<b>Tarea ${t.idx + 1} · ${escapeHtml(t.promptEn)}</b>
+      <small style="display:block;margin-top:3px;font-size:12.5px;color:var(--muted)">${escapeHtml(t.promptEs || '')}</small>
+      ${t.modelEn ? `<div class="sc-model">“${escapeHtml(t.modelEn)}”</div>` : ''}
+      ${t.functions && t.functions.length ? `<ul>${t.functions.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>` : ''}
+      <button class="sc-play" id="sc-task-play"${t.audioUrl ? ` data-src="${escapeHtml(t.audioUrl)}"` : ''}>▶ Escuchar la tarea</button>`;
+    const play = document.getElementById('sc-task-play');
+    play.onclick = () => {
+      const src = play.getAttribute('data-src');
+      if (src) { new Audio(src).play().catch(() => toast('No se pudo reproducir el audio')); }
+      else if (window.speechSynthesis) {
+        const u = new SpeechSynthesisUtterance(t.modelEn || t.promptEn); u.lang = 'en-US'; speechSynthesis.speak(u);
+      }
+    };
+    // los mensajes son por tarea: al cambiar, se limpia el hilo
+    const log = document.getElementById('sc-log');
+    if (log) log.innerHTML = '';
+  }
+  function pintaMensaje(m) {
+    if (estado.vistos[m.id]) return;
+    estado.vistos[m.id] = 1;
+    if (m.task_idx !== estado.taskIdx) return;
     const log = document.getElementById('sc-log');
     if (!log) return;
-    log.insertAdjacentHTML('beforeend', `<div class="sc-line"><b>${escapeHtml(quien)}:</b> ${escapeHtml(txt)}</div>`);
+    const quien = estado.miembros[m.member_id] || { nickname: 'Alguien', color: '#8A8A8A' };
+    const mio = m.member_id === estado.yo;
+    const resp = m.reply_to && estado.vistos[m.reply_to] ? '<span class="sc-tore">respondiendo</span>' : '';
+    log.insertAdjacentHTML('beforeend', `<div class="sc-turn${mio ? ' me' : ''}" data-id="${m.id}">
+      <b style="color:${quien.color}">${escapeHtml(quien.nickname)}</b> ${resp}
+      ${m.audioUrl ? `<button class="sc-play sm" data-src="${escapeHtml(m.audioUrl)}">▶ Nota de voz</button>` : ''}
+      ${m.body ? `<span class="sc-t">${escapeHtml(m.body)}</span>` : ''}
+      ${mio ? '' : `<button class="sc-answer" data-r="${m.id}">Responder</button>`}
+    </div>`);
+    const nodo = log.lastElementChild;
+    const p = nodo.querySelector('.sc-play');
+    if (p) p.onclick = () => new Audio(p.getAttribute('data-src')).play().catch(() => toast('No se pudo reproducir'));
+    const a = nodo.querySelector('.sc-answer');
+    if (a) a.onclick = () => {
+      SC_REPLY = m.id;
+      const r = document.getElementById('sc-reply');
+      r.hidden = false;
+      r.innerHTML = `Respondiendo a <b>${escapeHtml(quien.nickname)}</b> <button id="sc-unreply">cancelar</button>`;
+      document.getElementById('sc-unreply').onclick = () => { SC_REPLY = null; r.hidden = true; };
+    };
     log.scrollTop = log.scrollHeight;
   }
-  let li = 0;
-  const habla = setInterval(() => {
-    if (!document.getElementById('sc-room')) return clearInterval(habla);
-    const quien = gente[li % 2];
-    linea((m.lines[li % m.lines.length] || '').replace('{a}', yo), quien, li);
-    const cue = document.getElementById('sc-cue');
-    if (cue) cue.textContent = li % 3 === 2
-      ? `${gente[1]} hasn’t spoken much yet. ${gente[1]}, what do you think?`
-      : `Suggested speaker: ${gente[(li + 1) % 3]}`;
-    li++;
-  }, 4200);
-  const reloj = setInterval(() => {
-    if (!document.getElementById('sc-room')) return clearInterval(reloj);
-    seg--; hablado++;
-    const c = document.getElementById('sc-clock');
-    if (c) c.textContent = '00:' + String(Math.max(0, seg)).padStart(2, '0');
-    if (seg <= 0) siguiente();
-  }, 1000);
 
-  function siguiente() {
-    if (cerrado) return;
-    if (ronda < m.rounds.length - 1) { ronda++; seg = 45; pintaRonda(); linea('— ' + m.rounds[ronda] + ' —', 'Mission', 0); }
-    else fin();
+  //— sondeo ————————————————————————————————————————————
+  async function tick() {
+    if (ronda !== SC_POLL || !document.getElementById('sc-room')) return;
+    try {
+      const q = new URLSearchParams({ code: st.code, member: st.memberId, token: st.token, since: estado.since });
+      const r = await fetch(SC_API + '/state?' + q.toString());
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        if (j.error === 'expired' || j.error === 'unauthorized') {
+          scClear(); toast(scError(j.error)); return scStart('create');
+        }
+      } else if (ronda === SC_POLL && document.getElementById('sc-room')) {
+        pintaMiembros(j.members || []);
+        pintaTarea(j.task);
+        (j.messages || []).forEach(pintaMensaje);
+        if (j.messages && j.messages.length) estado.since = j.messages[j.messages.length - 1].created_at;
+        const solo = (j.members || []).filter(m => !m.is_bot).length <= 1;
+        const aviso = document.getElementById('sc-log');
+        if (solo && !j.circle.bots && aviso && !aviso.children.length) {
+          aviso.innerHTML = `<div class="sc-line" style="color:var(--muted)">Todavía estás solo en la sala.
+            Comparte el código ${escapeHtml(st.code)} y empiecen a hablar.</div>`;
+        }
+      }
+    } catch (e) { /* red intermitente: se reintenta */ }
+    if (ronda === SC_POLL) setTimeout(tick, 2200);
   }
-  function fin() {
-    cerrado = true;
-    clearInterval(habla); clearInterval(reloj);
-    scRecap(m, Math.max(1, Math.round(hablado / 60)), gente);
+  tick();
+
+  //— acciones ————————————————————————————————————————————
+  async function enviar(fd) {
+    fd.append('code', st.code); fd.append('member', st.memberId); fd.append('token', st.token);
+    if (SC_REPLY) fd.append('replyTo', SC_REPLY);
+    const r = await fetch(SC_API + '/message', { method: 'POST', body: fd });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error(j.error || 'send'), { code: j.error });
+    SC_REPLY = null;
+    const rr = document.getElementById('sc-reply'); if (rr) rr.hidden = true;
+    return j;
   }
-  w.querySelector('#sc-next').onclick = siguiente;
-  w.querySelectorAll('[data-a]').forEach(b => b.onclick = () => {
-    const a = b.getAttribute('data-a');
-    if (a === 'leave') { cerrado = true; clearInterval(habla); clearInterval(reloj); return scLanding(); }
-    toast(a === 'mute' ? 'Silenciado solo para ti' : a === 'report' ? 'Reporte enviado al equipo' : 'No volverá a aparecer en tus prácticas');
-  });
-  pintaRonda();
-  linea('— ' + m.rounds[0] + ' —', 'Mission', 0);
+
+  const mic = w.querySelector('#sc-mic');
+  let t0 = 0, tope = null;
+  mic.onclick = async () => {
+    if (SC_REC) {
+      const rec = SC_REC; SC_REC = null; clearTimeout(tope);
+      mic.classList.remove('rec'); mic.querySelector('span').textContent = 'Enviando…'; mic.disabled = true;
+      try {
+        const blob = await rec.stop();
+        const dur = Date.now() - t0;
+        const fd = new FormData();
+        fd.append('audio', blob, 'turn.wav');
+        fd.append('durationMs', String(dur));
+        await enviar(fd);
+        const s = scLoad(); s.voice = (s.voice || 0) + 1; s.ms = (s.ms || 0) + dur; scSave(s);
+        touchDay();
+      } catch (err) { toast(scError(err.code)); }
+      mic.disabled = false; mic.querySelector('span').textContent = 'Grabar respuesta';
+      return;
+    }
+    try {
+      await spMicReady();
+      SC_REC = await spRecorder();
+      t0 = Date.now();
+      mic.classList.add('rec'); mic.querySelector('span').textContent = 'Detener y enviar';
+      tope = setTimeout(() => { if (SC_REC) mic.click(); }, 60000);
+    } catch (e) {
+      toast('Necesitamos permiso del micrófono para mandar notas de voz.');
+    }
+  };
+
+  w.querySelector('#sc-send').onclick = async () => {
+    const inp = document.getElementById('sc-text');
+    const txt = (inp.value || '').trim();
+    if (!txt) return;
+    inp.value = '';
+    const fd = new FormData(); fd.append('body', txt);
+    try { await enviar(fd); } catch (err) { toast(scError(err.code)); }
+  };
+  w.querySelector('#sc-share').onclick = () => {
+    const texto = `Únete a mi círculo de speaking en Aprendo English con el código ${st.code}`;
+    if (navigator.share) navigator.share({ text: texto }).catch(() => {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(st.code).then(() => toast('Código copiado: ' + st.code));
+    else toast('Código: ' + st.code);
+  };
+  w.querySelector('#sc-next').onclick = async (e) => {
+    e.target.disabled = true;
+    try { await scPost('/next-task', { code: st.code, member: st.memberId, token: st.token }); }
+    catch (err) { toast(scError(err.code)); }
+    e.target.disabled = false;
+  };
+  w.querySelector('#sc-leave').onclick = () => { SC_POLL++; scRecap(); };
 }
 
-//— Post-sesión ————————————————————————————————————————————
-function scRecap(m, min, gente) {
+//— Cierre ————————————————————————————————————————————————
+function scRecap() {
   const st = scLoad();
-  st.history = (st.history || []).concat([{ when: 'Hoy', title: m.title, min: min }]);
-  st.sessions = (st.sessions || []).filter(s => s.title !== m.title);
-  scSave(st);
-  const mes = (st.history || []).reduce((a, h) => a + (h.min || 0), 0);
-  const w = scSheet(`<div class="sc-head"><b>¡Terminaste ${min} min de speaking!</b></div>
-    <div class="sc-card sc-static"><b>Hoy practicaste</b>
-      <small>${m.rounds.map(r => '✓ ' + escapeHtml(r)).join('<br>')}</small></div>
+  const min = Math.max(1, Math.round((st.ms || 0) / 60000));
+  const notas = st.voice || 0;
+  const w = scSheet(`<div class="sc-head"><b>Saliste del círculo</b></div>
+    <div class="sc-card sc-static"><b>${notas} nota${notas === 1 ? '' : 's'} de voz · ${min} min hablando</b>
+      <small>El círculo ${escapeHtml(st.code || '')} sigue abierto 24 horas: puedes volver con el mismo código.</small></div>
     <div class="sc-sec">¿Cómo estuvo la práctica?</div>
     <div class="sc-faces">${['😞', '😐', '🙂', '😄'].map((f, i) => `<button data-f="${i}">${f}</button>`).join('')}</div>
-    <div class="sc-sec">¿Practicarías con este grupo otra vez?</div>
-    <div class="sc-row"><button class="sc-btn" data-g="1">Sí</button><button class="sc-btn" data-g="0">Prefiero otras personas</button></div>
-    <div class="sc-card sc-static" style="margin-top:12px"><b>+${min} minutos de speaking</b>
-      <small>Total acumulado: ${mes} min</small></div>
-    <button class="btn green" id="sc-next2" style="margin-top:10px">Buscar próxima práctica</button>`);
+    <button class="btn green" id="sc-back-room" style="margin-top:10px">Volver al círculo</button>
+    <button class="sc-btn" id="sc-close" style="margin-top:8px">Cerrar</button>`);
   w.querySelectorAll('[data-f]').forEach(b => b.onclick = () => {
     w.querySelectorAll('[data-f]').forEach(x => x.classList.remove('on'));
     b.classList.add('on');
   });
-  w.querySelectorAll('[data-g]').forEach(b => b.onclick = () => toast('Gracias, lo tendremos en cuenta al armar tu próximo grupo'));
-  w.querySelector('#sc-next2').onclick = scLanding;
-  touchDay();
-  if (document.getElementById('course-body')) wireCirclesHome();
-}
-
-//— Chat del círculo (guionado) ————————————————————————————————
-function scChat() {
-  const st = scLoad();
-  const msgs = st.chat || [
-    { q: 'Andrea', t: '¿Alguien puede hoy a las 8?' },
-    { q: 'Jorge', t: 'Yo sí, pero mejor 9.' },
-    { q: 'María', t: 'Me apunto a las 9 👋' },
-  ];
-  const w = scSheet(`<button class="sc-back" id="sc-b">‹ Atrás</button>
-    <div class="sc-head"><b>Chat del círculo</b></div>
-    <small style="font-size:12.5px;color:var(--muted)">El chat acompaña; los horarios se cierran desde “Programar práctica”.</small>
-    <div class="sc-chat" id="sc-msgs">${msgs.map(m => `<div class="sc-msg${m.q === 'Tú' ? ' me' : ''}"><b>${escapeHtml(m.q)}:</b> ${escapeHtml(m.t)}</div>`).join('')}</div>
-    <div class="sc-input"><input id="sc-in" placeholder="Escribe algo…"><button class="sc-btn pri" id="sc-send" style="flex:0 0 auto">Enviar</button></div>
-    <button class="sc-btn" id="sc-plan" style="margin-top:10px">Programar práctica</button>`);
-  const push = (q, t) => {
-    msgs.push({ q, t });
-    const c = document.getElementById('sc-msgs');
-    c.insertAdjacentHTML('beforeend', `<div class="sc-msg${q === 'Tú' ? ' me' : ''}"><b>${escapeHtml(q)}:</b> ${escapeHtml(t)}</div>`);
-    c.scrollTop = c.scrollHeight;
-    const s = scLoad(); s.chat = msgs; scSave(s);
-  };
-  w.querySelector('#sc-b').onclick = scLanding;
-  w.querySelector('#sc-plan').onclick = scSchedule;
-  w.querySelector('#sc-send').onclick = () => {
-    const inp = document.getElementById('sc-in');
-    if (!inp.value.trim()) return;
-    push('Tú', inp.value.trim());
-    inp.value = '';
-    setTimeout(() => push('Rocío', '¡Yo me sumo! Programémosla.'), 900);
-  };
+  w.querySelector('#sc-back-room').onclick = () => scRoom();
+  w.querySelector('#sc-close').onclick = () => { closeOverlay(); if (document.getElementById('course-body')) renderCourse(); };
 }
 
 //— Entradas: Práctica e Inicio ————————————————————————————————
 function circlesShelfHTML() {
   if (!DEBUG_CIRCLES) return '';
-  const lvl = scLevel(), disp = scAvail();
+  const st = scLoad(), lvl = scLevel();
   return `<div class="sc-shelf">
     <div class="sc-shelf-h"><span class="sp-mic-badge" style="color:var(--blue)">${micSvg(17)}</span>
       <b>Speaking con otros</b></div>
-    <small>Practica conversaciones reales con alumnos de un nivel parecido al tuyo. Sesiones cortas,
-      con actividad guiada y sin profesor.</small>
-    <span class="sc-live"><span class="sc-dot"></span>${disp} alumnos ${escapeHtml(lvl)} disponibles ahora</span>
+    <small>Sala de conversación real: la tarea suena en audio, cada quien manda su nota de voz y los
+      demás responden. Nivel sugerido ${escapeHtml(lvl)}.</small>
+    ${st.code ? `<span class="sc-live"><span class="sc-dot"></span>Tienes el círculo ${escapeHtml(st.code)} abierto</span>` : ''}
     <div class="sc-row">
-      <button class="sc-btn pri" id="sc-shelf-now">Practicar ahora</button>
-      <button class="sc-btn" id="sc-shelf-plan">Programar práctica</button>
+      <button class="sc-btn pri" id="sc-shelf-now">${st.code ? 'Volver a mi círculo' : 'Crear círculo'}</button>
+      <button class="sc-btn" id="sc-shelf-plan">Entrar con código</button>
     </div>
   </div>`;
 }
@@ -7312,31 +7227,25 @@ function circlesShelfHTML() {
 function circlesHomeHTML() {
   if (!DEBUG_CIRCLES) return '';
   const st = scLoad();
-  const prox = (st.sessions || []).filter(s => new Date(s.iso).getTime() > Date.now())[0];
-  if (prox) {
-    return `<div class="sc-home"><div class="t"><b>Tu próxima práctica</b>
-      <small>${escapeHtml(prox.when)} · ${escapeHtml(prox.title)} · ${prox.n} participantes</small></div>
-      <button id="sc-home-btn" data-go="ver">Ver</button></div>`;
+  if (st.code) {
+    return `<div class="sc-home"><div class="t"><b>Tu círculo ${escapeHtml(st.code)} está abierto</b>
+      <small>Speaking con otros · vuelve cuando quieras</small></div>
+      <button id="sc-home-btn" data-go="room">Entrar</button></div>`;
   }
-  const disp = scAvail();
-  if (disp >= 3) {
-    return `<div class="sc-home"><div class="t"><b>${disp} personas de tu nivel quieren practicar ahora</b>
-      <small>Speaking con otros · ${escapeHtml(scLevel())}</small></div>
-      <button id="sc-home-btn" data-go="now">Unirme</button></div>`;
-  }
-  return ''; // sin oportunidad real, no se muestra tarjeta
+  return `<div class="sc-home"><div class="t"><b>Practica hablando con otros</b>
+    <small>Crea un círculo y comparte el código</small></div>
+    <button id="sc-home-btn" data-go="new">Crear</button></div>`;
 }
 
 function wireCirclesHome() {
   const b = document.getElementById('sc-home-btn');
   if (!b) return;
   b.onclick = () => {
-    const st = scLoad();
-    if (!st.onboarded) return openCircles();
-    scLanding();
-    if (b.getAttribute('data-go') === 'now') scMatchNow();
+    if (!DEBUG_CIRCLES) return;
+    b.getAttribute('data-go') === 'room' ? scRoom() : scStart('create');
   };
 }
+
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // SHEETS / DIALOGS
