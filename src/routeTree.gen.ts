@@ -50,6 +50,7 @@ import { Route as ApiCoursePracticeRouteImport } from './routes/api/course/pract
 import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
+import { Route as ApiPublicCirclesCreateRouteImport } from './routes/api/public/circles/create'
 
 const SilaboCipRoute = SilaboCipRouteImport.update({
   id: '/silabo-cip',
@@ -258,6 +259,11 @@ const LovableEmailTransactionalPreviewRoute =
     path: '/lovable/email/transactional/preview',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicCirclesCreateRoute = ApiPublicCirclesCreateRouteImport.update({
+  id: '/api/public/circles/create',
+  path: '/api/public/circles/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -299,6 +305,7 @@ export interface FileRoutesByFullPath {
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
+  '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -341,6 +348,7 @@ export interface FileRoutesByTo {
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
+  '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -385,6 +393,7 @@ export interface FileRoutesById {
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
+  '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -429,6 +438,7 @@ export interface FileRouteTypes {
     | '/api/demos/metas'
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
+    | '/api/public/circles/create'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -471,6 +481,7 @@ export interface FileRouteTypes {
     | '/api/demos/metas'
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
+    | '/api/public/circles/create'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -514,6 +525,7 @@ export interface FileRouteTypes {
     | '/api/demos/metas'
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
+    | '/api/public/circles/create'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -554,6 +566,7 @@ export interface RootRouteChildren {
   ApiDemosMetasRoute: typeof ApiDemosMetasRoute
   ApiPublicPreinscripcionRoute: typeof ApiPublicPreinscripcionRoute
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
+  ApiPublicCirclesCreateRoute: typeof ApiPublicCirclesCreateRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -846,6 +859,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/circles/create': {
+      id: '/api/public/circles/create'
+      path: '/api/public/circles/create'
+      fullPath: '/api/public/circles/create'
+      preLoaderRoute: typeof ApiPublicCirclesCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -903,6 +923,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDemosMetasRoute: ApiDemosMetasRoute,
   ApiPublicPreinscripcionRoute: ApiPublicPreinscripcionRoute,
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
+  ApiPublicCirclesCreateRoute: ApiPublicCirclesCreateRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
