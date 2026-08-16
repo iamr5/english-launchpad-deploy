@@ -50,6 +50,11 @@ import { Route as ApiCoursePracticeRouteImport } from './routes/api/course/pract
 import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
+import { Route as ApiPublicCirclesStateRouteImport } from './routes/api/public/circles/state'
+import { Route as ApiPublicCirclesNextTaskRouteImport } from './routes/api/public/circles/next-task'
+import { Route as ApiPublicCirclesMessageRouteImport } from './routes/api/public/circles/message'
+import { Route as ApiPublicCirclesJoinRouteImport } from './routes/api/public/circles/join'
+import { Route as ApiPublicCirclesCreateRouteImport } from './routes/api/public/circles/create'
 
 const SilaboCipRoute = SilaboCipRouteImport.update({
   id: '/silabo-cip',
@@ -258,6 +263,32 @@ const LovableEmailTransactionalPreviewRoute =
     path: '/lovable/email/transactional/preview',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicCirclesStateRoute = ApiPublicCirclesStateRouteImport.update({
+  id: '/api/public/circles/state',
+  path: '/api/public/circles/state',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCirclesNextTaskRoute =
+  ApiPublicCirclesNextTaskRouteImport.update({
+    id: '/api/public/circles/next-task',
+    path: '/api/public/circles/next-task',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicCirclesMessageRoute = ApiPublicCirclesMessageRouteImport.update({
+  id: '/api/public/circles/message',
+  path: '/api/public/circles/message',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCirclesJoinRoute = ApiPublicCirclesJoinRouteImport.update({
+  id: '/api/public/circles/join',
+  path: '/api/public/circles/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCirclesCreateRoute = ApiPublicCirclesCreateRouteImport.update({
+  id: '/api/public/circles/create',
+  path: '/api/public/circles/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -299,6 +330,11 @@ export interface FileRoutesByFullPath {
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
+  '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
+  '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
+  '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
+  '/api/public/circles/next-task': typeof ApiPublicCirclesNextTaskRoute
+  '/api/public/circles/state': typeof ApiPublicCirclesStateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -341,6 +377,11 @@ export interface FileRoutesByTo {
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
+  '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
+  '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
+  '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
+  '/api/public/circles/next-task': typeof ApiPublicCirclesNextTaskRoute
+  '/api/public/circles/state': typeof ApiPublicCirclesStateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -385,6 +426,11 @@ export interface FileRoutesById {
   '/api/demos/metas': typeof ApiDemosMetasRoute
   '/api/public/preinscripcion': typeof ApiPublicPreinscripcionRoute
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
+  '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
+  '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
+  '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
+  '/api/public/circles/next-task': typeof ApiPublicCirclesNextTaskRoute
+  '/api/public/circles/state': typeof ApiPublicCirclesStateRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -429,6 +475,11 @@ export interface FileRouteTypes {
     | '/api/demos/metas'
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
+    | '/api/public/circles/create'
+    | '/api/public/circles/join'
+    | '/api/public/circles/message'
+    | '/api/public/circles/next-task'
+    | '/api/public/circles/state'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -471,6 +522,11 @@ export interface FileRouteTypes {
     | '/api/demos/metas'
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
+    | '/api/public/circles/create'
+    | '/api/public/circles/join'
+    | '/api/public/circles/message'
+    | '/api/public/circles/next-task'
+    | '/api/public/circles/state'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -514,6 +570,11 @@ export interface FileRouteTypes {
     | '/api/demos/metas'
     | '/api/public/preinscripcion'
     | '/api/public/share-invite'
+    | '/api/public/circles/create'
+    | '/api/public/circles/join'
+    | '/api/public/circles/message'
+    | '/api/public/circles/next-task'
+    | '/api/public/circles/state'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -554,6 +615,11 @@ export interface RootRouteChildren {
   ApiDemosMetasRoute: typeof ApiDemosMetasRoute
   ApiPublicPreinscripcionRoute: typeof ApiPublicPreinscripcionRoute
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
+  ApiPublicCirclesCreateRoute: typeof ApiPublicCirclesCreateRoute
+  ApiPublicCirclesJoinRoute: typeof ApiPublicCirclesJoinRoute
+  ApiPublicCirclesMessageRoute: typeof ApiPublicCirclesMessageRoute
+  ApiPublicCirclesNextTaskRoute: typeof ApiPublicCirclesNextTaskRoute
+  ApiPublicCirclesStateRoute: typeof ApiPublicCirclesStateRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -846,6 +912,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/circles/state': {
+      id: '/api/public/circles/state'
+      path: '/api/public/circles/state'
+      fullPath: '/api/public/circles/state'
+      preLoaderRoute: typeof ApiPublicCirclesStateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/circles/next-task': {
+      id: '/api/public/circles/next-task'
+      path: '/api/public/circles/next-task'
+      fullPath: '/api/public/circles/next-task'
+      preLoaderRoute: typeof ApiPublicCirclesNextTaskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/circles/message': {
+      id: '/api/public/circles/message'
+      path: '/api/public/circles/message'
+      fullPath: '/api/public/circles/message'
+      preLoaderRoute: typeof ApiPublicCirclesMessageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/circles/join': {
+      id: '/api/public/circles/join'
+      path: '/api/public/circles/join'
+      fullPath: '/api/public/circles/join'
+      preLoaderRoute: typeof ApiPublicCirclesJoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/circles/create': {
+      id: '/api/public/circles/create'
+      path: '/api/public/circles/create'
+      fullPath: '/api/public/circles/create'
+      preLoaderRoute: typeof ApiPublicCirclesCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -903,6 +1004,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDemosMetasRoute: ApiDemosMetasRoute,
   ApiPublicPreinscripcionRoute: ApiPublicPreinscripcionRoute,
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
+  ApiPublicCirclesCreateRoute: ApiPublicCirclesCreateRoute,
+  ApiPublicCirclesJoinRoute: ApiPublicCirclesJoinRoute,
+  ApiPublicCirclesMessageRoute: ApiPublicCirclesMessageRoute,
+  ApiPublicCirclesNextTaskRoute: ApiPublicCirclesNextTaskRoute,
+  ApiPublicCirclesStateRoute: ApiPublicCirclesStateRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
