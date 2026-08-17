@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SilaboCipRouteImport } from './routes/silabo-cip'
 import { Route as SilaboAutonomaRouteImport } from './routes/silabo-autonoma'
 import { Route as PresentationRouteImport } from './routes/presentation'
+import { Route as PresentacionSantaMariaDeLaGraciaRouteImport } from './routes/presentacion-santa-maria-de-la-gracia'
 import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
 import { Route as PresentacionNuamRouteImport } from './routes/presentacion-nuam'
 import { Route as PresentacionMovistarRouteImport } from './routes/presentacion-movistar'
@@ -71,6 +72,12 @@ const PresentationRoute = PresentationRouteImport.update({
   path: '/presentation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PresentacionSantaMariaDeLaGraciaRoute =
+  PresentacionSantaMariaDeLaGraciaRouteImport.update({
+    id: '/presentacion-santa-maria-de-la-gracia',
+    path: '/presentacion-santa-maria-de-la-gracia',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PresentacionRepsolRoute = PresentacionRepsolRouteImport.update({
   id: '/presentacion-repsol',
   path: '/presentacion-repsol',
@@ -308,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/presentacion-movistar': typeof PresentacionMovistarRoute
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
+  '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-cip': typeof SilaboCipRoute
@@ -355,6 +363,7 @@ export interface FileRoutesByTo {
   '/presentacion-movistar': typeof PresentacionMovistarRoute
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
+  '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-cip': typeof SilaboCipRoute
@@ -404,6 +413,7 @@ export interface FileRoutesById {
   '/presentacion-movistar': typeof PresentacionMovistarRoute
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
+  '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-cip': typeof SilaboCipRoute
@@ -453,6 +463,7 @@ export interface FileRouteTypes {
     | '/presentacion-movistar'
     | '/presentacion-nuam'
     | '/presentacion-repsol'
+    | '/presentacion-santa-maria-de-la-gracia'
     | '/presentation'
     | '/silabo-autonoma'
     | '/silabo-cip'
@@ -500,6 +511,7 @@ export interface FileRouteTypes {
     | '/presentacion-movistar'
     | '/presentacion-nuam'
     | '/presentacion-repsol'
+    | '/presentacion-santa-maria-de-la-gracia'
     | '/presentation'
     | '/silabo-autonoma'
     | '/silabo-cip'
@@ -548,6 +560,7 @@ export interface FileRouteTypes {
     | '/presentacion-movistar'
     | '/presentacion-nuam'
     | '/presentacion-repsol'
+    | '/presentacion-santa-maria-de-la-gracia'
     | '/presentation'
     | '/silabo-autonoma'
     | '/silabo-cip'
@@ -597,6 +610,7 @@ export interface RootRouteChildren {
   PresentacionMovistarRoute: typeof PresentacionMovistarRoute
   PresentacionNuamRoute: typeof PresentacionNuamRoute
   PresentacionRepsolRoute: typeof PresentacionRepsolRoute
+  PresentacionSantaMariaDeLaGraciaRoute: typeof PresentacionSantaMariaDeLaGraciaRoute
   PresentationRoute: typeof PresentationRoute
   SilaboAutonomaRoute: typeof SilaboAutonomaRoute
   SilaboCipRoute: typeof SilaboCipRoute
@@ -644,6 +658,13 @@ declare module '@tanstack/react-router' {
       path: '/presentation'
       fullPath: '/presentation'
       preLoaderRoute: typeof PresentationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-santa-maria-de-la-gracia': {
+      id: '/presentacion-santa-maria-de-la-gracia'
+      path: '/presentacion-santa-maria-de-la-gracia'
+      fullPath: '/presentacion-santa-maria-de-la-gracia'
+      preLoaderRoute: typeof PresentacionSantaMariaDeLaGraciaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/presentacion-repsol': {
@@ -986,6 +1007,7 @@ const rootRouteChildren: RootRouteChildren = {
   PresentacionMovistarRoute: PresentacionMovistarRoute,
   PresentacionNuamRoute: PresentacionNuamRoute,
   PresentacionRepsolRoute: PresentacionRepsolRoute,
+  PresentacionSantaMariaDeLaGraciaRoute: PresentacionSantaMariaDeLaGraciaRoute,
   PresentationRoute: PresentationRoute,
   SilaboAutonomaRoute: SilaboAutonomaRoute,
   SilaboCipRoute: SilaboCipRoute,
