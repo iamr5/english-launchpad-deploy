@@ -8,7 +8,7 @@ const headTags = `
 <meta property="og:title" content="Propuesta de e-learning institucional de inglés · Colegio Santa María de la Gracia">
 <meta property="og:description" content="Dosier académico: 45 lecciones (391 microlecciones), 8 127 ejercicios, 11 040 palabras, A1–C1 en formato Cambridge con el MCER como marco.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://aprendoenglish.com/silabo-santa-maria">
+<meta property="og:url" content="https://aprendoenglish.com/silabo-santa-maria-de-la-gracia">
 <meta property="og:image" content="https://aprendoenglish.com/social-preview.jpg">
 <meta property="og:image:secure_url" content="https://aprendoenglish.com/social-preview.jpg">
 <meta property="og:image:width" content="1200">
@@ -23,7 +23,7 @@ const headTags = `
 
 const htmlWithMeta = html.replace("<head>", `<head>${headTags}`);
 
-export const Route = createFileRoute("/silabo-santa-maria")({
+export const Route = createFileRoute("/silabo-santa-maria-de-la-gracia")({
   server: {
     handlers: {
       GET: async () =>
