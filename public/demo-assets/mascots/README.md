@@ -9,6 +9,8 @@ eligiendo otro pack, sin tocar código.
 | [`ozito/`](ozito/README.md) | Ozzy el Osito 🐻 | capas SVG + CSS | **Sí — empieza aquí** |
 | [`boti/`](boti/README.md) | Boti 🤖 | script (`boti.js`) | No |
 | [`gallito/`](gallito/README.md) | Gallito el Tumi ✨ | capas SVG + CSS | Sí, igual que ozito |
+| `martin/` | Martín 🧒 | capas SVG + CSS | Sí, igual que ozito |
+| `arianna/` | Arianna 👧 | capas SVG + CSS | Sí, igual que ozito |
 
 [`escribimos/`](escribimos/README.md) no es un pack: es la data de diez personajes
 —conejito, cuycito, gatito, llamita, mapachito, monito, osito, perrito, torito y zorrito— y el
