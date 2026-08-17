@@ -17,6 +17,7 @@ import { Route as PresentacionSantaMariaDeLaGraciaRouteImport } from './routes/p
 import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
 import { Route as PresentacionNuamRouteImport } from './routes/presentacion-nuam'
 import { Route as PresentacionMovistarRouteImport } from './routes/presentacion-movistar'
+import { Route as PresentacionMisionHuascaranRouteImport } from './routes/presentacion-mision-huascaran'
 import { Route as PresentacionLaTinkaRouteImport } from './routes/presentacion-la-tinka'
 import { Route as PresentacionBcpRouteImport } from './routes/presentacion-bcp'
 import { Route as PresentacionAjeRouteImport } from './routes/presentacion-aje'
@@ -99,6 +100,12 @@ const PresentacionMovistarRoute = PresentacionMovistarRouteImport.update({
   path: '/presentacion-movistar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PresentacionMisionHuascaranRoute =
+  PresentacionMisionHuascaranRouteImport.update({
+    id: '/presentacion-mision-huascaran',
+    path: '/presentacion-mision-huascaran',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PresentacionLaTinkaRoute = PresentacionLaTinkaRouteImport.update({
   id: '/presentacion-la-tinka',
   path: '/presentacion-la-tinka',
@@ -318,6 +325,7 @@ export interface FileRoutesByFullPath {
   '/presentacion-aje': typeof PresentacionAjeRoute
   '/presentacion-bcp': typeof PresentacionBcpRoute
   '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-mision-huascaran': typeof PresentacionMisionHuascaranRoute
   '/presentacion-movistar': typeof PresentacionMovistarRoute
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
@@ -367,6 +375,7 @@ export interface FileRoutesByTo {
   '/presentacion-aje': typeof PresentacionAjeRoute
   '/presentacion-bcp': typeof PresentacionBcpRoute
   '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-mision-huascaran': typeof PresentacionMisionHuascaranRoute
   '/presentacion-movistar': typeof PresentacionMovistarRoute
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
@@ -418,6 +427,7 @@ export interface FileRoutesById {
   '/presentacion-aje': typeof PresentacionAjeRoute
   '/presentacion-bcp': typeof PresentacionBcpRoute
   '/presentacion-la-tinka': typeof PresentacionLaTinkaRoute
+  '/presentacion-mision-huascaran': typeof PresentacionMisionHuascaranRoute
   '/presentacion-movistar': typeof PresentacionMovistarRoute
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
@@ -469,6 +479,7 @@ export interface FileRouteTypes {
     | '/presentacion-aje'
     | '/presentacion-bcp'
     | '/presentacion-la-tinka'
+    | '/presentacion-mision-huascaran'
     | '/presentacion-movistar'
     | '/presentacion-nuam'
     | '/presentacion-repsol'
@@ -518,6 +529,7 @@ export interface FileRouteTypes {
     | '/presentacion-aje'
     | '/presentacion-bcp'
     | '/presentacion-la-tinka'
+    | '/presentacion-mision-huascaran'
     | '/presentacion-movistar'
     | '/presentacion-nuam'
     | '/presentacion-repsol'
@@ -568,6 +580,7 @@ export interface FileRouteTypes {
     | '/presentacion-aje'
     | '/presentacion-bcp'
     | '/presentacion-la-tinka'
+    | '/presentacion-mision-huascaran'
     | '/presentacion-movistar'
     | '/presentacion-nuam'
     | '/presentacion-repsol'
@@ -619,6 +632,7 @@ export interface RootRouteChildren {
   PresentacionAjeRoute: typeof PresentacionAjeRoute
   PresentacionBcpRoute: typeof PresentacionBcpRoute
   PresentacionLaTinkaRoute: typeof PresentacionLaTinkaRoute
+  PresentacionMisionHuascaranRoute: typeof PresentacionMisionHuascaranRoute
   PresentacionMovistarRoute: typeof PresentacionMovistarRoute
   PresentacionNuamRoute: typeof PresentacionNuamRoute
   PresentacionRepsolRoute: typeof PresentacionRepsolRoute
@@ -706,6 +720,13 @@ declare module '@tanstack/react-router' {
       path: '/presentacion-movistar'
       fullPath: '/presentacion-movistar'
       preLoaderRoute: typeof PresentacionMovistarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-mision-huascaran': {
+      id: '/presentacion-mision-huascaran'
+      path: '/presentacion-mision-huascaran'
+      fullPath: '/presentacion-mision-huascaran'
+      preLoaderRoute: typeof PresentacionMisionHuascaranRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/presentacion-la-tinka': {
@@ -1024,6 +1045,7 @@ const rootRouteChildren: RootRouteChildren = {
   PresentacionAjeRoute: PresentacionAjeRoute,
   PresentacionBcpRoute: PresentacionBcpRoute,
   PresentacionLaTinkaRoute: PresentacionLaTinkaRoute,
+  PresentacionMisionHuascaranRoute: PresentacionMisionHuascaranRoute,
   PresentacionMovistarRoute: PresentacionMovistarRoute,
   PresentacionNuamRoute: PresentacionNuamRoute,
   PresentacionRepsolRoute: PresentacionRepsolRoute,
