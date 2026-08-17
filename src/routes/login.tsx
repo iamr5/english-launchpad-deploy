@@ -22,15 +22,25 @@ export const Route = createFileRoute("/login")({
 
 type Role = "student" | "parent" | "teacher";
 
+/**
+ * A dónde va cada quien después de entrar.
+ *
+ * Se leen TODOS los roles, no uno cualquiera. Antes esto pedía `.limit(1)` sin
+ * ordenar y se quedaba con el que devolviera la base: una cuenta con más de un
+ * rol acababa donde tocara. El caso que lo destapa es la cuenta de
+ * administrador que además está en el padrón como alumna — se lleva 'admin' y
+ * 'student', y si salía 'admin' iba a /dashboard, que exige ser familia o
+ * profesor: `canView` daba false y la pantalla se quedaba EN BLANCO.
+ *
+ * La regla ahora es explícita: al panel sólo va quien tiene que verlo; el resto
+ * —alumnos, administradores sin más rol— a la app, que siempre tiene algo que
+ * enseñar.
+ */
 async function routeByRole(userId: string, navigate: ReturnType<typeof useNavigate>) {
-  const { data } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .limit(1)
-    .maybeSingle();
-  const role = (data?.role as Role | undefined) ?? "student";
-  navigate({ to: role === "student" ? "/app" : "/dashboard", replace: true });
+  const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+  const roles = (data ?? []).map((r) => (r as { role: string }).role);
+  const alPanel = roles.includes("teacher") || roles.includes("parent");
+  navigate({ to: alPanel ? "/dashboard" : "/app", replace: true });
 }
 
 function LoginPage() {
