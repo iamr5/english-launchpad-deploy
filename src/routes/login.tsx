@@ -264,57 +264,6 @@ function LoginPage() {
           </svg>
           Continuar con Google
         </button>
-
-        <div className="mt-6 pt-4 border-t border-dashed border-slate-300">
-          <p className="text-[10px] uppercase tracking-wider text-slate-400 text-center mb-2">
-            Debug — fake login (sin backend)
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                localStorage.setItem("fake_login", "1");
-                localStorage.setItem("fake_role", "student");
-                navigate({ to: "/app", replace: true });
-              }}
-              className="py-2 text-xs rounded-lg bg-amber-100 text-amber-900 font-medium hover:bg-amber-200"
-            >
-              Alumno → /app
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                localStorage.setItem("fake_login", "1");
-                localStorage.setItem("fake_role", "parent");
-                navigate({ to: "/dashboard", replace: true });
-              }}
-              className="py-2 text-xs rounded-lg bg-amber-100 text-amber-900 font-medium hover:bg-amber-200"
-            >
-              Familia → /dashboard
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                localStorage.setItem("fake_login", "1");
-                localStorage.setItem("fake_role", "teacher");
-                navigate({ to: "/dashboard", replace: true });
-              }}
-              className="py-2 text-xs rounded-lg bg-amber-100 text-amber-900 font-medium hover:bg-amber-200"
-            >
-              Profesor → /dashboard
-            </button>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              localStorage.removeItem("fake_login");
-              localStorage.removeItem("fake_role");
-            }}
-            className="w-full mt-2 py-1.5 text-[11px] text-slate-500 hover:text-slate-700"
-          >
-            Limpiar fake login
-          </button>
-        </div>
       </div>
     </div>
   );

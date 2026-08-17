@@ -27,16 +27,10 @@ export const Route = createFileRoute("/_authenticated/app")({
 
 function StudentApp() {
   const navigate = useNavigate();
-  // El atajo de depuración de _authenticated/route.tsx no tiene sesión de
-  // Supabase, así que tampoco puede pedir un pase: se le sirve la app estática
-  // de siempre, sin marca. Es exactamente para lo que existe ese atajo.
-  const isFake = typeof window !== "undefined" && localStorage.getItem("fake_login") === "1";
-
   const shellFn = useServerFn(getMyAppShell);
   const shell = useQuery({
     queryKey: ["me", "app-shell"],
     queryFn: () => shellFn(),
-    enabled: !isFake,
     // El pase dura 10 minutos y sólo sirve para cargar la página. Se vuelve a
     // pedir al remontar; no hace falta refrescarlo en segundo plano.
     staleTime: 5 * 60 * 1000,
@@ -56,12 +50,12 @@ function StudentApp() {
 
   // Mientras se resuelve la institución no se pinta un iframe a medias: se
   // dejaría ver la app sin marca y saltaría a la suya un instante después.
-  if (!isFake && shell.isLoading) return <Cargando />;
+  if (shell.isLoading) return <Cargando />;
 
   // Si el pase no llega —la red, la sesión— se cae a la app estática. Peor
   // aspecto, pero el alumno entra en su curso, que es lo que importa.
   const src =
-    isFake || shell.isError || !shell.data?.token
+    shell.isError || !shell.data?.token
       ? "/app/index.html"
       : `/api/app-shell?t=${encodeURIComponent(shell.data.token)}`;
 

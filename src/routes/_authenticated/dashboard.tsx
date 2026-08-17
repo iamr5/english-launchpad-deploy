@@ -26,49 +26,37 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const navigate = useNavigate();
-  const isFake = typeof window !== "undefined" && localStorage.getItem("fake_login") === "1";
-  const fakeRole = typeof window !== "undefined" ? localStorage.getItem("fake_role") : null;
-
   const profileFn = useServerFn(getMyProfile);
-  const profile = useQuery({
-    queryKey: ["me", "profile"],
-    queryFn: () => profileFn(),
-    enabled: !isFake,
-  });
+  const profile = useQuery({ queryKey: ["me", "profile"], queryFn: () => profileFn() });
 
   const shellFn = useServerFn(getMyDashboardShell);
   const shell = useQuery({
     queryKey: ["me", "dashboard-shell"],
     queryFn: () => shellFn(),
-    enabled: !isFake,
     staleTime: 5 * 60 * 1000,
     retry: 1,
   });
 
-  const roles = isFake ? [fakeRole ?? "parent"] : (profile.data?.roles ?? []);
+  const roles = profile.data?.roles ?? [];
   const isStudentOnly =
     roles.includes("student") && !roles.includes("parent") && !roles.includes("teacher");
-  const canView = isFake ? true : roles.includes("parent") || roles.includes("teacher");
+  const canView = roles.includes("parent") || roles.includes("teacher");
 
   useEffect(() => {
-    if ((isFake || profile.data) && isStudentOnly) {
+    if (profile.data && isStudentOnly) {
       navigate({ to: "/app", replace: true });
     }
-  }, [profile.data, isStudentOnly, navigate, isFake]);
+  }, [profile.data, isStudentOnly, navigate]);
 
-  if ((!isFake && profile.isLoading) || isStudentOnly || !canView) return null;
+  if (profile.isLoading || isStudentOnly || !canView) return null;
 
-  const role = roles.includes("teacher")
-    ? "teacher"
-    : roles.includes("parent")
-      ? "parent"
-      : "student";
+  const role = roles.includes("teacher") ? "teacher" : "parent";
 
-  if (!isFake && shell.isLoading) return null;
+  if (shell.isLoading) return null;
 
   // Respaldo al panel estático si el pase no llega: se ve sin marca, pero se ve.
   const src =
-    isFake || shell.isError || !shell.data?.token
+    shell.isError || !shell.data?.token
       ? `/dashboard/index.html?role=${role}`
       : `/api/dashboard-shell?t=${encodeURIComponent(shell.data.token)}`;
 

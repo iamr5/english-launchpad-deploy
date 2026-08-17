@@ -232,7 +232,15 @@ function DashPreview({
 
   const kpi = (v: string, l: string, tinta?: string, meta?: React.ReactNode) => (
     <div style={{ flex: 1, background: "#fff", padding: "8px 10px" }}>
-      <div style={{ fontSize: 17, fontWeight: 800, lineHeight: 1, color: tinta || tplInk, fontFamily: head }}>
+      <div
+        style={{
+          fontSize: 17,
+          fontWeight: 800,
+          lineHeight: 1,
+          color: tinta || tplInk,
+          fontFamily: head,
+        }}
+      >
         {v}
       </div>
       <div style={{ fontSize: 9.5, color: mut, marginTop: 3, fontWeight: 600 }}>{l}</div>
@@ -271,7 +279,15 @@ function DashPreview({
         {ini}
       </span>
       <b style={{ flex: 1, fontWeight: 600 }}>{nom}</b>
-      <span style={{ background: "#efedfd", color: "#5b4be6", borderRadius: 6, padding: "2px 6px", fontSize: 9.5 }}>
+      <span
+        style={{
+          background: "#efedfd",
+          color: "#5b4be6",
+          borderRadius: 6,
+          padding: "2px 6px",
+          fontSize: 9.5,
+        }}
+      >
         {nivel}
       </span>
       <span
@@ -338,13 +354,28 @@ function DashPreview({
               const mRie = nm(metas.riesgo, 2);
               return (
                 <>
-                  {kpi("83%", "Activos", undefined,
-                    chipMeta(83 >= mAct, (83 >= mAct ? "✓ " : "↑ ") + "meta " + mAct + "%"))}
-                  {kpi("B1", "Nivel", undefined,
-                    chipMeta(3 >= mNiv, (3 >= mNiv ? "✓ " : "↑ ") + "meta " + (metas.nivel || "B1")))}
-                  {kpi("2", "En riesgo", "#d1495b",
+                  {kpi(
+                    "83%",
+                    "Activos",
+                    undefined,
+                    chipMeta(83 >= mAct, (83 >= mAct ? "✓ " : "↑ ") + "meta " + mAct + "%"),
+                  )}
+                  {kpi(
+                    "B1",
+                    "Nivel",
+                    undefined,
+                    chipMeta(
+                      3 >= mNiv,
+                      (3 >= mNiv ? "✓ " : "↑ ") + "meta " + (metas.nivel || "B1"),
+                    ),
+                  )}
+                  {kpi(
+                    "2",
+                    "En riesgo",
+                    "#d1495b",
                     // La única que se cumple por debajo.
-                    chipMeta(2 <= mRie, (2 <= mRie ? "✓ " : "↓ ") + "máx. " + mRie))}
+                    chipMeta(2 <= mRie, (2 <= mRie ? "✓ " : "↓ ") + "máx. " + mRie),
+                  )}
                 </>
               );
             })()}
@@ -356,7 +387,15 @@ function DashPreview({
           {/* Una destreza: el degradado sale de --violet → --violet2, o sea del
               acento. Es lo que más superficie de color tiene en la ficha. */}
           <div style={{ padding: "9px 10px 11px", background: soft }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, fontWeight: 600, marginBottom: 4 }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: 10,
+                fontWeight: 600,
+                marginBottom: 4,
+              }}
+            >
               <span>Listening</span>
               <span style={{ color: mut }}>90%</span>
             </div>
@@ -374,8 +413,8 @@ function DashPreview({
         </div>
       </div>
       <p style={caption}>
-        El panel de seguimiento (/dashboard y /padres): fondo de la página, barra superior, chips
-        y destrezas. Los chips de nivel y estado no siguen la marca — son datos del alumno.
+        El panel de seguimiento (/dashboard y /padres): fondo de la página, barra superior, chips y
+        destrezas. Los chips de nivel y estado no siguen la marca — son datos del alumno.
       </p>
     </>
   );
@@ -422,7 +461,6 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
   const ink = g("colors.ink") || "#1A1A1A";
   const headerInk = g("colors.header");
 
-
   const frame: React.CSSProperties = {
     fontFamily: fontStack(uiFont, "ui") || "ui-rounded, 'Segoe UI', system-ui, sans-serif",
     background: "#F4F4F6",
@@ -457,7 +495,6 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
         >
           {headerText}
         </span>
-
       ) : (
         <span style={{ fontWeight: 700, fontSize: 18 }}>
           <span style={{ color: headerInk || "#000" }}>Aprendo</span>
@@ -555,7 +592,6 @@ function LivePreview({ tab, cfg, institution }: { tab: string; cfg: Cfg; institu
                 ...(g("splash.phraseColor") ? { "--sp-phrase-ink": g("splash.phraseColor") } : {}),
               } as React.CSSProperties
             }
-
           >
             <div className="sp-deco" />
             <div className="sp-mark">
@@ -1080,23 +1116,6 @@ function SessionFooter() {
               </p>
             )}
 
-            {/* fake_login sólo hace que el guardia de la ruta no compruebe nada.
-                Si además hay sesión, las consultas van firmadas con ella y se
-                escribe con normalidad; lo grave es cuando no la hay. */}
-            {d.fakeLogin && d.email && (
-              <p className="text-muted-foreground mt-1">
-                Tienes puesto el atajo de pruebas <code>fake_login</code>, pero no molesta: sólo
-                evita que la página te pida iniciar sesión. Lo que se guarda va con la cuenta de
-                arriba.
-              </p>
-            )}
-            {d.fakeLogin && !d.email && (
-              <p className="text-destructive mt-1">
-                Has entrado con el atajo de pruebas <code>fake_login</code> y sin cuenta, así que
-                nada de lo que hagas se va a guardar. Quítalo e inicia sesión.
-              </p>
-            )}
-
             {d.error && <p className="text-destructive mt-1">Error al comprobarlo: {d.error}</p>}
 
             <p className="text-muted-foreground mt-2 text-[11.5px]">
@@ -1105,21 +1124,6 @@ function SessionFooter() {
               <code>{d.roles.length ? d.roles.join(", ") : "ninguno"}</code>
             </p>
           </>
-        )}
-        {d && d.fakeLogin && !d.email && (
-          <div className="mt-3">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                localStorage.removeItem("fake_login");
-                localStorage.removeItem("fake_role");
-                location.reload();
-              }}
-            >
-              Quitar el atajo e iniciar sesión
-            </Button>
-          </div>
         )}
       </div>
     </footer>
@@ -1229,7 +1233,6 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
   const [tab, setTab] = useState("marca");
   // Sube uno cada vez que la biblioteca de mascotas cambia, para releerla.
   const [libTick, setLibTick] = useState(0);
-
 
   const dirty =
     JSON.stringify(cfg) !== JSON.stringify(demo.config ?? {}) ||
@@ -1520,7 +1523,7 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                         (g2("brand.watermarkSource") === "custom"
                           ? (get(cfg, "brand.watermarkImage") as string)
                           : g2("brand.watermarkSource") === "icon"
-                            ? ((get(cfg, "brand.appbarIcon") as string) || mascotHead)
+                            ? (get(cfg, "brand.appbarIcon") as string) || mascotHead
                             : (get(cfg, "brand.logo") as string)) || ""
                       }
                       pos={(g2("brand.watermarkPos") || "bl") as WmPos}
@@ -1532,7 +1535,6 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     />
                   </div>
                 )}
-
               </div>
 
               <FileField
@@ -1608,7 +1610,6 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
               />
             </TabsContent>
 
-
             <TabsContent value="splash" className="space-y-4">
               <label className="flex items-start gap-3 cursor-pointer rounded-lg border p-3">
                 <Switch
@@ -1630,7 +1631,8 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                     <Label className="text-xs">Estilo</Label>
                     <div className="grid gap-2 sm:grid-cols-2">
                       {SPLASH_STYLES.map((s) => {
-                        const on = (get(cfg, "splash.style", DEFAULTS.splash.style) as string) === s.id;
+                        const on =
+                          (get(cfg, "splash.style", DEFAULTS.splash.style) as string) === s.id;
                         return (
                           <button
                             key={s.id}
@@ -1699,7 +1701,6 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                       onChange={upd("splash.phraseColor")}
                     />
                   </div>
-
 
                   <div className="rounded-lg border p-3 space-y-3">
                     <div>
@@ -1795,9 +1796,9 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 <span className="leading-tight">
                   <span className="text-sm">Usarlo también en la barra del pie</span>
                   <span className="block text-xs text-muted-foreground">
-                    La barra fija de «Tu próxima lección» va del color de cada módulo y
-                    cambia de tono según avanzas. Actívalo para que use el color de acción
-                    y el botón sea siempre el mismo, como en el producto real.
+                    La barra fija de «Tu próxima lección» va del color de cada módulo y cambia de
+                    tono según avanzas. Actívalo para que use el color de acción y el botón sea
+                    siempre el mismo, como en el producto real.
                   </span>
                 </span>
               </label>
@@ -1888,9 +1889,9 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
             <TabsContent value="panel" className="space-y-4">
               <p className="text-sm font-medium">Metas del panel de seguimiento</p>
               <p className="text-xs text-muted-foreground">
-                La vara contra la que se lee cada número en <code>/{"<enlace>"}/dashboard</code>. Cada
-                KPI lleva debajo un chip que dice si se cumple, y es la línea discontinua que se ve
-                en los minigráficos y en las curvas. Vacío = el valor de siempre.
+                La vara contra la que se lee cada número en <code>/{"<enlace>"}/dashboard</code>.
+                Cada KPI lleva debajo un chip que dice si se cumple, y es la línea discontinua que
+                se ve en los minigráficos y en las curvas. Vacío = el valor de siempre.
               </p>
               <MetaField
                 label="Alumnos activos"
@@ -2939,7 +2940,6 @@ function MisMascotas({
   if (!items) return <p className="text-xs text-muted-foreground">Cargando tus mascotas…</p>;
   if (!items.length) return null;
 
-
   return (
     <div className="space-y-1.5">
       <Label>Mis mascotas</Label>
@@ -2993,8 +2993,6 @@ function MisMascotas({
                 Descargar
               </button>
 
-
-
               <button
                 type="button"
                 className="shrink-0 text-xs underline text-muted-foreground"
@@ -3037,7 +3035,6 @@ function MisMascotas({
     </div>
   );
 }
-
 
 /**
  * Descargar la plantilla y subir un pack propio. Es lo que permite tener una
@@ -3229,9 +3226,7 @@ function WatermarkPlacement({
     ...(pos.startsWith("b") ? { bottom: y * escala } : {}),
     ...(pos.endsWith("l") ? { left: x * escala } : {}),
     ...(pos.endsWith("r") ? { right: x * escala } : {}),
-    ...(pos.endsWith("c") && !centrado
-      ? { left: "50%", transform: "translateX(-50%)" }
-      : {}),
+    ...(pos.endsWith("c") && !centrado ? { left: "50%", transform: "translateX(-50%)" } : {}),
     ...(centrado ? { top: "50%", left: "50%", transform: "translate(-50%,-50%)" } : {}),
   };
 
@@ -3298,7 +3293,8 @@ function WatermarkPlacement({
         <Label className="text-xs">Cómo queda</Label>
         <div
           ref={(el) => {
-            if (el && el.clientWidth && Math.abs(el.clientWidth - caja) > 2) setCaja(el.clientWidth);
+            if (el && el.clientWidth && Math.abs(el.clientWidth - caja) > 2)
+              setCaja(el.clientWidth);
           }}
           className="relative mt-1 w-full max-w-[260px] overflow-hidden rounded-lg border bg-background"
           style={{ aspectRatio: "9 / 16" }}
@@ -3410,7 +3406,11 @@ function TintFields({
     <div className="rounded-lg border p-3 space-y-3">
       <div className="flex items-start gap-3">
         <label className="flex items-start gap-3 cursor-pointer flex-1">
-          <Switch className="mt-0.5" checked={!!v.on} onCheckedChange={(on) => onChange("on", on)} />
+          <Switch
+            className="mt-0.5"
+            checked={!!v.on}
+            onCheckedChange={(on) => onChange("on", on)}
+          />
           <span className="leading-tight">
             <span className="text-sm">{label}</span>
             {hint && (
@@ -3551,7 +3551,6 @@ function Slider2({
     </label>
   );
 }
-
 
 function Field({
   label,
@@ -3969,9 +3968,7 @@ function SvgTint({
                   <input
                     type="color"
                     value={mapa[c] ?? c}
-                    onChange={(e) =>
-                      setMapa((m) => ({ ...m, [c]: e.target.value.toUpperCase() }))
-                    }
+                    onChange={(e) => setMapa((m) => ({ ...m, [c]: e.target.value.toUpperCase() }))}
                     className="h-8 w-9 cursor-pointer rounded border bg-transparent"
                     aria-label={`Color ${c}`}
                   />

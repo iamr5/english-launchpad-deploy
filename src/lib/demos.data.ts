@@ -23,23 +23,15 @@ export type SessionInfo = {
   /** Todos los roles del usuario, no sólo admin. */
   roles: string[];
   isAdmin: boolean;
-  /**
-   * true si se entró por el atajo de depuración de _authenticated/route.tsx
-   * (localStorage.fake_login). En ese caso NO hay sesión de Supabase, así que
-   * toda escritura la rechaza RLS por más roles que tenga la cuenta real.
-   */
-  fakeLogin: boolean;
   error: string | null;
 };
 
 /** Quién está entrando y con qué permisos. Lo muestra el pie del panel. */
 export async function sessionInfo(): Promise<SessionInfo> {
-  const fakeLogin = typeof window !== "undefined" && localStorage.getItem("fake_login") === "1";
-
   const { data: auth } = await supabase.auth.getUser();
   const user = auth?.user ?? null;
   if (!user) {
-    return { email: null, userId: null, roles: [], isAdmin: false, fakeLogin, error: null };
+    return { email: null, userId: null, roles: [], isAdmin: false, error: null };
   }
 
   const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
@@ -49,7 +41,6 @@ export async function sessionInfo(): Promise<SessionInfo> {
     userId: user.id,
     roles,
     isAdmin: roles.includes("admin"),
-    fakeLogin,
     error: error?.message ?? null,
   };
 }
