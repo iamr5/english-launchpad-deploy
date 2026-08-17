@@ -98,7 +98,7 @@ export type Database = {
           prompt_en: string;
           prompt_es: string;
           model_en: string;
-          functions: unknown;
+          functions: string[];
           audio_path: string | null;
           created_at: string;
         };
@@ -109,7 +109,7 @@ export type Database = {
           prompt_en: string;
           prompt_es?: string;
           model_en?: string;
-          functions?: unknown;
+          functions?: string[];
           audio_path?: string | null;
           created_at?: string;
         };
@@ -120,7 +120,7 @@ export type Database = {
           prompt_en?: string;
           prompt_es?: string;
           model_en?: string;
-          functions?: unknown;
+          functions?: string[];
           audio_path?: string | null;
           created_at?: string;
         };
@@ -271,19 +271,19 @@ export type Database = {
           match: string;
           org_id: string;
           created_at: string;
-          role: unknown | null;
+          role: Database["public"]["Enums"]["app_role"] | null;
         };
         Insert: {
           match: string;
           org_id: string;
           created_at?: string;
-          role?: unknown | null;
+          role?: Database["public"]["Enums"]["app_role"] | null;
         };
         Update: {
           match?: string;
           org_id?: string;
           created_at?: string;
-          role?: unknown | null;
+          role?: Database["public"]["Enums"]["app_role"] | null;
         };
         Relationships: [
           { foreignKeyName: "org_domains_org_id_fkey"; columns: ["org_id"]; isOneToOne: false; referencedRelation: "orgs"; referencedColumns: ["id"]; },
@@ -411,7 +411,7 @@ export type Database = {
         Row: {
           id: string;
           name: string | null;
-          role: unknown;
+          role: Database["public"]["Enums"]["app_role"];
           level: number;
           daily_goal: number;
           created_at: string;
@@ -420,7 +420,7 @@ export type Database = {
         Insert: {
           id: string;
           name?: string | null;
-          role?: unknown;
+          role?: Database["public"]["Enums"]["app_role"];
           level?: number;
           daily_goal?: number;
           created_at?: string;
@@ -429,7 +429,7 @@ export type Database = {
         Update: {
           id?: string;
           name?: string | null;
-          role?: unknown;
+          role?: Database["public"]["Enums"]["app_role"];
           level?: number;
           daily_goal?: number;
           created_at?: string;
@@ -565,17 +565,17 @@ export type Database = {
         Row: {
           id: string;
           user_id: string;
-          role: unknown;
+          role: Database["public"]["Enums"]["app_role"];
         };
         Insert: {
           id?: string;
           user_id: string;
-          role: unknown;
+          role: Database["public"]["Enums"]["app_role"];
         };
         Update: {
           id?: string;
           user_id?: string;
-          role?: unknown;
+          role?: Database["public"]["Enums"]["app_role"];
         };
         Relationships: [
           { foreignKeyName: "user_roles_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "users"; referencedColumns: ["id"]; },
@@ -631,7 +631,7 @@ export type Database = {
         Args: {
           _email: string;
         };
-        Returns: unknown;
+        Returns: Database["public"]["Enums"]["app_role"];
       };
       redeem_org_invite: {
         Args: {
@@ -698,7 +698,7 @@ export type Database = {
           id: string;
           user_id: string | null;
           auth_code: string | null;
-          code_challenge_method: unknown | null;
+          code_challenge_method: Database["auth"]["Enums"]["code_challenge_method"] | null;
           code_challenge: string | null;
           provider_type: string;
           provider_access_token: string | null;
@@ -717,7 +717,7 @@ export type Database = {
           id: string;
           user_id?: string | null;
           auth_code?: string | null;
-          code_challenge_method?: unknown | null;
+          code_challenge_method?: Database["auth"]["Enums"]["code_challenge_method"] | null;
           code_challenge?: string | null;
           provider_type: string;
           provider_access_token?: string | null;
@@ -736,7 +736,7 @@ export type Database = {
           id?: string;
           user_id?: string | null;
           auth_code?: string | null;
-          code_challenge_method?: unknown | null;
+          code_challenge_method?: Database["auth"]["Enums"]["code_challenge_method"] | null;
           code_challenge?: string | null;
           provider_type?: string;
           provider_access_token?: string | null;
@@ -872,8 +872,8 @@ export type Database = {
           id: string;
           user_id: string;
           friendly_name: string | null;
-          factor_type: unknown;
-          status: unknown;
+          factor_type: Database["auth"]["Enums"]["factor_type"];
+          status: Database["auth"]["Enums"]["factor_status"];
           created_at: string;
           updated_at: string;
           secret: string | null;
@@ -887,8 +887,8 @@ export type Database = {
           id: string;
           user_id: string;
           friendly_name?: string | null;
-          factor_type: unknown;
-          status: unknown;
+          factor_type: Database["auth"]["Enums"]["factor_type"];
+          status: Database["auth"]["Enums"]["factor_status"];
           created_at: string;
           updated_at: string;
           secret?: string | null;
@@ -902,8 +902,8 @@ export type Database = {
           id?: string;
           user_id?: string;
           friendly_name?: string | null;
-          factor_type?: unknown;
-          status?: unknown;
+          factor_type?: Database["auth"]["Enums"]["factor_type"];
+          status?: Database["auth"]["Enums"]["factor_status"];
           created_at?: string;
           updated_at?: string;
           secret?: string | null;
@@ -919,7 +919,7 @@ export type Database = {
         Row: {
           id: string;
           user_id: string;
-          token_type: unknown;
+          token_type: Database["auth"]["Enums"]["one_time_token_type"];
           token_hash: string;
           relates_to: string;
           created_at: string;
@@ -928,7 +928,7 @@ export type Database = {
         Insert: {
           id: string;
           user_id: string;
-          token_type: unknown;
+          token_type: Database["auth"]["Enums"]["one_time_token_type"];
           token_hash: string;
           relates_to: string;
           created_at?: string;
@@ -937,7 +937,7 @@ export type Database = {
         Update: {
           id?: string;
           user_id?: string;
-          token_type?: unknown;
+          token_type?: Database["auth"]["Enums"]["one_time_token_type"];
           token_hash?: string;
           relates_to?: string;
           created_at?: string;
@@ -1069,7 +1069,7 @@ export type Database = {
           created_at: string | null;
           updated_at: string | null;
           factor_id: string | null;
-          aal: unknown | null;
+          aal: Database["auth"]["Enums"]["aal_level"] | null;
           not_after: string | null;
           refreshed_at: string | null;
           user_agent: string | null;
@@ -1086,7 +1086,7 @@ export type Database = {
           created_at?: string | null;
           updated_at?: string | null;
           factor_id?: string | null;
-          aal?: unknown | null;
+          aal?: Database["auth"]["Enums"]["aal_level"] | null;
           not_after?: string | null;
           refreshed_at?: string | null;
           user_agent?: string | null;
@@ -1103,7 +1103,7 @@ export type Database = {
           created_at?: string | null;
           updated_at?: string | null;
           factor_id?: string | null;
-          aal?: unknown | null;
+          aal?: Database["auth"]["Enums"]["aal_level"] | null;
           not_after?: string | null;
           refreshed_at?: string | null;
           user_agent?: string | null;
