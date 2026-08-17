@@ -536,6 +536,7 @@ export const RESERVED_SLUGS = new Set([
   "silabo-autonoma-1",
   "silabo-cip",
   "silabo-santa-maria",
+  "silabo-santa-maria-de-la-gracia",
   "head.png",
   "social-preview.jpg",
 ]);
