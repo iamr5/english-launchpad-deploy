@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SilaboCipRouteImport } from './routes/silabo-cip'
+import { Route as SilaboAutonoma1RouteImport } from './routes/silabo-autonoma-1'
 import { Route as SilaboAutonomaRouteImport } from './routes/silabo-autonoma'
 import { Route as PresentationRouteImport } from './routes/presentation'
 import { Route as PresentacionSantaMariaDeLaGraciaRouteImport } from './routes/presentacion-santa-maria-de-la-gracia'
@@ -60,6 +61,11 @@ import { Route as ApiPublicCirclesCreateRouteImport } from './routes/api/public/
 const SilaboCipRoute = SilaboCipRouteImport.update({
   id: '/silabo-cip',
   path: '/silabo-cip',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SilaboAutonoma1Route = SilaboAutonoma1RouteImport.update({
+  id: '/silabo-autonoma-1',
+  path: '/silabo-autonoma-1',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SilaboAutonomaRoute = SilaboAutonomaRouteImport.update({
@@ -318,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
+  '/silabo-autonoma-1': typeof SilaboAutonoma1Route
   '/silabo-cip': typeof SilaboCipRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
@@ -366,6 +373,7 @@ export interface FileRoutesByTo {
   '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
+  '/silabo-autonoma-1': typeof SilaboAutonoma1Route
   '/silabo-cip': typeof SilaboCipRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
@@ -416,6 +424,7 @@ export interface FileRoutesById {
   '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
+  '/silabo-autonoma-1': typeof SilaboAutonoma1Route
   '/silabo-cip': typeof SilaboCipRoute
   '/$slug_/dashboard': typeof SlugDashboardRoute
   '/$slug_/padres': typeof SlugPadresRoute
@@ -466,6 +475,7 @@ export interface FileRouteTypes {
     | '/presentacion-santa-maria-de-la-gracia'
     | '/presentation'
     | '/silabo-autonoma'
+    | '/silabo-autonoma-1'
     | '/silabo-cip'
     | '/$slug/dashboard'
     | '/$slug/padres'
@@ -514,6 +524,7 @@ export interface FileRouteTypes {
     | '/presentacion-santa-maria-de-la-gracia'
     | '/presentation'
     | '/silabo-autonoma'
+    | '/silabo-autonoma-1'
     | '/silabo-cip'
     | '/$slug/dashboard'
     | '/$slug/padres'
@@ -563,6 +574,7 @@ export interface FileRouteTypes {
     | '/presentacion-santa-maria-de-la-gracia'
     | '/presentation'
     | '/silabo-autonoma'
+    | '/silabo-autonoma-1'
     | '/silabo-cip'
     | '/$slug_/dashboard'
     | '/$slug_/padres'
@@ -613,6 +625,7 @@ export interface RootRouteChildren {
   PresentacionSantaMariaDeLaGraciaRoute: typeof PresentacionSantaMariaDeLaGraciaRoute
   PresentationRoute: typeof PresentationRoute
   SilaboAutonomaRoute: typeof SilaboAutonomaRoute
+  SilaboAutonoma1Route: typeof SilaboAutonoma1Route
   SilaboCipRoute: typeof SilaboCipRoute
   SlugDashboardRoute: typeof SlugDashboardRoute
   SlugPadresRoute: typeof SlugPadresRoute
@@ -644,6 +657,13 @@ declare module '@tanstack/react-router' {
       path: '/silabo-cip'
       fullPath: '/silabo-cip'
       preLoaderRoute: typeof SilaboCipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/silabo-autonoma-1': {
+      id: '/silabo-autonoma-1'
+      path: '/silabo-autonoma-1'
+      fullPath: '/silabo-autonoma-1'
+      preLoaderRoute: typeof SilaboAutonoma1RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/silabo-autonoma': {
@@ -1010,6 +1030,7 @@ const rootRouteChildren: RootRouteChildren = {
   PresentacionSantaMariaDeLaGraciaRoute: PresentacionSantaMariaDeLaGraciaRoute,
   PresentationRoute: PresentationRoute,
   SilaboAutonomaRoute: SilaboAutonomaRoute,
+  SilaboAutonoma1Route: SilaboAutonoma1Route,
   SilaboCipRoute: SilaboCipRoute,
   SlugDashboardRoute: SlugDashboardRoute,
   SlugPadresRoute: SlugPadresRoute,
