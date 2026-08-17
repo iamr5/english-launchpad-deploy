@@ -318,16 +318,19 @@ export type Database = {
           created_at: string
           match: string
           org_id: string
+          role: Database["public"]["Enums"]["app_role"] | null
         }
         Insert: {
           created_at?: string
           match: string
           org_id: string
+          role?: Database["public"]["Enums"]["app_role"] | null
         }
         Update: {
           created_at?: string
           match?: string
           org_id?: string
+          role?: Database["public"]["Enums"]["app_role"] | null
         }
         Relationships: [
           {
@@ -660,6 +663,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_roster_role: {
+        Args: { _role: Database["public"]["Enums"]["app_role"]; _user: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -673,6 +680,10 @@ export type Database = {
       }
       my_org_id: { Args: never; Returns: string }
       org_for_email: { Args: { _email: string }; Returns: string }
+      org_role_for_email: {
+        Args: { _email: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
       redeem_org_invite: { Args: { _code: string }; Returns: string }
       resync_org_members: { Args: never; Returns: number }
     }
