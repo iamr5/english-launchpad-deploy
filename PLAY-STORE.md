@@ -25,14 +25,23 @@ cualquier URL de retorno que no esté en esa lista.
 
 ---
 
-## 2 · Aplicar la migración nueva
+## 2 · Aplicar las migraciones nuevas
 
-Pídeselo a Lovable:
+Son dos, y el orden importa: la primera crea la columna y la institución, la
+segunda mete los correos dentro. Pídeselo a Lovable:
 
-> Aplica a Supabase la migración `supabase/migrations/20260815120000_org_roster_roles.sql`. Después regenera `src/integrations/supabase/types.ts`.
+> Aplica a Supabase las migraciones `supabase/migrations/20260815120000_org_roster_roles.sql` y `supabase/migrations/20260817090000_apavit_padron.sql`, en ese orden. Después regenera `src/integrations/supabase/types.ts`.
 
-Qué hace: añade la columna `role` al padrón (para las dos listas de APAVIT) y
-crea la institución APAVIT, con las listas vacías.
+Qué hacen:
+
+- **20260815120000** — añade `role` al padrón (las dos listas: alumnos y panel)
+  y crea la institución APAVIT.
+- **20260817090000** — mete las tres primeras cuentas:
+  `dmalcaruiz@gmail.com` y `turuta.ai.tools@gmail.com` como alumnos,
+  `feraligatr9000@gmail.com` al panel.
+
+Al regenerar los tipos se puede quitar el apaño de `DomainRow` en
+`src/lib/orgs.data.ts` (está comentado allí): `role` pasará a venir solo.
 
 ---
 
