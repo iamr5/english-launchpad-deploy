@@ -50,7 +50,10 @@ const config: CapacitorConfig = {
   ios: {
     // El teclado no debe empujar la barra inferior del curso.
     contentInset: "always",
-    limitsNavigationsToAppBoundDomains: true,
+    // limitsNavigationsToAppBoundDomains iba en true y estaba MAL para este
+    // caso: encierra al webview en los dominios declarados en Info.plist, y el
+    // inicio de sesión de Google tiene que salir de la app a propósito. Se
+    // queda apagado. (iOS todavía no se ha empezado — por ahora sólo Play.)
   },
 };
 

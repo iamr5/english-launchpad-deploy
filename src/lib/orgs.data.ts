@@ -9,8 +9,30 @@ import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 // nueva o un tipo que cambie aparece aquí solo, en vez de quedarse una copia
 // vieja que compila pero miente.
 export type OrgRow = Tables<"orgs">;
-export type DomainRow = Tables<"org_domains">;
 export type InviteRow = Tables<"org_invites">;
+
+/**
+ * El padrón. `role` va añadido a mano porque types.ts todavía no lo conoce: lo
+ * regenera la plataforma y la migración que crea la columna
+ * (20260815120000_org_roster_roles.sql) aún no se ha aplicado.
+ *
+ * En cuanto se regeneren los tipos, esto se queda en `Tables<"org_domains">` a
+ * secas — la intersección es correcta mientras tanto, pero sobra después.
+ */
+export type DomainRow = Tables<"org_domains"> & { role: RosterRole };
+
+/**
+ * Qué interfaz abre un correo del padrón.
+ *
+ *   "student"  la app del curso
+ *   "teacher"  el panel de seguimiento (reporte de aula)
+ *   "parent"   el panel, en su vista de familia
+ *   null       sólo asigna institución; el papel lo elige quien se registra
+ *
+ * Nunca "admin": eso abre /demos y /instituciones enteros, y lo impide un CHECK
+ * en la tabla, no sólo este tipo.
+ */
+export type RosterRole = "student" | "teacher" | "parent" | null;
 
 export async function fetchOrgs(): Promise<OrgRow[]> {
   const { data, error } = await db.from("orgs").select("*").order("name");
@@ -143,7 +165,11 @@ export type ImportResult = {
  * de cuáles: es lo que se quiere al corregir un padrón mal repartido, pero
  * conviene enterarse de que ha pasado en vez de que ocurra en silencio.
  */
-export async function addEmails(orgId: string, raw: string): Promise<ImportResult> {
+export async function addEmails(
+  orgId: string,
+  raw: string,
+  role: RosterRole = null,
+): Promise<ImportResult> {
   const { ok, bad } = parseEmails(raw);
   if (!ok.length) return { asignadas: 0, movidas: [], invalidas: bad };
 
@@ -156,11 +182,14 @@ export async function addEmails(orgId: string, raw: string): Promise<ImportResul
   const movidas = ok.filter((m) => previas.has(m) && previas.get(m) !== orgId);
 
   // En tandas: una sola petición con miles de filas se corta por tamaño.
+  // El cast es por lo mismo que el tipo DomainRow: `role` existe en la tabla
+  // pero todavía no en types.ts. Se cae solo cuando se regeneren los tipos.
   for (const lote of trozos(ok, 500)) {
-    const { error } = await db.from("org_domains").upsert(
-      lote.map((match) => ({ match, org_id: orgId })),
-      { onConflict: "match" },
-    );
+    const filas = lote.map((match) => ({ match, org_id: orgId, role })) as unknown as {
+      match: string;
+      org_id: string;
+    }[];
+    const { error } = await db.from("org_domains").upsert(filas, { onConflict: "match" });
     if (error) throw error;
   }
 

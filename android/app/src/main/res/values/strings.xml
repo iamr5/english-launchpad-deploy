@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AprendoEnglish</string>
+    <string name="title_activity_main">AprendoEnglish</string>
+    <string name="package_name">com.aprendoenglish.app</string>
+    <string name="custom_url_scheme">com.aprendoenglish.app</string>
+</resources>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+                La vuelta del inicio de sesión.
+
+                Google no admite OAuth dentro de un webview, así que se abre en
+                el navegador del sistema y vuelve a com.aprendoenglish.app://…
+                Este filtro es lo que hace que Android entregue ese enlace a la
+                app en vez de buscar quién lo atienda y no encontrar a nadie.
+
+                Sin esto, entrar con Google deja al alumno mirando una pestaña
+                del navegador que no lleva a ninguna parte. El esquema sale de
+                res/values/strings.xml (custom_url_scheme), que lo escribe
+                Capacitor a partir del appId, así que los dos no pueden
+                desincronizarse.
+
+                launchMode="singleTask" arriba es lo que hace que el enlace
+                llegue a la actividad que YA está abierta —y por tanto al
+                webview que tiene guardado el estado del inicio de sesión— en
+                vez de arrancar una copia nueva y en blanco.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/custom_url_scheme" />
+            </intent-filter>
+
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+    </application>
+
+    <!-- Permissions -->
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+        El micrófono, para la práctica de speaking: el alumno graba una frase y
+        se transcribe y evalúa. Sin declararlo aquí, getUserMedia() falla dentro
+        del webview y el ejercicio no arranca — y no se nota al compilar, sólo
+        en el móvil.
+
+        El permiso en caliente lo pide Capacitor solo cuando la página lo
+        necesita; esto es la declaración, que es lo que Android exige tener de
+        antemano. Ojo al publicar: al declararlo, la ficha de Play obliga a
+        declarar también que se recogen grabaciones de voz.
+    -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <!--
+        Desde Android 11 una app no ve qué otras apps hay instaladas salvo que
+        lo pregunte. Sin esto, abrir el inicio de sesión en el navegador del
+        sistema puede no encontrar ninguno y quedarse sin hacer nada.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+</manifest>

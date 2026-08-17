@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { redeemInvite } from "@/lib/org.functions";
+import { isNativeApp, listenForAuthDeepLink, signInWithGoogleNative } from "@/lib/native-auth";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -52,6 +53,17 @@ function LoginPage() {
     });
   }, [navigate]);
 
+  // En la app empaquetada, Google se abre en el navegador del sistema y vuelve
+  // por un enlace profundo. Esto es lo que espera esa vuelta. En el navegador
+  // normal no engancha nada: listenForAuthDeepLink() sale solo si no es nativo.
+  useEffect(() => {
+    return listenForAuthDeepLink(async (e) => {
+      if (e) return setErr(e.message);
+      const { data } = await supabase.auth.getUser();
+      if (data.user) await routeByRole(data.user.id, navigate);
+    });
+  }, [navigate]);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
@@ -92,6 +104,19 @@ function LoginPage() {
 
   const google = async () => {
     setErr(null);
+
+    // Dentro de la app empaquetada, Google rechaza el webview. Se abre fuera,
+    // en el navegador del sistema, y se vuelve por enlace profundo — es el
+    // único camino que Google admite. Ver src/lib/native-auth.ts.
+    if (isNativeApp()) {
+      try {
+        await signInWithGoogleNative();
+      } catch (e) {
+        setErr(e instanceof Error ? e.message : String(e));
+      }
+      return;
+    }
+
     const r = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin + "/login",
     });

@@ -38,24 +38,39 @@ dist-ssr
 
 # ── App nativa (Capacitor) ────────────────────────────────────────────────
 #
-# El proyecto android/ NO va al repositorio, de momento. Hoy todo lo que hay
-# dentro sale de capacitor.config.ts y de mobile/: el identificador, el nombre y
-# la pantalla de sin conexión. Se regenera entero con
+# android/ SÍ va al repositorio desde que tiene cosas escritas a mano que
+# `npx cap add android` no reconstruiría:
 #
-#     npx cap add android
+#   · el filtro de intent del enlace profundo (la vuelta del login de Google)
+#   · el permiso de micrófono (la práctica de speaking)
+#   · la configuración de firma de release
 #
-# así que guardar cien archivos derivados sólo estorbaría en un repositorio que
-# además edita Lovable.
+# Antes se ignoraba, cuando todo su contenido salía de capacitor.config.ts.
+# Regenerarlo ahora perdería las tres cosas, y ninguna falla al compilar: se
+# descubriría en el móvil, o peor, en la revisión de la tienda.
 #
-# EN CUANTO se toque el proyecto nativo a mano —iconos de lanzador propios,
-# permisos, un plugin— hay que quitar esta línea y commitearlo: a partir de ahí
-# regenerarlo perdería trabajo.
-android/
+# Lo que sigue fuera es lo que produce la compilación, lo que depende de la
+# máquina y —sobre todo— la clave.
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/app/release/
 
-# La clave de firma NUNCA va al repositorio. Perderla es no poder volver a
-# actualizar la app en Play; filtrarla es que otro publique en tu nombre.
+# La clave de firma y sus contraseñas NUNCA van al repositorio. Perderla es no
+# poder volver a actualizar la app en Play; filtrarla es que otro publique
+# actualizaciones en tu nombre.
+android/keystore.properties
 *.keystore
 *.jks
+
+# El proyecto de iOS lo genera `npx cap add ios` en un Mac. Todavía no se ha
+# empezado: por ahora sólo Play.
+ios/
 
 # El proyecto de iOS lo genera `npx cap add ios` en un Mac. Sus artefactos:
 ios/App/Pods/

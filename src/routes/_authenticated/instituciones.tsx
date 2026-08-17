@@ -16,6 +16,8 @@ import {
   matchProblem,
   orgSlugProblem,
   parseEmails,
+  type DomainRow,
+  type RosterRole,
   removeDomain,
   removeInvite,
   resyncMembers,
@@ -232,6 +234,117 @@ function Marco({ children }: { children: React.ReactNode }) {
   return <div className="max-w-4xl mx-auto p-6">{children}</div>;
 }
 
+/**
+ * Una de las dos listas del padrón: los alumnos, o quien entra al panel.
+ *
+ * Son dos cajas y no una con un desplegable porque así se ve de un vistazo
+ * cuánta gente hay de cada lado, que es justo lo que se quiere comprobar al
+ * cargar el padrón de una institución.
+ */
+function ListaPadron({
+  org,
+  role,
+  titulo,
+  pista,
+  filas,
+  onCambio,
+}: {
+  org: OrgRow;
+  role: Exclude<RosterRole, null>;
+  titulo: string;
+  pista: string;
+  filas: DomainRow[];
+  onCambio: () => void;
+}) {
+  const [pegado, setPegado] = useState("");
+
+  // Se analiza mientras se escribe para poder decir cuántas van a entrar ANTES
+  // de pulsar: pegar mil líneas y descubrir después que la mitad no valía es
+  // justo lo que no debe pasar.
+  const previa = useMemo(() => parseEmails(pegado), [pegado]);
+  const mios = filas.filter((f) => f.role === role && f.match.includes("@"));
+
+  const importar = useMutation({
+    mutationFn: () => addEmails(org.id, pegado, role),
+    onSuccess: (r) => {
+      setPegado("");
+      onCambio();
+      const partes = [`${r.asignadas} correo(s)`];
+      if (r.movidas.length) partes.push(`${r.movidas.length} venía(n) de otra institución`);
+      if (r.invalidas.length) partes.push(`${r.invalidas.length} descartado(s)`);
+      toast.success(partes.join(" · "));
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const quitar = useMutation({
+    mutationFn: removeDomain,
+    onSuccess: onCambio,
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <div className="border rounded-lg p-3">
+      <div className="flex items-baseline justify-between">
+        <h4 className="text-xs font-semibold">{titulo}</h4>
+        <span className="text-xs text-slate-500">{mios.length || "vacío"}</span>
+      </div>
+      <p className="text-[11px] text-slate-500 mt-0.5 mb-2">{pista}</p>
+
+      <Textarea
+        value={pegado}
+        onChange={(e) => setPegado(e.target.value)}
+        rows={4}
+        className="font-mono text-xs"
+        placeholder={"ana.torres@apavit.org\nluis.perez@apavit.org"}
+      />
+      <div className="flex items-center gap-2 mt-2">
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={!previa.ok.length || importar.isPending}
+          onClick={() => importar.mutate()}
+        >
+          {importar.isPending
+            ? "Añadiendo…"
+            : previa.ok.length
+              ? `Añadir ${previa.ok.length}`
+              : "Añadir"}
+        </Button>
+        {!!previa.bad.length && (
+          <span className="text-[11px] text-amber-700">
+            {previa.bad.length} sin formato de correo
+          </span>
+        )}
+      </div>
+
+      {!!mios.length && (
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {mios.slice(0, 8).map((d) => (
+            <span
+              key={d.match}
+              className="inline-flex items-center gap-1 text-[11px] bg-slate-100 rounded-full pl-2 pr-0.5 py-0.5"
+            >
+              {d.match}
+              <button
+                type="button"
+                className="w-4 h-4 rounded-full hover:bg-slate-300"
+                onClick={() => quitar.mutate(d.match)}
+                aria-label={`Quitar ${d.match}`}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+          {mios.length > 8 && (
+            <span className="text-[11px] text-slate-500 self-center">+{mios.length - 8} más</span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FilaOrg({
   org,
   abierta,
@@ -247,34 +360,14 @@ function FilaOrg({
   onToggle: () => void;
   miembros: number;
   demos: { slug: string; institution: string }[];
-  dominios: { match: string }[];
+  dominios: DomainRow[];
   codigos: { code: string; uses: number; max_uses: number }[];
   onCambio: () => void;
 }) {
   const [dominio, setDominio] = useState("");
   const [codigo, setCodigo] = useState("");
   const [topeUsos, setTopeUsos] = useState(0);
-  const [pegado, setPegado] = useState("");
   const [verTodos, setVerTodos] = useState(false);
-
-  // Se analiza mientras se escribe para poder decir cuántas van a entrar ANTES
-  // de pulsar: pegar mil líneas y descubrir después que la mitad no valía es
-  // justo lo que no debe pasar.
-  const previa = useMemo(() => parseEmails(pegado), [pegado]);
-  const correos = dominios.filter((d) => d.match.includes("@"));
-
-  const importar = useMutation({
-    mutationFn: () => addEmails(org.id, pegado),
-    onSuccess: (r) => {
-      setPegado("");
-      onCambio();
-      const partes = [`${r.asignadas} correo(s) en ${org.name}`];
-      if (r.movidas.length) partes.push(`${r.movidas.length} venía(n) de otra institución`);
-      if (r.invalidas.length) partes.push(`${r.invalidas.length} descartado(s)`);
-      toast.success(partes.join(" · "));
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
 
   const guardar = useMutation({
     mutationFn: (patch: TablesUpdate<"orgs">) => saveOrg(org.id, patch),
@@ -381,44 +474,32 @@ function FilaOrg({
             </div>
           </div>
 
-          {/* El padrón: qué correos pertenecen a esta institución */}
+          {/* El padrón, en dos listas: cada correo abre una interfaz u otra */}
           <div>
-            <h3 className="text-sm font-semibold mb-1">
-              Correos de esta institución
-              <span className="ml-2 font-normal text-slate-500">
-                {correos.length === 0 ? "ninguno" : `${correos.length}`}
-              </span>
-            </h3>
-            <p className="text-[11px] text-slate-500 mb-2">
-              El padrón: quién pertenece a {org.name}. Pega la lista entera —de una hoja de cálculo,
-              de un correo, como venga— y se dan de alta todas de una vez.
+            <h3 className="text-sm font-semibold mb-1">Padrón de {org.name}</h3>
+            <p className="text-[11px] text-slate-500 mb-3">
+              Quién pertenece a esta institución y qué ve al entrar. Lo decide el correo, no el
+              botón que pulse cada persona al registrarse — quien sabe si alguien es alumno o
+              profesor es la institución. Pega la lista entera, como venga.
             </p>
 
-            <Textarea
-              value={pegado}
-              onChange={(e) => setPegado(e.target.value)}
-              rows={4}
-              className="font-mono text-xs"
-              placeholder={"ana.torres@cip.org.pe\nluis.perez@cip.org.pe\ncarmen@gmail.com"}
-            />
-            <div className="flex items-center gap-3 mt-2">
-              <Button
-                variant="outline"
-                disabled={!previa.ok.length || importar.isPending}
-                onClick={() => importar.mutate()}
-              >
-                {importar.isPending
-                  ? "Dando de alta…"
-                  : previa.ok.length
-                    ? `Dar de alta ${previa.ok.length}`
-                    : "Dar de alta"}
-              </Button>
-              {!!previa.bad.length && (
-                <span className="text-xs text-amber-700">
-                  {previa.bad.length} no parece{previa.bad.length > 1 ? "n" : ""} un correo — se
-                  omitirá{previa.bad.length > 1 ? "n" : ""}
-                </span>
-              )}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <ListaPadron
+                org={org}
+                role="student"
+                titulo="Alumnos → app del curso"
+                pista="Entran a la app: lecciones, vocabulario, racha."
+                filas={dominios}
+                onCambio={onCambio}
+              />
+              <ListaPadron
+                org={org}
+                role="teacher"
+                titulo="Panel → seguimiento"
+                pista="Entran al reporte de aula y el avance."
+                filas={dominios}
+                onCambio={onCambio}
+              />
             </div>
 
             {/* Un dominio entero, para quien tiene correo institucional */}
