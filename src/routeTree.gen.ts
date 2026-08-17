@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SilaboSantaMariaDeLaGraciaRouteImport } from './routes/silabo-santa-maria-de-la-gracia'
+import { Route as SilaboSantaMariaRouteImport } from './routes/silabo-santa-maria'
 import { Route as SilaboCipRouteImport } from './routes/silabo-cip'
 import { Route as SilaboAutonoma1RouteImport } from './routes/silabo-autonoma-1'
 import { Route as SilaboAutonomaRouteImport } from './routes/silabo-autonoma'
@@ -66,6 +67,11 @@ const SilaboSantaMariaDeLaGraciaRoute =
     path: '/silabo-santa-maria-de-la-gracia',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SilaboSantaMariaRoute = SilaboSantaMariaRouteImport.update({
+  id: '/silabo-santa-maria',
+  path: '/silabo-santa-maria',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SilaboCipRoute = SilaboCipRouteImport.update({
   id: '/silabo-cip',
   path: '/silabo-cip',
@@ -341,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-autonoma-1': typeof SilaboAutonoma1Route
   '/silabo-cip': typeof SilaboCipRoute
+  '/silabo-santa-maria': typeof SilaboSantaMariaRoute
   '/silabo-santa-maria-de-la-gracia': typeof SilaboSantaMariaDeLaGraciaRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
@@ -392,6 +399,7 @@ export interface FileRoutesByTo {
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-autonoma-1': typeof SilaboAutonoma1Route
   '/silabo-cip': typeof SilaboCipRoute
+  '/silabo-santa-maria': typeof SilaboSantaMariaRoute
   '/silabo-santa-maria-de-la-gracia': typeof SilaboSantaMariaDeLaGraciaRoute
   '/$slug/dashboard': typeof SlugDashboardRoute
   '/$slug/padres': typeof SlugPadresRoute
@@ -445,6 +453,7 @@ export interface FileRoutesById {
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-autonoma-1': typeof SilaboAutonoma1Route
   '/silabo-cip': typeof SilaboCipRoute
+  '/silabo-santa-maria': typeof SilaboSantaMariaRoute
   '/silabo-santa-maria-de-la-gracia': typeof SilaboSantaMariaDeLaGraciaRoute
   '/$slug_/dashboard': typeof SlugDashboardRoute
   '/$slug_/padres': typeof SlugPadresRoute
@@ -498,6 +507,7 @@ export interface FileRouteTypes {
     | '/silabo-autonoma'
     | '/silabo-autonoma-1'
     | '/silabo-cip'
+    | '/silabo-santa-maria'
     | '/silabo-santa-maria-de-la-gracia'
     | '/$slug/dashboard'
     | '/$slug/padres'
@@ -549,6 +559,7 @@ export interface FileRouteTypes {
     | '/silabo-autonoma'
     | '/silabo-autonoma-1'
     | '/silabo-cip'
+    | '/silabo-santa-maria'
     | '/silabo-santa-maria-de-la-gracia'
     | '/$slug/dashboard'
     | '/$slug/padres'
@@ -601,6 +612,7 @@ export interface FileRouteTypes {
     | '/silabo-autonoma'
     | '/silabo-autonoma-1'
     | '/silabo-cip'
+    | '/silabo-santa-maria'
     | '/silabo-santa-maria-de-la-gracia'
     | '/$slug_/dashboard'
     | '/$slug_/padres'
@@ -654,6 +666,7 @@ export interface RootRouteChildren {
   SilaboAutonomaRoute: typeof SilaboAutonomaRoute
   SilaboAutonoma1Route: typeof SilaboAutonoma1Route
   SilaboCipRoute: typeof SilaboCipRoute
+  SilaboSantaMariaRoute: typeof SilaboSantaMariaRoute
   SilaboSantaMariaDeLaGraciaRoute: typeof SilaboSantaMariaDeLaGraciaRoute
   SlugDashboardRoute: typeof SlugDashboardRoute
   SlugPadresRoute: typeof SlugPadresRoute
@@ -685,6 +698,13 @@ declare module '@tanstack/react-router' {
       path: '/silabo-santa-maria-de-la-gracia'
       fullPath: '/silabo-santa-maria-de-la-gracia'
       preLoaderRoute: typeof SilaboSantaMariaDeLaGraciaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/silabo-santa-maria': {
+      id: '/silabo-santa-maria'
+      path: '/silabo-santa-maria'
+      fullPath: '/silabo-santa-maria'
+      preLoaderRoute: typeof SilaboSantaMariaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/silabo-cip': {
@@ -1075,6 +1095,7 @@ const rootRouteChildren: RootRouteChildren = {
   SilaboAutonomaRoute: SilaboAutonomaRoute,
   SilaboAutonoma1Route: SilaboAutonoma1Route,
   SilaboCipRoute: SilaboCipRoute,
+  SilaboSantaMariaRoute: SilaboSantaMariaRoute,
   SilaboSantaMariaDeLaGraciaRoute: SilaboSantaMariaDeLaGraciaRoute,
   SlugDashboardRoute: SlugDashboardRoute,
   SlugPadresRoute: SlugPadresRoute,
