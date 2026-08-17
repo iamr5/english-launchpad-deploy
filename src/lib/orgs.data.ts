@@ -10,16 +10,7 @@ import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 // vieja que compila pero miente.
 export type OrgRow = Tables<"orgs">;
 export type InviteRow = Tables<"org_invites">;
-
-/**
- * El padrón. `role` va añadido a mano porque types.ts todavía no lo conoce: lo
- * regenera la plataforma y la migración que crea la columna
- * (20260815120000_org_roster_roles.sql) aún no se ha aplicado.
- *
- * En cuanto se regeneren los tipos, esto se queda en `Tables<"org_domains">` a
- * secas — la intersección es correcta mientras tanto, pero sobra después.
- */
-export type DomainRow = Tables<"org_domains"> & { role: RosterRole };
+export type DomainRow = Tables<"org_domains">;
 
 /**
  * Qué interfaz abre un correo del padrón.
@@ -182,14 +173,11 @@ export async function addEmails(
   const movidas = ok.filter((m) => previas.has(m) && previas.get(m) !== orgId);
 
   // En tandas: una sola petición con miles de filas se corta por tamaño.
-  // El cast es por lo mismo que el tipo DomainRow: `role` existe en la tabla
-  // pero todavía no en types.ts. Se cae solo cuando se regeneren los tipos.
   for (const lote of trozos(ok, 500)) {
-    const filas = lote.map((match) => ({ match, org_id: orgId, role })) as unknown as {
-      match: string;
-      org_id: string;
-    }[];
-    const { error } = await db.from("org_domains").upsert(filas, { onConflict: "match" });
+    const { error } = await db.from("org_domains").upsert(
+      lote.map((match) => ({ match, org_id: orgId, role })),
+      { onConflict: "match" },
+    );
     if (error) throw error;
   }
 
