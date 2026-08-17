@@ -27,10 +27,11 @@ cualquier URL de retorno que no esté en esa lista.
 
 ## 2 · Aplicar las migraciones nuevas
 
-Son dos, y el orden importa: la primera crea la columna y la institución, la
-segunda mete los correos dentro. Pídeselo a Lovable:
+Son tres, y el orden importa: la primera crea la columna y la institución, la
+segunda mete los correos dentro y la tercera le pone la marca. Pídeselo a
+Lovable:
 
-> Aplica a Supabase las migraciones `supabase/migrations/20260815120000_org_roster_roles.sql` y `supabase/migrations/20260817090000_apavit_padron.sql`, en ese orden. Después regenera `src/integrations/supabase/types.ts`.
+> Aplica a Supabase, en este orden, las migraciones `supabase/migrations/20260815120000_org_roster_roles.sql`, `supabase/migrations/20260817090000_apavit_padron.sql` y `supabase/migrations/20260817100000_apavit_marca.sql`. Después regenera `src/integrations/supabase/types.ts`.
 
 Qué hacen:
 
@@ -39,6 +40,8 @@ Qué hacen:
 - **20260817090000** — mete las tres primeras cuentas:
   `dmalcaruiz@gmail.com` y `turuta.ai.tools@gmail.com` como alumnos,
   `feraligatr9000@gmail.com` al panel.
+- **20260817100000** — APAVIT hereda la marca del demo `/apavit` y se le pone el
+  nombre completo.
 
 Al regenerar los tipos se puede quitar el apaño de `DomainRow` en
 `src/lib/orgs.data.ts` (está comentado allí): `role` pasará a venir solo.
