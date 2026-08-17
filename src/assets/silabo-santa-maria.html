@@ -701,6 +701,78 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
   .mod-head{padding:20px}
   .mod-body{padding:4px 20px 22px}
 }
+
+/* --- demos reales embebidos, maquetas de formato, volumen y evidencia --- */
+.device-tools{display:inline-flex;gap:7px;margin-left:auto}
+.device-label{flex-wrap:wrap}
+.dbtn{appearance:none;cursor:pointer;text-decoration:none;border:1px solid var(--line);background:#fff;color:var(--ink);
+  font:800 10.5px/1 var(--disp);letter-spacing:.04em;padding:7px 11px;border-radius:999px;box-shadow:var(--shadow-sm)}
+.dbtn:hover{border-color:var(--sky-deep);color:var(--sky-deep)}
+.demo-modal{position:fixed;inset:0;z-index:9999;background:rgba(12,18,37,.82);display:none;
+  padding:clamp(12px,3vw,36px);flex-direction:column;gap:12px}
+.demo-modal.open{display:flex}
+.demo-modal header{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff}
+.demo-modal header b{font:900 14px/1 var(--disp)}
+.demo-modal .body{flex:1;min-height:0;display:flex;justify-content:center}
+.demo-modal iframe{width:100%;height:100%;border:0;border-radius:16px;background:#fff}
+.demo-modal.phone iframe{width:min(420px,100%);border-radius:26px}
+.demo-screen.live-embed{display:block;grid-template-columns:none;min-height:0;padding:0;background:#f4f7fb}
+.demo-screen.live-embed iframe.live{display:block;width:100%;height:660px;border:0;background:#f4f7fb}
+.demo-screen.live-embed.teacher iframe.live{height:780px}
+.device-shell.phone{width:300px}
+.phone-bezel{min-height:0}
+.phone-bezel iframe.live{display:block;width:100%;height:620px;border:0;background:#f4f7fb}
+.teacher-col{margin-top:26px}
+@media(max-width:640px){
+  .demo-screen.live-embed iframe.live{height:520px}
+  .demo-screen.live-embed.teacher iframe.live{height:600px}
+  .device-shell.phone{width:min(100%,300px)}
+}
+@media print{.device-tools,.demo-modal{display:none!important}}
+
+.practice-grid{grid-template-columns:repeat(2,1fr)}
+.practice-card{display:flex;flex-direction:column}
+.fx{margin-top:13px;border:1px solid var(--line);border-radius:13px;background:#fbfcfe;padding:11px 12px}
+.fx .fx-q{font:700 11.5px/1.4 var(--disp);color:var(--ink);margin-bottom:8px}
+.fx .fx-opt{display:flex;align-items:center;gap:7px;font-size:11.2px;color:var(--muted);
+  border:1px solid var(--line);border-radius:9px;background:#fff;padding:6px 9px;margin-bottom:5px}
+.fx .fx-opt:last-child{margin-bottom:0}
+.fx .fx-opt .dot{width:11px;height:11px;border-radius:50%;border:1.6px solid #c9d6e6;flex:0 0 auto}
+.fx .fx-opt.ok{border-color:#7fc39a;background:#f1faf4;color:#1d6b42;font-weight:700}
+.fx .fx-opt.ok .dot{border-color:#3f9c6b;background:#3f9c6b}
+.fx .fx-sent{font-size:12px;line-height:1.7;color:var(--ink)}
+.fx .bad{color:#c8394f;font-weight:700;border-bottom:2px wavy #c8394f;padding-bottom:1px}
+.fx .fx-hint{font-size:10.6px;color:var(--muted);margin-top:7px}
+.fx .fx-audio{display:inline-flex;align-items:center;gap:7px;font:800 10.5px/1 var(--disp);letter-spacing:.05em;
+  text-transform:uppercase;color:var(--sky-deep);background:var(--sky-wash);border-radius:999px;padding:7px 11px;margin-bottom:9px}
+.fx .fx-chips{display:flex;flex-wrap:wrap;gap:5px}
+.fx .chip{font-size:11px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:5px 8px;color:var(--ink)}
+.fx .chip.set{background:var(--ink);border-color:var(--ink);color:#fff}
+.fx .fx-input{border:1px solid #c9d6e6;border-radius:10px;background:#fff;padding:8px 10px;font-size:11.6px;color:var(--ink)}
+.fx .fx-input .caret{display:inline-block;width:1.5px;height:12px;background:var(--sky-deep);vertical-align:-2px;margin-left:2px}
+.fx .fx-ok{display:flex;align-items:center;gap:6px;font-size:10.8px;color:#1d6b42;margin-top:7px;font-weight:700}
+.volume-hero{margin-top:20px;border-radius:24px;background:var(--ink);color:#fff;padding:28px 30px;
+  display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center}
+.volume-hero .big{font-family:var(--black);font-size:clamp(44px,7vw,74px);line-height:.9;letter-spacing:-.02em}
+.volume-hero .big span{display:block;font:800 10.5px/1.3 var(--disp);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--sky-soft);margin-top:9px}
+.volume-hero p{font-family:var(--disp);font-size:clamp(16px,1.9vw,21px);line-height:1.35;color:#fff;margin:0}
+.volume-hero .sub{font-family:var(--body);font-size:12.6px;line-height:1.55;color:rgba(255,255,255,.72);margin-top:9px}
+.evidence{border-radius:22px;border:1px solid var(--line);background:#fff;padding:24px 26px;margin-top:24px;
+  display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+.evidence .stat{font-family:var(--black);font-size:clamp(38px,6vw,60px);line-height:.9;color:var(--sky-deep);letter-spacing:-.02em}
+.evidence .stat span{display:block;font:800 10px/1.3 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.evidence h3{font-family:var(--disp);font-weight:900;font-size:clamp(16px,2vw,21px);line-height:1.3;margin:0 0 8px}
+.evidence p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+.evidence cite{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:10px;opacity:.9}
+@media(max-width:900px){
+  .practice-grid{grid-template-columns:1fr}
+  .volume-hero,.evidence{grid-template-columns:1fr;gap:16px}
+}
+@media print{
+  .fx{background:#fff}
+  .volume-hero,.evidence{break-inside:avoid;page-break-inside:avoid}
+}
 </style>
 </head>
 <body>
@@ -755,18 +827,37 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <div class="cover-thesis">
 <span><b>Amplía el alcance del docente</b> · la práctica continúa entre una sesión y la siguiente</span>
 <span><b>Le devuelve información</b> · el docente llega a clase sabiendo dónde está cada alumno</span>
-<span><b>Se configura según el programa del colegio</b> · la Coordinación define el qué y el cuándo</span>
+<span><b>Llega lista para usarse</b> · la Coordinación elige qué activa y en qué orden</span>
 </div>
 
 <dl class="colofon">
 <div><dt>Dirigido a</dt><dd>Dirección Académica y Coordinación de Inglés<br/>Colegio Santa María de la Gracia</dd></div>
 <div><dt>Marcos de referencia</dt><dd>CNEB · MCER (Consejo de Europa)<br/>Cambridge English Qualifications for Schools</dd></div>
-<div><dt>Extensión</dt><dd>5 módulos · 48 microlecciones<br/>7 200 ejercicios · 8 000 palabras</dd></div>
+<div><dt>Extensión</dt><dd>5 módulos · 45 lecciones · 391 microlecciones<br/>8 127 ejercicios · 11 040 palabras · ≈145 h disponibles</dd></div>
+<div><dt>Actualización</dt><dd>Revisión de agosto de 2026<br/>Según descriptores vigentes de Cambridge English / MCER y pedidos de la Coordinación de Inglés.</dd></div>
 <div><dt>Naturaleza</dt><dd>Recurso complementario del área<br/>de Inglés · primaria y secundaria</dd></div>
 
 </dl>
 </div>
 </header>
+<!-- ==================== POR QUÉ LA PRÁCTICA FUERA DEL AULA ==================== -->
+<section class="band bg-paper" id="evidencia">
+<div class="sheet">
+<span class="eyebrow"><span class="bar"></span>Por qué la práctica fuera del aula</span>
+<h2 class="head">La práctica sostenida puede aumentar la retención <span class="hl">hasta en 35%</span>.</h2>
+<p class="lead">Con el mismo tiempo total de estudio, distribuir la práctica en varios días hace que se recuerde mucho más.</p>
+<div class="evidence">
+<div class="stat">35%<span>más retención</span></div>
+<div>
+<h3>Mismo tiempo de estudio, mejores resultados.</h3>
+<p>En un experimento, dos grupos estudiaron vocabulario exactamente 30 minutos: uno lo hizo de una sola vez y el otro repartió 10 minutos durante 3 días. Cuatro días después, quienes practicaron de forma distribuida recordaron un 35% más de vocabulario. Por eso la plataforma complementa el trabajo del docente: mantiene la práctica activa entre una clase y la siguiente.</p>
+<p class="reinforce" style="font-size:.86em;color:var(--muted);margin-top:10px">Una revisión de 65 estudios publicada por Cambridge University Press encontró que las aplicaciones móviles fueron más efectivas que los métodos convencionales para aprender vocabulario a largo plazo, con mayor efecto fuera del aula que dentro.</p>
+<cite>Fuentes: Bloom &amp; Shuell (1981), <i>Journal of Educational Research</i>; meta-análisis de 65 estudios, Cambridge University Press.</cite>
+</div>
+</div>
+<p class="note">Esta propuesta no reemplaza la clase: le da al área de Inglés del colegio una herramienta para sostener la práctica de sus estudiantes entre una sesión y la siguiente.</p>
+</div>
+</section>
 <!-- ==================== PREVISUALIZACIÓN ==================== -->
 <section class="band bg-cream demo-band" id="demo-preview">
 <div class="sheet">
@@ -780,78 +871,38 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 </div>
 <div class="device-stage">
 <div class="device-col">
-<div class="device-label"><b>Previsualizador web</b><span>Experiencia de escritorio</span></div>
+<div class="device-label"><b>Previsualizador web</b><span>Experiencia de escritorio</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/santa-maria-de-la-gracia" data-title="Demo del alumno · web">Ampliar</button><a class="dbtn" href="/santa-maria-de-la-gracia" target="_blank" rel="noopener">Abrir ↗</a></span></div>
 <div class="device-shell web">
 <div class="browser-bar">
 <div class="browser-dots"><i></i><i></i><i></i></div>
-<div class="browser-url">Entorno institucional · Colegio Santa María de la Gracia</div>
+<div class="browser-url">aprendoenglish.com/santa-maria-de-la-gracia</div>
 </div>
-<div class="demo-screen">
-<aside class="demo-sidebar">
-<div class="demo-brand"><img alt="Colegio Santa María de la Gracia" class="smg-crest" src="data:image/png;base64,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"/></div>
-<div class="demo-nav">
-<span class="active">⌂   Inicio</span>
-<span>▶   Mis lecciones</span>
-<span>◎   Mi progreso</span>
-<span>★   Práctica</span>
-</div>
-<div class="student"><b>Alex Huapaya</b>Estudiante · Colegio Santa María de la Gracia</div>
-</aside>
-<main class="demo-main">
-<div class="demo-top">
-<div class="hello">Good evening, Alex 👋<small>Continúa donde te quedaste y mantén tu práctica esta semana.</small></div>
-<div class="demo-avatar">AH</div>
-</div>
-<div class="demo-hero-card">
-<div>
-<span class="ey">Tu ruta de aprendizaje · B1</span>
-<h4>¿Ya pasó… o sigue pasando?</h4>
-<p>Presente perfecto frente a pasado simple · práctica guiada y corrección inmediata.</p>
-</div>
-<div class="demo-progress-ring"><b>68%</b></div>
-</div>
-<div class="demo-section-title"><b>Continúa practicando</b><span>Ver ruta completa →</span></div>
-<div class="lesson-grid">
-<div class="lesson-card"><div class="lesson-icon">01</div><b>Present perfect</b><span>12 min · Gramática</span><div class="mini-bar"><i style="width:86%"></i></div></div>
-<div class="lesson-card"><div class="lesson-icon">02</div><b>Listening practice</b><span>10 min · Comprensión</span><div class="mini-bar"><i style="width:44%"></i></div></div>
-<div class="lesson-card"><div class="lesson-icon">03</div><b>Work &amp; studies</b><span>11 min · Vocabulario</span><div class="mini-bar"><i style="width:22%"></i></div></div>
-</div>
-</main>
-</div>
+<div class="demo-screen live-embed"><iframe class="live" loading="lazy" data-src="/santa-maria-de-la-gracia" title="Demo del alumno · Colegio Santa María de la Gracia"></iframe></div>
 </div>
 </div>
 <div class="device-col phone-wrap">
 <div>
-<div class="device-label"><b>Previsualizador app</b><span>Experiencia móvil</span></div>
+<div class="device-label"><b>Previsualizador app</b><span>Experiencia móvil</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/santa-maria-de-la-gracia" data-title="Demo del alumno · app" data-phone="1">Ampliar</button><a class="dbtn" href="/santa-maria-de-la-gracia" target="_blank" rel="noopener">Abrir ↗</a></span></div>
 <div class="device-shell phone">
 <div class="phone-bezel">
 <div class="phone-notch"></div>
-<div class="phone-status"><span>9:41</span><span>● ● ●</span></div>
-<div class="phone-content">
-<div class="phone-brand"><img alt="Colegio Santa María de la Gracia" class="smg-crest" src="data:image/png;base64,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"/></div>
-<div class="phone-greet">Hello, Alex 👋<small>Tu práctica de inglés, estés donde estés.</small></div>
-<div class="phone-card">
-<span class="ey">Continúa tu ruta · B1</span>
-<h4>Present perfect vs. past simple</h4>
-<p>Te faltan 4 actividades para completar esta microlección.</p>
-<div class="phone-progress"><i></i></div>
-</div>
-<div class="phone-sub">Para hoy</div>
-<div class="phone-lessons">
-<div class="phone-lesson"><div class="ic">▶</div><div><b>Escucha y reconstruye</b><span>4 min · Listening</span></div><strong>›</strong></div>
-<div class="phone-lesson"><div class="ic">Aa</div><div><b>Detecta el error</b><span>5 min · Use of English</span></div><strong>›</strong></div>
-<div class="phone-lesson"><div class="ic">✎</div><div><b>Produce la respuesta</b><span>3 min · Writing</span></div><strong>›</strong></div>
-</div>
-</div>
-<div class="phone-nav">
-<span class="active"><b>⌂</b>Inicio</span>
-<span><b>▶</b>Lecciones</span>
-<span><b>◎</b>Progreso</span>
-<span><b>★</b>Práctica</span>
+<iframe class="live" loading="lazy" data-src="/santa-maria-de-la-gracia" title="Demo del alumno en móvil · Colegio Santa María de la Gracia"></iframe>
 </div>
 </div>
 </div>
 </div>
+</div>
+<div class="device-col teacher-col">
+<div class="device-label"><b>Lo que ve el docente</b><span>Reporte de aula</span>
+<span class="device-tools"><button class="dbtn" type="button" data-expand="/santa-maria-de-la-gracia/dashboard" data-title="Panel del docente">Ampliar</button><a class="dbtn" href="/santa-maria-de-la-gracia/dashboard" target="_blank" rel="noopener">Abrir ↗</a></span></div>
+<div class="device-shell web">
+<div class="browser-bar">
+<div class="browser-dots"><i></i><i></i><i></i></div>
+<div class="browser-url">aprendoenglish.com/santa-maria-de-la-gracia/dashboard</div>
+</div>
+<div class="demo-screen teacher live-embed"><iframe class="live" loading="lazy" data-src="/santa-maria-de-la-gracia/dashboard" title="Panel del docente · Colegio Santa María de la Gracia"></iframe></div>
 </div>
 </div>
 <div class="demo-caption">
@@ -869,7 +920,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <li><a href="#proposito"><span class="n">01</span><span class="t">La oportunidad</span><span class="d">E-learning institucional para el colegio</span></a></li>
 <li><a href="#complemento"><span class="n">02</span><span class="t">Cómo apoya al docente</span><span class="d">Antes, durante y después de cada sesión</span></a></li>
 <li><a href="#marco"><span class="n">03</span><span class="t">Encaje curricular</span><span class="d">Competencias del CNEB y marcos de referencia</span></a></li>
-<li><a href="#arquitectura"><span class="n">04</span><span class="t">Lo que recibe el estudiante</span><span class="d">7 200 ejercicios · 8 000 palabras</span></a></li>
+<li><a href="#arquitectura"><span class="n">04</span><span class="t">Lo que recibe el estudiante</span><span class="d">8 127 ejercicios · 45 lecciones (391 microlecciones) · 11 040 palabras</span></a></li>
 <li><a href="#modulos"><span class="n">05</span><span class="t">Programa por nivel</span><span class="d">A1 · A2 · B1 · B2 · C1</span></a></li>
 <li><a href="#alineacion"><span class="n">06</span><span class="t">MCER + Cambridge for Schools</span><span class="d">Correspondencia académica revisable</span></a></li>
 <li><a href="#tipologia"><span class="n">07</span><span class="t">Experiencia de práctica</span><span class="d">Ruta guiada, práctica libre y vocabulario</span></a></li>
@@ -896,7 +947,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 </div>
 <div class="hero-proof">
 <div class="copy"><span class="label">Plataforma institucional de inglés</span><b>La Santa María de la Gracia puede contar con su propio e-learning de inglés, integrado a su experiencia académica y disponible para toda su comunidad escolar.</b></div>
-<div class="proof-pill">48 microlecciones · 7 200 ejercicios · A1 a C1</div>
+<div class="proof-pill">45 lecciones · 8 127 ejercicios · A1 a C1</div>
 </div>
 <div class="stake-grid">
 <article class="stake"><div class="who">Para la Coordinación</div><h3>Una iniciativa institucional que puede liderar</h3><p>Define cómo se presenta, cómo se articula al programa y qué rol cumple dentro de la estrategia de inglés.</p></article>
@@ -970,9 +1021,9 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <h2 class="head">Una capa de práctica ya construida, <span class="hl-b">lista para ponerse en manos del estudiante</span>.</h2>
 <p class="lead">La plataforma cuenta con una base amplia de práctica para acompañar al estudiante durante el semestre en tramos breves y recurrentes.</p>
 <div class="metric-wall">
-<div class="m"><span class="k">7 200</span><span class="u">ejercicios construidos</span><span class="d">Práctica activa con corrección inmediata, 1 800 por cada formato.</span></div>
-<div class="m"><span class="k">48</span><span class="u">microlecciones</span><span class="d">Unidades breves y fáciles de distribuir a lo largo del bimestre.</span></div>
-<div class="m"><span class="k">150</span><span class="u">ejercicios por microlección</span><span class="d">Un banco del que el docente o el alumno toman tramos, no una unidad que se agota de una vez.</span></div>
+<div class="m"><span class="k">8 127</span><span class="u">ejercicios construidos</span><span class="d">Práctica activa con corrección inmediata, repartida en los cuatro formatos.</span></div>
+<div class="m"><span class="k">45</span><span class="u">lecciones</span><span class="d">Divididas en 391 microlecciones: unidades breves y fáciles de distribuir a lo largo del bimestre.</span></div>
+<div class="m"><span class="k">≈145 h</span><span class="u">de práctica disponible</span><span class="d">Volumen total del banco: cada estudiante toma lo que necesita según su nivel.</span></div>
 <div class="m"><span class="k">12–15</span><span class="u">min por tramo</span><span class="d">Entre 15 y 20 ejercicios, repetible varias veces por semana.</span></div>
 <div class="m"><span class="k">5</span><span class="u">niveles</span><span class="d">A1, A2, B1, B2 y C1.</span></div>
 </div>
@@ -981,8 +1032,8 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <b style="color:#fff">Para planificar.</b> La unidad de uso es el tramo de 12 a 15 minutos. Tres tramos por semana durante 16 semanas suman <b style="color:#fff">entre 10 y 12 horas de práctica adicional</b> a las horas de clase, con corrección inmediata y registro para el docente. El banco sostiene ese ritmo durante varios años sin repetir ejercicios.</div>
 
 
-<h3 class="sub" style="color:#fff">Y un banco de vocabulario de más de 8 000 palabras</h3>
-<p>Además de la ruta de microlecciones, el alumno dispone de un <b>banco léxico de más de 8 000 palabras</b> con su práctica asociada. Es la diferencia entre dominar la estructura de la lengua y tener con qué llenarla: un estudiante puede manejar bien el presente perfecto y aun así quedarse mudo por falta de vocabulario.</p>
+<h3 class="sub" style="color:#fff">Y un banco de vocabulario de 11 040 palabras</h3>
+<p>Además de la ruta de microlecciones, el alumno dispone de un <b>banco léxico de 11 040 palabras</b> con su práctica asociada. Es la diferencia entre dominar la estructura de la lengua y tener con qué llenarla: un estudiante puede manejar bien el presente perfecto y aun así quedarse mudo por falta de vocabulario.</p>
 <div class="grid-3">
 <div class="mini"><div class="ic">◆</div><h3>Léxico general de la escala</h3><p>Vocabulario de alta frecuencia organizado por nivel MCER, alineado con las listas de referencia de las cualificaciones Cambridge y con los campos semánticos de cada microlección.</p></div>
 <div class="mini"><div class="ic">▣</div><h3>Campos léxicos escolares</h3><p>Escuela, familia, cuerpo, animales y rutinas en los primeros niveles; ciencia, tecnología, medio ambiente y ciudadanía más adelante. Vocabulario apropiado para público escolar en toda la ruta.</p></div>
@@ -1003,7 +1054,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <span class="eyebrow"><span class="sec-no">05</span>Programa por nivel</span>
 <h2 class="head">Contenido listo de A1 a C1, <span class="hl-b">disponible desde el primer día</span>.</h2>
 <p class="lead">La estructura general se presenta de forma resumida y cada nivel puede abrirse para consultar su programa completo.</p>
-<p class="note">El banco global contiene <b>7 200 ejercicios</b>, con <b>1 800 por cada uno de los cuatro formatos de práctica</b>. Ponemos a disposición del equipo académico el programa detallado y el banco completo del nivel que la Coordinación desee revisar.</p>
+<p class="note">El banco global contiene <b>8 127 ejercicios</b> repartidos en los cuatro formatos de práctica. Las cifras por nivel son el conteo real del contenido publicado, no una proyección. Ponemos a disposición del equipo académico el programa detallado y el banco completo del nivel que la Coordinación desee revisar.</p>
 <h3 class="sub">Cómo se distribuye a lo largo de la escolaridad</h3>
 <div class="table-wrap">
 <table class="grade-map">
@@ -1024,26 +1075,26 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p style="margin-top:10px">La correspondencia es una referencia: el colegio decide en qué grado habilita cada módulo y a qué ritmo lo recorre, con la ruta completa disponible desde el primer día. El material es <b>apto para todas las edades</b> —lenguaje claro, presentación amable y situaciones neutras—, de modo que un mismo módulo funciona igual en un aula de primaria que en una de secundaria.</p>
 </div>
 <div class="level-summary">
-<div class="level-chip-card"><span class="lv">A1</span><b>10 microlecciones</b><span>1 833 ejercicios · Base verbal y fonológica.</span></div>
-<div class="level-chip-card"><span class="lv">A2</span><b>15 microlecciones</b><span>2 233 ejercicios · Ampliación del sistema y uso funcional.</span></div>
-<div class="level-chip-card"><span class="lv">B1</span><b>8 microlecciones</b><span>1 130 ejercicios · Cohesión, registro y estrategia.</span></div>
-<div class="level-chip-card"><span class="lv">B2</span><b>8 microlecciones</b><span>1 107 ejercicios · Matiz, eficacia y preparación B2 First.</span></div>
-<div class="level-chip-card"><span class="lv">C1</span><b>7 microlecciones</b><span>897 ejercicios · Gestión de información y nivel avanzado.</span></div>
+<div class="level-chip-card"><span class="lv">A1</span><b>10 lecciones</b><span>2 251 ejercicios · Base verbal y fonológica.</span></div>
+<div class="level-chip-card"><span class="lv">A2</span><b>12 lecciones</b><span>2 224 ejercicios · Ampliación del sistema y uso funcional.</span></div>
+<div class="level-chip-card"><span class="lv">B1</span><b>8 lecciones</b><span>1 385 ejercicios · Cohesión, registro y estrategia.</span></div>
+<div class="level-chip-card"><span class="lv">B2</span><b>8 lecciones</b><span>1 233 ejercicios · Matiz, eficacia y preparación B2 First.</span></div>
+<div class="level-chip-card"><span class="lv">C1</span><b>7 lecciones</b><span>1 034 ejercicios · Gestión de información y nivel avanzado.</span></div>
 </div>
 
 <div class="institutional-note">
 <span class="label">Todo el contenido está disponible desde el inicio</span>
-<p>Los cinco módulos, las 48 microlecciones y los 7 200 ejercicios se habilitan completos al activar el servicio. No hay contenido pendiente de desarrollo ni entregas por fases: la Coordinación decide qué activa y en qué orden, sobre un programa que ya existe.</p>
+<p>Los cinco módulos, las 45 lecciones (391 microlecciones) y los 8 127 ejercicios se habilitan completos al activar el servicio. No hay contenido pendiente de desarrollo ni entregas por fases: la Coordinación decide qué activa y en qué orden, sobre un programa que ya existe.</p>
 </div>
 
-<details class="academic-detail"><summary>A1 · Ver programa completo <span style="font-weight:600;color:var(--muted)">10 microlecciones · 1 833 ejercicios</span></summary><div class="detail-body"><article class="module">
+<details class="academic-detail"><summary>A1 · Ver programa completo <span style="font-weight:600;color:var(--muted)">10 lecciones · 2 251 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 1</span>A1</div>
 <div class="mt">Primeros pasos</div>
 <div class="ms">Instalación del sistema verbal básico y conciencia fonológica temprana</div>
 </div>
-<div class="mod-metrics"><span><b>10</b>microlecciones</span><span><b>1 833</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>10</b>lecciones</span><span><b>2 251</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -1075,14 +1126,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 
 </div>
 </div>
-</article></div></details><details class="academic-detail"><summary>A2 · Ver programa completo <span style="font-weight:600;color:var(--muted)">15 microlecciones · 2 233 ejercicios</span></summary><div class="detail-body"><article class="module">
+</article></div></details><details class="academic-detail"><summary>A2 · Ver programa completo <span style="font-weight:600;color:var(--muted)">12 lecciones · 2 224 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 2</span>A2</div>
 <div class="mt">A2 en acción</div>
 <div class="ms">Ampliación del sistema verbal y primeras unidades funcionales</div>
 </div>
-<div class="mod-metrics"><span><b>15</b>microlecciones</span><span><b>2 233</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>12</b>lecciones</span><span><b>2 224</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -1116,14 +1167,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p><b>Sobre las tres microlecciones de cierre.</b> El <b>presente perfecto</b> es la más urgente: interviene en las tres destrezas del A2 Key. La <b>voz pasiva</b> se limita a presente y pasado simple, y el <b>estilo indirecto</b> a <em>say</em> y <em>tell</em> sin desplazamiento temporal. El criterio es no trasladar a A2 el tratamiento que reciben en B1 y B2.</p>
 </div>
 </div>
-</article></div></details><details class="academic-detail"><summary>B1 · Ver programa completo <span style="font-weight:600;color:var(--muted)">8 microlecciones · 1 130 ejercicios</span></summary><div class="detail-body"><article class="module">
+</article></div></details><details class="academic-detail"><summary>B1 · Ver programa completo <span style="font-weight:600;color:var(--muted)">8 lecciones · 1 385 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 3</span>B1</div>
 <div class="mt">Rumbo al B1</div>
 <div class="ms">De la oración al texto: cohesión, registro y estrategia de examen</div>
 </div>
-<div class="mod-metrics"><span><b>8</b>microlecciones</span><span><b>1 130</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>8</b>lecciones</span><span><b>1 385</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -1149,14 +1200,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p>Con el presente perfecto ya introducido en A2, la primera microlección es un <b>contraste</b> entre dos tiempos que el estudiante conoce por separado: currículo en espiral, no una segunda presentación desde cero. Lo mismo en la microlección 4, donde el estilo indirecto incorpora el desplazamiento temporal —<em>«I am tired» → She said she was tired</em>—, que es la dificultad real del fenómeno.</p>
 </div>
 </div>
-</article></div></details><details class="academic-detail"><summary>B2 · Ver programa completo <span style="font-weight:600;color:var(--muted)">8 microlecciones · 1 107 ejercicios</span></summary><div class="detail-body"><article class="module">
+</article></div></details><details class="academic-detail"><summary>B2 · Ver programa completo <span style="font-weight:600;color:var(--muted)">8 lecciones · 1 233 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 4</span>B2</div>
 <div class="mt">Rumbo al B2 First</div>
 <div class="ms">De la corrección a la eficacia: matiz, énfasis y habla natural</div>
 </div>
-<div class="mod-metrics"><span><b>8</b>microlecciones</span><span><b>1 107</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>8</b>lecciones</span><span><b>1 233</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -1182,14 +1233,14 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p>La microlección 5, sobre acentos y habla rápida, atiende donde se concentran más caídas: la prueba de escucha de Cambridge emplea acentos diversos a velocidad natural, no la locución cuidada de los materiales de estudio.</p>
 </div>
 </div>
-</article></div></details><details class="academic-detail"><summary>C1 · Ver programa completo <span style="font-weight:600;color:var(--muted)">7 microlecciones · 897 ejercicios</span></summary><div class="detail-body"><article class="module">
+</article></div></details><details class="academic-detail"><summary>C1 · Ver programa completo <span style="font-weight:600;color:var(--muted)">7 lecciones · 1 034 ejercicios</span></summary><div class="detail-body"><article class="module">
 <div class="mod-head">
 <div>
 <div class="lvl-chip"><span class="mo">Módulo 5</span>C1</div>
 <div class="mt">Rumbo a C1 Advanced</div>
 <div class="ms">Estrategia de gestión de la información bajo presión temporal</div>
 </div>
-<div class="mod-metrics"><span><b>7</b>microlecciones</span><span><b>897</b>ejercicios</span></div>
+<div class="mod-metrics"><span><b>7</b>lecciones</span><span><b>1 034</b>ejercicios</span></div>
 </div>
 <div class="mod-body">
 <div class="table-wrap">
@@ -1223,7 +1274,8 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <section class="band bg-cream page-break" id="alineacion">
 <div class="sheet">
 <span class="eyebrow"><span class="sec-no">06</span>MCER + Cambridge</span>
-<h2 class="head">Un alineamiento que el equipo académico <span class="hl">puede revisar de un vistazo</span>.</h2>
+<h2 class="head">Se practica en <span class="hl">formato Cambridge</span>, con el MCER como marco.</h2>
+<p class="lead">Los ejercicios reproducen los formatos de tarea de las cualificaciones Cambridge English <em>for Schools</em> (Movers, Flyers, A2 Key, B1 Preliminary, B2 First), de modo que el alumno practica con el mismo tipo de consigna con el que luego se evalúa. La certificación oficial la otorgan las instancias acreditadas.</p>
 <p class="lead">Detrás de la experiencia digital existe una estructura académica reconocible: las competencias del CNEB como marco curricular, el MCER como escala de progresión y las cualificaciones Cambridge <em>for Schools</em> como referencia externa de logro.</p>
 <div class="badges" style="margin-bottom:4px">
 <span class="badge"><i></i>A1 Movers</span>
@@ -1274,21 +1326,22 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <h2 class="head">Cada minuto en pantalla <span class="hl-b">es práctica activa</span>.</h2>
 <p class="lead">La plataforma combina cuatro formatos que llevan al alumno a reconocer, detectar, escuchar y producir. Cada minuto frente a la pantalla se traduce en respuestas dadas y corregidas, que es donde ocurre el aprendizaje.</p>
 <div class="practice-grid">
-<article class="practice-card"><div class="ic">A</div><h3>Opción múltiple</h3><p><b>1 800 ejercicios.</b> Reconocer la forma correcta e inferir sobre textos breves.</p></article>
-<article class="practice-card"><div class="ic">!</div><h3>Detección de error</h3><p><b>1 800 ejercicios.</b> Localizar qué está mal y prestar atención a la forma. Entra a partir de A2.</p></article>
-<article class="practice-card"><div class="ic">▶</div><h3>Escucha y reconstrucción</h3><p><b>1 800 ejercicios.</b> Procesar audio y reconstruir la estructura correcta.</p></article>
-<article class="practice-card"><div class="ic">✎</div><h3>Producción controlada</h3><p><b>1 800 ejercicios.</b> Responder sin opciones a la vista y recuperar activamente lo aprendido.</p></article>
+<article class="practice-card"><div class="ic">A</div><h3>Opción múltiple</h3><p><b>1 983 ejercicios.</b> Reconocer la forma correcta e inferir sobre textos breves.</p><div class="fx"><div class="fx-q">She ______ to school every morning.</div><div class="fx-opt"><span class="dot"></span>go</div><div class="fx-opt ok"><span class="dot"></span>goes</div><div class="fx-opt"><span class="dot"></span>going</div></div></article>
+<article class="practice-card"><div class="ic">!</div><h3>Detección de error</h3><p><b>1 957 ejercicios.</b> Localizar qué está mal y prestar atención a la forma. Entra a partir de A2.</p><div class="fx"><div class="fx-q">Toca la palabra incorrecta:</div><div class="fx-sent">He <span class="bad">don’t</span> have any homework today.</div><div class="fx-hint">El alumno marca la palabra y recibe la forma correcta al instante.</div></div></article>
+<article class="practice-card"><div class="ic">▶</div><h3>Escucha y reconstrucción</h3><p><b>1 921 ejercicios.</b> Procesar audio y reconstruir la estructura correcta.</p><div class="fx"><div class="fx-audio">▶ Escuchar</div><div class="fx-chips"><span class="chip set">I</span><span class="chip set">have</span><span class="chip set">never</span><span class="chip">been</span><span class="chip">there</span><span class="chip">before</span></div><div class="fx-hint">Reconstruye la frase ordenando las palabras que escuchó.</div></div></article>
+<article class="practice-card"><div class="ic">✎</div><h3>Producción escrita</h3><p><b>2 266 ejercicios.</b> Responder sin opciones a la vista y recuperar activamente lo aprendido.</p><div class="fx"><div class="fx-q">Escribe en inglés: «Estudio aquí desde 2019.»</div><div class="fx-input">I have studied here since 2019<span class="caret"></span></div><div class="fx-ok">✓ Correcto · también se acepta “I’ve studied here since 2019”</div></div></article>
 </div>
 <h3 class="sub">Cuatro formatos, con el mismo volumen de práctica</h3>
 <div class="coverage-strip">
-<div class="coverage"><b>1 800 ejercicios</b><span>Opción múltiple · reconocimiento e inferencia</span></div>
-<div class="coverage"><b>1 800 ejercicios</b><span>Detección de error · atención a la forma</span></div>
-<div class="coverage"><b>1 800 ejercicios</b><span>Escucha y reconstrucción · comprensión auditiva</span></div>
-<div class="coverage"><b>1 800 ejercicios</b><span>Producción escrita · recuperación activa</span></div>
+<div class="coverage"><b>1 983 ejercicios</b><span>Opción múltiple · reconocimiento e inferencia</span></div>
+<div class="coverage"><b>1 957 ejercicios</b><span>Detección de error · atención a la forma</span></div>
+<div class="coverage"><b>1 921 ejercicios</b><span>Escucha y reconstrucción · comprensión auditiva</span></div>
+<div class="coverage"><b>2 266 ejercicios</b><span>Producción escrita · recuperación activa</span></div>
 </div>
-<div class="hero-proof" style="margin-top:18px">
-<div class="copy"><span class="label">Volumen total de práctica</span><b>7 200 ejercicios: 1,800 oportunidades de práctica en cada uno de los cuatro formatos.</b></div>
-<div class="proof-pill">4 formatos × 1 800</div>
+<div class="volume-hero">
+<div class="big">8 127<span>ejercicios de práctica</span></div>
+<div><p>Volumen suficiente para que la práctica fuera del aula se sostenga durante todo el año escolar, sin repetir siempre los mismos ítems.</p>
+<div class="sub">Repartidos en los cuatro formatos, con la producción escrita como el bloque más grande, y disponibles tanto en la ruta guiada como en la práctica libre.</div></div>
 </div>
 
 <h3 class="sub">Cómo funciona la corrección</h3>
@@ -1317,12 +1370,12 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <div class="mini">
 <h3>Práctica libre</h3>
 <p>El estudiante puede resolver ejercicios por su cuenta, sin esperar a llegar al punto correspondiente de la ruta: elige el nivel, el punto de lengua, el formato o el campo de vocabulario que quiera trabajar. El docente puede acotar este modo por grado si prefiere que la sección avance junta.</p>
-<p>El banco se abre por completo: <b>más de 8 000 preguntas</b>, incluidas las del banco léxico. Sirve para reforzar antes de una evaluación o para adelantarse por gusto.</p>
+<p>El banco se abre por completo: <b>8 127 ejercicios</b>, incluidas las del banco léxico. Sirve para reforzar antes de una evaluación o para adelantarse por gusto.</p>
 </div>
 </div>
 <div class="hero-proof" style="margin-top:18px">
 <div class="copy"><span class="label">Ruta y práctica libre</span><b>La secuencia académica la fija la Coordinación; el volumen adicional queda disponible para el alumno que quiera ir más allá.</b></div>
-<div class="proof-pill">+8 000 preguntas en práctica libre</div>
+<div class="proof-pill">8 127 ejercicios en práctica libre</div>
 </div>
 
 
@@ -1413,18 +1466,18 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <section class="band bg-cream page-break" id="adaptacion">
 <div class="sheet">
 <span class="eyebrow"><span class="sec-no">10</span>Adaptación al programa</span>
-<h2 class="head">La plataforma se ajusta al programa del colegio, <span class="hl">no al revés</span>.</h2>
-<p class="lead">Nada de lo anterior es rígido. El programa, la secuencia, los umbrales, el contenido y la marca se configuran según lo que la Coordinación decida, y esa configuración forma parte de la puesta en marcha, no de un servicio adicional.</p>
+<h2 class="head">Llega lista para usarse; <span class="hl">la Coordinación elige qué activa</span>.</h2>
+<p class="lead">El programa de A1 a C1 ya está construido y se entrega completo. No se desarrolla contenido a medida para el colegio: lo que la Coordinación decide es <b>qué se habilita, en qué orden, con qué exigencia y con qué identidad</b>, desde su propio panel y sin depender de nosotros.</p>
 <div class="adapt-grid">
-<article class="adapt-card"><div class="ic">01</div><h3>Secuencia y selección</h3><p>La Coordinación decide <strong>qué microlecciones se habilitan, en qué orden y en qué semana del bimestre</strong>. Puede desactivar las que ya cubre en aula y reordenar el resto para que coincida con su programación, sin tocar el resto del sistema.</p></article>
+<article class="adapt-card"><div class="ic">01</div><h3>Selección y orden</h3><p>Sobre el programa ya construido, la Coordinación elige <strong>qué microlecciones se habilitan, en qué orden y en qué semana del bimestre</strong>. Puede desactivar las que ya cubre en aula y reordenar el resto para que coincida con su programación.</p></article>
 <article class="adapt-card"><div class="ic">02</div><h3>Contenido identificable</h3><p>Cada microlección declara qué punto de lengua trabaja, de modo que <strong>la Coordinación puede ubicarla dentro de su propia programación</strong> y asignarla en la semana que le corresponda, sin depender de nosotros para hacerlo.</p></article>
 <article class="adapt-card"><div class="ic">03</div><h3>Umbrales y reglas</h3><p>Porcentaje mínimo de acierto, tramos exigidos por semana, plazo para las tareas y peso en la evaluación del área: <strong>todos son parámetros que fija el colegio</strong> y que pueden diferir por grado, sección o nivel educativo.</p></article>
 <article class="adapt-card"><div class="ic">04</div><h3>Ritmo libre</h3><p>La ruta completa está disponible desde el primer día, de modo que <strong>cada grado avanza al ritmo que el colegio determine</strong> y un estudiante puede adelantarse o reforzar niveles anteriores sin pedir permiso ni esperar una habilitación.</p></article>
-<article class="adapt-card"><div class="ic">05</div><h3>Léxico por campo temático</h3><p>El banco de más de 8 000 palabras se organiza por campos semánticos escolares —escuela, familia, cuerpo, animales y rutinas; ciencia, tecnología, medio ambiente y ciudadanía—, <strong>y el colegio elige cuáles activa</strong> según los proyectos y unidades que ya trabaja en otras áreas.</p></article>
+<article class="adapt-card"><div class="ic">05</div><h3>Léxico por campo temático</h3><p>El banco de 11 040 palabras se organiza por campos semánticos escolares —escuela, familia, cuerpo, animales y rutinas; ciencia, tecnología, medio ambiente y ciudadanía—, <strong>y el colegio elige cuáles activa</strong> según los proyectos y unidades que ya trabaja en otras áreas.</p></article>
 <article class="adapt-card"><div class="ic">06</div><h3>Identidad y presentación</h3><p>Nombre del entorno, logotipo, paleta, dominio, textos de bienvenida y comunicaciones al alumno. <strong>El estudiante entra a un servicio del colegio</strong>, no a una plataforma externa con la marca de un proveedor.</p></article>
 </div>
-<div class="statement">La Coordinación define el qué y el cómo académico. Nosotros ponemos la plataforma, el banco completo y la configuración inicial.</div>
-<div class="audit-note"><b>Qué es configurable y qué no.</b> Todo lo anterior son <b>parámetros del sistema</b>: se ajustan en la puesta en marcha y la Coordinación puede modificarlos después desde su propio panel. El contenido, en cambio, se entrega tal como está descrito en este documento —48 microlecciones, 7 200 ejercicios y el banco léxico—, sin desarrollos específicos ni entregas por fases, que es lo que permite activar el servicio en semanas y no en meses.</div>
+<div class="statement">La Coordinación define qué se usa y cuándo. Nosotros ponemos la plataforma y el banco completo, ya construidos y listos desde el primer día.</div>
+<div class="audit-note"><b>Qué es configurable y qué no.</b> Lo anterior son <b>parámetros del sistema</b>: selección de contenido, umbrales, ritmo, campos léxicos e identidad. El contenido, en cambio, se entrega tal como está descrito en este documento —45 lecciones (391 microlecciones), 8 127 ejercicios y el banco léxico de 11 040 palabras—, <b>sin desarrollo de material propio del colegio ni entregas por fases</b>. Eso es justamente lo que permite activar el servicio en semanas y no en meses.</div>
 </div>
 </section>
 
@@ -1452,26 +1505,13 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p><b>Es un argumento de admisión y de permanencia</b>: para un colegio bilingüe, el inglés es aquello por lo que la familia eligió pagar.</p>
 </div>
 </div>
-<div class="audit-note"><b>Consentimiento y titularidad.</b> Tratándose de menores, el tratamiento requiere consentimiento del padre, madre o apoderado. El colegio es titular del banco de datos y responsable del tratamiento; nosotros somos encargados. Entregamos el modelo de consentimiento informado para que se incorpore a la matrícula; el detalle legal está en la sección 13.</div>
-</div>
-</section>
-<section class="band bg-navy page-break" id="alcance">
-<div class="sheet">
-<span class="eyebrow"><span class="sec-no">12</span>Valor para el colegio</span>
-<h2 class="head">Una misma herramienta, <span class="hl-b">tres impactos distintos</span>.</h2>
-<p class="lead">La implementación tiene sentido cuando no solo agrega contenido, sino que mejora la experiencia de quienes gestionan, enseñan y aprenden.</p>
-<div class="role-grid">
-<article class="role-card"><div class="who">Coordinación de Inglés</div><h3>Evidencia de la promesa bilingüe</h3><p>Un solo programa de primero de primaria a quinto de secundaria, con la trazabilidad del nivel MCER de cada estudiante a lo largo de toda su escolaridad y el dato agregado por grado que la Dirección puede mostrar.</p></article>
-<article class="role-card"><div class="who">Docentes</div><h3>Llegan a clase sabiendo dónde está su sección</h3><p>La práctica repetitiva ocurre fuera del aula y el docente entra a la sesión con el diagnóstico hecho, con más tiempo para interacción y acompañamiento.</p></article>
-<article class="role-card"><div class="who">Estudiantes y familias</div><h3>Saben en qué nivel están y cuánto avanzaron</h3><p>El estudiante ve su propia progresión y la familia la acompaña con datos, en lugar de esperar a la libreta bimestral para enterarse de cómo va el curso.</p></article>
-</div>
-<div class="statement">La Colegio Santa María de la Gracia ofrece una experiencia digital de inglés como parte visible de su propia propuesta educativa, con su marca, su programa y su equipo docente al frente.</div>
+<div class="audit-note"><b>Consentimiento y titularidad.</b> Tratándose de menores, el tratamiento requiere consentimiento del padre, madre o apoderado. El colegio es titular del banco de datos y responsable del tratamiento; nosotros somos encargados. Entregamos el modelo de consentimiento informado para que se incorpore a la matrícula; el detalle legal está en la sección 12.</div>
 </div>
 </section>
 <!-- ==================== 08 · ARTICULACIÓN ==================== -->
 <section class="band bg-cream page-break" id="articulacion">
 <div class="sheet">
-<span class="eyebrow"><span class="sec-no">13</span>Implementación, datos y servicio</span>
+<span class="eyebrow"><span class="sec-no">12</span>Implementación, datos y servicio</span>
 <h2 class="head">Todo lo necesario para llevar el inglés <span class="hl">más allá del aula</span>.</h2>
 <p class="lead">La plataforma se integra a los sistemas que el colegio ya usa, con un marco de protección de datos, un nivel de servicio comprometido y capacitación para el equipo docente.</p>
 
@@ -1510,17 +1550,17 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <article class="get-card">
 <div class="ic">A1</div>
 <h3>Ruta estructurada de A1 a C1</h3>
-<p>48 microlecciones sobre el MCER, con Cambridge <em>for Schools</em> como referencia.</p>
+<p>45 lecciones (391 microlecciones) sobre el MCER, con Cambridge <em>for Schools</em> como referencia.</p>
 </article>
 <article class="get-card">
 <div class="ic">7.2K</div>
-<h3>7 200 ejercicios de práctica activa</h3>
-<p>1 800 por formato: opción múltiple, detección de error, escucha y producción controlada.</p>
+<h3>8 127 ejercicios de práctica activa</h3>
+<p>Repartidos en cuatro formatos: opción múltiple, detección de error, escucha y reconstrucción y producción escrita.</p>
 </article>
 
 <article class="get-card">
 <div class="ic">8K</div>
-<h3>Banco léxico de más de 8 000 palabras</h3>
+<h3>Banco léxico de 11 040 palabras</h3>
 <p>Campos semánticos escolares, aptos para primaria y secundaria.</p>
 </article>
 <article class="get-card">
@@ -1537,13 +1577,13 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <p>La práctica continúa toda la semana desde una plataforma institucional, en los dispositivos que el estudiante ya usa.</p>
 </div>
 <div class="reward-stats">
-<div class="reward-stat"><b>7 200</b><span>ejercicios totales</span></div>
-<div class="reward-stat"><b>8 000+</b><span>palabras en el banco léxico</span></div>
+<div class="reward-stat"><b>8 127</b><span>ejercicios totales</span></div>
+<div class="reward-stat"><b>11 040</b><span>palabras en el banco léxico</span></div>
 <div class="reward-stat"><b>A1–C1</b><span>ruta completa</span></div>
 <div class="reward-stat"><b>Web + app</b><span>una sola experiencia</span></div>
 </div>
 </div>
-<div class="statement">Una experiencia institucional de inglés que acompaña al alumno durante toda la semana y permite extender el alcance del programa a toda la comunidad escolar.</div>
+<div class="statement">El Colegio Santa María de la Gracia ofrece una experiencia digital de inglés como parte visible de su propia propuesta educativa, con su marca, su programa y su equipo docente al frente: acompaña al alumno durante toda la semana sin reemplazar la clase.</div>
 </div>
 </section>
 <!-- ==================== CIERRE ==================== -->
@@ -1551,17 +1591,11 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <div class="sheet">
 <span class="eyebrow"><span class="bar"></span>Hagámoslo realidad</span>
 <h2 class="head">Demos evidencia medible <span class="hl-b">de la formación bilingüe</span>.</h2>
-<p class="lead">Una plataforma con la identidad del colegio, en web y app, con una ruta continua de A1 a C1, más de 8 000 palabras de vocabulario y un reporte que llega al docente, a la Dirección y a la familia.</p>
+<p class="lead">Una plataforma con la identidad del colegio, en web y app, con una ruta continua de A1 a C1, 11 040 palabras de vocabulario y un reporte que llega al docente, a la Dirección y a la familia.</p>
 <div class="launch-hero">
 <span class="launch-label">Colegio Santa María de la Gracia × AprendoEnglish</span>
 <h3>Del aula a una experiencia de inglés disponible todos los días.</h3>
 <p>La tecnología, la experiencia digital y el contenido ya están construidos. La implementación permite convertirlos en una plataforma institucional del colegio, configurada según su programa y puesta al alcance de sus estudiantes.</p>
-<div class="launch-path">
-<div class="launch-step"><div class="n">01</div><b>Configuración</b><span>Definir con la Coordinación qué módulos se habilitan por grado, los umbrales y las reglas de uso.</span></div>
-<div class="launch-step"><div class="n">02</div><b>Identidad Santa María de la Gracia</b><span>Aplicar nombre, marca y experiencia institucional en web y app.</span></div>
-<div class="launch-step"><div class="n">03</div><b>Activación</b><span>Cargar nóminas, habilitar accesos de estudiantes y apoderados, y capacitar al equipo docente.</span></div>
-<div class="launch-step"><div class="n">04</div><b>Lanzamiento</b><span>Presentar la plataforma a estudiantes y familias al inicio del año escolar.</span></div>
-</div>
 <div class="history-line">El colegio pone los docentes, el criterio pedagógico y el vínculo con las familias. Nosotros ponemos el volumen de práctica y la infraestructura. Ninguna de las dos partes llega sola a donde llegan juntas.</div>
 </div>
 </div>
@@ -1574,5 +1608,34 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 </div>
 </div>
 </footer>
+<div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-label="Demo ampliado">
+<header><b id="demoModalTitle">Demo</b><button class="dbtn" type="button" data-close="1">Cerrar ✕</button></header>
+<div class="body"></div>
+</div>
+<script>
+(function(){
+  var m=document.getElementById('demoModal'),body=m.querySelector('.body'),t=document.getElementById('demoModalTitle');
+  function close(){m.classList.remove('open','phone');body.innerHTML='';document.body.style.overflow='';}
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-expand]');
+    if(b){
+      t.textContent=b.getAttribute('data-title')||'Demo';
+      m.classList.toggle('phone',b.hasAttribute('data-phone'));
+      body.innerHTML='<iframe src="'+b.getAttribute('data-expand')+'" title="'+t.textContent+'"></iframe>';
+      m.classList.add('open');document.body.style.overflow='hidden';return;
+    }
+    if(e.target.closest('[data-close]')||e.target===m) close();
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  var lives=[].slice.call(document.querySelectorAll('iframe.live[data-src]'));
+  function cargar(f){ if(f.dataset.src){ f.src=f.dataset.src; delete f.dataset.src; } }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ cargar(e.target); io.unobserve(e.target); } });
+    },{rootMargin:'40px 0px'});
+    lives.forEach(function(f){io.observe(f);});
+  } else { lives.forEach(cargar); }
+})();
+</script>
 </body>
 </html>
