@@ -657,6 +657,52 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
   .cover-nomi img{max-width:110px}
   .cover-nomi figcaption{align-items:flex-start}
 }
+
+/* --- Feedback académico: maquetas de formato, volumen y evidencia --- */
+.practice-grid{grid-template-columns:repeat(2,1fr)}
+.practice-card{display:flex;flex-direction:column}
+.fx{margin-top:13px;border:1px solid var(--line);border-radius:13px;background:#fbfcfe;padding:11px 12px}
+.fx .fx-q{font:700 11.5px/1.4 var(--disp);color:var(--ink);margin-bottom:8px}
+.fx .fx-opt{display:flex;align-items:center;gap:7px;font-size:11.2px;color:var(--muted);
+  border:1px solid var(--line);border-radius:9px;background:#fff;padding:6px 9px;margin-bottom:5px}
+.fx .fx-opt:last-child{margin-bottom:0}
+.fx .fx-opt .dot{width:11px;height:11px;border-radius:50%;border:1.6px solid #c9d6e6;flex:0 0 auto}
+.fx .fx-opt.ok{border-color:#7fc39a;background:#f1faf4;color:#1d6b42;font-weight:700}
+.fx .fx-opt.ok .dot{border-color:#3f9c6b;background:#3f9c6b}
+.fx .fx-sent{font-size:12px;line-height:1.7;color:var(--ink)}
+.fx .bad{color:#c8394f;font-weight:700;border-bottom:2px wavy #c8394f;padding-bottom:1px}
+.fx .fx-hint{font-size:10.6px;color:var(--muted);margin-top:7px}
+.fx .fx-audio{display:inline-flex;align-items:center;gap:7px;font:800 10.5px/1 var(--disp);letter-spacing:.05em;
+  text-transform:uppercase;color:var(--sky-deep);background:var(--sky-wash);border-radius:999px;padding:7px 11px;margin-bottom:9px}
+.fx .fx-chips{display:flex;flex-wrap:wrap;gap:5px}
+.fx .chip{font-size:11px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:5px 8px;color:var(--ink)}
+.fx .chip.set{background:var(--ink);border-color:var(--ink);color:#fff}
+.fx .fx-input{border:1px solid #c9d6e6;border-radius:10px;background:#fff;padding:8px 10px;font-size:11.6px;color:var(--ink)}
+.fx .fx-input .caret{display:inline-block;width:1.5px;height:12px;background:var(--sky-deep);vertical-align:-2px;margin-left:2px}
+.fx .fx-ok{display:flex;align-items:center;gap:6px;font-size:10.8px;color:#1d6b42;margin-top:7px;font-weight:700}
+.volume-hero{margin-top:20px;border-radius:24px;background:var(--ink);color:#fff;padding:28px 30px;
+  display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center}
+.volume-hero .big{font-family:var(--black);font-size:clamp(44px,7vw,74px);line-height:.9;letter-spacing:-.02em}
+.volume-hero .big span{display:block;font:800 10.5px/1.3 var(--disp);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--sky-soft);margin-top:9px}
+.volume-hero p{font-family:var(--disp);font-size:clamp(16px,1.9vw,21px);line-height:1.35;color:#fff;margin:0}
+.volume-hero .sub{font-family:var(--sans);font-size:12.6px;line-height:1.55;color:rgba(255,255,255,.72);margin-top:9px}
+.evidence{border-radius:22px;border:1px solid var(--line);background:#fff;padding:24px 26px;margin-top:24px;
+  display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+.evidence .stat{font-family:var(--black);font-size:clamp(38px,6vw,60px);line-height:.9;color:var(--sky-deep);letter-spacing:-.02em}
+.evidence .stat span{display:block;font:800 10px/1.3 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.evidence h3{font-family:var(--disp);font-weight:900;font-size:clamp(16px,2vw,21px);line-height:1.3;margin:0 0 8px}
+.evidence p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+.evidence cite{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:10px;opacity:.9}
+@media(max-width:900px){
+  .practice-grid{grid-template-columns:1fr}
+  .volume-hero,.evidence{grid-template-columns:1fr;gap:16px}
+}
+@media print{
+  .fx{background:#fff}
+  .volume-hero,.evidence{break-inside:avoid;page-break-inside:avoid}
+}
+
 </style>
 </head>
 <body>
@@ -671,7 +717,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <span class="doc-kind">Propuesta académica · implementación institucional</span>
 <h1 class="title">Un e-learning de inglés <span class="acc">para toda la Autónoma</span></h1>
 <div class="cover-with-nomi">
-<p class="standfirst">Una plataforma de aprendizaje disponible en <b>web y app</b>, con la <b>identidad de la Universidad Autónoma del Perú</b>, que puede implementarse desde la Coordinación de Inglés para extender la práctica de sus alumnos fuera del aula.</p>
+<p class="standfirst"><b>Una herramienta digital para practicar y sostener el desarrollo de las competencias del área de idiomas de la universidad</b>, disponible en <b>web y app</b> y con la <b>identidad de la Universidad Autónoma del Perú</b>. No reemplaza la clase ni al docente: extiende su trabajo a los días en que el alumno no está en el aula.</p>
 <figure class="cover-nomi">
 <img src="/demo-assets/nomi-autonoma.svg" alt="Nomi, la llamita guía de la plataforma de inglés de la Universidad Autónoma del Perú" loading="eager"/>
 <figcaption><b>Nomi</b><span>La guía que acompaña al alumno dentro de la plataforma, ya vestida con los colores de la Autónoma.</span></figcaption>
@@ -720,6 +766,24 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 </dl>
 </div>
 </header>
+<!-- ==================== POR QUÉ LA PRÁCTICA FUERA DEL AULA ==================== -->
+<section class="band bg-paper" id="evidencia">
+<div class="sheet">
+<span class="eyebrow"><span class="bar"></span>Por qué la práctica fuera del aula</span>
+<h2 class="head">Las competencias se desarrollan <span class="hl">donde hay práctica sostenida</span>.</h2>
+<p class="lead">La investigación sobre exposición extraescolar al inglés es consistente: los estudiantes que practican fuera del horario de clase alcanzan un desempeño marcadamente superior en vocabulario y gramática frente a quienes solo tienen contacto con el idioma dentro del aula.</p>
+<div class="evidence">
+<div class="stat">d = 1,5<span>Tamaño del efecto</span></div>
+<div>
+<h3>Efecto grande y estadísticamente significativo de la exposición fuera del aula.</h3>
+<p>En un estudio comparativo entre adolescentes con alta y baja exposición extraescolar al inglés, la diferencia en comprensión de vocabulario alcanzó un tamaño del efecto de <b>d = 1,54</b> y el conocimiento morfosintáctico <b>d = 1,40</b> (todos con p &lt; ,001). En la escala de Cohen, cualquier valor sobre 0,8 se considera un efecto grande.</p>
+<cite>Muñoz, C. &amp; Cadierno, T. (2021). «How do differences in exposure affect English language learning? A comparison of teenagers in two learning environments». <i>Studies in Second Language Learning and Teaching</i>, 11(2), 185–212.</cite>
+</div>
+</div>
+<p class="note">Una revisión sistemática de 33 estudios sobre aprendizaje extramural concluye en la misma dirección: la práctica fuera del aula resulta efectiva tanto para el desarrollo lingüístico como para la actitud hacia el idioma (Zhang et al., 2021, <i>PLOS ONE</i>, 16(6)). Esta propuesta se sitúa exactamente ahí: no en reemplazar la clase, sino en darle al área de idiomas una herramienta para sostener esa práctica durante toda la semana.</p>
+</div>
+</section>
+
 <!-- ==================== PREVISUALIZACIÓN ==================== -->
 <section class="band bg-cream demo-band" id="demo-preview">
 <div class="sheet">
@@ -786,8 +850,8 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <li><a href="#modulos"><span class="n">04</span><span class="t">Sílabo por nivel</span><span class="d">A1 · A2 · B1 · B2 · C1</span></a></li>
 <li><a href="#alineacion"><span class="n">05</span><span class="t">MCER + Cambridge</span><span class="d">Anexo: tabla de correspondencia</span></a></li>
 <li><a href="#tipologia"><span class="n">06</span><span class="t">Experiencia de práctica</span><span class="d">Formatos y dinámica de práctica</span></a></li>
-<li><a href="#alcance"><span class="n">07</span><span class="t">Valor para la universidad</span><span class="d">Coordinación · docentes · estudiantes</span></a></li>
-<li><a href="#articulacion"><span class="n">08</span><span class="t">Implementación</span><span class="d">Cómo llevarlo a la Autónoma</span></a></li>
+<li><a href="#articulacion"><span class="n">07</span><span class="t">Implementación</span><span class="d">Cómo llevarlo a la Autónoma</span></a></li>
+
 </ol>
 </div>
 </section>
@@ -1049,7 +1113,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <div class="sheet">
 <span class="eyebrow"><span class="sec-no">05</span>MCER + Cambridge</span>
 <h2 class="head">Anexo: <span class="hl">la tabla de correspondencia nivel por nivel</span>.</h2>
-<p class="lead">Detrás de la experiencia digital existe una estructura académica reconocible y compatible con los objetivos de inglés de la universidad.</p>
+<h3 class="sub" style="margin-top:0">Se practica en formato Cambridge</h3><p class="lead">Los ejercicios reproducen los formatos de tarea de los exámenes Cambridge English (A2 Key, B1 Preliminary, B2 First, C1 Advanced), y el MCER ordena la progresión nivel por nivel. El alumno practica con el mismo tipo de consigna con el que luego se evalúa, dentro de una estructura académica reconocible y compatible con los objetivos de inglés de la universidad.</p>
 <div class="hero-proof" style="margin-top:22px">
 <div class="copy"><span class="label">Alineamiento académico</span><b>La plataforma es una extensión digital del programa, para acompañar al alumno siempre y llegar a más alumnos con un mejor nivel de inglés.</b></div>
 <div class="proof-pill">MCER · Cambridge English Qualifications</div>
@@ -1060,7 +1124,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <thead><tr><th>Módulo</th><th>MCER</th><th>Examen de referencia</th><th>Cobertura del programa</th></tr></thead>
 <tbody>
 <tr>
-<td class="lang">Módulo 1</td><td>A1</td><td>Sin examen de referencia en la escala de adultos</td>
+<td class="lang">Módulo 1</td><td>A1</td><td>Base previa a la escala de adultos · prepara el terreno para A2 Key</td>
 <td>Base estructural y fonológica sobre la que se apoya el resto de la escala.</td>
 </tr>
 <tr>
@@ -1092,10 +1156,10 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <h2 class="head">El estudiante no solo mira contenido. <span class="hl-b">Tiene que responder</span>.</h2>
 <p class="lead">La plataforma combina formatos que obligan al alumno a reconocer, detectar, escuchar y producir. Eso convierte el tiempo en pantalla en práctica activa, no únicamente en consumo de teoría.</p>
 <div class="practice-grid">
-<article class="practice-card"><div class="ic">A</div><h3>Opción múltiple</h3><p><b>1 983 ejercicios.</b> Reconocer la forma correcta e inferir sobre textos breves.</p></article>
-<article class="practice-card"><div class="ic">!</div><h3>Detección de error</h3><p><b>1 957 ejercicios.</b> Localizar qué está mal y prestar atención a la forma.</p></article>
-<article class="practice-card"><div class="ic">▶</div><h3>Escucha y reconstrucción</h3><p><b>1 921 ejercicios.</b> Procesar audio y reconstruir la estructura correcta.</p></article>
-<article class="practice-card"><div class="ic">✎</div><h3>Producción escrita</h3><p><b>2 266 ejercicios.</b> Responder sin opciones dadas y recuperar activamente lo aprendido.</p></article>
+<article class="practice-card"><div class="ic">A</div><h3>Opción múltiple</h3><p><b>1 983 ejercicios.</b> Reconocer la forma correcta e inferir sobre textos breves.</p><div class="fx"><div class="fx-q">She ______ to the office every morning.</div><div class="fx-opt"><span class="dot"></span>go</div><div class="fx-opt ok"><span class="dot"></span>goes</div><div class="fx-opt"><span class="dot"></span>going</div></div></article>
+<article class="practice-card"><div class="ic">!</div><h3>Detección de error</h3><p><b>1 957 ejercicios.</b> Localizar qué está mal y prestar atención a la forma.</p><div class="fx"><div class="fx-q">Toca la palabra incorrecta:</div><div class="fx-sent">He <span class="bad">don’t</span> have any experience in this field.</div><div class="fx-hint">El alumno marca la palabra y recibe la forma correcta al instante.</div></div></article>
+<article class="practice-card"><div class="ic">▶</div><h3>Escucha y reconstrucción</h3><p><b>1 921 ejercicios.</b> Procesar audio y reconstruir la estructura correcta.</p><div class="fx"><div class="fx-audio">▶ Escuchar</div><div class="fx-chips"><span class="chip set">I</span><span class="chip set">have</span><span class="chip set">never</span><span class="chip">been</span><span class="chip">there</span><span class="chip">before</span></div><div class="fx-hint">Reconstruye la frase ordenando las palabras que escuchó.</div></div></article>
+<article class="practice-card"><div class="ic">✎</div><h3>Producción escrita</h3><p><b>2 266 ejercicios.</b> Responder sin opciones dadas y recuperar activamente lo aprendido.</p><div class="fx"><div class="fx-q">Escribe en inglés: «Trabajo aquí desde 2019.»</div><div class="fx-input">I have worked here since 2019<span class="caret"></span></div><div class="fx-ok">✓ Correcto · también se acepta “I’ve worked here since 2019”</div></div></article>
 </div>
 <h3 class="sub">Cuatro formatos, con el mismo volumen de práctica</h3>
 <div class="coverage-strip">
@@ -1104,31 +1168,18 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <div class="coverage"><b>1 921 ejercicios</b><span>Escucha y reconstrucción · comprensión auditiva</span></div>
 <div class="coverage"><b>2 266 ejercicios</b><span>Producción escrita · recuperación activa</span></div>
 </div>
-<div class="hero-proof" style="margin-top:18px">
-<div class="copy"><span class="label">Volumen total de práctica</span><b>8 127 ejercicios repartidos en los cuatro formatos, con la producción escrita como el bloque más grande.</b></div>
-<div class="proof-pill">4 formatos · 8 127 ejercicios</div>
+<div class="volume-hero">
+<div class="big">8 127<span>ejercicios de práctica</span></div>
+<div><p>Volumen suficiente para que la práctica fuera del aula se sostenga durante todo el año académico, sin repetir siempre los mismos ítems.</p>
+<div class="sub">Repartidos en los cuatro formatos, con la producción escrita como el bloque más grande, y disponibles tanto en la ruta guiada como en la práctica libre.</div></div>
 </div>
 <p class="note">La interacción oral evaluable continúa siendo especialmente valiosa con docente. La plataforma cuenta además con una capa de conversación guiada que puede plantearse como complemento cuando se quiera ampliar ese volumen de práctica.</p>
 </div>
 </section>
-<!-- ==================== 07 · REPARTO ==================== -->
-<section class="band bg-navy page-break" id="alcance">
-<div class="sheet">
-<span class="eyebrow"><span class="sec-no">07</span>Valor para la universidad</span>
-<h2 class="head">Una misma herramienta, <span class="hl-b">tres impactos distintos</span>.</h2>
-<p class="lead">La implementación tiene sentido cuando no solo agrega contenido, sino que mejora la experiencia de quienes gestionan, enseñan y aprenden.</p>
-<div class="role-grid">
-<article class="role-card"><div class="who">Coordinación de Inglés</div><h3>Convierte el e-learning en una iniciativa propia</h3><p>Puede presentarlo bajo la identidad de la Autónoma y articular su lugar dentro del programa académico que ya administra.</p></article>
-<article class="role-card"><div class="who">Docentes</div><h3>Derivan práctica repetitiva fuera de sesión</h3><p>El alumno puede llegar con más exposición y repetición acumulada, reservando el encuentro docente para tareas de mayor valor pedagógico.</p></article>
-<article class="role-card"><div class="who">Estudiantes</div><h3>Tienen una herramienta visible y disponible</h3><p>Web y app convierten el inglés en algo a lo que pueden volver durante la semana, no únicamente en una actividad ligada al horario de clase.</p></article>
-</div>
-<div class="statement">El producto no es “otra plataforma de inglés”. El producto es que la Universidad Autónoma pueda ofrecer una experiencia digital de inglés como parte visible de su propia propuesta educativa.</div>
-</div>
-</section>
-<!-- ==================== 08 · ARTICULACIÓN ==================== -->
+<!-- ==================== 07 · ARTICULACIÓN ==================== -->
 <section class="band bg-cream page-break" id="articulacion">
 <div class="sheet">
-<span class="eyebrow"><span class="sec-no">08</span>La experiencia completa</span>
+<span class="eyebrow"><span class="sec-no">07</span>La experiencia completa</span>
 <h2 class="head">Todo lo necesario para llevar el inglés <span class="hl">más allá del aula</span>.</h2>
 <p class="lead">La demo muestra la plataforma funcionando. Esta es la experiencia completa que la Universidad Autónoma puede poner a disposición de sus alumnos.</p>
 <div class="get-grid">
@@ -1166,6 +1217,7 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <div class="reward-stat"><b>Web + app</b><span>una sola experiencia</span></div>
 </div>
 </div>
+<div class="statement">El producto no es “otra plataforma de inglés”. El producto es que la Universidad Autónoma pueda ofrecer una experiencia digital de inglés como parte visible de su propia propuesta educativa.</div>
 <div class="statement">Una experiencia institucional de inglés que acompaña al alumno durante toda la semana y permite extender el alcance del programa a toda la comunidad estudiantil.</div>
 </div>
 </section>
@@ -1175,17 +1227,12 @@ details.academic-detail .module{margin-top:18px;box-shadow:none}
 <span class="eyebrow"><span class="bar"></span>Hagámoslo realidad</span>
 <h2 class="head">Lancemos juntos la plataforma de e-learning de inglés de la Autónoma <span class="hl-b">y hagamos historia</span>.</h2>
 <p class="lead">Una plataforma con identidad propia, disponible en web y app, con contenido de A1 a C1 y miles de oportunidades de práctica para acompañar a los alumnos dentro y fuera del aula.</p>
+<p class="lead" style="margin-top:8px">Una capa de práctica al servicio del área de idiomas: el aula sigue siendo el centro y la plataforma sostiene el trabajo entre sesión y sesión.</p>
 <div class="launch-hero">
 <span class="launch-label">Universidad Autónoma del Perú × AprendoEnglish</span>
 <h3>Del aula a una experiencia de inglés disponible todos los días.</h3>
 <p>La tecnología, la experiencia digital y el contenido ya están construidos. La implementación permite convertirlos en una plataforma institucional de la Autónoma y ponerlos al alcance de sus estudiantes.</p>
-<div class="launch-path">
-<div class="launch-step"><div class="n">01</div><b>Alineamiento académico</b><span>Mapear la ruta final al programa de inglés de la universidad.</span></div>
-<div class="launch-step"><div class="n">02</div><b>Identidad Autónoma</b><span>Aplicar nombre, branding y experiencia institucional.</span></div>
-<div class="launch-step"><div class="n">03</div><b>Activación</b><span>Habilitar web y app para los alumnos definidos por la universidad.</span></div>
-<div class="launch-step"><div class="n">04</div><b>Lanzamiento</b><span>Presentar la nueva plataforma de inglés a la comunidad universitaria.</span></div>
-</div>
-<div class="history-line">Una universidad que lleva el inglés más allá del aula abre más oportunidades para que sus alumnos lleguen más lejos.</div>
+<div class="history-line" style="margin-top:20px">Una universidad que lleva el inglés más allá del aula abre más oportunidades para que sus alumnos lleguen más lejos.</div>
 </div>
 </div>
 </section>
