@@ -9,67 +9,141 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SilaboCipRouteImport } from './routes/silabo-cip'
-import { Route as SilaboAutonomaRouteImport } from './routes/silabo-autonoma'
-import { Route as PresentationRouteImport } from './routes/presentation'
-import { Route as PresentacionSantaMariaDeLaGraciaRouteImport } from './routes/presentacion-santa-maria-de-la-gracia'
-import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
-import { Route as PresentacionNuamRouteImport } from './routes/presentacion-nuam'
-import { Route as PresentacionMovistarRouteImport } from './routes/presentacion-movistar'
-import { Route as PresentacionLaTinkaRouteImport } from './routes/presentacion-la-tinka'
-import { Route as PresentacionBcpRouteImport } from './routes/presentacion-bcp'
-import { Route as PresentacionAjeRouteImport } from './routes/presentacion-aje'
-import { Route as PresentacionRouteImport } from './routes/presentacion'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
-import { Route as CipPresentacionRouteImport } from './routes/cip-presentacion'
-import { Route as CipRouteImport } from './routes/cip'
-import { Route as AutonomaPresentacionRouteImport } from './routes/autonoma-presentacion'
-import { Route as ApavitPresentacionRouteImport } from './routes/apavit-presentacion'
-import { Route as CIPPresentaRouteImport } from './routes/CIP-presenta'
-import { Route as R1millondealumnosRouteImport } from './routes/1millondealumnos'
-import { Route as SlugRouteImport } from './routes/$slug'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiDashboardShellRouteImport } from './routes/api/dashboard-shell'
-import { Route as ApiAppShellRouteImport } from './routes/api/app-shell'
-import { Route as AuthenticatedInstitucionesRouteImport } from './routes/_authenticated/instituciones'
-import { Route as AuthenticatedDemosRouteImport } from './routes/_authenticated/demos'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
-import { Route as SlugPadresRouteImport } from './routes/$slug_.padres'
+import { Route as SlugRouteImport } from './routes/$slug'
+import { Route as R1millondealumnosRouteImport } from './routes/1millondealumnos'
+import { Route as CIPPresentaRouteImport } from './routes/CIP-presenta'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as ApavitPresentacionRouteImport } from './routes/apavit-presentacion'
+import { Route as AutonomaPresentacionRouteImport } from './routes/autonoma-presentacion'
+import { Route as CipRouteImport } from './routes/cip'
+import { Route as CipPresentacionRouteImport } from './routes/cip-presentacion'
+import { Route as DemoDashboardRouteImport } from './routes/demo-dashboard'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PresentacionRouteImport } from './routes/presentacion'
+import { Route as PresentacionAjeRouteImport } from './routes/presentacion-aje'
+import { Route as PresentacionBcpRouteImport } from './routes/presentacion-bcp'
+import { Route as PresentacionLaTinkaRouteImport } from './routes/presentacion-la-tinka'
+import { Route as PresentacionMovistarRouteImport } from './routes/presentacion-movistar'
+import { Route as PresentacionNuamRouteImport } from './routes/presentacion-nuam'
+import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
+import { Route as PresentacionSantaMariaDeLaGraciaRouteImport } from './routes/presentacion-santa-maria-de-la-gracia'
+import { Route as PresentationRouteImport } from './routes/presentation'
+import { Route as SilaboAutonomaRouteImport } from './routes/silabo-autonoma'
+import { Route as SilaboCipRouteImport } from './routes/silabo-cip'
 import { Route as SlugDashboardRouteImport } from './routes/$slug_.dashboard'
-import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
-import { Route as ApiPublicPreinscripcionRouteImport } from './routes/api/public/preinscripcion'
-import { Route as ApiDemosMetasRouteImport } from './routes/api/demos/metas'
-import { Route as ApiDemosInvalidateRouteImport } from './routes/api/demos/invalidate'
-import { Route as ApiCourseVocabRouteImport } from './routes/api/course/vocab'
-import { Route as ApiCourseSpeakingEvalRouteImport } from './routes/api/course/speaking-eval'
-import { Route as ApiCourseSpeakingAttemptsRouteImport } from './routes/api/course/speaking-attempts'
-import { Route as ApiCourseSpeakingRouteImport } from './routes/api/course/speaking'
-import { Route as ApiCoursePracticeRouteImport } from './routes/api/course/practice'
-import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
+import { Route as SlugPadresRouteImport } from './routes/$slug_.padres'
+import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDemosRouteImport } from './routes/_authenticated/demos'
+import { Route as AuthenticatedInstitucionesRouteImport } from './routes/_authenticated/instituciones'
+import { Route as ApiAppShellRouteImport } from './routes/api/app-shell'
+import { Route as ApiDashboardShellRouteImport } from './routes/api/dashboard-shell'
 import { Route as ApiBrandSplatRouteImport } from './routes/api/brand/$'
-import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
-import { Route as ApiPublicCirclesStateRouteImport } from './routes/api/public/circles/state'
-import { Route as ApiPublicCirclesNextTaskRouteImport } from './routes/api/public/circles/next-task'
-import { Route as ApiPublicCirclesMessageRouteImport } from './routes/api/public/circles/message'
-import { Route as ApiPublicCirclesJoinRouteImport } from './routes/api/public/circles/join'
+import { Route as ApiCourseBundleRouteImport } from './routes/api/course/bundle'
+import { Route as ApiCoursePracticeRouteImport } from './routes/api/course/practice'
+import { Route as ApiCourseSpeakingRouteImport } from './routes/api/course/speaking'
+import { Route as ApiCourseSpeakingAttemptsRouteImport } from './routes/api/course/speaking-attempts'
+import { Route as ApiCourseSpeakingEvalRouteImport } from './routes/api/course/speaking-eval'
+import { Route as ApiCourseVocabRouteImport } from './routes/api/course/vocab'
+import { Route as ApiDemosInvalidateRouteImport } from './routes/api/demos/invalidate'
+import { Route as ApiDemosMetasRouteImport } from './routes/api/demos/metas'
+import { Route as ApiPublicPreinscripcionRouteImport } from './routes/api/public/preinscripcion'
+import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as ApiPublicCirclesCreateRouteImport } from './routes/api/public/circles/create'
+import { Route as ApiPublicCirclesJoinRouteImport } from './routes/api/public/circles/join'
+import { Route as ApiPublicCirclesMessageRouteImport } from './routes/api/public/circles/message'
+import { Route as ApiPublicCirclesNextTaskRouteImport } from './routes/api/public/circles/next-task'
+import { Route as ApiPublicCirclesStateRouteImport } from './routes/api/public/circles/state'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
-const SilaboCipRoute = SilaboCipRouteImport.update({
-  id: '/silabo-cip',
-  path: '/silabo-cip',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SilaboAutonomaRoute = SilaboAutonomaRouteImport.update({
-  id: '/silabo-autonoma',
-  path: '/silabo-autonoma',
+const SlugRoute = SlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PresentationRoute = PresentationRouteImport.update({
-  id: '/presentation',
-  path: '/presentation',
+const R1millondealumnosRoute = R1millondealumnosRouteImport.update({
+  id: '/1millondealumnos',
+  path: '/1millondealumnos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CIPPresentaRoute = CIPPresentaRouteImport.update({
+  id: '/CIP-presenta',
+  path: '/CIP-presenta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApavitPresentacionRoute = ApavitPresentacionRouteImport.update({
+  id: '/apavit-presentacion',
+  path: '/apavit-presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AutonomaPresentacionRoute = AutonomaPresentacionRouteImport.update({
+  id: '/autonoma-presentacion',
+  path: '/autonoma-presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CipRoute = CipRouteImport.update({
+  id: '/cip',
+  path: '/cip',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CipPresentacionRoute = CipPresentacionRouteImport.update({
+  id: '/cip-presentacion',
+  path: '/cip-presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoDashboardRoute = DemoDashboardRouteImport.update({
+  id: '/demo-dashboard',
+  path: '/demo-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionRoute = PresentacionRouteImport.update({
+  id: '/presentacion',
+  path: '/presentacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionAjeRoute = PresentacionAjeRouteImport.update({
+  id: '/presentacion-aje',
+  path: '/presentacion-aje',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionBcpRoute = PresentacionBcpRouteImport.update({
+  id: '/presentacion-bcp',
+  path: '/presentacion-bcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionLaTinkaRoute = PresentacionLaTinkaRouteImport.update({
+  id: '/presentacion-la-tinka',
+  path: '/presentacion-la-tinka',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionMovistarRoute = PresentacionMovistarRouteImport.update({
+  id: '/presentacion-movistar',
+  path: '/presentacion-movistar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionNuamRoute = PresentacionNuamRouteImport.update({
+  id: '/presentacion-nuam',
+  path: '/presentacion-nuam',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentacionRepsolRoute = PresentacionRepsolRouteImport.update({
+  id: '/presentacion-repsol',
+  path: '/presentacion-repsol',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PresentacionSantaMariaDeLaGraciaRoute =
@@ -78,129 +152,19 @@ const PresentacionSantaMariaDeLaGraciaRoute =
     path: '/presentacion-santa-maria-de-la-gracia',
     getParentRoute: () => rootRouteImport,
   } as any)
-const PresentacionRepsolRoute = PresentacionRepsolRouteImport.update({
-  id: '/presentacion-repsol',
-  path: '/presentacion-repsol',
+const PresentationRoute = PresentationRouteImport.update({
+  id: '/presentation',
+  path: '/presentation',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PresentacionNuamRoute = PresentacionNuamRouteImport.update({
-  id: '/presentacion-nuam',
-  path: '/presentacion-nuam',
+const SilaboAutonomaRoute = SilaboAutonomaRouteImport.update({
+  id: '/silabo-autonoma',
+  path: '/silabo-autonoma',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PresentacionMovistarRoute = PresentacionMovistarRouteImport.update({
-  id: '/presentacion-movistar',
-  path: '/presentacion-movistar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PresentacionLaTinkaRoute = PresentacionLaTinkaRouteImport.update({
-  id: '/presentacion-la-tinka',
-  path: '/presentacion-la-tinka',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PresentacionBcpRoute = PresentacionBcpRouteImport.update({
-  id: '/presentacion-bcp',
-  path: '/presentacion-bcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PresentacionAjeRoute = PresentacionAjeRouteImport.update({
-  id: '/presentacion-aje',
-  path: '/presentacion-aje',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PresentacionRoute = PresentacionRouteImport.update({
-  id: '/presentacion',
-  path: '/presentacion',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoDashboardRoute = DemoDashboardRouteImport.update({
-  id: '/demo-dashboard',
-  path: '/demo-dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CipPresentacionRoute = CipPresentacionRouteImport.update({
-  id: '/cip-presentacion',
-  path: '/cip-presentacion',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CipRoute = CipRouteImport.update({
-  id: '/cip',
-  path: '/cip',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AutonomaPresentacionRoute = AutonomaPresentacionRouteImport.update({
-  id: '/autonoma-presentacion',
-  path: '/autonoma-presentacion',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApavitPresentacionRoute = ApavitPresentacionRouteImport.update({
-  id: '/apavit-presentacion',
-  path: '/apavit-presentacion',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CIPPresentaRoute = CIPPresentaRouteImport.update({
-  id: '/CIP-presenta',
-  path: '/CIP-presenta',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const R1millondealumnosRoute = R1millondealumnosRouteImport.update({
-  id: '/1millondealumnos',
-  path: '/1millondealumnos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SlugRoute = SlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiDashboardShellRoute = ApiDashboardShellRouteImport.update({
-  id: '/api/dashboard-shell',
-  path: '/api/dashboard-shell',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAppShellRoute = ApiAppShellRouteImport.update({
-  id: '/api/app-shell',
-  path: '/api/app-shell',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedInstitucionesRoute =
-  AuthenticatedInstitucionesRouteImport.update({
-    id: '/instituciones',
-    path: '/instituciones',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDemosRoute = AuthenticatedDemosRouteImport.update({
-  id: '/demos',
-  path: '/demos',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
-  id: '/app',
-  path: '/app',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const SlugPadresRoute = SlugPadresRouteImport.update({
-  id: '/$slug_/padres',
-  path: '/$slug/padres',
+const SilaboCipRoute = SilaboCipRouteImport.update({
+  id: '/silabo-cip',
+  path: '/silabo-cip',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SlugDashboardRoute = SlugDashboardRouteImport.update({
@@ -208,34 +172,60 @@ const SlugDashboardRoute = SlugDashboardRouteImport.update({
   path: '/$slug/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
-  id: '/api/public/share-invite',
-  path: '/api/public/share-invite',
+const SlugPadresRoute = SlugPadresRouteImport.update({
+  id: '/$slug_/padres',
+  path: '/$slug/padres',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicPreinscripcionRoute = ApiPublicPreinscripcionRouteImport.update({
-  id: '/api/public/preinscripcion',
-  path: '/api/public/preinscripcion',
+const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDemosRoute = AuthenticatedDemosRouteImport.update({
+  id: '/demos',
+  path: '/demos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInstitucionesRoute =
+  AuthenticatedInstitucionesRouteImport.update({
+    id: '/instituciones',
+    path: '/instituciones',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const ApiAppShellRoute = ApiAppShellRouteImport.update({
+  id: '/api/app-shell',
+  path: '/api/app-shell',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDemosMetasRoute = ApiDemosMetasRouteImport.update({
-  id: '/api/demos/metas',
-  path: '/api/demos/metas',
+const ApiDashboardShellRoute = ApiDashboardShellRouteImport.update({
+  id: '/api/dashboard-shell',
+  path: '/api/dashboard-shell',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDemosInvalidateRoute = ApiDemosInvalidateRouteImport.update({
-  id: '/api/demos/invalidate',
-  path: '/api/demos/invalidate',
+const ApiBrandSplatRoute = ApiBrandSplatRouteImport.update({
+  id: '/api/brand/$',
+  path: '/api/brand/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiCourseVocabRoute = ApiCourseVocabRouteImport.update({
-  id: '/api/course/vocab',
-  path: '/api/course/vocab',
+const ApiCourseBundleRoute = ApiCourseBundleRouteImport.update({
+  id: '/api/course/bundle',
+  path: '/api/course/bundle',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiCourseSpeakingEvalRoute = ApiCourseSpeakingEvalRouteImport.update({
-  id: '/api/course/speaking-eval',
-  path: '/api/course/speaking-eval',
+const ApiCoursePracticeRoute = ApiCoursePracticeRouteImport.update({
+  id: '/api/course/practice',
+  path: '/api/course/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCourseSpeakingRoute = ApiCourseSpeakingRouteImport.update({
+  id: '/api/course/speaking',
+  path: '/api/course/speaking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCourseSpeakingAttemptsRoute =
@@ -244,35 +234,49 @@ const ApiCourseSpeakingAttemptsRoute =
     path: '/api/course/speaking-attempts',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiCourseSpeakingRoute = ApiCourseSpeakingRouteImport.update({
-  id: '/api/course/speaking',
-  path: '/api/course/speaking',
+const ApiCourseSpeakingEvalRoute = ApiCourseSpeakingEvalRouteImport.update({
+  id: '/api/course/speaking-eval',
+  path: '/api/course/speaking-eval',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiCoursePracticeRoute = ApiCoursePracticeRouteImport.update({
-  id: '/api/course/practice',
-  path: '/api/course/practice',
+const ApiCourseVocabRoute = ApiCourseVocabRouteImport.update({
+  id: '/api/course/vocab',
+  path: '/api/course/vocab',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiCourseBundleRoute = ApiCourseBundleRouteImport.update({
-  id: '/api/course/bundle',
-  path: '/api/course/bundle',
+const ApiDemosInvalidateRoute = ApiDemosInvalidateRouteImport.update({
+  id: '/api/demos/invalidate',
+  path: '/api/demos/invalidate',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiBrandSplatRoute = ApiBrandSplatRouteImport.update({
-  id: '/api/brand/$',
-  path: '/api/brand/$',
+const ApiDemosMetasRoute = ApiDemosMetasRouteImport.update({
+  id: '/api/demos/metas',
+  path: '/api/demos/metas',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LovableEmailTransactionalPreviewRoute =
-  LovableEmailTransactionalPreviewRouteImport.update({
-    id: '/lovable/email/transactional/preview',
-    path: '/lovable/email/transactional/preview',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicCirclesStateRoute = ApiPublicCirclesStateRouteImport.update({
-  id: '/api/public/circles/state',
-  path: '/api/public/circles/state',
+const ApiPublicPreinscripcionRoute = ApiPublicPreinscripcionRouteImport.update({
+  id: '/api/public/preinscripcion',
+  path: '/api/public/preinscripcion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicShareInviteRoute = ApiPublicShareInviteRouteImport.update({
+  id: '/api/public/share-invite',
+  path: '/api/public/share-invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCirclesCreateRoute = ApiPublicCirclesCreateRouteImport.update({
+  id: '/api/public/circles/create',
+  path: '/api/public/circles/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCirclesJoinRoute = ApiPublicCirclesJoinRouteImport.update({
+  id: '/api/public/circles/join',
+  path: '/api/public/circles/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCirclesMessageRoute = ApiPublicCirclesMessageRouteImport.update({
+  id: '/api/public/circles/message',
+  path: '/api/public/circles/message',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicCirclesNextTaskRoute =
@@ -281,21 +285,17 @@ const ApiPublicCirclesNextTaskRoute =
     path: '/api/public/circles/next-task',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicCirclesMessageRoute = ApiPublicCirclesMessageRouteImport.update({
-  id: '/api/public/circles/message',
-  path: '/api/public/circles/message',
+const ApiPublicCirclesStateRoute = ApiPublicCirclesStateRouteImport.update({
+  id: '/api/public/circles/state',
+  path: '/api/public/circles/state',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicCirclesJoinRoute = ApiPublicCirclesJoinRouteImport.update({
-  id: '/api/public/circles/join',
-  path: '/api/public/circles/join',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicCirclesCreateRoute = ApiPublicCirclesCreateRouteImport.update({
-  id: '/api/public/circles/create',
-  path: '/api/public/circles/create',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -639,137 +639,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/silabo-cip': {
-      id: '/silabo-cip'
-      path: '/silabo-cip'
-      fullPath: '/silabo-cip'
-      preLoaderRoute: typeof SilaboCipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/silabo-autonoma': {
-      id: '/silabo-autonoma'
-      path: '/silabo-autonoma'
-      fullPath: '/silabo-autonoma'
-      preLoaderRoute: typeof SilaboAutonomaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentation': {
-      id: '/presentation'
-      path: '/presentation'
-      fullPath: '/presentation'
-      preLoaderRoute: typeof PresentationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentacion-santa-maria-de-la-gracia': {
-      id: '/presentacion-santa-maria-de-la-gracia'
-      path: '/presentacion-santa-maria-de-la-gracia'
-      fullPath: '/presentacion-santa-maria-de-la-gracia'
-      preLoaderRoute: typeof PresentacionSantaMariaDeLaGraciaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentacion-repsol': {
-      id: '/presentacion-repsol'
-      path: '/presentacion-repsol'
-      fullPath: '/presentacion-repsol'
-      preLoaderRoute: typeof PresentacionRepsolRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentacion-nuam': {
-      id: '/presentacion-nuam'
-      path: '/presentacion-nuam'
-      fullPath: '/presentacion-nuam'
-      preLoaderRoute: typeof PresentacionNuamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentacion-movistar': {
-      id: '/presentacion-movistar'
-      path: '/presentacion-movistar'
-      fullPath: '/presentacion-movistar'
-      preLoaderRoute: typeof PresentacionMovistarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentacion-la-tinka': {
-      id: '/presentacion-la-tinka'
-      path: '/presentacion-la-tinka'
-      fullPath: '/presentacion-la-tinka'
-      preLoaderRoute: typeof PresentacionLaTinkaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentacion-bcp': {
-      id: '/presentacion-bcp'
-      path: '/presentacion-bcp'
-      fullPath: '/presentacion-bcp'
-      preLoaderRoute: typeof PresentacionBcpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentacion-aje': {
-      id: '/presentacion-aje'
-      path: '/presentacion-aje'
-      fullPath: '/presentacion-aje'
-      preLoaderRoute: typeof PresentacionAjeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/presentacion': {
-      id: '/presentacion'
-      path: '/presentacion'
-      fullPath: '/presentacion'
-      preLoaderRoute: typeof PresentacionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo-dashboard': {
-      id: '/demo-dashboard'
-      path: '/demo-dashboard'
-      fullPath: '/demo-dashboard'
-      preLoaderRoute: typeof DemoDashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cip-presentacion': {
-      id: '/cip-presentacion'
-      path: '/cip-presentacion'
-      fullPath: '/cip-presentacion'
-      preLoaderRoute: typeof CipPresentacionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cip': {
-      id: '/cip'
-      path: '/cip'
-      fullPath: '/cip'
-      preLoaderRoute: typeof CipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/autonoma-presentacion': {
-      id: '/autonoma-presentacion'
-      path: '/autonoma-presentacion'
-      fullPath: '/autonoma-presentacion'
-      preLoaderRoute: typeof AutonomaPresentacionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/apavit-presentacion': {
-      id: '/apavit-presentacion'
-      path: '/apavit-presentacion'
-      fullPath: '/apavit-presentacion'
-      preLoaderRoute: typeof ApavitPresentacionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/CIP-presenta': {
-      id: '/CIP-presenta'
-      path: '/CIP-presenta'
-      fullPath: '/CIP-presenta'
-      preLoaderRoute: typeof CIPPresentaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/1millondealumnos': {
-      id: '/1millondealumnos'
-      path: '/1millondealumnos'
-      fullPath: '/1millondealumnos'
-      preLoaderRoute: typeof R1millondealumnosRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$slug': {
@@ -779,6 +653,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/1millondealumnos': {
+      id: '/1millondealumnos'
+      path: '/1millondealumnos'
+      fullPath: '/1millondealumnos'
+      preLoaderRoute: typeof R1millondealumnosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/CIP-presenta': {
+      id: '/CIP-presenta'
+      path: '/CIP-presenta'
+      fullPath: '/CIP-presenta'
+      preLoaderRoute: typeof CIPPresentaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -786,60 +674,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/apavit-presentacion': {
+      id: '/apavit-presentacion'
+      path: '/apavit-presentacion'
+      fullPath: '/apavit-presentacion'
+      preLoaderRoute: typeof ApavitPresentacionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/dashboard-shell': {
-      id: '/api/dashboard-shell'
-      path: '/api/dashboard-shell'
-      fullPath: '/api/dashboard-shell'
-      preLoaderRoute: typeof ApiDashboardShellRouteImport
+    '/autonoma-presentacion': {
+      id: '/autonoma-presentacion'
+      path: '/autonoma-presentacion'
+      fullPath: '/autonoma-presentacion'
+      preLoaderRoute: typeof AutonomaPresentacionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/app-shell': {
-      id: '/api/app-shell'
-      path: '/api/app-shell'
-      fullPath: '/api/app-shell'
-      preLoaderRoute: typeof ApiAppShellRouteImport
+    '/cip': {
+      id: '/cip'
+      path: '/cip'
+      fullPath: '/cip'
+      preLoaderRoute: typeof CipRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/instituciones': {
-      id: '/_authenticated/instituciones'
-      path: '/instituciones'
-      fullPath: '/instituciones'
-      preLoaderRoute: typeof AuthenticatedInstitucionesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/cip-presentacion': {
+      id: '/cip-presentacion'
+      path: '/cip-presentacion'
+      fullPath: '/cip-presentacion'
+      preLoaderRoute: typeof CipPresentacionRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/demos': {
-      id: '/_authenticated/demos'
-      path: '/demos'
-      fullPath: '/demos'
-      preLoaderRoute: typeof AuthenticatedDemosRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/demo-dashboard': {
+      id: '/demo-dashboard'
+      path: '/demo-dashboard'
+      fullPath: '/demo-dashboard'
+      preLoaderRoute: typeof DemoDashboardRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/app': {
-      id: '/_authenticated/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AuthenticatedAppRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/presentacion': {
+      id: '/presentacion'
+      path: '/presentacion'
+      fullPath: '/presentacion'
+      preLoaderRoute: typeof PresentacionRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/$slug_/padres': {
-      id: '/$slug_/padres'
-      path: '/$slug/padres'
-      fullPath: '/$slug/padres'
-      preLoaderRoute: typeof SlugPadresRouteImport
+    '/presentacion-aje': {
+      id: '/presentacion-aje'
+      path: '/presentacion-aje'
+      fullPath: '/presentacion-aje'
+      preLoaderRoute: typeof PresentacionAjeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-bcp': {
+      id: '/presentacion-bcp'
+      path: '/presentacion-bcp'
+      fullPath: '/presentacion-bcp'
+      preLoaderRoute: typeof PresentacionBcpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-la-tinka': {
+      id: '/presentacion-la-tinka'
+      path: '/presentacion-la-tinka'
+      fullPath: '/presentacion-la-tinka'
+      preLoaderRoute: typeof PresentacionLaTinkaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-movistar': {
+      id: '/presentacion-movistar'
+      path: '/presentacion-movistar'
+      fullPath: '/presentacion-movistar'
+      preLoaderRoute: typeof PresentacionMovistarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-nuam': {
+      id: '/presentacion-nuam'
+      path: '/presentacion-nuam'
+      fullPath: '/presentacion-nuam'
+      preLoaderRoute: typeof PresentacionNuamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-repsol': {
+      id: '/presentacion-repsol'
+      path: '/presentacion-repsol'
+      fullPath: '/presentacion-repsol'
+      preLoaderRoute: typeof PresentacionRepsolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-santa-maria-de-la-gracia': {
+      id: '/presentacion-santa-maria-de-la-gracia'
+      path: '/presentacion-santa-maria-de-la-gracia'
+      fullPath: '/presentacion-santa-maria-de-la-gracia'
+      preLoaderRoute: typeof PresentacionSantaMariaDeLaGraciaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentation': {
+      id: '/presentation'
+      path: '/presentation'
+      fullPath: '/presentation'
+      preLoaderRoute: typeof PresentationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/silabo-autonoma': {
+      id: '/silabo-autonoma'
+      path: '/silabo-autonoma'
+      fullPath: '/silabo-autonoma'
+      preLoaderRoute: typeof SilaboAutonomaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/silabo-cip': {
+      id: '/silabo-cip'
+      path: '/silabo-cip'
+      fullPath: '/silabo-cip'
+      preLoaderRoute: typeof SilaboCipRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$slug_/dashboard': {
@@ -849,74 +800,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SlugDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/share-invite': {
-      id: '/api/public/share-invite'
-      path: '/api/public/share-invite'
-      fullPath: '/api/public/share-invite'
-      preLoaderRoute: typeof ApiPublicShareInviteRouteImport
+    '/$slug_/padres': {
+      id: '/$slug_/padres'
+      path: '/$slug/padres'
+      fullPath: '/$slug/padres'
+      preLoaderRoute: typeof SlugPadresRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/preinscripcion': {
-      id: '/api/public/preinscripcion'
-      path: '/api/public/preinscripcion'
-      fullPath: '/api/public/preinscripcion'
-      preLoaderRoute: typeof ApiPublicPreinscripcionRouteImport
+    '/_authenticated/app': {
+      id: '/_authenticated/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AuthenticatedAppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/demos': {
+      id: '/_authenticated/demos'
+      path: '/demos'
+      fullPath: '/demos'
+      preLoaderRoute: typeof AuthenticatedDemosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/instituciones': {
+      id: '/_authenticated/instituciones'
+      path: '/instituciones'
+      fullPath: '/instituciones'
+      preLoaderRoute: typeof AuthenticatedInstitucionesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/app-shell': {
+      id: '/api/app-shell'
+      path: '/api/app-shell'
+      fullPath: '/api/app-shell'
+      preLoaderRoute: typeof ApiAppShellRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/demos/metas': {
-      id: '/api/demos/metas'
-      path: '/api/demos/metas'
-      fullPath: '/api/demos/metas'
-      preLoaderRoute: typeof ApiDemosMetasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/demos/invalidate': {
-      id: '/api/demos/invalidate'
-      path: '/api/demos/invalidate'
-      fullPath: '/api/demos/invalidate'
-      preLoaderRoute: typeof ApiDemosInvalidateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/course/vocab': {
-      id: '/api/course/vocab'
-      path: '/api/course/vocab'
-      fullPath: '/api/course/vocab'
-      preLoaderRoute: typeof ApiCourseVocabRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/course/speaking-eval': {
-      id: '/api/course/speaking-eval'
-      path: '/api/course/speaking-eval'
-      fullPath: '/api/course/speaking-eval'
-      preLoaderRoute: typeof ApiCourseSpeakingEvalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/course/speaking-attempts': {
-      id: '/api/course/speaking-attempts'
-      path: '/api/course/speaking-attempts'
-      fullPath: '/api/course/speaking-attempts'
-      preLoaderRoute: typeof ApiCourseSpeakingAttemptsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/course/speaking': {
-      id: '/api/course/speaking'
-      path: '/api/course/speaking'
-      fullPath: '/api/course/speaking'
-      preLoaderRoute: typeof ApiCourseSpeakingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/course/practice': {
-      id: '/api/course/practice'
-      path: '/api/course/practice'
-      fullPath: '/api/course/practice'
-      preLoaderRoute: typeof ApiCoursePracticeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/course/bundle': {
-      id: '/api/course/bundle'
-      path: '/api/course/bundle'
-      fullPath: '/api/course/bundle'
-      preLoaderRoute: typeof ApiCourseBundleRouteImport
+    '/api/dashboard-shell': {
+      id: '/api/dashboard-shell'
+      path: '/api/dashboard-shell'
+      fullPath: '/api/dashboard-shell'
+      preLoaderRoute: typeof ApiDashboardShellRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/brand/$': {
@@ -926,32 +856,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiBrandSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/transactional/preview': {
-      id: '/lovable/email/transactional/preview'
-      path: '/lovable/email/transactional/preview'
-      fullPath: '/lovable/email/transactional/preview'
-      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+    '/api/course/bundle': {
+      id: '/api/course/bundle'
+      path: '/api/course/bundle'
+      fullPath: '/api/course/bundle'
+      preLoaderRoute: typeof ApiCourseBundleRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/circles/state': {
-      id: '/api/public/circles/state'
-      path: '/api/public/circles/state'
-      fullPath: '/api/public/circles/state'
-      preLoaderRoute: typeof ApiPublicCirclesStateRouteImport
+    '/api/course/practice': {
+      id: '/api/course/practice'
+      path: '/api/course/practice'
+      fullPath: '/api/course/practice'
+      preLoaderRoute: typeof ApiCoursePracticeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/circles/next-task': {
-      id: '/api/public/circles/next-task'
-      path: '/api/public/circles/next-task'
-      fullPath: '/api/public/circles/next-task'
-      preLoaderRoute: typeof ApiPublicCirclesNextTaskRouteImport
+    '/api/course/speaking': {
+      id: '/api/course/speaking'
+      path: '/api/course/speaking'
+      fullPath: '/api/course/speaking'
+      preLoaderRoute: typeof ApiCourseSpeakingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/circles/message': {
-      id: '/api/public/circles/message'
-      path: '/api/public/circles/message'
-      fullPath: '/api/public/circles/message'
-      preLoaderRoute: typeof ApiPublicCirclesMessageRouteImport
+    '/api/course/speaking-attempts': {
+      id: '/api/course/speaking-attempts'
+      path: '/api/course/speaking-attempts'
+      fullPath: '/api/course/speaking-attempts'
+      preLoaderRoute: typeof ApiCourseSpeakingAttemptsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/course/speaking-eval': {
+      id: '/api/course/speaking-eval'
+      path: '/api/course/speaking-eval'
+      fullPath: '/api/course/speaking-eval'
+      preLoaderRoute: typeof ApiCourseSpeakingEvalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/course/vocab': {
+      id: '/api/course/vocab'
+      path: '/api/course/vocab'
+      fullPath: '/api/course/vocab'
+      preLoaderRoute: typeof ApiCourseVocabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/demos/invalidate': {
+      id: '/api/demos/invalidate'
+      path: '/api/demos/invalidate'
+      fullPath: '/api/demos/invalidate'
+      preLoaderRoute: typeof ApiDemosInvalidateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/demos/metas': {
+      id: '/api/demos/metas'
+      path: '/api/demos/metas'
+      fullPath: '/api/demos/metas'
+      preLoaderRoute: typeof ApiDemosMetasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/preinscripcion': {
+      id: '/api/public/preinscripcion'
+      path: '/api/public/preinscripcion'
+      fullPath: '/api/public/preinscripcion'
+      preLoaderRoute: typeof ApiPublicPreinscripcionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/share-invite': {
+      id: '/api/public/share-invite'
+      path: '/api/public/share-invite'
+      fullPath: '/api/public/share-invite'
+      preLoaderRoute: typeof ApiPublicShareInviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/circles/create': {
+      id: '/api/public/circles/create'
+      path: '/api/public/circles/create'
+      fullPath: '/api/public/circles/create'
+      preLoaderRoute: typeof ApiPublicCirclesCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/circles/join': {
@@ -961,11 +940,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicCirclesJoinRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/circles/create': {
-      id: '/api/public/circles/create'
-      path: '/api/public/circles/create'
-      fullPath: '/api/public/circles/create'
-      preLoaderRoute: typeof ApiPublicCirclesCreateRouteImport
+    '/api/public/circles/message': {
+      id: '/api/public/circles/message'
+      path: '/api/public/circles/message'
+      fullPath: '/api/public/circles/message'
+      preLoaderRoute: typeof ApiPublicCirclesMessageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/circles/next-task': {
+      id: '/api/public/circles/next-task'
+      path: '/api/public/circles/next-task'
+      fullPath: '/api/public/circles/next-task'
+      preLoaderRoute: typeof ApiPublicCirclesNextTaskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/circles/state': {
+      id: '/api/public/circles/state'
+      path: '/api/public/circles/state'
+      fullPath: '/api/public/circles/state'
+      preLoaderRoute: typeof ApiPublicCirclesStateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
