@@ -1,0 +1,35 @@
+{
+  "id": "martin",
+  "name": "Martín",
+  "shortName": "Martín",
+  "kind": "compañero guía",
+  "emoji": "🧒",
+  "engine": "layers",
+  "css": "mascot.css",
+  "rootClass": "martin",
+  "shadow": true,
+  "artboard": { "width": 1427.48, "height": 2886.26 },
+  "headIcon": "head-icon.svg",
+  "layers": {
+    "armL": "layers/armL.svg",
+    "armR": "layers/armR.svg",
+    "legs": "layers/legs.svg",
+    "body": "layers/body.svg",
+    "head": "layers/head.svg",
+    "eyes": "layers/eyes.svg"
+  },
+  "stack": [
+    {
+      "group": "torso",
+      "children": [{ "layer": "armL" }, { "layer": "armR" }]
+    },
+    { "layer": "legs" },
+    {
+      "group": "torso",
+      "children": [
+        { "layer": "body" },
+        { "wrapper": "headbob", "children": [{ "layer": "head" }, { "layer": "eyes" }] }
+      ]
+    }
+  ]
+}

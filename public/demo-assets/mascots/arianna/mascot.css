@@ -1,0 +1,107 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   arianna · mascot.css — la animación de Arianna.
+
+   Sale de la de Ozzy y del Gallito, ajustada a este personaje: es un chico/a de
+   pie, con brazos como capa aparte, así que hay péndulo además del rebote.
+
+   Los pivotes salen de la caja real de cada capa medida sobre el lienzo
+   1427.48 × 2886.26: cabeza hasta el 40% de alto, torso 38–59%, piernas 58–96%,
+   ojos alrededor del 27.9% y hombros al 50%. Van en porcentaje del lienzo, así
+   que se ve igual a cualquier tamaño.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Amplitud general: baja este número y todo el movimiento se calma a la vez. */
+.arianna { --amp: 1; }
+
+.arianna .shadow {
+  position: absolute; left: 50%; bottom: 1.5%; width: 46%; height: 3.4%;
+  transform: translateX(-50%); border-radius: 50%;
+  background: rgba(0, 0, 0, .20);
+}
+
+.arianna .bear  { position: absolute; inset: 0; }
+.arianna .group { position: absolute; inset: 0; }
+.arianna .layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* El torso sube y baja; los pies se quedan plantados. */
+.arianna .torso { animation: arianna-bob 3.7s ease-in-out infinite; }
+
+/* El cuerpo respira desde la cintura, donde se apoya en las piernas. */
+.arianna .body { transform-origin: 51% 59%; animation: arianna-breathe 3.7s ease-in-out infinite; }
+
+/* Las piernas se estiran desde el pie plantado para acompañar la subida. */
+.arianna .legs { transform-origin: 51% 96%; animation: arianna-legs 3.7s ease-in-out infinite; }
+
+/* Los brazos cuelgan del hombro y hacen péndulo, cada uno al revés del otro. */
+.arianna .armL { transform-origin: 32% 50%; animation: arianna-armL 4.3s ease-in-out infinite; }
+.arianna .armR { transform-origin: 68% 50%; animation: arianna-armR 4.3s ease-in-out infinite; }
+
+/* La cabeza cabecea sobre el cuello. El envoltorio mueve cabeza y ojos juntos:
+   animando sólo la cabeza, los ojos se quedarían atrás.
+
+   Su periodo (4.1s) no coincide con el del torso (3.7s) a propósito: con el
+   mismo, la cabeza subiría clavada al cuerpo y parecería soldada. */
+.arianna .headbob {
+  position: absolute; inset: 0;
+  transform-origin: 51% 40%;
+  animation: arianna-head 4.1s ease-in-out infinite;
+}
+
+/* Parpadeo en su propio ciclo, largo y sin relación con el resto, para que no
+   caiga siempre en el mismo punto del cabeceo. */
+.arianna .eyes {
+  transform-origin: 49.5% 27.9%;
+  animation: arianna-blink 6.1s ease-in-out infinite;
+}
+
+@keyframes arianna-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(calc(-1.5% * var(--amp))); }
+}
+
+@keyframes arianna-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scaleX(calc(1 + .018 * var(--amp))) scaleY(calc(1 - .014 * var(--amp))); }
+}
+
+@keyframes arianna-legs {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(calc(1 + .022 * var(--amp))); }
+}
+
+@keyframes arianna-armL {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(calc(3.2deg * var(--amp))); }
+}
+
+@keyframes arianna-armR {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(calc(-3.2deg * var(--amp))); }
+}
+
+@keyframes arianna-head {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  35%      { transform: translateY(calc(-1.1% * var(--amp))) rotate(calc(-1.4deg * var(--amp))); }
+  70%      { transform: translateY(calc(-.5% * var(--amp))) rotate(calc(1.2deg * var(--amp))); }
+}
+
+/* Dos parpadeos seguidos y una pausa larga: así no parece un metrónomo. */
+@keyframes arianna-blink {
+  0%, 87%  { transform: scaleY(1); }
+  89%      { transform: scaleY(.06); }
+  91%      { transform: scaleY(1); }
+  94%      { transform: scaleY(.06); }
+  96%,100% { transform: scaleY(1); }
+}
+
+/* Con «reducir movimiento» del sistema no se para todo: queda un resto de vida
+   —una cuarta parte de amplitud y el doble de lento—, como hace Boti. */
+@media (prefers-reduced-motion: reduce) {
+  .arianna { --amp: .25; }
+  .arianna .torso,
+  .arianna .body,
+  .arianna .legs,
+  .arianna .armL,
+  .arianna .armR,
+  .arianna .headbob { animation-duration: 8.5s; }
+}

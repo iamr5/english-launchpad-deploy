@@ -24,7 +24,7 @@ Misma animación suave que ya tienen Ozzy y Gallito, sin exagerar:
 
 Los dos aparecen en la parrilla de «Personaje» con su ícono de cabeza, su nombre y su nota, junto a Ozzy, Boti y Gallito. Al elegir uno, el demo lo usa en el mapa, los globos y la barra superior, y su nombre y emoji entran en el texto del curso donde hoy dice «Ozzy».
 
-Nombres propuestos —dime si prefieres otros—: **Mateo** 🧒 y **Luana** 👧, ambos como «compañero de clase» / «compañera de clase».
+Nombres propuestos —dime si prefieres otros—: **Martin** 🧒 y **Arianna** 👧, ambos como «compañero de clase» / «compañera de clase».
 
 ### 4. Comprobación
 
