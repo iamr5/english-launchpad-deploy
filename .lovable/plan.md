@@ -1,28 +1,27 @@
-# Dar una cifra concreta de mejora en el bloque de evidencia
+# Nuevo bloque de evidencia: 35% más retención
 
-El problema: "33 estudios revisados" dice cuánta investigación hay, no cuánto mejora el alumno. Hay que responder la pregunta real: **¿cuánto mejor le va a quien practica fuera de clase?**
+Reemplazar la sección "Por qué la práctica fuera del aula" (bloque `#evidencia`) en los tres sílabos por una cifra que se entiende de inmediato.
 
-## La cifra que sí se entiende
+## Contenido nuevo
 
-El estudio de Muñoz & Cadierno (2021) mide una diferencia grande entre adolescentes con mucha y poca exposición al inglés fuera del aula. Traducida a lenguaje normal, esa diferencia equivale a que:
+Cifra grande: **35%** — subtítulo: "más retención".
 
-> **9 de cada 10** estudiantes que practican fuera de clase superan al alumno promedio que solo asiste a clase.
+Titular: **La práctica sostenida puede aumentar la retención hasta en 35%.**
 
-Es la conversión estándar del tamaño del efecto a percentiles (d ≈ 1,5 → percentil 93), pero sin mencionar jerga. Es fiel al estudio y directamente comprensible.
+Párrafo: Con el mismo tiempo total de estudio, los estudiantes que distribuyeron la práctica durante varios días recordaron 35% más vocabulario que quienes concentraron todo en una sola sesión. Por eso la plataforma complementa el trabajo del docente: mantiene la práctica activa entre una clase y la siguiente.
 
-## Cómo queda el bloque
+Refuerzo en letra pequeña: un meta-análisis de Cambridge University Press sobre 65 estudios encontró que el uso de apps móviles fue más efectivo que los métodos convencionales para el aprendizaje de vocabulario a largo plazo, con mayor efecto fuera del aula que dentro.
 
-- Número grande: **9 de 10** — subtítulo: "practican fuera de clase y superan al promedio de quienes solo van a clase".
-- Titular: "Practicar fuera de clase marca una diferencia grande, no menor."
-- Párrafo: los estudiantes con contacto frecuente con el inglés fuera del aula avanzan claramente más en vocabulario y gramática. La plataforma da esa práctica todos los días de la semana, sin quitarle tiempo al docente.
-- Nota al pie discreta con la fuente (Muñoz & Cadierno, 2021), sin números técnicos.
+Fuentes (nota al pie discreta): Bloom & Shuell (1981), *Journal of Educational Research*; meta-análisis de 65 estudios, Cambridge University Press.
+
+Sin jerga: no se muestran valores d ni p en el cuerpo del texto.
 
 ## Alcance técnico
 
-Se edita únicamente la sección `#evidencia` en:
+Se edita solo la sección `#evidencia` en:
 
 - `src/assets/silabo-autonoma.html`
 - `src/assets/silabo-autonoma-1.html`
-- `src/assets/silabo-cip.html` (con "colegiados" en lugar de "estudiantes")
+- `src/assets/silabo-cip.html` (usa "colegiados" en lugar de "estudiantes")
 
-Sin cambios de layout ni de estilos: se reemplaza el contenido del `.stat` y los textos. Verificación visual en escritorio y móvil en las tres rutas.
+Se conserva el layout y las clases existentes (`.evidence`, `.stat`, `cite`); solo cambian textos y se añade la línea de refuerzo. Verificación visual en escritorio y móvil en las tres rutas.
