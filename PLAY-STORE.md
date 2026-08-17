@@ -5,6 +5,16 @@ cuentas, claves y lo que sólo se comprueba en un móvil de verdad.
 
 Sólo Play. iOS todavía no se ha empezado.
 
+## Ya decidido — no volver a abrirlo
+
+- **UNA sola app**, no una por institución. `com.aprendoenglish.app`, una ficha,
+  una clave de firma. La marca de cada institución se pinta al entrar, después
+  del login, así que el icono y las capturas de la tienda son de AprendoEnglish.
+- **Comprobado en el navegador**: se entra con una cuenta del padrón de APAVIT y
+  la app sale con la marca de APAVIT. La cadena entera —padrón → institución →
+  marca → interfaz— funciona. Lo que queda por probar es sólo lo del aparato
+  (paso 5).
+
 ---
 
 ## 1 · Autorizar la vuelta del login en Supabase
