@@ -1255,6 +1255,8 @@
   .debug-fab.wipe { bottom: 234px; }
   .debug-fab.speaking { bottom: 286px; }
   .debug-fab.speaking.on { background: var(--ok, #3FAA24); opacity: 1; border-style: solid; }
+  .debug-fab.circles { bottom: 338px; }
+  .debug-fab.circles.on { background: var(--ok, #3FAA24); opacity: 1; border-style: solid; }
   /* The FABs are above the quiz overlay/sheet (z-index:50) and pinned
      bottom-right — exactly where the quiz's Confirmar/Siguiente button sits. Hide
      them whenever a sheet (mini-quiz, cierre, dialog) or the final-quiz screen is
@@ -2129,6 +2131,104 @@
   .sp-lvl b { display: block; font-size: 14px; font-weight: 900; }
   .sp-lvl span { display: block; margin-top: 1px; font-size: 11px; font-weight: 700; color: var(--muted2); }
 
+  /* ===== Speaking Circles: "Speaking con otros" (maqueta simulada) ===== */
+  .sc-shelf { margin: 0 2px 18px; padding: 14px; border: 2px solid var(--line); border-bottom-width: 4px;
+    border-radius: 18px; background: #fff; }
+  .sc-shelf-h { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+  .sc-shelf-h b { font-size: 16px; font-weight: 900; color: var(--ink); }
+  .sc-shelf small { display: block; font-size: 12px; line-height: 1.45; color: var(--muted); }
+  .sc-live { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 5px 10px;
+    border-radius: 999px; background: color-mix(in srgb, #3FAA24 12%, #fff); color: #2E7D1A;
+    font-size: 12px; font-weight: 800; }
+  .sc-dot { width: 8px; height: 8px; border-radius: 50%; background: #3FAA24; animation: scPulse 1.6s infinite; }
+  @keyframes scPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.8); } }
+  .sc-row { display: flex; gap: 8px; margin-top: 11px; flex-wrap: wrap; }
+  .sc-btn { flex: 1 1 140px; padding: 11px 12px; border-radius: 14px; cursor: pointer; font-size: 13px; font-weight: 800;
+    border: 2px solid var(--line); border-bottom-width: 4px; background: #fff; color: var(--ink); text-align: center; }
+  .sc-btn.pri { background: var(--blue); border-color: color-mix(in srgb, var(--blue) 70%, #000); color: #fff; }
+  .sc-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .sc-head { display: flex; align-items: center; gap: 10px; margin: 2px 0 10px; }
+  .sc-head b { font-size: 18px; font-weight: 900; color: var(--ink); }
+  .sc-back { background: none; border: 0; padding: 4px 0; font-size: 13px; font-weight: 800; color: var(--muted2); cursor: pointer; }
+  .sc-sec { margin: 14px 0 6px; font-size: 12px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--muted2); }
+  .sc-card { padding: 12px 13px; border: 2px solid var(--line); border-bottom-width: 3px; border-radius: 14px;
+    background: #fff; margin-bottom: 8px; width: 100%; text-align: left; cursor: pointer; display: block; }
+  .sc-card b { display: block; font-size: 14px; font-weight: 900; color: var(--ink); }
+  .sc-card small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+  .sc-card:active { transform: translateY(2px); border-bottom-width: 1px; }
+  .sc-static { cursor: default; }
+  .sc-static:active { transform: none; border-bottom-width: 3px; }
+  .sc-people { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+  .sc-av { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px 4px 4px; border-radius: 999px;
+    background: #F6F5F8; font-size: 12px; font-weight: 800; color: var(--ink); }
+  .sc-av i { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+    border-radius: 50%; color: #fff; font-size: 11px; font-style: normal; font-weight: 900; }
+  .sc-av.talk { background: color-mix(in srgb, var(--blue) 16%, #fff); }
+  .sc-pill { display: inline-block; padding: 4px 9px; border-radius: 999px; background: #F6F5F8;
+    font-size: 11px; font-weight: 800; color: var(--muted2); margin: 0 5px 5px 0; cursor: pointer; border: 2px solid transparent; }
+  .sc-pill.on { background: color-mix(in srgb, var(--blue) 14%, #fff); border-color: var(--blue); color: var(--blueDark); }
+  .sc-mission { padding: 12px 13px; border-radius: 14px; border: 2px solid var(--line); background: #FBFAFC; }
+  .sc-mission b { display: block; font-size: 14px; font-weight: 900; color: var(--ink); }
+  .sc-mission ul { margin: 7px 0 0; padding-left: 18px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+  .sc-timer { font-size: 26px; font-weight: 900; color: var(--blueDark); text-align: center; margin: 8px 0 2px; }
+  .sc-log { margin-top: 10px; max-height: 168px; overflow-y: auto; }
+  .sc-line { margin-bottom: 7px; font-size: 13px; line-height: 1.45; color: var(--ink); }
+  .sc-line b { font-weight: 900; color: var(--blueDark); }
+  .sc-cue { margin-top: 9px; padding: 9px 11px; border-radius: 12px; font-size: 12.5px; font-weight: 800;
+    background: color-mix(in srgb, #F4A720 16%, #fff); color: #8A5A00; }
+  .sc-menu { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .sc-menu button { padding: 6px 10px; border-radius: 999px; border: 2px solid var(--line); background: #fff;
+    font-size: 11.5px; font-weight: 800; color: var(--muted2); cursor: pointer; }
+  .sc-faces { display: flex; justify-content: center; gap: 12px; margin: 10px 0; }
+  .sc-faces button { font-size: 26px; background: none; border: 0; cursor: pointer; opacity: .5; }
+  .sc-faces button.on { opacity: 1; transform: scale(1.15); }
+  .sc-chat { max-height: 150px; overflow-y: auto; margin-top: 6px; }
+  .sc-msg { margin-bottom: 6px; font-size: 12.5px; color: var(--ink); }
+  .sc-msg b { color: var(--blueDark); font-weight: 900; }
+  .sc-msg.me { text-align: right; color: var(--muted); }
+  .sc-input { display: flex; gap: 6px; margin-top: 8px; }
+  .sc-input input { flex: 1; padding: 9px 11px; border: 2px solid var(--line); border-radius: 12px; font: inherit; font-size: 13px; }
+  .sc-home { margin: 0 2px 12px; padding: 12px 13px; border-radius: 16px; border: 2px solid var(--line);
+    border-bottom-width: 4px; background: #fff; display: flex; align-items: center; gap: 10px; }
+  .sc-home .t { flex: 1; }
+  .sc-home b { display: block; font-size: 13.5px; font-weight: 900; color: var(--ink); }
+  .sc-home small { display: block; font-size: 12px; color: var(--muted); }
+  .sc-home button { padding: 9px 14px; border-radius: 12px; border: 0; background: var(--blue); color: #fff;
+    font-size: 13px; font-weight: 800; cursor: pointer; }
+  .sc-av em { font-style: normal; font-size: 10.5px; font-weight: 800; color: var(--muted2); }
+  .sc-code { margin-left: auto; padding: 6px 11px; border-radius: 999px; border: 2px solid var(--line);
+    background: #fff; font-size: 12px; font-weight: 900; color: var(--blueDark); cursor: pointer; }
+  .sc-check { display: flex; gap: 9px; align-items: flex-start; margin-top: 12px; padding: 11px 12px;
+    border: 2px solid var(--line); border-radius: 14px; background: #FBFAFC; cursor: pointer; }
+  .sc-check input { margin-top: 2px; width: 18px; height: 18px; accent-color: var(--blue); }
+  .sc-check b { display: block; font-size: 13px; font-weight: 900; color: var(--ink); }
+  .sc-check small { display: block; font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+  .sc-model { margin-top: 7px; padding: 9px 11px; border-radius: 12px; background: #fff;
+    border: 2px solid var(--line); font-size: 14px; font-weight: 800; color: var(--ink); }
+  .sc-play { margin-top: 8px; padding: 8px 13px; border-radius: 999px; border: 2px solid var(--line);
+    border-bottom-width: 3px; background: #fff; font-size: 12.5px; font-weight: 900; color: var(--blueDark); cursor: pointer; }
+  .sc-play.sm { margin: 5px 6px 0 0; padding: 5px 11px; font-size: 12px; }
+  .sc-play:active { transform: translateY(2px); border-bottom-width: 1px; }
+  .sc-turn { margin-bottom: 9px; padding: 9px 11px; border-radius: 13px; background: #FBFAFC;
+    border: 2px solid var(--line); font-size: 13px; line-height: 1.45; }
+  .sc-turn.me { background: color-mix(in srgb, var(--blue) 10%, #fff); }
+  .sc-turn b { font-weight: 900; }
+  .sc-turn .sc-t { display: block; margin-top: 3px; color: var(--ink); }
+  .sc-tore { font-size: 10.5px; font-weight: 800; color: var(--muted2); }
+  .sc-answer { margin-top: 6px; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--line);
+    background: #fff; font-size: 11.5px; font-weight: 800; color: var(--muted2); cursor: pointer; }
+  .sc-reply { margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .sc-reply button { margin-left: 6px; border: 0; background: none; font: inherit; font-weight: 900;
+    color: var(--blueDark); cursor: pointer; }
+  .sc-rec { margin-top: 10px; }
+  .sc-mic { width: 100%; display: flex; align-items: center; justify-content: center; gap: 9px;
+    padding: 13px; border-radius: 16px; border: 2px solid color-mix(in srgb, var(--blue) 70%, #000);
+    border-bottom-width: 4px; background: var(--blue); color: #fff; font-size: 14px; font-weight: 900; cursor: pointer; }
+  .sc-mic.rec { background: #EF6C6C; border-color: #C24B4B; animation: scPulse 1.2s infinite; }
+  .sc-mic:disabled { opacity: .6; cursor: default; }
+  .sc-log { max-height: 240px; }
+
+
   .sp-target { margin: 4px 0 2px; padding: 13px 14px; border-radius: 14px; border: 2px solid var(--line);
     background: #FBFAFC; font-size: 17px; font-weight: 800; line-height: 1.4; color: var(--ink); }
   .sp-target .w { padding: 1px 2px; border-radius: 5px; }
@@ -2428,6 +2528,9 @@
 <button class="debug-fab speaking" id="debug-speaking" title="Activar Speaking" aria-label="Activar Speaking" onclick="toggleDebugSpeaking()">
   <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21H8v2h8v-2h-3v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
 </button>
+<button class="debug-fab circles" id="debug-circles" title="Activar Speaking con otros" aria-label="Activar Speaking con otros" onclick="toggleDebugCircles()">
+  <svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm-8 0a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm0 2c-2.3 0-7 1.2-7 3.5V19h9v-2.5c0-.9.5-1.7 1.3-2.3A12 12 0 0 0 8 13zm8 0c-.6 0-1.3.1-2 .2 1.1.8 1.9 1.8 1.9 3.3V19h7v-2.5c0-2.3-4.7-3.5-6.9-3.5z"/></svg>
+</button>
 
 <!-- Mascota. El servidor sustituye este marcador por el pack que use el demo:
      'ozito' (capas SVG + CSS) o 'boti' (SVG + resortes en JS). Ver
@@ -2469,6 +2572,7 @@ const CFG = {
   features: Object.assign({ placement: true, share: true, dashboard: true, speaking: false }, DEMO.features || {}),
 };
 let DEBUG_SPEAKING = false;
+let DEBUG_CIRCLES = false;
 
 // Un icono puede ser un emoji o una imagen subida. iconHTML() decide cual.
 function iconHTML(v, cls) {
@@ -3465,6 +3569,7 @@ document.addEventListener('click', (e) => {
     _dbgTaps = 0;
     const on = document.body.classList.toggle('debug-fabs');
     if (!on && DEBUG_SPEAKING) { DEBUG_SPEAKING = false; renderPractice(); }
+    if (!on && DEBUG_CIRCLES) { DEBUG_CIRCLES = false; renderPractice(); renderCourse(); }
     toast(on ? 'Modo debug activado' : 'Modo debug desactivado');
   }
 });
@@ -3474,6 +3579,14 @@ function toggleDebugSpeaking() {
   if (b) { b.classList.toggle('on', DEBUG_SPEAKING); b.title = DEBUG_SPEAKING ? 'Desactivar Speaking' : 'Activar Speaking'; }
   renderPractice();
   toast(DEBUG_SPEAKING ? 'Speaking de prueba activado' : 'Speaking oculto');
+}
+function toggleDebugCircles() {
+  DEBUG_CIRCLES = !DEBUG_CIRCLES;
+  const b = document.getElementById('debug-circles');
+  if (b) { b.classList.toggle('on', DEBUG_CIRCLES); b.title = DEBUG_CIRCLES ? 'Desactivar Speaking con otros' : 'Activar Speaking con otros'; }
+  renderPractice();
+  renderCourse();
+  toast(DEBUG_CIRCLES ? 'Speaking con otros activado' : 'Speaking con otros oculto');
 }
 
 function pbar(progress, completed, color) {
@@ -3720,7 +3833,7 @@ function homeGreeting() {
       <span class="hh-st"><b>${racha}</b><i>días de racha</i></span>
       <span class="hh-st"><b>${fmtXp(xp)}</b><i>XP</i></span>
     </div>
-  </div>`;
+  </div>` + circlesHomeHTML();
 }
 
 function renderCourse() {
@@ -3764,6 +3877,7 @@ function renderCourse() {
       ${arrowFwd(20, '#1CB0F6', 2.6)}
     </button>`;
   document.getElementById('course-body').innerHTML = html;
+  wireCirclesHome();
   document.getElementById('course-foot').innerHTML = courseHero();
   document.querySelectorAll('.mod-card').forEach(c => c.onclick = () => {
     const m = course.modules[+c.getAttribute('data-mod')];
@@ -6101,11 +6215,16 @@ function renderPracticeLibrary(el) {
 
     </div>
     ${speakingShelfHTML()}
+    ${circlesShelfHTML()}
     <div class="pr-chips">${chips.join('')}</div>` +
     (cuerpo || `<div class="pr-empty"><b>Todavía no hay ejercicios</b>
       <small>En cuanto el curso cargue sus lecciones, sus ejercicios aparecerán aquí.</small></div>`);
 
   el.querySelectorAll('.sp-lvl').forEach(b => b.onclick = () => openSpeakingRun(+b.getAttribute('data-sp')));
+  const scNow = el.querySelector('#sc-shelf-now'), scPlan = el.querySelector('#sc-shelf-plan');
+  if (scNow) scNow.onclick = () => scStart('create');
+  if (scPlan) scPlan.onclick = () => scStart('join');
+
   el.querySelectorAll('.pr-chip').forEach(b => b.onclick = () => {
     PRACTICE_FILTER = +b.getAttribute('data-m');
     renderPractice();
@@ -6767,6 +6886,401 @@ function openSpeakingRun(mi) {
 }
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// SPEAKING CIRCLES — "Speaking con otros" (salas reales)
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// Ya no es una maqueta: la sala vive en el servidor (/api/public/circles/*).
+// Varias personas entran con el mismo código, escuchan la tarea, mandan notas
+// de voz o texto y se responden entre ellas. Si activas el relleno con bots,
+// unos compañeros generados responden y comentan para poder testear a solas.
+// Sigue escondido tras el modo debug (DEBUG_CIRCLES).
+
+const SC_KEY = 'ae_circle_v2';
+function scLoad() { try { return JSON.parse(localStorage.getItem(SC_KEY)) || {}; } catch (e) { return {}; } }
+function scSave(s) { try { localStorage.setItem(SC_KEY, JSON.stringify(s)); } catch (e) {} }
+function scClear() { try { localStorage.removeItem(SC_KEY); } catch (e) {} }
+
+const SC_API = '/api/public/circles';
+const SC_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'];
+
+// El nivel del alumno: el último módulo desbloqueado que aún no termina.
+function scLevel() {
+  const mods = (course && course.modules) || [];
+  let idx = 0;
+  mods.forEach((m, i) => {
+    if (isLessonUnlocked(m.lessons[0].id) && !m.lessons.every(l => isLessonCompleted(l.id))) idx = i;
+  });
+  const mod = mods[idx];
+  return (mod && mod.level) || PR_CEFR[idx] || 'A1';
+}
+
+function scMyName() {
+  const p = (typeof loadProfile === 'function' && loadProfile()) || {};
+  return (p.name || '').trim().slice(0, 24);
+}
+
+async function scPost(path, body) {
+  const r = await fetch(SC_API + path, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error(j.error || 'error'), { code: j.error, status: r.status });
+  return j;
+}
+
+function scError(code) {
+  return ({
+    not_found: 'No encontramos ese código. Revísalo con quien te lo pasó.',
+    bad_code: 'El código tiene 6 letras y números.',
+    bad_nickname: 'Escribe un apodo para que te reconozcan.',
+    nickname_taken: 'Ese apodo ya está en la sala; usa otro.',
+    expired: 'Esa sala ya caducó. Crea una nueva.',
+    full: 'La sala está llena.',
+    rate_limited: 'Demasiados intentos. Espera un momento.',
+    invalid_audio: 'La nota de voz es demasiado larga o pesada.',
+  })[code] || 'No se pudo conectar con el círculo. Inténtalo otra vez.';
+}
+
+//— Andamio de pantallas dentro de la hoja ————————————————————————
+function scSheet(inner, dismissible) {
+  const overlay = document.getElementById('overlay'), sheet = document.getElementById('sheet');
+  sheet.classList.remove('result');
+  sheet.dataset.dismissible = dismissible === false ? 'false' : 'true';
+  sheet.innerHTML = `<div class="handle"></div><div class="sc-wrap" id="sc-wrap">${inner}</div>`;
+  overlay.classList.add('active');
+  return document.getElementById('sc-wrap');
+}
+
+function openCircles() {
+  if (!DEBUG_CIRCLES) return;
+  const st = scLoad();
+  if (st.code && st.memberId && st.token) scRoom();
+  else scStart('create');
+}
+
+//— Entrada: crear o entrar con código ————————————————————————————
+function scStart(tab) {
+  const lvl = scLevel(), nombre = scMyName() || 'Tú';
+  const crear = tab !== 'join';
+  const w = scSheet(`<div class="sc-head"><b>Speaking con otros</b></div>
+    <small style="display:block;font-size:12.5px;color:var(--muted);line-height:1.5">
+      Un círculo es una sala de conversación: se escucha la tarea, cada quien manda su nota de voz
+      y los demás responden. Comparte el código para que entren tus compañeros.</small>
+    <div class="sc-row" style="margin-top:12px">
+      <button class="sc-btn${crear ? ' pri' : ''}" data-tab="create">Crear círculo</button>
+      <button class="sc-btn${crear ? '' : ' pri'}" data-tab="join">Entrar con código</button>
+    </div>
+    <div class="sc-sec">Tu apodo en la sala</div>
+    <div class="sc-input"><input id="sc-nick" maxlength="24" value="${escapeHtml(nombre)}" placeholder="¿Cómo te llamamos?"></div>
+    <div id="sc-pane"></div>`);
+
+  const pane = w.querySelector('#sc-pane');
+  const pintaCrear = () => {
+    pane.innerHTML = `<div class="sc-sec">Nivel del círculo</div>
+      <div class="sc-row" id="sc-lvls">${SC_LEVELS.map(l => `<button class="sc-btn${l === lvl ? ' pri' : ''}" data-l="${l}" style="flex:1 1 52px">${l}</button>`).join('')}</div>
+      <div class="sc-sec">Tema</div>
+      <div class="sc-row" id="sc-topics">
+        <button class="sc-btn pri" data-t="general">Inglés general</button>
+        <button class="sc-btn" data-t="engineering">Inglés para ingeniería</button>
+      </div>
+      <label class="sc-check"><input type="checkbox" id="sc-bots" checked>
+        <span><b>Rellenar con compañeros bot</b><small>Para probar solo: responden la tarea y comentan lo que dices.</small></span></label>
+      <button class="btn green" id="sc-go" style="margin-top:12px">Crear círculo</button>`;
+    let nivel = lvl, tema = 'general';
+    pane.querySelectorAll('[data-l]').forEach(b => b.onclick = () => {
+      nivel = b.getAttribute('data-l');
+      pane.querySelectorAll('[data-l]').forEach(x => x.classList.toggle('pri', x === b));
+    });
+    pane.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
+      tema = b.getAttribute('data-t');
+      pane.querySelectorAll('[data-t]').forEach(x => x.classList.toggle('pri', x === b));
+    });
+    pane.querySelector('#sc-go').onclick = async (e) => {
+      const nick = (document.getElementById('sc-nick').value || '').trim();
+      if (!nick) return toast('Escribe tu apodo');
+      e.target.disabled = true; e.target.textContent = 'Creando…';
+      try {
+        const j = await scPost('/create', { nickname: nick, level: nivel, topic: tema, bots: document.getElementById('sc-bots').checked });
+        scSave({ code: j.code, memberId: j.memberId, token: j.token, nickname: nick, startedAt: Date.now(), voice: 0, ms: 0 });
+        scRoom(true);
+      } catch (err) {
+        e.target.disabled = false; e.target.textContent = 'Crear círculo';
+        toast(scError(err.code));
+      }
+    };
+  };
+  const pintaEntrar = () => {
+    pane.innerHTML = `<div class="sc-sec">Código de la sala</div>
+      <div class="sc-input"><input id="sc-code" maxlength="6" placeholder="ABC123" style="text-transform:uppercase;letter-spacing:.18em;font-weight:900"></div>
+      <button class="btn green" id="sc-go" style="margin-top:12px">Entrar al círculo</button>`;
+    pane.querySelector('#sc-go').onclick = async (e) => {
+      const nick = (document.getElementById('sc-nick').value || '').trim();
+      const code = (document.getElementById('sc-code').value || '').trim().toUpperCase();
+      if (!nick) return toast('Escribe tu apodo');
+      if (code.length !== 6) return toast('El código tiene 6 caracteres');
+      e.target.disabled = true; e.target.textContent = 'Entrando…';
+      try {
+        const j = await scPost('/join', { code, nickname: nick });
+        scSave({ code: j.code, memberId: j.memberId, token: j.token, nickname: nick, startedAt: Date.now(), voice: 0, ms: 0 });
+        scRoom();
+      } catch (err) {
+        e.target.disabled = false; e.target.textContent = 'Entrar al círculo';
+        toast(scError(err.code));
+      }
+    };
+  };
+  w.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
+    w.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('pri', x === b));
+    b.getAttribute('data-tab') === 'create' ? pintaCrear() : pintaEntrar();
+  });
+  crear ? pintaCrear() : pintaEntrar();
+}
+
+//— La sala ————————————————————————————————————————————————
+let SC_POLL = 0;        // id de la ronda de sondeo activa
+let SC_REC = null;      // grabador en curso
+let SC_REPLY = null;    // mensaje al que estoy respondiendo
+
+function scRoom(recienCreada) {
+  const st = scLoad();
+  if (!st.code) return scStart('create');
+  const ronda = ++SC_POLL;
+  SC_REPLY = null;
+  const w = scSheet(`<div id="sc-room">
+    <div class="sc-head"><b>Círculo ${escapeHtml(st.code)}</b>
+      <button class="sc-code" id="sc-share" title="Compartir código">Compartir</button></div>
+    ${recienCreada ? `<div class="sc-card sc-static"><b>Pásales el código: ${escapeHtml(st.code)}</b>
+      <small>Cada persona abre el demo, toca “Speaking con otros” → “Entrar con código”.</small></div>` : ''}
+    <div class="sc-people" id="sc-members"></div>
+    <div class="sc-mission" id="sc-task"><b>Cargando la tarea…</b></div>
+    <div class="sc-log" id="sc-log"><div class="sc-line" style="color:var(--muted)">Conectando con la sala…</div></div>
+    <div class="sc-reply" id="sc-reply" hidden></div>
+    <div class="sc-rec">
+      <button class="sc-mic" id="sc-mic">${micSvg(22)}<span>Grabar respuesta</span></button>
+      <div class="sc-input"><input id="sc-text" maxlength="300" placeholder="…o escribe algo">
+        <button class="sc-btn pri" id="sc-send" style="flex:0 0 auto">Enviar</button></div>
+    </div>
+    <div class="sc-row">
+      <button class="sc-btn" id="sc-next">Siguiente tarea</button>
+      <button class="sc-btn" id="sc-leave">Salir del círculo</button>
+    </div>
+  </div>`, false);
+
+  const estado = { since: '1970-01-01T00:00:00Z', vistos: {}, miembros: {}, taskIdx: -1, yo: st.memberId };
+
+  //— pintado ————————————————————————————————————————————
+  function pintaMiembros(list) {
+    const cont = document.getElementById('sc-members');
+    if (!cont) return;
+    cont.innerHTML = list.map(m => {
+      estado.miembros[m.id] = m;
+      const activo = Date.now() - new Date(m.last_seen_at).getTime() < 20000;
+      return `<span class="sc-av${m.id === estado.yo ? ' talk' : ''}"><i style="background:${m.color}">${escapeHtml((m.nickname || '?')[0])}</i>${escapeHtml(m.nickname)}${m.is_bot ? ' <em>bot</em>' : (activo ? '' : ' <em>ausente</em>')}</span>`;
+    }).join('');
+  }
+  function pintaTarea(t) {
+    const cont = document.getElementById('sc-task');
+    if (!cont || estado.taskIdx === t.idx) return;
+    estado.taskIdx = t.idx;
+    cont.innerHTML = `<b>Tarea ${t.idx + 1} · ${escapeHtml(t.promptEn)}</b>
+      <small style="display:block;margin-top:3px;font-size:12.5px;color:var(--muted)">${escapeHtml(t.promptEs || '')}</small>
+      ${t.modelEn ? `<div class="sc-model">“${escapeHtml(t.modelEn)}”</div>` : ''}
+      ${t.functions && t.functions.length ? `<ul>${t.functions.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>` : ''}
+      <button class="sc-play" id="sc-task-play"${t.audioUrl ? ` data-src="${escapeHtml(t.audioUrl)}"` : ''}>▶ Escuchar la tarea</button>`;
+    const play = document.getElementById('sc-task-play');
+    play.onclick = () => {
+      const src = play.getAttribute('data-src');
+      if (src) { new Audio(src).play().catch(() => toast('No se pudo reproducir el audio')); }
+      else if (window.speechSynthesis) {
+        const u = new SpeechSynthesisUtterance(t.modelEn || t.promptEn); u.lang = 'en-US'; speechSynthesis.speak(u);
+      }
+    };
+    // los mensajes son por tarea: al cambiar, se limpia el hilo
+    const log = document.getElementById('sc-log');
+    if (log) log.innerHTML = '';
+  }
+  function pintaMensaje(m) {
+    if (estado.vistos[m.id]) return;
+    estado.vistos[m.id] = 1;
+    if (m.task_idx !== estado.taskIdx) return;
+    const log = document.getElementById('sc-log');
+    if (!log) return;
+    const quien = estado.miembros[m.member_id] || { nickname: 'Alguien', color: '#8A8A8A' };
+    const mio = m.member_id === estado.yo;
+    const resp = m.reply_to && estado.vistos[m.reply_to] ? '<span class="sc-tore">respondiendo</span>' : '';
+    log.insertAdjacentHTML('beforeend', `<div class="sc-turn${mio ? ' me' : ''}" data-id="${m.id}">
+      <b style="color:${quien.color}">${escapeHtml(quien.nickname)}</b> ${resp}
+      ${m.audioUrl ? `<button class="sc-play sm" data-src="${escapeHtml(m.audioUrl)}">▶ Nota de voz</button>` : ''}
+      ${m.body ? `<span class="sc-t">${escapeHtml(m.body)}</span>` : ''}
+      ${mio ? '' : `<button class="sc-answer" data-r="${m.id}">Responder</button>`}
+    </div>`);
+    const nodo = log.lastElementChild;
+    const p = nodo.querySelector('.sc-play');
+    if (p) p.onclick = () => new Audio(p.getAttribute('data-src')).play().catch(() => toast('No se pudo reproducir'));
+    const a = nodo.querySelector('.sc-answer');
+    if (a) a.onclick = () => {
+      SC_REPLY = m.id;
+      const r = document.getElementById('sc-reply');
+      r.hidden = false;
+      r.innerHTML = `Respondiendo a <b>${escapeHtml(quien.nickname)}</b> <button id="sc-unreply">cancelar</button>`;
+      document.getElementById('sc-unreply').onclick = () => { SC_REPLY = null; r.hidden = true; };
+    };
+    log.scrollTop = log.scrollHeight;
+  }
+
+  //— sondeo ————————————————————————————————————————————
+  async function tick() {
+    if (ronda !== SC_POLL || !document.getElementById('sc-room')) return;
+    try {
+      const q = new URLSearchParams({ code: st.code, member: st.memberId, token: st.token, since: estado.since });
+      const r = await fetch(SC_API + '/state?' + q.toString());
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        if (j.error === 'expired' || j.error === 'unauthorized') {
+          scClear(); toast(scError(j.error)); return scStart('create');
+        }
+      } else if (ronda === SC_POLL && document.getElementById('sc-room')) {
+        pintaMiembros(j.members || []);
+        pintaTarea(j.task);
+        (j.messages || []).forEach(pintaMensaje);
+        if (j.messages && j.messages.length) estado.since = j.messages[j.messages.length - 1].created_at;
+        const solo = (j.members || []).filter(m => !m.is_bot).length <= 1;
+        const aviso = document.getElementById('sc-log');
+        if (solo && !j.circle.bots && aviso && !aviso.children.length) {
+          aviso.innerHTML = `<div class="sc-line" style="color:var(--muted)">Todavía estás solo en la sala.
+            Comparte el código ${escapeHtml(st.code)} y empiecen a hablar.</div>`;
+        }
+      }
+    } catch (e) { /* red intermitente: se reintenta */ }
+    if (ronda === SC_POLL) setTimeout(tick, 2200);
+  }
+  tick();
+
+  //— acciones ————————————————————————————————————————————
+  async function enviar(fd) {
+    fd.append('code', st.code); fd.append('member', st.memberId); fd.append('token', st.token);
+    if (SC_REPLY) fd.append('replyTo', SC_REPLY);
+    const r = await fetch(SC_API + '/message', { method: 'POST', body: fd });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error(j.error || 'send'), { code: j.error });
+    SC_REPLY = null;
+    const rr = document.getElementById('sc-reply'); if (rr) rr.hidden = true;
+    return j;
+  }
+
+  const mic = w.querySelector('#sc-mic');
+  let t0 = 0, tope = null;
+  mic.onclick = async () => {
+    if (SC_REC) {
+      const rec = SC_REC; SC_REC = null; clearTimeout(tope);
+      mic.classList.remove('rec'); mic.querySelector('span').textContent = 'Enviando…'; mic.disabled = true;
+      try {
+        const blob = await rec.stop();
+        const dur = Date.now() - t0;
+        const fd = new FormData();
+        fd.append('audio', blob, 'turn.wav');
+        fd.append('durationMs', String(dur));
+        await enviar(fd);
+        const s = scLoad(); s.voice = (s.voice || 0) + 1; s.ms = (s.ms || 0) + dur; scSave(s);
+        touchDay();
+      } catch (err) { toast(scError(err.code)); }
+      mic.disabled = false; mic.querySelector('span').textContent = 'Grabar respuesta';
+      return;
+    }
+    try {
+      await spMicReady();
+      SC_REC = await spRecorder();
+      t0 = Date.now();
+      mic.classList.add('rec'); mic.querySelector('span').textContent = 'Detener y enviar';
+      tope = setTimeout(() => { if (SC_REC) mic.click(); }, 60000);
+    } catch (e) {
+      toast('Necesitamos permiso del micrófono para mandar notas de voz.');
+    }
+  };
+
+  w.querySelector('#sc-send').onclick = async () => {
+    const inp = document.getElementById('sc-text');
+    const txt = (inp.value || '').trim();
+    if (!txt) return;
+    inp.value = '';
+    const fd = new FormData(); fd.append('body', txt);
+    try { await enviar(fd); } catch (err) { toast(scError(err.code)); }
+  };
+  w.querySelector('#sc-share').onclick = () => {
+    const texto = `Únete a mi círculo de speaking en Aprendo English con el código ${st.code}`;
+    if (navigator.share) navigator.share({ text: texto }).catch(() => {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(st.code).then(() => toast('Código copiado: ' + st.code));
+    else toast('Código: ' + st.code);
+  };
+  w.querySelector('#sc-next').onclick = async (e) => {
+    e.target.disabled = true;
+    try { await scPost('/next-task', { code: st.code, member: st.memberId, token: st.token }); }
+    catch (err) { toast(scError(err.code)); }
+    e.target.disabled = false;
+  };
+  w.querySelector('#sc-leave').onclick = () => { SC_POLL++; scRecap(); };
+}
+
+//— Cierre ————————————————————————————————————————————————
+function scRecap() {
+  const st = scLoad();
+  const min = Math.max(1, Math.round((st.ms || 0) / 60000));
+  const notas = st.voice || 0;
+  const w = scSheet(`<div class="sc-head"><b>Saliste del círculo</b></div>
+    <div class="sc-card sc-static"><b>${notas} nota${notas === 1 ? '' : 's'} de voz · ${min} min hablando</b>
+      <small>El círculo ${escapeHtml(st.code || '')} sigue abierto 24 horas: puedes volver con el mismo código.</small></div>
+    <div class="sc-sec">¿Cómo estuvo la práctica?</div>
+    <div class="sc-faces">${['😞', '😐', '🙂', '😄'].map((f, i) => `<button data-f="${i}">${f}</button>`).join('')}</div>
+    <button class="btn green" id="sc-back-room" style="margin-top:10px">Volver al círculo</button>
+    <button class="sc-btn" id="sc-close" style="margin-top:8px">Cerrar</button>`);
+  w.querySelectorAll('[data-f]').forEach(b => b.onclick = () => {
+    w.querySelectorAll('[data-f]').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+  });
+  w.querySelector('#sc-back-room').onclick = () => scRoom();
+  w.querySelector('#sc-close').onclick = () => { closeOverlay(); if (document.getElementById('course-body')) renderCourse(); };
+}
+
+//— Entradas: Práctica e Inicio ————————————————————————————————
+function circlesShelfHTML() {
+  if (!DEBUG_CIRCLES) return '';
+  const st = scLoad(), lvl = scLevel();
+  return `<div class="sc-shelf">
+    <div class="sc-shelf-h"><span class="sp-mic-badge" style="color:var(--blue)">${micSvg(17)}</span>
+      <b>Speaking con otros</b></div>
+    <small>Sala de conversación real: la tarea suena en audio, cada quien manda su nota de voz y los
+      demás responden. Nivel sugerido ${escapeHtml(lvl)}.</small>
+    ${st.code ? `<span class="sc-live"><span class="sc-dot"></span>Tienes el círculo ${escapeHtml(st.code)} abierto</span>` : ''}
+    <div class="sc-row">
+      <button class="sc-btn pri" id="sc-shelf-now">${st.code ? 'Volver a mi círculo' : 'Crear círculo'}</button>
+      <button class="sc-btn" id="sc-shelf-plan">Entrar con código</button>
+    </div>
+  </div>`;
+}
+
+function circlesHomeHTML() {
+  if (!DEBUG_CIRCLES) return '';
+  const st = scLoad();
+  if (st.code) {
+    return `<div class="sc-home"><div class="t"><b>Tu círculo ${escapeHtml(st.code)} está abierto</b>
+      <small>Speaking con otros · vuelve cuando quieras</small></div>
+      <button id="sc-home-btn" data-go="room">Entrar</button></div>`;
+  }
+  return `<div class="sc-home"><div class="t"><b>Practica hablando con otros</b>
+    <small>Crea un círculo y comparte el código</small></div>
+    <button id="sc-home-btn" data-go="new">Crear</button></div>`;
+}
+
+function wireCirclesHome() {
+  const b = document.getElementById('sc-home-btn');
+  if (!b) return;
+  b.onclick = () => {
+    if (!DEBUG_CIRCLES) return;
+    b.getAttribute('data-go') === 'room' ? scRoom() : scStart('create');
+  };
+}
+
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // SHEETS / DIALOGS
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -6898,7 +7412,7 @@ function resetAllData() {
   if (window._goalTimer) { clearInterval(window._goalTimer); window._goalTimer = null; }
   PROGRESS = {};
   try {
-    [PK, PROFILE_KEY, SUMMARY_KEY, 'ae_share', 'placement_log_v1'].forEach(k => localStorage.removeItem(k));
+    [PK, PROFILE_KEY, SUMMARY_KEY, 'ae_share', 'placement_log_v1', SC_KEY].forEach(k => localStorage.removeItem(k));
   } catch (e) {}
   location.replace(location.pathname + location.search);
 }

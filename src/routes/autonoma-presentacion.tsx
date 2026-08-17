@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { servePresentacion } from "@/lib/serve-presentacion.server";
 import asset from "../assets/autonoma-presentacion.html.asset.json";
 
 // La presentación pesa ~14 MB (las imágenes van incrustadas), así que no vive en
@@ -21,19 +22,14 @@ const headTags = `
 <meta name="twitter:image" content="https://aprendoenglish.com/social-preview.jpg">
 `;
 
-let cache: string | null = null;
-
 export const Route = createFileRoute("/autonoma-presentacion")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        if (!cache) {
-          const res = await fetch(new URL(asset.url, request.url));
-          if (!res.ok) return new Response("No disponible", { status: 502 });
-          cache = (await res.text()).replace("<head>", `<head>${headTags}`);
-        }
-        return new Response(cache, {
-          headers: { "Content-Type": "text/html; charset=utf-8" },
+        return servePresentacion({
+          assetUrl: asset.url,
+          requestUrl: request.url,
+          headTags,
         });
       },
     },

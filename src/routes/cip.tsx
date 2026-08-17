@@ -28,7 +28,7 @@ export const Route = createFileRoute("/cip")({
       {
         property: "og:description",
         content:
-          "Curso completo A1–C1 con marca del Colegio: 45 microlecciones, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Plataforma lista, esperando el visto bueno del CIP.",
+          "Curso completo A1–C1 con marca del Colegio: 45 lecciones con 391 microlecciones, 8.127 ejercicios, 11.040 palabras (779 de ingeniería). Plataforma lista, esperando el visto bueno del CIP.",
       },
       { property: "og:image", content: "https://aprendoenglish.com/social-preview.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -57,20 +57,21 @@ export const Route = createFileRoute("/cip")({
 });
 
 const METRICS = [
-  { n: "45", l: "microlecciones A1 → C1" },
-  { n: "8.127", l: "ejercicios de práctica" },
-  { n: "11.040", l: "palabras de vocabulario" },
-  { n: "779", l: "de ellas, de ingeniería" },
+  { n: "391", l: "microlecciones", s: "en 45 lecciones A1 → C1", i: "/demo-assets/ob-books.svg" },
+  { n: "8.127", l: "ejercicios de práctica", s: "corregidos al instante", i: "/demo-assets/ob-thunder.svg" },
+  { n: "11.040", l: "palabras de vocabulario", s: "con definición en español", i: "/demo-assets/ob-words.svg" },
+  { n: "779", l: "términos de ingeniería", s: "dentro del vocabulario", i: "/demo-assets/ob-work.svg" },
 ];
 
 /** Etiquetas cortas bajo el titular: qué incluye el programa. */
-const BADGES = [
-  "Niveles A1 a C1 (MCER)",
-  "Incluye inglés técnico",
-  "Test de ubicación",
-  "Certificado por nivel",
-  "Con la marca del CIP",
+const BADGES: { t: string; hot?: boolean }[] = [
+  { t: "Niveles A1 a C1 (MCER)" },
+  { t: "Incluye inglés técnico por especialidad", hot: true },
+  { t: "Test de ubicación" },
+  { t: "Certificado por nivel" },
+  { t: "Con la marca del CIP" },
 ];
+
 
 /** Capturas reales de la plataforma (tomadas del demo del CIP). */
 const SHOTS = [
@@ -104,8 +105,9 @@ const TECH = [
   },
   {
     e: "/demo-assets/ob-words.svg",
-    t: "Corrección de escritura con IA",
-    d: "Acepta varias formas correctas de decir la misma frase, no una sola respuesta memorizada.",
+    t: "Escritura corregida al instante",
+    d: "Reconoce las distintas formas correctas de decir lo mismo: si tu frase está bien construida, cuenta como bien, aunque no sea palabra por palabra la del ejemplo.",
+
   },
   {
     e: "/demo-assets/streak.svg",
@@ -208,13 +210,53 @@ const PAGE_CSS = `
 .cipp .badge{ display:inline-block; border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:800;
   letter-spacing:.14em; text-transform:uppercase; }
 
-/* etiquetas de «qué incluye», bajo el titular */
+/* etiquetas de «qué incluye», bajo el titular (paleta del sílabo) */
 .cipp .badges{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
 .cipp .badges li{ display:inline-flex; align-items:center; gap:7px; border-radius:999px;
-  padding:6px 12px 6px 10px; font-size:12.5px; font-weight:700; letter-spacing:.01em;
-  color:#eef2fb; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.18); }
+  padding:7px 13px 7px 11px; font-size:12.5px; font-weight:700; letter-spacing:.01em;
+  color:#dbe7f7; background:rgba(169,205,242,.13); border:1.5px solid rgba(169,205,242,.42); }
 .cipp .badges li::before{ content:""; width:6px; height:6px; border-radius:50%;
-  background:var(--cip); box-shadow:0 0 0 3px color-mix(in srgb,var(--cip) 30%,transparent); }
+  background:#a9cdf2; }
+.cipp .badges li.hot{ color:#ffb3b8; font-weight:800; font-size:13px; padding:8px 15px 8px 12px;
+  background:rgba(232,85,96,.13); border:1.5px solid rgba(232,85,96,.55);
+  box-shadow:0 0 0 0 rgba(232,85,96,.35);
+  animation:cipPulse 3.2s ease-out infinite; }
+.cipp .badges li.hot::before{ background:#ffb3b8; }
+@keyframes cipPulse{
+  0%{ box-shadow:0 0 0 0 rgba(232,85,96,.35); }
+  70%{ box-shadow:0 0 0 10px transparent; }
+  100%{ box-shadow:0 0 0 0 transparent; } }
+
+/* fichas de cifras */
+.cipp .mcard{ position:relative; background:#fff; border:1px solid var(--line); border-radius:18px;
+  padding:20px 14px 18px; text-align:center; box-shadow:var(--shadow-sm); }
+.cipp .mcard img{ display:block; margin:0 auto 10px; width:40px; height:40px; }
+.cipp .mcard b{ display:block; font-family:var(--black); font-weight:400; letter-spacing:-.03em;
+  font-size:clamp(26px,3.4vw,38px); line-height:1; color:var(--cip); }
+.cipp .mcard span{ display:block; margin-top:8px; font-size:12.8px; font-weight:800; color:var(--ink); }
+.cipp .mcard em{ display:block; margin-top:3px; font-style:normal; font-size:11.8px; font-weight:600; color:var(--muted); }
+
+/* caja del formulario, con brillo que recorre todo el bloque */
+.cipp .formglow{ position:relative; overflow:hidden; border-radius:16px;
+  padding:12px; border:1.5px solid color-mix(in srgb,var(--cip) 26%,var(--line));
+  background:color-mix(in srgb,var(--cip) 5%,#fff); }
+.cipp .formglow>*{ position:relative; z-index:2; }
+.cipp .formglow::after{ content:""; position:absolute; top:0; bottom:0; width:38%; left:-45%;
+  z-index:1; background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);
+  animation:cipShimmer 3.6s ease-in-out infinite; pointer-events:none; }
+@keyframes cipShimmer{ 0%{ left:-45%; } 55%{ left:110%; } 100%{ left:110%; } }
+
+/* nota de privacidad, discreta */
+.cipp .promise{ display:flex; align-items:center; justify-content:center; gap:7px;
+  margin-top:10px; color:var(--muted); }
+.cipp .promise svg{ flex:0 0 auto; opacity:.7; }
+.cipp .promise p{ min-width:0; font-size:12px; font-weight:600; line-height:1.4; text-align:center; }
+.cipp .promise p b{ font-weight:700; }
+
+@media (prefers-reduced-motion:reduce){
+  .cipp .formglow::after{ animation:none; display:none; }
+  .cipp .badges li.hot{ animation:none; } }
+
 
 
 
@@ -302,28 +344,39 @@ function EmailForm({ id, cta }: { id: string; cta: string }) {
 
   return (
     <form onSubmit={submit} className="w-full">
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="tucorreo@ejemplo.com"
-          aria-label="Tu correo electrónico"
-          className="min-w-0 flex-1 rounded-xl border-2 border-[#e7dcc2] bg-white px-4 py-3.5 text-base text-[#16233F] outline-none focus:border-[var(--hi)]"
-        />
-        <button
-          type="submit"
-          disabled={state === "sending"}
-          className="rounded-xl px-6 py-3.5 text-base font-extrabold text-white transition active:translate-y-[2px] disabled:opacity-60"
-          style={{ background: "var(--cta)", boxShadow: "0 4px 0 var(--ctaLip)" }}
-        >
-          {state === "sending" ? "Enviando…" : cta}
-        </button>
+      <div className="formglow">
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="tucorreo@ejemplo.com"
+            aria-label="Tu correo electrónico"
+            className="min-w-0 flex-1 rounded-xl border-2 border-[#e7dcc2] bg-white px-4 py-3.5 text-base text-[#16233F] outline-none focus:border-[var(--hi)]"
+          />
+          <button
+            type="submit"
+            disabled={state === "sending"}
+            className="rounded-xl px-6 py-3.5 text-base font-extrabold text-white transition active:translate-y-[2px] disabled:opacity-60"
+            style={{ background: "var(--cta)", boxShadow: "0 4px 0 var(--ctaLip)" }}
+          >
+            {state === "sending" ? "Enviando…" : cta}
+          </button>
+        </div>
       </div>
-      <p className="mt-2 text-xs font-medium text-[#5f6b82]">
-        Sin costo y sin compromiso. Sólo usamos tu correo para avisarte si el programa se activa.
-      </p>
+      <div className="promise">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <rect x="4" y="10" width="16" height="10" rx="2.5" />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+        </svg>
+        <p>
+          <b>Sin costo y sin compromiso.</b> Sólo usamos tu correo para avisarte si el programa se
+          activa.
+        </p>
+      </div>
+
+
       {state === "error" && (
         <p className="mt-2 text-sm font-semibold text-red-600">
           No pudimos registrarte. Revisa el correo e inténtalo otra vez.
@@ -365,42 +418,49 @@ function Counter() {
 function Hero({ brand }: { brand: { logo: string; icon: string; phrase: string } }) {
   return (
     <section className="band bg-hero overflow-hidden">
-      <div className="sheet grid items-center gap-10 md:grid-cols-[1.15fr_.85fr]">
-        <div>
-          {brand.logo ? (
-            <img
-              src={brand.logo}
-              alt="Colegio de Ingenieros del Perú"
-              width={220}
-              height={64}
-              className="mb-7 h-16 w-auto object-contain"
-            />
-          ) : null}
-          <p className="eyebrow text-white/70">Plataforma construida · El Colegio debe activarla</p>
-          <h1 className="title">
-            Que todos los ingenieros del Perú
-            <br />
-            <span className="acc">hablen inglés</span>
-          </h1>
-          <p className="lede mt-5 text-white/85">
-            Un curso de inglés completo, de cero a nivel avanzado, con la marca del Colegio — y con
-            inglés técnico de ingeniería incluido. La plataforma ya está construida; el Colegio debe
-            asegurarse de que los colegiados la quieren para encender el acceso.
-          </p>
-          <ul className="badges">
-            {BADGES.map((b) => (
-              <li key={b}>{b}</li>
-            ))}
-          </ul>
+      <div className="sheet">
+        <div className="grid items-center gap-10 md:grid-cols-[1.15fr_.85fr]">
+          <div>
+            {brand.logo ? (
+              <img
+                src={brand.logo}
+                alt="Colegio de Ingenieros del Perú"
+                width={220}
+                height={64}
+                className="mb-7 h-16 w-auto object-contain"
+              />
+            ) : null}
+            <p className="eyebrow text-white/70">
+              Plataforma construida · El Colegio debe activarla
+            </p>
+            <h1 className="title">
+              Que todos los ingenieros del Perú
+              <br />
+              <span className="acc">hablen inglés</span>
+            </h1>
+            <p className="lede mt-5 text-white/85">
+              Un curso de inglés completo, de cero a nivel avanzado, con la marca del Colegio — y
+              con inglés técnico de ingeniería incluido. La plataforma ya está construida; el
+              Colegio debe asegurarse de que los colegiados la quieren para encender el acceso.
+            </p>
+            <ul className="badges">
+              {BADGES.map((b) => (
+                <li key={b.t} className={b.hot ? "hot" : undefined}>
+                  {b.t}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="hidden flex-col items-center gap-3 md:flex">
+            <BotiFull />
+          </div>
+        </div>
 
-
-          <div className="card mt-8 max-w-xl p-4" style={{ boxShadow: "var(--shadow)" }}>
+        <div className="mx-auto mt-10 w-full max-w-[620px] text-center">
+          <div className="card p-4 text-left" style={{ boxShadow: "var(--shadow)" }}>
             <EmailForm id="hero" cta="Firmar mi preinscripción" />
           </div>
           <Counter />
-        </div>
-        <div className="hidden flex-col items-center gap-3 md:flex">
-          <BotiFull />
         </div>
       </div>
     </section>
@@ -438,15 +498,18 @@ function Steps() {
 function Metrics() {
   return (
     <section className="band bg-paper !py-10">
-      <div className="sheet grid grid-cols-2 gap-8 md:grid-cols-4">
+      <div className="sheet grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
         {METRICS.map((m) => (
-          <div key={m.l} className="metric text-center">
+          <div key={m.l} className="mcard">
+            <img src={m.i} alt="" aria-hidden width={40} height={40} loading="lazy" />
             <b>{m.n}</b>
             <span>{m.l}</span>
+            <em>{m.s}</em>
           </div>
         ))}
       </div>
     </section>
+
   );
 }
 

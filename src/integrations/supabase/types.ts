@@ -14,6 +14,194 @@ export type Database = {
   }
   public: {
     Tables: {
+      circle_members: {
+        Row: {
+          circle_id: string
+          color: string
+          created_at: string
+          id: string
+          is_bot: boolean
+          last_seen_at: string
+          nickname: string
+          persona: string | null
+          token: string
+        }
+        Insert: {
+          circle_id: string
+          color?: string
+          created_at?: string
+          id?: string
+          is_bot?: boolean
+          last_seen_at?: string
+          nickname: string
+          persona?: string | null
+          token: string
+        }
+        Update: {
+          circle_id?: string
+          color?: string
+          created_at?: string
+          id?: string
+          is_bot?: boolean
+          last_seen_at?: string
+          nickname?: string
+          persona?: string | null
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "circle_members_circle_id_fkey"
+            columns: ["circle_id"]
+            isOneToOne: false
+            referencedRelation: "circles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      circle_messages: {
+        Row: {
+          audio_path: string | null
+          body: string
+          circle_id: string
+          created_at: string
+          duration_ms: number
+          id: string
+          kind: string
+          member_id: string
+          reply_to: string | null
+          task_idx: number
+        }
+        Insert: {
+          audio_path?: string | null
+          body?: string
+          circle_id: string
+          created_at?: string
+          duration_ms?: number
+          id?: string
+          kind?: string
+          member_id: string
+          reply_to?: string | null
+          task_idx?: number
+        }
+        Update: {
+          audio_path?: string | null
+          body?: string
+          circle_id?: string
+          created_at?: string
+          duration_ms?: number
+          id?: string
+          kind?: string
+          member_id?: string
+          reply_to?: string | null
+          task_idx?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "circle_messages_circle_id_fkey"
+            columns: ["circle_id"]
+            isOneToOne: false
+            referencedRelation: "circles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "circle_messages_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "circle_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "circle_messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "circle_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      circle_tasks: {
+        Row: {
+          audio_path: string | null
+          circle_id: string
+          created_at: string
+          functions: string[]
+          id: string
+          idx: number
+          model_en: string
+          prompt_en: string
+          prompt_es: string
+        }
+        Insert: {
+          audio_path?: string | null
+          circle_id: string
+          created_at?: string
+          functions?: string[]
+          id?: string
+          idx: number
+          model_en?: string
+          prompt_en: string
+          prompt_es?: string
+        }
+        Update: {
+          audio_path?: string | null
+          circle_id?: string
+          created_at?: string
+          functions?: string[]
+          id?: string
+          idx?: number
+          model_en?: string
+          prompt_en?: string
+          prompt_es?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "circle_tasks_circle_id_fkey"
+            columns: ["circle_id"]
+            isOneToOne: false
+            referencedRelation: "circles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      circles: {
+        Row: {
+          bot_busy_until: string | null
+          bots_enabled: boolean
+          code: string
+          created_at: string
+          expires_at: string
+          id: string
+          level: string
+          task_idx: number
+          task_started_at: string
+          topic: string
+        }
+        Insert: {
+          bot_busy_until?: string | null
+          bots_enabled?: boolean
+          code: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          level?: string
+          task_idx?: number
+          task_started_at?: string
+          topic?: string
+        }
+        Update: {
+          bot_busy_until?: string | null
+          bots_enabled?: boolean
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          level?: string
+          task_idx?: number
+          task_started_at?: string
+          topic?: string
+        }
+        Relationships: []
+      }
       demos: {
         Row: {
           config: Json
