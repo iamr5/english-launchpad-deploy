@@ -91,3 +91,66 @@ export function packInfo(id: string): PackChoice {
   const all = packChoices();
   return all.find((p) => p.id === id) ?? all[0];
 }
+
+// ── Vestuario ────────────────────────────────────────────────────────────────
+// Algunas mascotas traen la ropa recoloreable: su SVG va en línea y los
+// rellenos salen de variables CSS (`--m-<prenda>`), con los valores del dibujo
+// original como respaldo en su mascot.css. Aquí se traduce lo que el panel
+// guardó en la configuración del demo a esas variables, para que la misma regla
+// valga en la app, en el panel de progreso y en las presentaciones de marca.
+
+/** Prendas que declara un pack, en el orden en que se enseñan en el panel. */
+export function wardrobeOf(pack: MascotPack | null | undefined): string[] {
+  const w = pack?.wardrobe;
+  return Array.isArray(w) ? (w as string[]) : [];
+}
+
+/** Si el pack tiene ranura para el estampado del pecho. */
+export function hasChestLogo(pack: MascotPack | null | undefined): boolean {
+  return !!pack?.chestLogo;
+}
+
+/** Cómo se llama cada prenda en el panel. */
+export const WARDROBE_LABELS: Record<string, string> = {
+  polo: "Polo",
+  pants: "Pantalón",
+  shoes: "Zapatillas",
+  bag: "Mochila",
+  skirt: "Falda",
+  hair: "Cabello",
+};
+
+export type WardrobeCfg = {
+  wardrobe?: Record<string, string> | null;
+  chestLogo?: { url?: string; size?: number } | null;
+};
+
+/**
+ * El bloque `<style>` con la ropa del personaje. Cadena vacía si el pack no
+ * tiene vestuario o si el demo no ha cambiado nada: en ese caso manda el
+ * mascot.css del pack, que ya trae los colores originales.
+ */
+export function wardrobeCSS(pack: MascotPack | null | undefined, cfg: WardrobeCfg): string {
+  if (!pack) return "";
+  const root = (pack.rootClass as string) || "mascot";
+  const prendas = wardrobeOf(pack);
+  const vars: string[] = [];
+
+  for (const prenda of prendas) {
+    const color = cfg.wardrobe?.[prenda];
+    if (color && /^#[0-9a-fA-F]{3,8}$/.test(color)) vars.push(`--m-${prenda}:${color}`);
+  }
+
+  if (hasChestLogo(pack)) {
+    const url = cfg.chestLogo?.url;
+    // Sólo rutas, nunca un url() escrito por quien edita: se cita y se escapa.
+    if (url) vars.push(`--m-chest-logo:url("${url.replace(/["\\]/g, "")}")`);
+    const size = cfg.chestLogo?.size;
+    if (typeof size === "number" && size > 0) {
+      vars.push(`--m-chest-scale:${Math.min(3, Math.max(0.2, size)).toFixed(2)}`);
+    }
+  }
+
+  if (!vars.length) return "";
+  return `<style id="mascota-ropa">.${root}{${vars.join(";")}}</style>`;
+}
