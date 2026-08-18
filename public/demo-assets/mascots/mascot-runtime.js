@@ -171,7 +171,25 @@
       }
       return el;
     },
+
+    // Rellena a mano las capas en línea que ya estén puestas. El observador de
+    // arriba lo hace solo; esto está para quien monte la mascota antes de
+    // cargar este archivo.
+    hydrate: function (root) { hydrateAll(root); return api; },
+
+    /**
+     * Abre y cierra la boca. Se llama al empezar y al terminar de hablar
+     * (voz o globo de texto). En packs sin boca abierta no hace nada.
+     */
+    talk: function (on, root) {
+      var sel = '.' + api.rootClass();
+      (root || document).querySelectorAll(sel).forEach(function (el) {
+        el.classList.toggle('talking', !!on);
+      });
+      return api;
+    },
   };
+
 
   global.Mascot = api;
 })(window);
