@@ -384,6 +384,20 @@ export type DemoConfig = {
     tints?: MascotTint[];
     /** Como se guardaba antes, de una sola capa. Se sigue leyendo como la primera. */
     tint?: MascotTint;
+    /**
+     * Ropa del personaje, para las mascotas que la declaran en su manifiesto
+     * (`wardrobe`, hoy Tomito: polo, pantalón, zapatillas, mochila). La clave es
+     * la prenda y el valor un color. Lo que falte se queda como en el dibujo
+     * original: el CSS del pack ya trae sus valores por defecto.
+     */
+    wardrobe?: Record<string, string>;
+    /** Estampado del pecho, para los packs con ranura de logo (`chestLogo`). */
+    chestLogo?: {
+      /** URL de la imagen. Vacío = sin estampado. */
+      url?: string;
+      /** Ancho en % del lienzo de la mascota. Por defecto, el del pack. */
+      size?: number;
+    };
   };
 
   /** Emoji o URL de imagen. */
