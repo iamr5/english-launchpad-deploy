@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { servePresentacion } from "@/lib/serve-presentacion.server";
+import { mascotaDelDemo } from "@/lib/presentacion-mascota";
 import asset from "../assets/autonoma-presentacion.html.asset.json";
 
 // La presentación pesa ~14 MB (las imágenes van incrustadas), así que no vive en
@@ -26,10 +27,13 @@ export const Route = createFileRoute("/autonoma-presentacion")({
   server: {
     handlers: {
       GET: async ({ request }) => {
+        // Boti se cambia por Tomito, la mascota del demo de la Autónoma.
+        const mascota = await mascotaDelDemo("demoautonoma");
         return servePresentacion({
           assetUrl: asset.url,
           requestUrl: request.url,
           headTags,
+          extraHead: mascota || undefined,
         });
       },
     },
