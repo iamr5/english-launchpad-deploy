@@ -56,6 +56,7 @@ export async function mascotaDelDemo(slug: string): Promise<string> {
 
   return `
 ${css}
+${wardrobeCSS(pack, cfg.mascot)}
 <style id="mascota-demo">
 #boti-svg{display:none !important}
 .boti-slot{aspect-ratio:${art.width}/${art.height} !important}
