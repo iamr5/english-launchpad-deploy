@@ -205,6 +205,18 @@
       });
       return api;
     },
+  };
+
+  // Ciclo de reposo: cada 9-16 s la mascota sonríe un instante si no habla.
+  function idleEmotes() {
+    setTimeout(function () {
+      try { api.emote('smile', 1200); } catch (e) {}
+      idleEmotes();
+    }, 9000 + Math.random() * 7000);
+  }
+  idleEmotes();
+
+
 
 
 
