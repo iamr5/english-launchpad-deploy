@@ -2621,12 +2621,17 @@ function MascotStage({
   baseUrl,
   tints,
   headIcon,
+  wardrobe,
+  chestLogo,
 }: {
   packId: string;
   manifest: MascotManifest | null;
   baseUrl: string;
   tints?: MascotTint[];
   headIcon?: string;
+  /** Ropa elegida en el panel; se pinta como variables sobre esta caja. */
+  wardrobe?: Record<string, string> | null;
+  chestLogo?: ChestLogoCfg | null;
 }) {
   const box = useRef<HTMLDivElement | null>(null);
   const [err, setErr] = useState<string | null>(null);
