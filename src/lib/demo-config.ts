@@ -528,6 +528,7 @@ export const RESERVED_SLUGS = new Set([
   "login",
   "lovable",
   "presentacion",
+  "presentacion-ue-isabel-la-catolica",
   "presentation",
   "cip",
   "cip-presenta",
