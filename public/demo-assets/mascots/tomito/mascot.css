@@ -60,10 +60,14 @@
   animation: tomito-blink 6.3s ease-in-out infinite;
 }
 
-/* La boca: cerrada de base, abierta sólo mientras habla. */
+/* La boca: cerrada de base. Al hablar, las dos bocas se alternan en el mismo
+   ciclo (una abre mientras la otra cierra), que es lo que se lee como habla;
+   una sola boca deformándose parecía un tic. */
+.tomito .mouth, .tomito .mouthopen { transform-origin: 50% 34%; }
 .tomito .mouthopen { opacity: 0; }
-.tomito.talking .mouth { opacity: 0; }
-.tomito.talking .mouthopen { opacity: 1; animation: tomito-talk .26s steps(1, end) infinite; }
+.tomito.talking .mouth { animation: tomito-talk-closed .24s steps(1, end) infinite; }
+.tomito.talking .mouthopen { animation: tomito-talk-open .24s steps(1, end) infinite; }
+
 
 /* El logo del pecho. Sin logo puesto no se dibuja nada. El demo puede agrandarlo
    o achicarlo con --m-chest-scale (1 = el tamaño de serie). */
