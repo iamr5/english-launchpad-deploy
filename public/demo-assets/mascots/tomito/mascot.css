@@ -1,0 +1,113 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   tomito · mascot.css — la animación de Tomito.
+
+   Mismo esqueleto que Martín y Arianna (chico de pie, brazos como capa aparte),
+   con los pivotes medidos sobre SU lienzo, 1936.88 × 4680.61:
+   cabeza 234–1842 (hasta el 39%), torso 1778–2895, hombros al 48%, piernas
+   2740–4447 (pies al 95%) y ojos alrededor del 28% de alto. Van en porcentaje
+   del lienzo, así que se ve igual a cualquier tamaño.
+
+   Además, Tomito tiene dos cosas que las otras mascotas no:
+   · Ropa recoloreable. Sus SVG van EN LÍNEA (mascot.json: "inline": true), y
+     los rellenos del polo, el pantalón, las zapatillas y la mochila salen de
+     variables. Cambiarlas repinta al personaje entero, con sus sombras, porque
+     cada tono se calcula como una mezcla del color base.
+   · Boca abierta. El arte vino en dos versiones; aquí se cruzan para que hable.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Vestuario. Los valores por defecto son los del dibujo original. El demo los
+   pisa desde :root con los colores de la institución. */
+.tomito {
+  --m-polo: #f0eff4;
+  --m-pants: #8a7a75;
+  --m-shoes: #f0eff0;
+  --m-bag: #fc7712;
+  --amp: 1;
+}
+
+.tomito .shadow {
+  position: absolute; left: 50%; bottom: 1.2%; width: 44%; height: 2.6%;
+  transform: translateX(-50%); border-radius: 50%;
+  background: rgba(0, 0, 0, .20);
+}
+
+.tomito .bear  { position: absolute; inset: 0; }
+.tomito .group { position: absolute; inset: 0; }
+.tomito .layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tomito .layer > svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+/* El torso sube y baja; los pies se quedan plantados. */
+.tomito .torso { animation: tomito-bob 3.8s ease-in-out infinite; }
+
+.tomito .body { transform-origin: 50% 62%; animation: tomito-breathe 3.8s ease-in-out infinite; }
+.tomito .legs { transform-origin: 50% 95%; animation: tomito-legs 3.8s ease-in-out infinite; }
+
+.tomito .armL { transform-origin: 21% 48%; animation: tomito-armL 4.4s ease-in-out infinite; }
+.tomito .armR { transform-origin: 79% 48%; animation: tomito-armR 4.4s ease-in-out infinite; }
+
+/* La cabeza cabecea sobre el cuello; el envoltorio lleva ojos y boca con ella,
+   que si no se quedarían atrás. Su periodo no coincide con el del torso a
+   propósito: con el mismo, parecería soldada. */
+.tomito .headbob {
+  position: absolute; inset: 0;
+  transform-origin: 50% 39%;
+  animation: tomito-head 4.2s ease-in-out infinite;
+}
+
+/* Parpadeo en su propio ciclo, para que no caiga siempre en el mismo punto. */
+.tomito .eyes {
+  transform-origin: 50% 28%;
+  animation: tomito-blink 6.3s ease-in-out infinite;
+}
+
+/* La boca: cerrada de base, abierta sólo mientras habla. */
+.tomito .mouthopen { opacity: 0; }
+.tomito.talking .mouth { opacity: 0; }
+.tomito.talking .mouthopen { opacity: 1; animation: tomito-talk .26s steps(1, end) infinite; }
+
+/* El logo del pecho. Sin logo puesto no se dibuja nada. */
+.tomito .chestlogo {
+  position: absolute; left: 50%; top: 45.5%;
+  width: 17%; height: 5.4%;
+  transform: translateX(-50%);
+  background: var(--m-chest-logo, none) center/contain no-repeat;
+  pointer-events: none;
+}
+
+@keyframes tomito-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(calc(-1.1% * var(--amp))); }
+}
+@keyframes tomito-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scaleX(calc(1 + .016 * var(--amp))) scaleY(calc(1 - .012 * var(--amp))); }
+}
+@keyframes tomito-legs {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(calc(1 + .018 * var(--amp))); }
+}
+@keyframes tomito-armL {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(calc(3deg * var(--amp))); }
+}
+@keyframes tomito-armR {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(calc(-3deg * var(--amp))); }
+}
+@keyframes tomito-head {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(calc(-.6% * var(--amp))) rotate(calc(1.2deg * var(--amp))); }
+}
+@keyframes tomito-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(.08); }
+}
+@keyframes tomito-talk {
+  0%   { transform: scaleY(1); }
+  50%  { transform: scaleY(.55); }
+  100% { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tomito * { animation: none !important; }
+}
