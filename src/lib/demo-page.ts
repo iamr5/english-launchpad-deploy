@@ -387,7 +387,7 @@ async function inject(
       // El tema cierra el <head>: antes lo pisaría el :root de la plantilla.
       .replace(
         "</head>",
-        `${themeCSS(cfg)}
+        `${themeCSS(cfg)}${wardrobeCSS(mascot.pack, cfg.mascot)}
 </head>`,
       )
       .replace("<!--MASCOT-SCRIPTS-->", mascotScripts(mascot))
