@@ -1,0 +1,46 @@
+{
+  "id": "tomito",
+  "name": "Tomito",
+  "shortName": "Tomito",
+  "kind": "compañero guía",
+  "emoji": "🎒",
+  "engine": "layers",
+  "css": "mascot.css",
+  "rootClass": "tomito",
+  "shadow": true,
+  "inline": true,
+  "wardrobe": ["polo", "pants", "shoes", "bag"],
+  "chestLogo": true,
+  "artboard": { "width": 1936.88, "height": 4680.61 },
+  "headIcon": "head-icon.svg",
+  "layers": {
+    "armL": "layers/armL.svg",
+    "armR": "layers/armR.svg",
+    "legs": "layers/legs.svg",
+    "body": "layers/body.svg",
+    "head": "layers/head.svg",
+    "eyes": "layers/eyes.svg",
+    "mouth": "layers/mouth.svg",
+    "mouthopen": "layers/mouth-open.svg"
+  },
+  "stack": [
+    { "group": "torso", "children": [{ "layer": "armL" }, { "layer": "armR" }] },
+    { "layer": "legs" },
+    {
+      "group": "torso",
+      "children": [
+        { "layer": "body" },
+        { "slot": "chestlogo" },
+        {
+          "wrapper": "headbob",
+          "children": [
+            { "layer": "head" },
+            { "layer": "eyes" },
+            { "layer": "mouth" },
+            { "layer": "mouthopen" }
+          ]
+        }
+      ]
+    }
+  ]
+}

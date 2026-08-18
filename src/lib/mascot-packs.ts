@@ -13,6 +13,7 @@ import botiPack from "../../public/demo-assets/mascots/boti/mascot.json";
 import gallitoPack from "../../public/demo-assets/mascots/gallito/mascot.json";
 import martinPack from "../../public/demo-assets/mascots/martin/mascot.json";
 import ariannaPack from "../../public/demo-assets/mascots/arianna/mascot.json";
+import tomitoPack from "../../public/demo-assets/mascots/tomito/mascot.json";
 
 export type MascotPack = {
   id: string;
@@ -34,6 +35,7 @@ export const BUILT_IN_PACKS: Record<string, MascotPack> = {
   gallito: gallitoPack as MascotPack,
   martin: martinPack as MascotPack,
   arianna: ariannaPack as MascotPack,
+  tomito: tomitoPack as MascotPack,
 };
 
 /** Carpeta de los packs, relativa a la base de assets de un demo. */
@@ -51,6 +53,8 @@ const NOTES: Record<string, string> = {
   gallito: "Un tumi. Cabecea, parpadea y se estira; movimiento vertical.",
   martin: "Escolar con el uniforme del colegio. Respira, balancea los brazos y parpadea.",
   arianna: "Escolar con el uniforme del colegio. Misma animación que Martín.",
+  tomito:
+    "Escolar con mochila. Ropa recoloreable (polo, pantalón, zapatillas, mochila), logo en el pecho y boca que se abre al hablar.",
 };
 
 export type PackChoice = {
