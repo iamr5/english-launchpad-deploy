@@ -2618,11 +2618,6 @@ function loadScript(src: string) {
   return loaded.get(src)!;
 }
 
-/**
- * La mascota montada de verdad y moviéndose, con el mismo runtime que usa la
- * app. Antes aquí había una imagen fija de la cabeza, así que ninguna mascota
- * parecía animarse por más que lo estuviera.
- */
 /** Lo que se guarda del estampado del pecho. */
 type ChestLogoCfg = { url?: string; size?: number };
 
@@ -2791,6 +2786,11 @@ function Vestuario({
   );
 }
 
+/**
+ * La mascota montada de verdad y moviéndose, con el mismo runtime que usa la
+ * app. Antes aquí había una imagen fija de la cabeza, así que ninguna mascota
+ * parecía animarse por más que lo estuviera.
+ */
 function MascotStage({
   packId,
   manifest,
