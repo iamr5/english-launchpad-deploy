@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   createDemo,
   deleteDemo,
@@ -28,7 +28,15 @@ import {
   shadeHex,
   VOCAB_PACKS,
 } from "@/lib/demo-config";
-import { BUILT_IN_PACKS, packAsset, packChoices, packInfo } from "@/lib/mascot-packs";
+import {
+  BUILT_IN_PACKS,
+  WARDROBE_LABELS,
+  hasChestLogo,
+  packAsset,
+  packChoices,
+  packInfo,
+  wardrobeOf,
+} from "@/lib/mascot-packs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -2615,6 +2623,174 @@ function loadScript(src: string) {
  * app. Antes aquí había una imagen fija de la cabeza, así que ninguna mascota
  * parecía animarse por más que lo estuviera.
  */
+/** Lo que se guarda del estampado del pecho. */
+type ChestLogoCfg = { url?: string; size?: number };
+
+/**
+ * Las variables CSS de la ropa, para pintar la vista previa del panel igual que
+ * se pintará el demo. Mismos nombres que usa `wardrobeCSS` en el servidor.
+ */
+function wardrobeVars(
+  wardrobe?: Record<string, string> | null,
+  chestLogo?: ChestLogoCfg | null,
+): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [prenda, color] of Object.entries(wardrobe ?? {})) {
+    if (color && /^#[0-9a-fA-F]{3,8}$/.test(color)) out[`--m-${prenda}`] = color;
+  }
+  if (chestLogo?.url) out["--m-chest-logo"] = `url("${chestLogo.url.replace(/["\\]/g, "")}")`;
+  if (chestLogo?.size) out["--m-chest-scale"] = String(chestLogo.size);
+  return out;
+}
+
+/**
+ * La ropa del personaje: un color por prenda y el estampado del pecho.
+ * Sólo aparece para las mascotas que declaran vestuario en su manifiesto (hoy
+ * Tomito); el resto no tiene prendas separadas que repintar.
+ */
+function Vestuario({
+  slug,
+  pack,
+  wardrobe,
+  chestLogo,
+  marca,
+  onWardrobe,
+  onChestLogo,
+}: {
+  slug: string;
+  pack: MascotManifest | null;
+  wardrobe: Record<string, string>;
+  chestLogo: ChestLogoCfg;
+  /** Colores del demo, para vestirla de la marca de un clic. */
+  marca: string[];
+  onWardrobe: (next: Record<string, string>) => void;
+  onChestLogo: (next: ChestLogoCfg) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const prendas = wardrobeOf(pack as never);
+  const conLogo = hasChestLogo(pack as never);
+  if (!prendas.length && !conLogo) return null;
+
+  const set1 = (prenda: string, color: string) => onWardrobe({ ...wardrobe, [prenda]: color });
+  const quitar = (prenda: string) => {
+    const next = { ...wardrobe };
+    delete next[prenda];
+    onWardrobe(next);
+  };
+
+  return (
+    <div className="space-y-3 rounded-lg border p-3">
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <p className="text-sm font-medium">Ropa</p>
+          <p className="text-xs text-muted-foreground">
+            Esta mascota se puede vestir. Lo que dejes vacío se queda con el color del dibujo
+            original.
+          </p>
+        </div>
+        {!!marca.length && !!prendas.length && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const next = { ...wardrobe };
+              prendas.forEach((p, i) => {
+                const c = marca[i % marca.length];
+                if (c) next[p] = c;
+              });
+              onWardrobe(next);
+            }}
+          >
+            Usar colores de la marca
+          </Button>
+        )}
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        {prendas.map((prenda) => (
+          <div key={prenda} className="space-y-1">
+            <ColorField
+              label={WARDROBE_LABELS[prenda] ?? prenda}
+              value={wardrobe[prenda] ?? ""}
+              fallback="#F0EFF4"
+              onChange={(v) => set1(prenda, v)}
+            />
+            {wardrobe[prenda] && (
+              <button
+                type="button"
+                className="text-xs underline text-muted-foreground"
+                onClick={() => quitar(prenda)}
+              >
+                Volver al color original
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {conLogo && (
+        <div className="space-y-2 border-t pt-3">
+          <Label>Estampado del polo</Label>
+          <div className="flex flex-wrap items-center gap-2">
+            {chestLogo.url && (
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg border bg-white">
+                <img src={chestLogo.url} alt="" className="h-7 w-7 object-contain" />
+              </span>
+            )}
+            <Button variant="outline" size="sm" asChild disabled={busy}>
+              <label className="cursor-pointer">
+                {busy ? "Subiendo…" : chestLogo.url ? "Cambiar imagen" : "Subir imagen"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setBusy(true);
+                    try {
+                      const url = await uploadBrandFile(slug, "mascota-estampado", file);
+                      onChestLogo({ ...chestLogo, url });
+                      toast.success("Estampado subido.");
+                    } catch (err) {
+                      toast.error((err as Error).message);
+                    } finally {
+                      setBusy(false);
+                      e.target.value = "";
+                    }
+                  }}
+                />
+              </label>
+            </Button>
+            {chestLogo.url && (
+              <Button variant="ghost" size="sm" onClick={() => onChestLogo({ ...chestLogo, url: "" })}>
+                Quitar
+              </Button>
+            )}
+          </div>
+          {chestLogo.url && (
+            <div className="space-y-1">
+              <Label className="text-xs">Tamaño</Label>
+              <input
+                type="range"
+                min={0.4}
+                max={2}
+                step={0.05}
+                value={chestLogo.size ?? 1}
+                onChange={(e) => onChestLogo({ ...chestLogo, size: Number(e.target.value) })}
+                className="w-full"
+              />
+            </div>
+          )}
+          <p className="text-xs text-muted-foreground">
+            PNG con fondo transparente o SVG. Se coloca en el pecho del personaje.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MascotStage({
   packId,
   manifest,
