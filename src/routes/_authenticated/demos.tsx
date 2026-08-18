@@ -2727,7 +2727,17 @@ function MascotStage({
 
   return (
     <div className="flex items-end gap-3 rounded-lg border bg-muted/30 p-3">
-      <div style={{ width: W, height: W * ratio, position: "relative" }} ref={box} />
+      <div
+        style={
+          {
+            width: W,
+            height: W * ratio,
+            position: "relative",
+            ...wardrobeVars(wardrobe, chestLogo),
+          } as CSSProperties
+        }
+        ref={box}
+      />
       <div className="text-xs text-muted-foreground">
         {err ? (
           <span className="text-destructive">{err}</span>
