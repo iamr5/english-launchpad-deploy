@@ -32,15 +32,25 @@
       .replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // Un nodo del árbol `stack` puede ser una capa, un grupo o un envoltorio:
+  // Un nodo del árbol `stack` puede ser una capa, un grupo, un envoltorio o una
+  // ranura:
   //   { layer: 'head' }                              → <img class="layer head">
   //   { group: 'torso', children: [...] }            → <div class="group torso">…</div>
   //   { wrapper: 'glassesfollow', children: [...] }  → <div class="glassesfollow">…</div>
+  //   { slot: 'chestlogo' }                          → <div class="chestlogo"></div>
+  //
+  // Los packs con "inline": true no usan <img>: su SVG se pega dentro del DOM
+  // para que las variables CSS de la página (la ropa del personaje) lo alcancen.
+  // Un <img> es un documento aparte y las variables no cruzan esa frontera.
   function node(n) {
     if (!n) return '';
+    if (n.slot) return '<div class="' + esc(n.slot) + '"></div>';
     if (n.layer) {
       var file = pack.layers && pack.layers[n.layer];
       if (!file) return '';                       // capa declarada pero sin archivo → se omite
+      if (pack.inline) {
+        return '<span class="layer ' + esc(n.layer) + '" data-svg="' + esc(join(file)) + '"></span>';
+      }
       return '<img class="layer ' + esc(n.layer) + '" src="' + esc(join(file)) + '" alt="">';
     }
     var kids = (n.children || []).map(node).join('');
@@ -48,6 +58,35 @@
     if (n.wrapper) return '<div class="' + esc(n.wrapper) + '">' + kids + '</div>';
     return kids;
   }
+
+  // ── Capas en línea ──────────────────────────────────────────────────────────
+  // Quien monta la mascota lo hace de mil formas (innerHTML suelto, mount(),
+  // fill(), plantillas del demo). En vez de perseguir a cada uno, se vigila el
+  // documento: cualquier [data-svg] que aparezca se rellena solo.
+  var svgCache = {};
+  function hydrate(el) {
+    if (!el || el.dataset.svgDone) return;
+    var url = el.getAttribute('data-svg');
+    if (!url) return;
+    el.dataset.svgDone = '1';
+    var got = svgCache[url] || (svgCache[url] = fetch(url).then(function (r) { return r.text(); }));
+    got.then(function (txt) { el.innerHTML = txt; }).catch(function () { delete el.dataset.svgDone; });
+  }
+  function hydrateAll(root) {
+    (root || document).querySelectorAll('[data-svg]').forEach(hydrate);
+  }
+  if (typeof MutationObserver === 'function') {
+    new MutationObserver(function (muts) {
+      muts.forEach(function (m) {
+        m.addedNodes.forEach(function (nd) {
+          if (nd.nodeType !== 1) return;
+          if (nd.hasAttribute && nd.hasAttribute('data-svg')) hydrate(nd);
+          if (nd.querySelectorAll) hydrateAll(nd);
+        });
+      });
+    }).observe(document.documentElement, { childList: true, subtree: true });
+  }
+
 
   function injectCSS() {
     if (!pack.css) return;
