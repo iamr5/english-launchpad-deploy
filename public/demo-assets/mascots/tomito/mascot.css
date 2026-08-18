@@ -72,6 +72,12 @@
 .tomito.talking .mouth { animation: tomito-talk-closed .24s steps(1, end) infinite; }
 .tomito.talking .mouthopen { animation: tomito-talk-open .24s steps(1, end) infinite; }
 
+/* Gesto de simpatía: sonrisa ancha y ojos entornados, un instante cada tanto.
+   Solo en reposo — el runtime nunca lo pone sobre una mascota hablando. */
+.tomito .mouth, .tomito .eyes { transition: transform .35s ease-in-out; }
+.tomito.emote-smile .mouth { transform: scaleX(1.18) scaleY(1.25) translateY(.25%); }
+.tomito.emote-smile .eyes  { animation: none; transform: scaleY(.55); }
+
 
 /* El logo del pecho. Sin logo puesto no se dibuja nada. El demo puede agrandarlo
    o achicarlo con --m-chest-scale (1 = el tamaño de serie). */
@@ -122,7 +128,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tomito * { animation: none !important; }
+  .tomito * { animation: none !important; transition: none !important; }
 }
 
 /* La sombra respira con el bob: se encoge y aclara cuando el cuerpo sube. */
