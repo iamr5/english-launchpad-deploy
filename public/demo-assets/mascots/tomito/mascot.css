@@ -65,10 +65,12 @@
 .tomito.talking .mouth { opacity: 0; }
 .tomito.talking .mouthopen { opacity: 1; animation: tomito-talk .26s steps(1, end) infinite; }
 
-/* El logo del pecho. Sin logo puesto no se dibuja nada. */
+/* El logo del pecho. Sin logo puesto no se dibuja nada. El demo puede agrandarlo
+   o achicarlo con --m-chest-scale (1 = el tamaño de serie). */
 .tomito .chestlogo {
   position: absolute; left: 50%; top: 45.5%;
-  width: 17%; height: 5.4%;
+  width: calc(17% * var(--m-chest-scale, 1));
+  height: calc(5.4% * var(--m-chest-scale, 1));
   transform: translateX(-50%);
   background: var(--m-chest-logo, none) center/contain no-repeat;
   pointer-events: none;
