@@ -3490,6 +3490,23 @@ function readingMinutes(lesson) {
 // TTS
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 let _speaking = false;
+
+// La boca de la mascota. El motor de mascotas expone Mascot.talk(on): abre la
+// boca mientras suene la voz o dure un globo de dialogo. En demos sin runtime
+// de mascota (o packs sin boca abierta) no hace nada.
+let _talkTimer = null;
+function mascotTalk(on) {
+  try {
+    if (_talkTimer) { clearTimeout(_talkTimer); _talkTimer = null; }
+    if (window.Mascot && window.Mascot.talk) window.Mascot.talk(!!on);
+  } catch (e) {}
+}
+// Mueve la boca durante un rato fijo (globos de texto, que no traen 'onend').
+function mascotTalkFor(ms) {
+  mascotTalk(true);
+  _talkTimer = setTimeout(function () { _talkTimer = null; mascotTalk(false); }, Math.max(600, ms || 1200));
+}
+
 let _utter = null;    // la locucion en curso
 let _onEnd = null;    // su callback de cierre, para poder llamarlo al cortarla
 
@@ -3499,6 +3516,7 @@ function stopSpeak() {
   try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
   const cb = _onEnd;
   _utter = null; _onEnd = null; _speaking = false;
+  mascotTalk(false);
   if (cb) cb();
 }
 
@@ -3521,10 +3539,11 @@ function speak(text, onStart, onEnd, rate, interrupt) {
     // Los callbacks solo valen si esta locucion sigue siendo la vigente: al
     // interrumpir, el 'onend' tardio de la anterior llegaba despues del
     // 'onstart' de la nueva y dejaba el estado en "no suena nada".
-    u.onstart = () => { if (_utter !== u) return; _speaking = true; if (onStart) onStart(); };
+    u.onstart = () => { if (_utter !== u) return; _speaking = true; mascotTalk(true); if (onStart) onStart(); };
     const done = () => {
       if (_utter !== u) return;
       _utter = null; _onEnd = null; _speaking = false;
+      mascotTalk(false);
       if (onEnd) onEnd();
     };
     u.onend = done; u.onerror = done;
@@ -7089,9 +7108,17 @@ function scRoom(recienCreada) {
     const play = document.getElementById('sc-task-play');
     play.onclick = () => {
       const src = play.getAttribute('data-src');
-      if (src) { new Audio(src).play().catch(() => toast('No se pudo reproducir el audio')); }
+      if (src) {
+        const a = new Audio(src);
+        a.onplay = () => mascotTalk(true);
+        a.onended = a.onpause = a.onerror = () => mascotTalk(false);
+        a.play().catch(() => { mascotTalk(false); toast('No se pudo reproducir el audio'); });
+      }
       else if (window.speechSynthesis) {
-        const u = new SpeechSynthesisUtterance(t.modelEn || t.promptEn); u.lang = 'en-US'; speechSynthesis.speak(u);
+        const u = new SpeechSynthesisUtterance(t.modelEn || t.promptEn); u.lang = 'en-US';
+        u.onstart = () => mascotTalk(true);
+        u.onend = u.onerror = () => mascotTalk(false);
+        speechSynthesis.speak(u);
       }
     };
     // los mensajes son por tarea: al cambiar, se limpia el hilo
@@ -8369,7 +8396,10 @@ function obRender() {
   document.querySelector('#screen-onboard .ob-top').classList.toggle('can-back', OB.step > 0);
   document.getElementById('ob-segs').innerHTML = Array.from({ length: OB_LAST + 1 }, (_, i) =>
     `<div class="seg ${i < OB.step ? 'done' : (i === OB.step ? 'now' : '')}"></div>`).join('');
-  document.getElementById('ob-bubble').innerHTML = OB_BUBBLES[OB.step]();
+  const _bub = document.getElementById('ob-bubble');
+  _bub.innerHTML = OB_BUBBLES[OB.step]();
+  // La mascota "dice" el globo: la boca se mueve el tiempo que cuesta leerlo.
+  mascotTalkFor((_bub.textContent || '').length * 45);
   document.querySelectorAll('#screen-onboard .ob-step').forEach(s =>
     s.classList.toggle('on', +s.dataset.step === OB.step));
   // keep the option pills' selected state in sync (matters when stepping back)
