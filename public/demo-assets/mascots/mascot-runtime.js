@@ -185,10 +185,27 @@
       var sel = '.' + api.rootClass();
       (root || document).querySelectorAll(sel).forEach(function (el) {
         el.classList.toggle('talking', !!on);
+        if (on) el.classList.remove('emote-smile');
       });
       return api;
     },
-  };
+
+    /**
+     * Un gesto corto: por ahora 'smile' (sonrisa + ojos entornados). No se
+     * aplica sobre una mascota que esté hablando, para no pisar la boca.
+     */
+    emote: function (name, ms, root) {
+      var sel = '.' + api.rootClass();
+      var cls = 'emote-' + (name || 'smile');
+      (root || document).querySelectorAll(sel).forEach(function (el) {
+        if (el.classList.contains('talking')) return;
+        el.classList.add(cls);
+        clearTimeout(el._emoteT);
+        el._emoteT = setTimeout(function () { el.classList.remove(cls); }, Math.max(400, ms || 1200));
+      });
+      return api;
+    },
+
 
 
   global.Mascot = api;
