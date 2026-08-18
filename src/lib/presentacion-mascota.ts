@@ -15,7 +15,7 @@
 // /demos se refleja en la presentación sin tocar nada más.
 
 import { getDemoConfig } from "./demo-config";
-import { BUILT_IN_PACKS, MASCOTS_DIR, type MascotPack } from "./mascot-packs";
+import { BUILT_IN_PACKS, MASCOTS_DIR, wardrobeCSS, type MascotPack } from "./mascot-packs";
 
 const esc = (s: string) =>
   String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
