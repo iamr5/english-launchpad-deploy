@@ -1943,6 +1943,28 @@ function DemoEditor({ demo }: { demo: DemoRow }) {
                 baseUrl={g2("mascot.baseUrl")}
                 tints={tints}
                 headIcon={mascotHead}
+                wardrobe={get(cfg, "mascot.wardrobe", null) as Record<string, string> | null}
+                chestLogo={get(cfg, "mascot.chestLogo", null) as ChestLogoCfg | null}
+              />
+              <Vestuario
+                slug={demo.slug}
+                pack={
+                  (g2("mascot.pack", "ozito") === "custom"
+                    ? (get(cfg, "mascot.manifest", null) as MascotManifest | null)
+                    : ((BUILT_IN_PACKS[g2("mascot.pack", "ozito")] ?? null) as MascotManifest | null)) as
+                    | MascotManifest
+                    | null
+                }
+                wardrobe={(get(cfg, "mascot.wardrobe", null) as Record<string, string> | null) ?? {}}
+                chestLogo={(get(cfg, "mascot.chestLogo", null) as ChestLogoCfg | null) ?? {}}
+                marca={[
+                  g2("colors.accent"),
+                  g2("colors.button"),
+                  g2("colors.highlight"),
+                  g2("colors.ink"),
+                ].filter((c) => /^#[0-9a-fA-F]{6}$/.test(c))}
+                onWardrobe={(next) => setCfg((c) => set(c, "mascot.wardrobe", next))}
+                onChestLogo={(next) => setCfg((c) => set(c, "mascot.chestLogo", next))}
               />
               <TintLayers
                 tints={tints}
