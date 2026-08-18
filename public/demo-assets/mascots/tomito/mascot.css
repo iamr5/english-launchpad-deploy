@@ -124,3 +124,9 @@
 @media (prefers-reduced-motion: reduce) {
   .tomito * { animation: none !important; }
 }
+
+/* La sombra respira con el bob: se encoge y aclara cuando el cuerpo sube. */
+@keyframes tomito-shadow {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+  50%      { transform: translateX(-50%) scale(calc(1 - .06 * var(--amp))); opacity: .88; }
+}
