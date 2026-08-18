@@ -8410,7 +8410,7 @@ function obRender() {
   const _bub = document.getElementById('ob-bubble');
   _bub.innerHTML = OB_BUBBLES[OB.step]();
   // La mascota "dice" el globo: la boca se mueve el tiempo que cuesta leerlo.
-  mascotTalkFor((_bub.textContent || '').length * 45);
+  mascotTalkFor(talkDurationFor(_bub.textContent));
   document.querySelectorAll('#screen-onboard .ob-step').forEach(s =>
     s.classList.toggle('on', +s.dataset.step === OB.step));
   // keep the option pills' selected state in sync (matters when stepping back)
