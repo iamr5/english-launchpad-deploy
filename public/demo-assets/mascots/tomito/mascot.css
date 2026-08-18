@@ -25,11 +25,15 @@
   --amp: 1;
 }
 
+/* Los zapatos de Tomito terminan al ~94.2% del lienzo, no al borde: la sombra
+   va ahí, pegada a sus pies, no al fondo del contenedor. */
 .tomito .shadow {
-  position: absolute; left: 50%; bottom: 1.2%; width: 44%; height: 2.6%;
+  position: absolute; left: 50%; bottom: 4.4%; width: 40%; height: 2.2%;
   transform: translateX(-50%); border-radius: 50%;
   background: rgba(0, 0, 0, .20);
+  animation: tomito-shadow 3.8s ease-in-out infinite;
 }
+
 
 .tomito .bear  { position: absolute; inset: 0; }
 .tomito .group { position: absolute; inset: 0; }
@@ -119,4 +123,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .tomito * { animation: none !important; }
+}
+
+/* La sombra respira con el bob: se encoge y aclara cuando el cuerpo sube. */
+@keyframes tomito-shadow {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+  50%      { transform: translateX(-50%) scale(calc(1 - .06 * var(--amp))); opacity: .88; }
 }
