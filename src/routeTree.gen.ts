@@ -15,6 +15,7 @@ import { Route as SilaboCipRouteImport } from './routes/silabo-cip'
 import { Route as SilaboAutonoma1RouteImport } from './routes/silabo-autonoma-1'
 import { Route as SilaboAutonomaRouteImport } from './routes/silabo-autonoma'
 import { Route as PresentationRouteImport } from './routes/presentation'
+import { Route as PresentacionUeIsabelLaCatolicaRouteImport } from './routes/presentacion-ue-isabel-la-catolica'
 import { Route as PresentacionSantaMariaDeLaGraciaRouteImport } from './routes/presentacion-santa-maria-de-la-gracia'
 import { Route as PresentacionRepsolRouteImport } from './routes/presentacion-repsol'
 import { Route as PresentacionNuamRouteImport } from './routes/presentacion-nuam'
@@ -92,6 +93,12 @@ const PresentationRoute = PresentationRouteImport.update({
   path: '/presentation',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PresentacionUeIsabelLaCatolicaRoute =
+  PresentacionUeIsabelLaCatolicaRouteImport.update({
+    id: '/presentacion-ue-isabel-la-catolica',
+    path: '/presentacion-ue-isabel-la-catolica',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PresentacionSantaMariaDeLaGraciaRoute =
   PresentacionSantaMariaDeLaGraciaRouteImport.update({
     id: '/presentacion-santa-maria-de-la-gracia',
@@ -343,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
+  '/presentacion-ue-isabel-la-catolica': typeof PresentacionUeIsabelLaCatolicaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-autonoma-1': typeof SilaboAutonoma1Route
@@ -395,6 +403,7 @@ export interface FileRoutesByTo {
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
+  '/presentacion-ue-isabel-la-catolica': typeof PresentacionUeIsabelLaCatolicaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-autonoma-1': typeof SilaboAutonoma1Route
@@ -449,6 +458,7 @@ export interface FileRoutesById {
   '/presentacion-nuam': typeof PresentacionNuamRoute
   '/presentacion-repsol': typeof PresentacionRepsolRoute
   '/presentacion-santa-maria-de-la-gracia': typeof PresentacionSantaMariaDeLaGraciaRoute
+  '/presentacion-ue-isabel-la-catolica': typeof PresentacionUeIsabelLaCatolicaRoute
   '/presentation': typeof PresentationRoute
   '/silabo-autonoma': typeof SilaboAutonomaRoute
   '/silabo-autonoma-1': typeof SilaboAutonoma1Route
@@ -503,6 +513,7 @@ export interface FileRouteTypes {
     | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentacion-santa-maria-de-la-gracia'
+    | '/presentacion-ue-isabel-la-catolica'
     | '/presentation'
     | '/silabo-autonoma'
     | '/silabo-autonoma-1'
@@ -555,6 +566,7 @@ export interface FileRouteTypes {
     | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentacion-santa-maria-de-la-gracia'
+    | '/presentacion-ue-isabel-la-catolica'
     | '/presentation'
     | '/silabo-autonoma'
     | '/silabo-autonoma-1'
@@ -608,6 +620,7 @@ export interface FileRouteTypes {
     | '/presentacion-nuam'
     | '/presentacion-repsol'
     | '/presentacion-santa-maria-de-la-gracia'
+    | '/presentacion-ue-isabel-la-catolica'
     | '/presentation'
     | '/silabo-autonoma'
     | '/silabo-autonoma-1'
@@ -662,6 +675,7 @@ export interface RootRouteChildren {
   PresentacionNuamRoute: typeof PresentacionNuamRoute
   PresentacionRepsolRoute: typeof PresentacionRepsolRoute
   PresentacionSantaMariaDeLaGraciaRoute: typeof PresentacionSantaMariaDeLaGraciaRoute
+  PresentacionUeIsabelLaCatolicaRoute: typeof PresentacionUeIsabelLaCatolicaRoute
   PresentationRoute: typeof PresentationRoute
   SilaboAutonomaRoute: typeof SilaboAutonomaRoute
   SilaboAutonoma1Route: typeof SilaboAutonoma1Route
@@ -733,6 +747,13 @@ declare module '@tanstack/react-router' {
       path: '/presentation'
       fullPath: '/presentation'
       preLoaderRoute: typeof PresentationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentacion-ue-isabel-la-catolica': {
+      id: '/presentacion-ue-isabel-la-catolica'
+      path: '/presentacion-ue-isabel-la-catolica'
+      fullPath: '/presentacion-ue-isabel-la-catolica'
+      preLoaderRoute: typeof PresentacionUeIsabelLaCatolicaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/presentacion-santa-maria-de-la-gracia': {
@@ -1091,6 +1112,7 @@ const rootRouteChildren: RootRouteChildren = {
   PresentacionNuamRoute: PresentacionNuamRoute,
   PresentacionRepsolRoute: PresentacionRepsolRoute,
   PresentacionSantaMariaDeLaGraciaRoute: PresentacionSantaMariaDeLaGraciaRoute,
+  PresentacionUeIsabelLaCatolicaRoute: PresentacionUeIsabelLaCatolicaRoute,
   PresentationRoute: PresentationRoute,
   SilaboAutonomaRoute: SilaboAutonomaRoute,
   SilaboAutonoma1Route: SilaboAutonoma1Route,
