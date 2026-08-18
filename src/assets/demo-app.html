@@ -3506,6 +3506,17 @@ function mascotTalkFor(ms) {
   mascotTalk(true);
   _talkTimer = setTimeout(function () { _talkTimer = null; mascotTalk(false); }, Math.max(600, ms || 1200));
 }
+// Cuanto dura decir un texto: ritmo de lectura real (~3.3 palabras/s) mas las
+// pausas de comas y puntos. Asi la boca acompana al largo de la frase.
+function talkDurationFor(text) {
+  const t = String(text || '').trim();
+  if (!t) return 0;
+  const words = (t.match(/\S+/g) || []).length;
+  const commas = (t.match(/[,;:]/g) || []).length;
+  const stops = (t.match(/[.!?…]/g) || []).length;
+  return Math.min(9000, Math.max(900, words * 300 + commas * 180 + stops * 320));
+}
+
 
 let _utter = null;    // la locucion en curso
 let _onEnd = null;    // su callback de cierre, para poder llamarlo al cortarla
