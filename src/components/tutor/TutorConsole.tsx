@@ -192,24 +192,28 @@ function EstadoPill({
 }
 
 function PanelNivel({ tutor }: { tutor: ReturnType<typeof useRealtimeTutor> }) {
-  const { estimator, evidence, bandaPractica, nivelFijado } = tutor;
+  const { estimator, evidence, bandaPractica, nivelSembrado } = tutor;
   const perfil = PROFILES[bandaPractica];
   const midiendo = estimator.confidence < 0.35;
 
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        Practicando en
+        Tu nivel ahora
       </h2>
 
       <div className="mt-2 flex items-baseline gap-2">
-        <span className="text-3xl font-bold tabular-nums text-foreground">{bandaPractica}</span>
-        <span className="text-xs text-muted-foreground">{perfil.label.split(" · ")[1]}</span>
+        <span className="text-3xl font-bold tabular-nums text-foreground">
+          {midiendo ? "—" : bandaPractica}
+        </span>
+        <span className="text-xs text-muted-foreground">
+          {midiendo ? "midiendo…" : perfil.label.split(" · ")[1]}
+        </span>
       </div>
       <p className="mt-1 text-[11px] text-muted-foreground">
-        {nivelFijado
-          ? "Tu nivel, ya conocido. No cambia durante la práctica."
-          : "Sin nivel informado: se está estimando sobre la marcha."}
+        {midiendo
+          ? "Se ajusta según hablas, midiendo solo tu inglés."
+          : `El tutor te habla en ${bandaPractica}${nivelSembrado ? ", partiendo de tu nivel conocido" : ""}.`}
       </p>
 
       {/* La escala hace visible que la estimación es continua y no un salto

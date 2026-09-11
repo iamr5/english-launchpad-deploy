@@ -108,7 +108,10 @@ export function useRealtimeTutor({
   estRef.current = estimator;
 
   /** La banda con la que se HABLA, que no tiene por qué ser la que se MIDE. */
-  const bandaPractica: Band = bandaInicial ?? estimator.band;
+  // Manda siempre el estimador. `bandaInicial` solo SIEMBRA el arranque (test
+  // de ubicación, progreso del curso) para no empezar en frío; a partir de ahí
+  // el nivel se recalibra con lo que el alumno habla, turno a turno.
+  const bandaPractica: Band = estimator.band;
 
   const bandaEnviadaRef = useRef<Band>(bandaPractica);
   const atascoEnviadoRef = useRef(false);
@@ -441,7 +444,7 @@ export function useRealtimeTutor({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           t: token,
-          band: bandaInicial ?? est.band,
+          band: est.band,
           nombre,
           packs: packsRef.current,
           mic,
@@ -463,7 +466,7 @@ export function useRealtimeTutor({
       };
       const clientSecret = sesion.clientSecret;
       vocabRef.current = sesion.vocabulario;
-      bandaEnviadaRef.current = bandaInicial ?? est.band;
+      bandaEnviadaRef.current = est.band;
 
       const pc = new RTCPeerConnection();
       pcRef.current = pc;
@@ -572,7 +575,7 @@ export function useRealtimeTutor({
       arrancandoRef.current = false;
       stop();
     }
-  }, [bandaInicial, manejaEvento, mic, modo, nombre, stop, token]);
+  }, [manejaEvento, mic, modo, nombre, stop, token]);
 
   /** Escribir en vez de hablar. */
   const sendText = useCallback(
@@ -642,8 +645,8 @@ export function useRealtimeTutor({
     bandaEntrada: bandaInicial,
     /** La banda con la que habla el tutor. */
     bandaPractica,
-    /** true si el nivel vino de fuera y el estimador no lo mueve. */
-    nivelFijado: bandaInicial !== undefined,
+    /** true si se partió de un nivel conocido en vez de arrancar en frío. */
+    nivelSembrado: bandaInicial !== undefined,
     vocabulario: vocabRef.current,
     modo,
     start,
