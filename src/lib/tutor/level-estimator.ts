@@ -44,6 +44,16 @@ export function pideEspanol(texto: string): boolean {
   return PIDE_ESPANOL.test(texto || "");
 }
 
+// Decir "no entiendo" no encajaba en NADA: PIDE_ESPANOL exige un verbo junto a la
+// palabra "español", y lostRate solo lo movía el observador, tres turnos más
+// tarde. Se podía repetir cinco veces seguidas sin que cambiara una coma.
+const NO_ENTIENDE =
+  /\bno (?:te |lo )?(?:entiendo|entend[íi]|comprendo|pillo)|\bno s[ée] qu[ée] (?:dices|significa|es)\b|\bm[áa]s despacio\b|\b(?:rep[ií]te(?:lo)?|otra vez|c[óo]mo dices)\b|\bi (?:don'?t|do not) (?:understand|get it)\b/i;
+
+export function noEntiende(texto: string): boolean {
+  return NO_ENTIENDE.test(texto || "");
+}
+
 function tokenize(text: string): string[] {
   return (text.toLowerCase().match(/[a-záéíóúñü']+/gi) || []).filter((w) => w.length > 0);
 }
@@ -209,12 +219,16 @@ export function ingestTurn(
 ): EstimatorState {
   const m = measureTurn(text);
   const pidioEspanol = prev.pidioEspanol || pideEspanol(text);
+  // Un "no entiendo" pesa la mitad de lo acumulado: uno hace que simplifique,
+  // dos seguidos cruzan el 0.5 y pasan a explicarle en español.
+  const lostRate = noEntiende(text) ? ema(prev.lostRate, 1, 0.5) : prev.lostRate;
 
   // Un "yes" o un "ok" no dicen nada del nivel de nadie.
   if (m.totalTokens < 3 || m.words < 3 || (m.totalTokens >= 4 && m.coreShare < 0.3)) {
     return {
       ...prev,
       pidioEspanol,
+      lostRate,
       turns: prev.turns + 1,
       turnsSinceChange: prev.turnsSinceChange + 1,
     };
@@ -259,6 +273,7 @@ export function ingestTurn(
   const next: EstimatorState = {
     ...prev,
     pidioEspanol,
+    lostRate,
     score,
     confidence,
     repertoire,

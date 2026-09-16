@@ -77,3 +77,15 @@ export async function verifyTutorToken(
 
   return { sid, exp };
 }
+
+/**
+ * Acceso a /api/tutor/*: vale el pase del tutor o el del curso. La app del
+ * alumno ya lleva el del curso, así que no necesita pedir otro.
+ */
+export async function verifyTutorAccess(token: string): Promise<TutorClaims | null> {
+  const tutor = await verifyTutorToken(token);
+  if (tutor) return tutor;
+  const { verifyCourseToken } = await import("@/lib/course-token");
+  const slug = await verifyCourseToken(token);
+  return slug ? { sid: newSessionId(), exp: Date.now() + 30 * 60 * 1000 } : null;
+}

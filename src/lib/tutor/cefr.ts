@@ -69,7 +69,7 @@ export const PROFILES: Record<Band, SpeechProfile> = {
     topics: "Nombre, familia, casa, comida, rutina diaria, números, colores, el clima.",
     eagerness: "low",
     maxOutputTokens: 540,
-    vadSilenceMs: 2000,
+    vadSilenceMs: 2200,
   },
   A2: {
     band: "A2",
@@ -90,7 +90,7 @@ export const PROFILES: Record<Band, SpeechProfile> = {
       "Trabajo, estudios, viajes cortos, compras, planes del fin de semana, experiencias recientes.",
     eagerness: "low",
     maxOutputTokens: 840,
-    vadSilenceMs: 1800,
+    vadSilenceMs: 2000,
   },
   B1: {
     band: "B1",
@@ -111,7 +111,7 @@ export const PROFILES: Record<Band, SpeechProfile> = {
       "Opiniones, planes a futuro, anécdotas, comparar ciudades o costumbres, resolver un problema.",
     eagerness: "low",
     maxOutputTokens: 1200,
-    vadSilenceMs: 1500,
+    vadSilenceMs: 1700,
   },
   B2: {
     band: "B2",
@@ -131,7 +131,7 @@ export const PROFILES: Record<Band, SpeechProfile> = {
     topics: "Debate, ética profesional, tecnología, cultura, hipótesis, negociación.",
     eagerness: "medium",
     maxOutputTokens: 1740,
-    vadSilenceMs: 1200,
+    vadSilenceMs: 1300,
   },
   C1: {
     band: "C1",
@@ -151,18 +151,32 @@ export const PROFILES: Record<Band, SpeechProfile> = {
       "Temas abstractos, argumentación densa, humor, matices culturales, lenguaje especializado.",
     eagerness: "auto",
     maxOutputTokens: 2400,
-    vadSilenceMs: 1000,
+    vadSilenceMs: 1100,
   },
 };
 
 export type TurnMode = "auto" | "manual";
 
 /** La configuración de detección de turno que va en la sesión. */
+/**
+ * Techo de tokens de salida. Es una red, no un presupuesto: quien manda en la
+ * longitud son las palabras que fija el perfil. Cuando saltaba, cortaba a mitad
+ * de palabra —"Elige una de estas y repít"— y esa respuesta se paga entera
+ * igual, así que apurarlo no ahorra nada.
+ *
+ * Explicar en español ocupa casi el doble: se dice en inglés y se traduce.
+ */
+export function techoSalida(base: number, bilingue = false): number {
+  return Math.round(base * (bilingue ? 2.2 : 1.4));
+}
+
 export function turnDetection(modo: TurnMode, band: Band) {
   if (modo === "manual") return null;
   return {
     type: "server_vad",
-    threshold: 0.5,
+    // 0.6 y no el 0.5 por defecto: con 0.5 un carraspeo o un golpe en la mesa
+    // abría turno y el tutor contestaba a nada.
+    threshold: 0.6,
     prefix_padding_ms: 300,
     silence_duration_ms: PROFILES[band].vadSilenceMs,
     interrupt_response: false,

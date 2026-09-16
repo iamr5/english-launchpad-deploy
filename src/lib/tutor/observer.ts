@@ -101,18 +101,31 @@ function normaliza(s: string): string {
 }
 
 /** Fórmulas con las que el tutor atribuye palabras al alumno, seguidas de la cita. */
-const ATRIBUCION =
-  /\byou\s+(?:said|say|told\s+me|mentioned)\b[,:]?\s*["'“‘«]([^"'”’»]{3,120})["'”’»]/gi;
+// Tres maneras de atribuirle una frase. La tercera hace falta porque
+// `Nice, "I have two coffees" is good` no dice "you said" en ningún sitio y le
+// está atribuyendo la frase igual.
+//
+// No vale marcar toda comilla: el tutor entrecomilla sus PROPIOS ejemplos
+// —«Option one: "I study every day."»— y eso es su trabajo. Lo que delata la
+// atribución es el verbo de decir delante, o el juicio de valor detrás.
+const ATRIBUCION = [
+  /\byou\s+(?:said|say|told\s+me|mentioned)\b[,:]?\s*["'“‘«]([^"'”’»]{3,120})["'”’»]/gi,
+  /\b(?:dijiste|has dicho|acabas de decir)\b[,:]?\s*["'“‘«]([^"'”’»]{3,120})["'”’»]/gi,
+  /["'“‘«]([^"'”’»]{3,120})["'”’»]\s*(?:is|was|sounds|sounded)\s+(?:good|great|perfect|correct|right|nice|fine|better|clear)\b/gi,
+];
 
 /** Comprueba que las citas que el tutor atribuye al alumno existan de verdad. */
 export function detectarMisquotes(tutorText: string, studentText: string): string[] {
   if (!tutorText || !studentText) return [];
   const heno = normaliza(studentText);
   const fuera: string[] = [];
-  for (const m of tutorText.matchAll(ATRIBUCION)) {
-    const cita = normaliza(m[1] ?? "");
-    if (cita.split(" ").length < 2) continue; // una palabra suelta no es una cita
-    if (!heno.includes(cita)) fuera.push(m[1] ?? "");
+  for (const patron of ATRIBUCION) {
+    for (const m of tutorText.matchAll(patron)) {
+      const cita = normaliza(m[1] ?? "");
+      if (cita.split(" ").length < 2) continue; // una palabra suelta no es una cita
+      if (heno.includes(cita)) continue;
+      if (!fuera.includes(m[1] ?? "")) fuera.push(m[1] ?? "");
+    }
   }
   return fuera;
 }

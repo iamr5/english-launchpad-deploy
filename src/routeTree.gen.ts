@@ -58,6 +58,7 @@ import { Route as ApiPublicPreinscripcionRouteImport } from './routes/api/public
 import { Route as ApiPublicShareInviteRouteImport } from './routes/api/public/share-invite'
 import { Route as ApiTutorObserveRouteImport } from './routes/api/tutor/observe'
 import { Route as ApiTutorSessionRouteImport } from './routes/api/tutor/session'
+import { Route as ApiTutorTurnRouteImport } from './routes/api/tutor/turn'
 import { Route as ApiPublicCirclesCreateRouteImport } from './routes/api/public/circles/create'
 import { Route as ApiPublicCirclesJoinRouteImport } from './routes/api/public/circles/join'
 import { Route as ApiPublicCirclesMessageRouteImport } from './routes/api/public/circles/message'
@@ -315,6 +316,11 @@ const ApiTutorSessionRoute = ApiTutorSessionRouteImport.update({
   path: '/api/tutor/session',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTutorTurnRoute = ApiTutorTurnRouteImport.update({
+  id: '/api/tutor/turn',
+  path: '/api/tutor/turn',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicCirclesCreateRoute = ApiPublicCirclesCreateRouteImport.update({
   id: '/api/public/circles/create',
   path: '/api/public/circles/create',
@@ -397,6 +403,7 @@ export interface FileRoutesByFullPath {
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/api/tutor/observe': typeof ApiTutorObserveRoute
   '/api/tutor/session': typeof ApiTutorSessionRoute
+  '/api/tutor/turn': typeof ApiTutorTurnRoute
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
@@ -453,6 +460,7 @@ export interface FileRoutesByTo {
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/api/tutor/observe': typeof ApiTutorObserveRoute
   '/api/tutor/session': typeof ApiTutorSessionRoute
+  '/api/tutor/turn': typeof ApiTutorTurnRoute
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
@@ -511,6 +519,7 @@ export interface FileRoutesById {
   '/api/public/share-invite': typeof ApiPublicShareInviteRoute
   '/api/tutor/observe': typeof ApiTutorObserveRoute
   '/api/tutor/session': typeof ApiTutorSessionRoute
+  '/api/tutor/turn': typeof ApiTutorTurnRoute
   '/api/public/circles/create': typeof ApiPublicCirclesCreateRoute
   '/api/public/circles/join': typeof ApiPublicCirclesJoinRoute
   '/api/public/circles/message': typeof ApiPublicCirclesMessageRoute
@@ -569,6 +578,7 @@ export interface FileRouteTypes {
     | '/api/public/share-invite'
     | '/api/tutor/observe'
     | '/api/tutor/session'
+    | '/api/tutor/turn'
     | '/api/public/circles/create'
     | '/api/public/circles/join'
     | '/api/public/circles/message'
@@ -625,6 +635,7 @@ export interface FileRouteTypes {
     | '/api/public/share-invite'
     | '/api/tutor/observe'
     | '/api/tutor/session'
+    | '/api/tutor/turn'
     | '/api/public/circles/create'
     | '/api/public/circles/join'
     | '/api/public/circles/message'
@@ -682,6 +693,7 @@ export interface FileRouteTypes {
     | '/api/public/share-invite'
     | '/api/tutor/observe'
     | '/api/tutor/session'
+    | '/api/tutor/turn'
     | '/api/public/circles/create'
     | '/api/public/circles/join'
     | '/api/public/circles/message'
@@ -736,6 +748,7 @@ export interface RootRouteChildren {
   ApiPublicShareInviteRoute: typeof ApiPublicShareInviteRoute
   ApiTutorObserveRoute: typeof ApiTutorObserveRoute
   ApiTutorSessionRoute: typeof ApiTutorSessionRoute
+  ApiTutorTurnRoute: typeof ApiTutorTurnRoute
   ApiPublicCirclesCreateRoute: typeof ApiPublicCirclesCreateRoute
   ApiPublicCirclesJoinRoute: typeof ApiPublicCirclesJoinRoute
   ApiPublicCirclesMessageRoute: typeof ApiPublicCirclesMessageRoute
@@ -1089,6 +1102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTutorSessionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/tutor/turn': {
+      id: '/api/tutor/turn'
+      path: '/api/tutor/turn'
+      fullPath: '/api/tutor/turn'
+      preLoaderRoute: typeof ApiTutorTurnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/circles/create': {
       id: '/api/public/circles/create'
       path: '/api/public/circles/create'
@@ -1197,6 +1217,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicShareInviteRoute: ApiPublicShareInviteRoute,
   ApiTutorObserveRoute: ApiTutorObserveRoute,
   ApiTutorSessionRoute: ApiTutorSessionRoute,
+  ApiTutorTurnRoute: ApiTutorTurnRoute,
   ApiPublicCirclesCreateRoute: ApiPublicCirclesCreateRoute,
   ApiPublicCirclesJoinRoute: ApiPublicCirclesJoinRoute,
   ApiPublicCirclesMessageRoute: ApiPublicCirclesMessageRoute,

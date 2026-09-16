@@ -1,8 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { buildInstructions } from "@/lib/tutor/prompt";
-import { PROFILES, BANDS, turnDetection, type Band, type TurnMode } from "@/lib/tutor/cefr";
-import { verifyTutorToken } from "@/lib/tutor/tutor-token";
-import { INITIAL_BAND } from "@/lib/tutor/level-estimator";
+import {
+  PROFILES,
+  BANDS,
+  turnDetection,
+  techoSalida,
+  type Band,
+  type TurnMode,
+} from "@/lib/tutor/cefr";
+import { verifyTutorAccess } from "@/lib/tutor/tutor-token";
+import { INITIAL_BAND, initialState, necesitaEspanol } from "@/lib/tutor/level-estimator";
 
 // Acuñación de la llave efímera para una sesión de tutor en tiempo real.
 
@@ -15,8 +22,14 @@ const REALTIME_MODEL = "gpt-realtime-2.1-mini";
 const TRANSCRIBE_MODEL = "gpt-transcribe";
 const TRANSCRIBE_LANGS = ["en", "es"];
 
-/** Voz del tutor. */
-const VOICE = "marin";
+/**
+ * Voz del tutor. `cedar` es de las nuevas de gpt-realtime: más natural y con
+ * más rango que `coral`, que salía demasiado plana. El punto de partida para
+ * probar otra es esta constante; el ánimo lo pone sobre todo el bloque
+ * "CÓMO SUENAS" del prompt, no la voz en sí.
+ * Alternativas válidas: marin, cedar, sage, ballad, alloy, ash, verse, shimmer, echo.
+ */
+const VOICE = "cedar";
 
 /** Perfil de micrófono. */
 const NOISE_DEFAULT = "far_field";
@@ -58,7 +71,7 @@ export const Route = createFileRoute("/api/tutor/session")({
           return Response.json({ error: "bad_request" }, { status: 400 });
         }
 
-        const claims = await verifyTutorToken(String(body["t"] || ""));
+        const claims = await verifyTutorAccess(String(body["t"] || ""));
         if (!claims) return Response.json({ error: "invalid_token" }, { status: 401 });
         if (tooMany(ip)) return Response.json({ error: "rate_limited" }, { status: 429 });
 
@@ -70,7 +83,16 @@ export const Route = createFileRoute("/api/tutor/session")({
         const nombre = typeof body["nombre"] === "string" ? body["nombre"] : undefined;
         const noiseProfile = body["mic"] === "near" ? "near_field" : NOISE_DEFAULT;
         const cuestaSeguir = body["cuestaSeguir"] === true;
-        const bilingue = body["bilingue"] === true;
+        // Si el cliente no lo dice, se deduce de la banda. Sin esto, una sesión
+        // sembrada en A1 se montaba en "solo inglés" mientras la pantalla ya
+        // prometía español, y el session.update que lo habría arreglado nunca
+        // salía: /turn solo lo manda cuando el valor CAMBIA, y no cambiaba.
+        const bilingue =
+          typeof body["bilingue"] === "boolean"
+            ? body["bilingue"]
+            : necesitaEspanol(initialState(band));
+        const mascota =
+          typeof body["mascota"] === "string" ? body["mascota"].slice(0, 40) : undefined;
         const modo: TurnMode = esModo(body["modo"]) ? body["modo"] : "auto";
         const packs = Array.isArray(body["packs"])
           ? (body["packs"] as unknown[])
@@ -79,7 +101,9 @@ export const Route = createFileRoute("/api/tutor/session")({
           : [];
 
         const { targetVocabulary } = await import("@/lib/tutor/syllabus.server");
-        const vocabulario = targetVocabulary(band, packs);
+        const { resolverContexto } = await import("@/lib/tutor/contexto.server");
+        const contexto = body["contexto"] ? resolverContexto(body["contexto"], mascota) : undefined;
+        const vocabulario = contexto ? undefined : targetVocabulary(band, packs);
 
         const perfil = PROFILES[band];
         const instructions = buildInstructions({
@@ -89,6 +113,9 @@ export const Route = createFileRoute("/api/tutor/session")({
           vocabulario,
           cuestaSeguir,
           bilingue,
+          contexto,
+          primerTurno: true,
+          mascota,
         });
 
         try {
@@ -103,7 +130,7 @@ export const Route = createFileRoute("/api/tutor/session")({
                 type: "realtime",
                 model: REALTIME_MODEL,
                 instructions,
-                max_output_tokens: perfil.maxOutputTokens,
+                max_output_tokens: techoSalida(perfil.maxOutputTokens, bilingue),
                 // El historial de audio se reenvía en cada turno; conservar el 60% recorta el arrastre.
                 truncation: { type: "retention_ratio", retention_ratio: 0.6 },
                 audio: {

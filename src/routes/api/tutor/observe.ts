@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { observe } from "@/lib/tutor/observer";
-import { verifyTutorToken } from "@/lib/tutor/tutor-token";
+import { verifyTutorAccess } from "@/lib/tutor/tutor-token";
 
 // Observación de lo que dijo el alumno.
 
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/api/tutor/observe")({
           return Response.json({ error: "bad_request" }, { status: 400 });
         }
 
-        const claims = await verifyTutorToken(String(body["t"] || ""));
+        const claims = await verifyTutorAccess(String(body["t"] || ""));
         if (!claims) return Response.json({ error: "invalid_token" }, { status: 401 });
         if (tooMany(ip)) return Response.json({ error: "rate_limited" }, { status: 429 });
 
