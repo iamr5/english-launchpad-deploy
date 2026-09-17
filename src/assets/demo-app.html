@@ -2328,6 +2328,110 @@
   .pr-empty b { display: block; font-size: 16px; font-weight: 800; color: var(--ink); }
   .pr-empty small { display: block; margin-top: 5px; font-size: 13px; line-height: 1.45; color: var(--muted2); }
 
+  /* ── Conversar: práctica hablada con Tomito en tiempo real ── */
+  .tab[data-tab="conversar"] .tab-lbl { font-size: 11px; }
+  /* El panel llena el alto visible: así el micro queda siempre abajo, donde está
+     el pulgar, y no bailando detrás del último mensaje. */
+  #conversar-body:not([hidden]) { display: flex; flex-direction: column; min-height: 100%; box-sizing: border-box; }
+  .cv { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .cv-ctx { display: flex; align-items: center; gap: 11px; width: 100%; padding: 10px 12px;
+    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px;
+    font-family: inherit; text-align: left; cursor: pointer; }
+  .cv-ctx:not(:disabled):active { transform: translateY(2px); border-bottom-width: 2px; }
+  .cv-ctx:disabled { cursor: default; }
+  .cv-ico { flex: 0 0 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: #fff; }
+  .cv-ico svg { width: 22px; height: 22px; }
+  .cv-ctx-tx { flex: 1; min-width: 0; }
+  .cv-ctx-k { display: block; font-size: 11px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
+  .cv-ctx-t { display: block; font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.25;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cv-chev { flex: 0 0 auto; color: var(--muted2); font-size: 12px; font-weight: 800; }
+
+  .cv-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
+    padding: 24px 18px 20px; background: #fff; border: 2px solid var(--line); border-radius: 20px; }
+  .cv-hero img { width: 78px; height: 78px; object-fit: contain; }
+  .cv-hero b { font-size: 20px; font-weight: 800; color: var(--ink); line-height: 1.25; }
+  .cv-hero small { font-size: 14px; line-height: 1.45; color: var(--muted2); max-width: 32ch; }
+  .cv-hero .btn { margin-top: 10px; }
+
+  .cv-msgs { display: flex; flex-direction: column; gap: 8px; }
+  .cv-who { display: flex; align-items: center; gap: 6px; margin: 6px 2px -3px; font-size: 11px; font-weight: 800; color: var(--muted2); }
+  .cv-who img { width: 18px; height: 18px; object-fit: contain; }
+  .cv-b { max-width: 86%; padding: 10px 13px; border-radius: 18px; font-size: 15px; line-height: 1.45; overflow-wrap: anywhere; }
+  .cv-b.tu { align-self: flex-start; background: #fff; border: 2px solid var(--line); color: var(--ink); border-bottom-left-radius: 6px; }
+  .cv-b.yo { align-self: flex-end; background: var(--blue); color: #fff; border-bottom-right-radius: 6px; }
+  .cv-b.parcial { opacity: .55; }
+
+  .cv-dock { position: sticky; bottom: 0; margin: auto -19px -40px; padding: 14px 19px calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--canvas) 78%, rgba(244,244,246,0)); }
+  .cv-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+  .cv-estado { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 800; color: var(--muted); }
+  .cv-estado i { width: 9px; height: 9px; border-radius: 50%; background: var(--muted2); }
+  .cv-estado.escucha i { background: var(--green); animation: cv-pulso 1.1s ease-in-out infinite; }
+  .cv-estado.habla i { background: var(--blue); animation: cv-pulso .8s ease-in-out infinite; }
+  .cv-estado.recon i { background: var(--amber); }
+  @keyframes cv-pulso { 50% { transform: scale(1.55); opacity: .45; } }
+  .cv-fin { background: none; border: none; font: inherit; font-size: 13px; font-weight: 800; color: var(--err); cursor: pointer; padding: 4px 2px; }
+  .cv-fila { display: flex; align-items: center; gap: 8px; }
+  .cv-mic { flex: 0 0 52px; height: 52px; border-radius: 50%; border: none; cursor: pointer; display: grid; place-items: center;
+    background: var(--blue); color: #fff; box-shadow: 0 4px 0 var(--blueDark); }
+  .cv-mic:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--blueDark); }
+  .cv-mic.off { background: #fff; color: var(--muted); box-shadow: 0 4px 0 var(--line); outline: 2px solid var(--line); outline-offset: -2px; }
+  .cv-mic svg { width: 24px; height: 24px; }
+  .cv-in { flex: 1; min-width: 0; height: 50px; padding: 0 16px; border: 2px solid var(--line); border-radius: 999px;
+    font: inherit; font-size: 15px; background: #fff; color: var(--ink); }
+  .cv-in:focus { outline: none; border-color: var(--blue); }
+  .cv-send { flex: 0 0 50px; height: 50px; border-radius: 50%; border: 2px solid var(--line); background: #fff; color: var(--blue);
+    cursor: pointer; display: grid; place-items: center; }
+  .cv-send:disabled { color: var(--gray); cursor: default; }
+  .cv-send svg { width: 22px; height: 22px; }
+
+  .cv-aviso { padding: 10px 13px; border-radius: 14px; font-size: 13px; font-weight: 700; line-height: 1.4; }
+  .cv-aviso.err { background: color-mix(in srgb, var(--err) 10%, #fff); color: var(--err); }
+  .cv-aviso.es { background: color-mix(in srgb, var(--amber) 16%, #fff); color: var(--amberInk); }
+  .cv-nivel { font-size: 11px; font-weight: 700; color: var(--muted2); text-align: center; }
+
+  .cv-lec { background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px; overflow: hidden; }
+  .cv-lec > summary { display: flex; align-items: center; gap: 8px; padding: 11px 13px; cursor: pointer;
+    font-size: 13px; font-weight: 800; color: var(--ink); list-style: none; }
+  .cv-lec > summary::-webkit-details-marker { display: none; }
+  .cv-lec > summary::after { content: '+'; margin-left: auto; font-size: 17px; font-weight: 800; color: var(--muted2); }
+  .cv-lec[open] > summary::after { content: '–'; }
+  .cv-lec > summary span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-weight: 700; color: var(--muted2); }
+  .cv-lec-in { padding: 0 14px 14px; border-top: 2px solid var(--line); max-height: 46vh; overflow-y: auto;
+    font-size: 14px; line-height: 1.55; color: var(--ink); }
+  .cv-lec-in table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+  .cv-lec-in th, .cv-lec-in td { border: 1px solid var(--line); padding: 5px 8px; text-align: left; }
+
+  .cv-rev { padding: 14px 15px; background: #fff; border: 2px solid var(--line); border-left: 6px solid var(--amber); border-radius: 16px; }
+  .cv-rev b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); }
+  .cv-rev small { display: block; margin-top: 2px; font-size: 12px; color: var(--muted2); }
+  .cv-rev ul { margin: 8px 0 0; padding: 0; }
+  .cv-rev li { list-style: none; margin: 7px 0 0; font-size: 14px; line-height: 1.45; color: var(--ink); }
+  .cv-rev s { color: var(--muted2); }
+  .cv-rev em { font-style: normal; font-weight: 800; color: var(--greenDark); }
+
+  .cv-sheet { min-height: 0; }
+  .cv-sheet h3 { margin: 0 2px 12px; font-size: 19px; font-weight: 800; color: var(--ink); }
+  .cv-opc { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; margin-bottom: 9px;
+    background: #fff; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 16px; font: inherit; text-align: left; cursor: pointer; }
+  .cv-opc:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .cv-opc.on { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 6%, #fff); }
+  .cv-opc b { display: block; font-size: 15px; font-weight: 800; color: var(--ink); }
+  .cv-opc small { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; line-height: 1.35; color: var(--muted2); }
+  .cv-sub { margin: 16px 2px 8px; font-size: 11px; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; color: var(--muted2); }
+  .cv-lista { max-height: 42vh; overflow-y: auto; }
+  .cv-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; margin-bottom: 8px;
+    background: #fff; border: 2px solid var(--line); border-radius: 14px; font: inherit; text-align: left; cursor: pointer; }
+  .cv-item.on { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 5%, #fff); }
+  .cv-item-e { flex: 0 0 auto; font-size: 20px; }
+  .cv-item-t { flex: 1; min-width: 0; }
+  .cv-item-t b { display: block; font-size: 14px; font-weight: 800; color: var(--ink); line-height: 1.25; }
+  .cv-item-t small { display: block; margin-top: 1px; font-size: 12px; color: var(--muted2); }
+  .cv-tag { flex: 0 0 auto; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 900; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--blue); background: color-mix(in srgb, var(--blue) 10%, #fff); }
+
 </style>
 </head>
 <body>
@@ -2349,6 +2453,8 @@
       <div class="pad" id="vocab-body" hidden></div>
       <!-- Práctica: igual que Vocabulary, se llena al entrar (renderPractice). -->
       <div class="pad" id="practice-body" hidden></div>
+      <!-- Conversar: práctica hablada con Tomito, se monta al entrar (renderConversar). -->
+      <div class="pad" id="conversar-body" hidden></div>
     </div>
     <div class="course-foot" id="course-foot"></div>
     <!-- Pestañas del inicio. Andamio: "Ruta" es el curso de siempre, movido tal
@@ -2374,6 +2480,15 @@
           <circle cx="18" cy="5" r="2.2" fill="currentColor" stroke="none"/>
         </svg>
         <span class="tab-lbl">Ruta</span>
+      </button>
+      <button class="tab" type="button" role="tab" aria-selected="false"
+              aria-controls="conversar-body" data-tab="conversar" onclick="showHomeTab('conversar')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.5 11.5a8 8 0 0 1-11.9 7L4 20l1.5-4.3A8 8 0 1 1 20.5 11.5z"/>
+          <path d="M9 11.5h.01M12.5 11.5h.01M16 11.5h.01"/>
+        </svg>
+        <span class="tab-lbl">Conversar</span>
       </button>
       <!-- Práctica: cuaderno de ejercicios libre. La mancuerna es lo que se
            espera de una pestaña que se llama así — un icono de quiz (papel,
@@ -3932,15 +4047,20 @@ function renderCourse() {
 function showHomeTab(tab) {
   // Cualquier cosa que no sea una pestaña conocida cae en la ruta: es la de
   // siempre y la unica que no puede fallar.
-  const cual = (tab === 'vocab' || tab === 'practice') ? tab : 'ruta';
+  const cual = (tab === 'vocab' || tab === 'practice' || tab === 'conversar') ? tab : 'ruta';
   const body = document.getElementById('course-body');
   const vocab = document.getElementById('vocab-body');
   const prac = document.getElementById('practice-body');
+  const conv = document.getElementById('conversar-body');
   const foot = document.getElementById('course-foot');
   if (!body || !vocab) return;
   body.hidden = cual !== 'ruta';
   vocab.hidden = cual !== 'vocab';
   if (prac) prac.hidden = cual !== 'practice';
+  if (conv) conv.hidden = cual !== 'conversar';
+  // Salir de Conversar corta la sesión: si no, el micro seguiría abierto y
+  // facturando con la pestaña fuera de la vista.
+  if (cual !== 'conversar' && typeof cvStop === 'function') cvStop(false);
   // El pie es el "continuar con la leccion": pertenece a la ruta y en las otras
   // pestañas no significa nada.
   if (foot) foot.hidden = cual !== 'ruta';
@@ -3957,6 +4077,7 @@ function showHomeTab(tab) {
   // por el indice, que es de donde se entra siempre.
   if (cual === 'vocab') renderVocab(); else VOPEN = null;
   if (cual === 'practice') renderPractice();
+  if (cual === 'conversar') renderConversar();
 }
 
 // LA BIBLIOTECA. Ya no viaja entera con la página: son 8.000+ palabras y
@@ -8518,6 +8639,704 @@ function obFinishToLesson() {
   toast('¡Hola, ' + OB.name + '! ' + (CFG.mascot.name || 'Boti') + ' te espera ' + (CFG.mascot.emoji || ''));
 }
 function startOnboarding() { OB = { step: 0, name: '', mot: '', lvl: null, goal: '' }; PL = { state: 'intro', items: [], i: 0, sel: null, ok: {} }; show('onboard'); obRender(); }
+
+//= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// CONVERSAR: práctica hablada con la mascota, por voz y texto en tiempo real.
+// El audio va del navegador a OpenAI por WebRTC; el servidor solo acuña la
+// credencial, resuelve el contexto (teoría, palabras) y estima el nivel.
+const CV_MODOS = {
+  repaso: { k: 'Repaso de lección', color: '#3FAA24', desc: 'Practica hablando una microlección que ya desbloqueaste.' },
+  vocabulario: { k: 'Vocabulario', color: '#CE82FF', desc: 'Usa en frases las palabras que estás aprendiendo.' },
+  conversacion: { k: 'Conversación', color: '#1CB0F6', desc: 'Habla de lo que quieras. Se ajusta a tu nivel mientras hablas.' },
+};
+const CV_ICONOS = {
+  repaso: '<path d="M4 12a8 8 0 0 1 13.66-5.66L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M20 12a8 8 0 0 1-13.66 5.66L4 15.5"/><path d="M4 20v-4.5h4.5"/>',
+  vocabulario: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2.5 2.5 0 0 1 2 1 2.5 2.5 0 0 1 2-1h4.5A1.5 1.5 0 0 1 20 5.5v12a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 0 0-2 1 2 2 0 0 0-2-1H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M12 5v14"/>',
+  conversacion: '<path d="M20.5 11.5a8 8 0 0 1-11.9 7L4 20l1.5-4.3A8 8 0 1 1 20.5 11.5z"/><path d="M9 11.5h.01M12.5 11.5h.01M16 11.5h.01"/>',
+};
+const CV = {
+  estado: 'idle', ctx: null, turnos: [], errores: [], est: null,
+  flags: { band: null, bilingue: false, cuestaSeguir: false }, semilla: null, adapta: false, citaAvisada: false, esperando2: false,
+  pc: null, dc: null, stream: null, audio: null, arrancando: false, reconTimer: null, ocultoTimer: null,
+  pend: { texto: [], palabras: 0, turnos: 0 }, ultimoTutor: '',
+  hablando: false, sonando: false, escuchando: false, micOff: false, error: '',
+  audioCtx: null, vigila: null,
+};
+let _cvCola = Promise.resolve();
+
+function mascotName() { return (CFG.mascot && CFG.mascot.name) || 'Tomito'; }
+function cvSvg(paths) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>'; }
+function cvIcono(modo) { return cvSvg(CV_ICONOS[modo] || CV_ICONOS.conversacion); }
+function cvIconoMic() { return cvSvg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>'); }
+function cvIconoMicOff() { return cvSvg('<path d="M15 9.3V6a3 3 0 0 0-5.7-1.3M9 9v2a3 3 0 0 0 5.1 2.1M5 11a7 7 0 0 0 11.5 5.4M19 11a7 7 0 0 1-.4 2.3M12 18v3M3 3l18 18"/>'); }
+function cvIconoEnviar() { return cvSvg('<path d="M5 12h13M13 6l6 6-6 6"/>'); }
+
+function cvLeccionActual() {
+  const na = nextActiveLesson();
+  if (na) return na.lesson;
+  const des = allLessons.filter(l => isLessonUnlocked(l.id));
+  return des[des.length - 1] || null;
+}
+function cvVocabDefault() {
+  const last = PROGRESS['__vocabLast'];
+  if (last && vocabChip(last)) return last;
+  const tocado = Object.keys(vocabCounts()).find(id => vocabChip(id));
+  if (tocado) return tocado;
+  const primero = VOCAB[0] && VOCAB[0].chips[0];
+  return primero ? primero.id : null;
+}
+// Por defecto se practica lo que el alumno está estudiando ahora: la lección en
+// la que va. Se recuerda el modo, no la lección, para que siga su avance.
+function cvCtxDefault() {
+  let modo = null;
+  try { modo = localStorage.getItem('cv:modo'); } catch (e) { /* sin almacenamiento */ }
+  const lec = cvLeccionActual();
+  if (modo === 'vocabulario') { const v = cvVocabDefault(); if (v) return { modo, vocabId: v, lessonId: lec && lec.id }; }
+  if (modo === 'conversacion') return { modo, lessonId: lec && lec.id };
+  if (lec) return { modo: 'repaso', lessonId: lec.id };
+  return { modo: 'conversacion' };
+}
+function cvLeccion(id) { return allLessons.find(l => l.id === id) || null; }
+function cvTitulo(ctx) {
+  if (ctx.modo === 'repaso') { const l = cvLeccion(ctx.lessonId); return l ? lessonName(l) : 'Una lección'; }
+  if (ctx.modo === 'vocabulario') { const v = vocabChip(ctx.vocabId); return v ? v.chip.n : 'Vocabulario'; }
+  return 'Tema libre';
+}
+function cvTema(ctx) {
+  if (ctx.modo === 'repaso') { const l = cvLeccion(ctx.lessonId); return l ? (lessonTopic(l) || lessonName(l)) : ''; }
+  if (ctx.modo === 'vocabulario') { const v = vocabChip(ctx.vocabId); return v ? v.chip.n : ''; }
+  return '';
+}
+function cvHeroTexto(ctx) {
+  const tema = cvTema(ctx);
+  if (ctx.modo === 'repaso') return { b: '¿Listo para practicar ' + tema + '?', s: mascotName() + ' te hará preguntas para que uses lo que aprendiste en «' + cvTitulo(ctx) + '».' };
+  if (ctx.modo === 'vocabulario') return { b: '¿Listo para practicar ' + tema + '?', s: 'Vas a usar estas palabras hablando, no solo traduciéndolas.' };
+  return { b: '¿Listo para conversar?', s: 'Habla de lo que quieras. ' + mascotName() + ' se ajusta a tu nivel mientras hablas.' };
+}
+
+function renderConversar() {
+  const el = document.getElementById('conversar-body');
+  if (!el || !course) return;
+  if (!CV.ctx) CV.ctx = cvCtxDefault();
+  const m = CV_MODOS[CV.ctx.modo];
+  const enSesion = CV.estado === 'live' || CV.estado === 'reconnecting';
+  const bloqueado = enSesion || CV.estado === 'connecting';
+  const conHero = !enSesion && !(CV.estado === 'ended' && CV.turnos.length);
+  const t = cvHeroTexto(CV.ctx);
+  el.innerHTML = '<div class="cv">'
+    + '<button class="cv-ctx" type="button" id="cv-ctx"' + (bloqueado ? ' disabled' : '') + '>'
+    +   '<span class="cv-ico" style="background:' + m.color + '">' + cvIcono(CV.ctx.modo) + '</span>'
+    +   '<span class="cv-ctx-tx"><span class="cv-ctx-k" style="color:' + m.color + '">' + m.k + '</span>'
+    +   '<span class="cv-ctx-t">' + escapeHtml(cvTitulo(CV.ctx)) + '</span></span>'
+    +   (bloqueado ? '' : '<span class="cv-chev">Cambiar</span>')
+    + '</button>'
+    + (conHero
+      ? '<div class="cv-hero"><img src="' + mascotHeadIcon() + '" alt=""><b>' + escapeHtml(t.b) + '</b><small>' + escapeHtml(t.s) + '</small>'
+        + '<button class="btn blue" type="button" id="cv-go"' + (CV.estado === 'connecting' ? ' disabled>Conectando…' : '>Empezar') + '</button></div>'
+      : '')
+    + '<div id="cv-lec"></div>'
+    + '<div class="cv-msgs" id="cv-msgs"></div>'
+    + '<div id="cv-extra"></div>'
+    + (enSesion
+      ? '<div class="cv-dock"><div class="cv-top"><span class="cv-estado" id="cv-estado"><i></i><span></span></span>'
+        + '<button class="cv-fin" type="button" id="cv-fin">Terminar</button></div>'
+        + '<div class="cv-fila"><button class="cv-mic" type="button" id="cv-mic" aria-label="Micrófono">' + cvIconoMic() + '</button>'
+        + '<input class="cv-in" id="cv-in" type="text" placeholder="…o escríbelo aquí" autocomplete="off" enterkeyhint="send">'
+        + '<button class="cv-send" type="button" id="cv-send" aria-label="Enviar" disabled>' + cvIconoEnviar() + '</button></div></div>'
+      : (CV.estado === 'ended' && CV.turnos.length
+        ? '<div class="cv-dock"><button class="btn blue" type="button" id="cv-go">Practicar otra vez</button></div>'
+        : ''))
+    + '</div>';
+  CV.turnos.forEach(cvPintaTurno);
+  cvPintaLeccion();
+  cvPintaExtra();
+  cvPintaEstado();
+  cvEnlaza(el);
+  cvBaja();
+}
+
+function cvEnlaza(el) {
+  const q = sel => el.querySelector(sel);
+  if (q('#cv-ctx')) q('#cv-ctx').addEventListener('click', cvAbreHoja);
+  if (q('#cv-go')) q('#cv-go').addEventListener('click', cvStart);
+  if (q('#cv-fin')) q('#cv-fin').addEventListener('click', () => cvStop(true));
+  if (q('#cv-mic')) q('#cv-mic').addEventListener('click', cvToggleMic);
+  const inp = q('#cv-in'), send = q('#cv-send');
+  if (inp && send) {
+    const enviar = () => { const v = inp.value.trim(); if (!v) return; cvEnviaTexto(v); inp.value = ''; send.disabled = true; };
+    inp.addEventListener('input', () => { send.disabled = !inp.value.trim(); });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); enviar(); } });
+    send.addEventListener('click', enviar);
+  }
+}
+
+function cvPintaTurno(t) {
+  const cont = document.getElementById('cv-msgs');
+  if (!cont) return;
+  let nodo = document.getElementById('cvt-' + t.id);
+  if (!nodo) {
+    if (t.rol === 'tu') {
+      const ult = cont.lastElementChild;
+      if (!ult || !ult.classList.contains('tu')) {
+        const who = document.createElement('div');
+        who.className = 'cv-who';
+        who.innerHTML = '<img src="' + mascotHeadIcon() + '" alt="">' + escapeHtml(mascotName());
+        cont.appendChild(who);
+      }
+    }
+    nodo = document.createElement('div');
+    nodo.id = 'cvt-' + t.id;
+    cont.appendChild(nodo);
+  }
+  nodo.className = 'cv-b ' + t.rol + (t.parcial ? ' parcial' : '');
+  nodo.textContent = t.texto || '…';
+}
+function cvUpsert(id, rol, texto, parcial, agregar) {
+  let t = CV.turnos.find(x => x.id === id);
+  if (!t) { t = { id, rol, texto: '', parcial }; CV.turnos.push(t); }
+  t.texto = agregar ? t.texto + texto : texto;
+  t.parcial = parcial;
+  cvPintaTurno(t);
+  cvBaja();
+}
+// Una transcripción vacía fue ruido, no habla: su burbuja no debe quedarse.
+function cvQuita(id) {
+  CV.turnos = CV.turnos.filter(t => t.id !== id);
+  const nodo = document.getElementById('cvt-' + id);
+  if (nodo) nodo.remove();
+}
+function cvBaja() {
+  const sc = document.querySelector('#screen-course .scroll');
+  if (sc) requestAnimationFrame(() => { sc.scrollTop = sc.scrollHeight; });
+}
+
+function cvPintaEstado() {
+  const el = document.getElementById('cv-estado');
+  if (el) {
+    let clase = 'escucha', tx = 'Te escucho';
+    if (CV.estado === 'reconnecting') { clase = 'recon'; tx = 'Reconectando…'; }
+    else if (CV.hablando || CV.sonando) { clase = 'habla'; tx = mascotName() + ' está hablando'; }
+    else if (CV.micOff) { clase = ''; tx = 'Micrófono en pausa'; }
+    el.className = 'cv-estado ' + clase;
+    el.lastElementChild.textContent = tx;
+  }
+  const mic = document.getElementById('cv-mic');
+  if (mic) { mic.classList.toggle('off', CV.micOff); mic.innerHTML = CV.micOff ? cvIconoMicOff() : cvIconoMic(); }
+}
+// El repaso se apoya en una lección que el alumno ya leyó, y tenerla delante
+// mientras habla ahorra tener que pedírsela al tutor. Sale de `course`, que ya
+// está cargado en el navegador: no cuesta ni un token.
+const CV_LEC_BLOQUES = ['mision', 'sneakPeek', 'teoria', 'resumen'];
+function cvPintaLeccion() {
+  const el = document.getElementById('cv-lec');
+  if (!el) return;
+  const c = CV.ctx || {};
+  const l = c.modo === 'repaso' && c.lessonId && allLessons.find(x => x.id === c.lessonId);
+  if (!l) { el.innerHTML = ''; return; }
+  const md = (l.contentBlocks || [])
+    .filter(b => CV_LEC_BLOQUES.indexOf(b.type) >= 0 && b.markdown)
+    .map(b => b.markdown).join('\n\n');
+  if (!md) { el.innerHTML = ''; return; }
+  el.innerHTML = '<details class="cv-lec"><summary>Ver la lección<span>'
+    + escapeHtml(lessonName(l)) + '</span></summary><div class="cv-lec-in">'
+    + renderMarkdown(md) + '</div></details>';
+}
+
+function cvPintaExtra() {
+  const el = document.getElementById('cv-extra');
+  if (!el) return;
+  const enSesion = CV.estado === 'live' || CV.estado === 'reconnecting';
+  let h = '';
+  if (CV.error) h += '<div class="cv-aviso err">' + escapeHtml(CV.error) + '</div>';
+  if (enSesion && (CV.semilla || CV.flags.band)) {
+    const medido = CV.adapta && CV.est && CV.est.confidence >= 0.35 && CV.flags.band;
+    const n = medido ? CV.flags.band : CV.semilla;
+    h += '<div class="cv-nivel">' + (CV.adapta
+      ? (medido ? escapeHtml(mascotName()) + ' te habla en nivel ' + n : 'Empieza en tu nivel ' + n) + ' · se ajusta mientras hablas'
+      : 'Nivel ' + n + ', el de ' + (CV.ctx.modo === 'repaso' ? 'esta lección' : 'este vocabulario')) + '</div>';
+  }
+  if (CV.estado === 'ended' && CV.errores.length) {
+    h += '<div class="cv-rev"><b>Para repasar</b><small>Frases tuyas de esta conversación que se pueden decir mejor.</small><ul>'
+      + CV.errores.slice(0, 6).map(e => '<li><s>' + escapeHtml(e.quote) + '</s> → <em>' + escapeHtml(e.correction) + '</em></li>').join('')
+      + '</ul></div>';
+  }
+  el.innerHTML = h;
+}
+
+function cvAbreHoja() {
+  cvCierraHoja();
+  const ov = document.createElement('div');
+  ov.className = 'overlay active';
+  ov.id = 'cv-overlay';
+  ov.innerHTML = '<div class="sheet cv-sheet" role="dialog" aria-label="Qué quieres practicar"><div class="handle"></div><div id="cv-hoja"></div></div>';
+  ov.addEventListener('click', e => { if (e.target === ov) cvCierraHoja(); });
+  document.body.appendChild(ov);
+  cvPintaHoja('modos');
+}
+function cvCierraHoja() { const o = document.getElementById('cv-overlay'); if (o) o.remove(); }
+function cvElige(ctx) {
+  CV.ctx = ctx;
+  try { localStorage.setItem('cv:modo', ctx.modo); } catch (e) { /* sin almacenamiento */ }
+  cvCierraHoja();
+  if (CV.estado === 'ended') { CV.estado = 'idle'; CV.turnos = []; CV.errores = []; }
+  CV.error = '';
+  renderConversar();
+}
+function cvPintaHoja(paso) {
+  const el = document.getElementById('cv-hoja');
+  if (!el) return;
+  const atras = '<button class="pr-back" type="button" id="cv-atras">' + arrowFwd(14, 'currentColor', 2.6) + 'Atrás</button>';
+
+  if (paso === 'modos') {
+    el.innerHTML = '<h3>¿Qué quieres practicar?</h3>' + ['repaso', 'vocabulario', 'conversacion'].map(k => {
+      const m = CV_MODOS[k];
+      return '<button class="cv-opc' + (CV.ctx.modo === k ? ' on' : '') + '" type="button" data-modo="' + k + '">'
+        + '<span class="cv-ico" style="background:' + m.color + '">' + cvIcono(k) + '</span>'
+        + '<span><b>' + m.k + '</b><small>' + m.desc + '</small></span></button>';
+    }).join('');
+    el.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => {
+      const k = b.getAttribute('data-modo');
+      if (k === 'repaso') return cvPintaHoja('lecciones');
+      if (k === 'vocabulario') return cvPintaHoja('vocab');
+      const lec = cvLeccionActual();
+      cvElige({ modo: 'conversacion', lessonId: lec && lec.id });
+    }));
+    return;
+  }
+
+  if (paso === 'lecciones') {
+    const actual = cvLeccionActual();
+    let h = atras + '<h3>Repaso de lección</h3><div class="cv-lista">';
+    course.modules.forEach(mod => {
+      const des = mod.lessons.filter(l => isLessonUnlocked(l.id));
+      if (!des.length) return;
+      h += '<div class="cv-sub">' + escapeHtml(moduleName(mod)) + '</div>';
+      des.forEach(l => {
+        const on = CV.ctx.modo === 'repaso' && CV.ctx.lessonId === l.id;
+        const tema = lessonTopic(l);
+        h += '<button class="cv-item' + (on ? ' on' : '') + '" type="button" data-l="' + escapeHtml(l.id) + '">'
+          + '<span class="cv-item-t"><b>' + escapeHtml(lessonName(l)) + '</b>' + (tema ? '<small>' + escapeHtml(tema) + '</small>' : '') + '</span>'
+          + (actual && actual.id === l.id ? '<span class="cv-tag">Por aquí vas</span>' : '') + '</button>';
+      });
+    });
+    el.innerHTML = h + '</div>';
+    el.querySelectorAll('[data-l]').forEach(b => b.addEventListener('click', () => cvElige({ modo: 'repaso', lessonId: b.getAttribute('data-l') })));
+    el.querySelector('#cv-atras').addEventListener('click', () => cvPintaHoja('modos'));
+    return;
+  }
+
+  if (paso === 'vocab') {
+    const n = vocabCounts(), last = PROGRESS['__vocabLast'];
+    const vistos = new Set(), orden = [];
+    const mete = id => { if (id && !vistos.has(id) && vocabChip(id)) { vistos.add(id); orden.push(id); } };
+    mete(last);
+    Object.keys(n).sort((a, b) => (n[b] || 0) - (n[a] || 0)).forEach(mete);
+    VOCAB.forEach(sec => sec.chips.forEach(c => { if (orden.length < 24) mete(c.id); }));
+    let h = atras + '<h3>Vocabulario</h3><div class="cv-lista">';
+    orden.forEach(id => {
+      const c = vocabChip(id).chip;
+      const oidas = n[id] || 0;
+      const on = CV.ctx.modo === 'vocabulario' && CV.ctx.vocabId === id;
+      h += '<button class="cv-item' + (on ? ' on' : '') + '" type="button" data-v="' + escapeHtml(id) + '">'
+        + '<span class="cv-item-e">' + escapeHtml(c.e || '') + '</span>'
+        + '<span class="cv-item-t"><b>' + escapeHtml(c.n) + '</b><small>' + (oidas ? oidas + ' de ' + c.c + ' escuchadas' : c.c + ' palabras') + '</small></span>'
+        + (id === last ? '<span class="cv-tag">Lo último</span>' : '') + '</button>';
+    });
+    el.innerHTML = h + '</div>';
+    el.querySelectorAll('[data-v]').forEach(b => b.addEventListener('click', () => {
+      const lec = cvLeccionActual();
+      cvElige({ modo: 'vocabulario', vocabId: b.getAttribute('data-v'), lessonId: lec && lec.id });
+    }));
+    el.querySelector('#cv-atras').addEventListener('click', () => cvPintaHoja('modos'));
+  }
+}
+
+function cvMensaje(codigo, status) {
+  if (codigo === 'invalid_token') return 'Tu sesión caducó. Recarga la app para seguir.';
+  if (codigo === 'rate_limited') return 'Has practicado mucho en la última hora. Descansa un momento.';
+  if (codigo === 'ai_unavailable') return 'La práctica hablada no está disponible ahora mismo.';
+  return 'No se pudo empezar la conversación. Inténtalo de nuevo.';
+}
+// El nivel que la app ya sabe de ti. Es solo el punto de partida: desde el primer
+// turno manda lo que hables, no esto.
+//
+// Se queda con la mayor de las tres señales porque ninguna baja: el test de
+// ubicación convalida los módulos de debajo, y quien se registró en B2 sigue
+// siendo B2 aunque todavía no haya abierto una lección. Fiarse solo del progreso
+// mandaba a A1 a medio mundo, porque scLevel() devuelve A1 cuando no hay nada.
+const CV_BANDAS = ['A1', 'A2', 'B1', 'B2', 'C1'];
+function cvBanda(n) {
+  let b = String(n || '').toUpperCase();
+  if (b === 'C2') b = 'C1';
+  return CV_BANDAS.indexOf(b) >= 0 ? b : null;
+}
+
+function cvNivelApp() {
+  let i = -1;
+  const sube = n => { const k = CV_BANDAS.indexOf(cvBanda(n)); if (k > i) i = k; };
+  try { if (typeof scLevel === 'function') sube(scLevel()); } catch (e) { /* sin curso cargado */ }
+  const pl = PROGRESS['__placement'];
+  if (pl && typeof pl.lvl === 'number') sube(PR_CEFR[pl.lvl]);
+  const perfil = loadProfile();
+  if (perfil && typeof perfil.level === 'number') sube(OB_LEVELS[perfil.level]);
+  return i >= 0 ? CV_BANDAS[i] : null;
+}
+
+function cvNivelLeccion(lessonId) {
+  const i = course.modules.findIndex(m => m.lessons.some(l => l.id === lessonId));
+  return i < 0 ? null : cvBanda(course.modules[i].level || PR_CEFR[i]);
+}
+
+// Repasando una lección manda el nivel de esa lección: repasar la primera del
+// curso es A1 aunque el alumno vaya por B2, y al revés.
+function cvNivelSesion() {
+  const c = CV.ctx || {};
+  if (c.modo === 'repaso' && c.lessonId) return cvNivelLeccion(c.lessonId) || cvNivelApp();
+  return cvNivelApp();
+}
+
+// El nivel solo se recalibra hablando libremente. En repaso y vocabulario lo fija
+// el material, que para eso el alumno lo ha elegido.
+function cvAdapta() { return (CV.ctx || {}).modo === 'conversacion'; }
+
+function cvApi(ruta, cuerpo) {
+  return fetch('/api/tutor/' + ruta, {
+    method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(Object.assign({ t: DEMO.courseToken || '', mascota: mascotName() }, cuerpo)),
+  });
+}
+
+async function cvStart() {
+  if (CV.pc || CV.arrancando) return;
+  CV.arrancando = true;
+  Object.assign(CV, {
+    estado: 'connecting', error: '', turnos: [], errores: [], est: null, ultimoTutor: '',
+    flags: { band: null, bilingue: false, cuestaSeguir: false }, semilla: cvNivelSesion(), adapta: cvAdapta(), citaAvisada: false, esperando2: false,
+    pend: { texto: [], palabras: 0, turnos: 0 }, micOff: false, hablando: false, sonando: false, escuchando: false,
+  });
+  renderConversar();
+
+  // iOS solo deja sonar audio si el play() ocurre dentro del gesto, y el
+  // permiso no sobrevive a un await: el <audio> se desbloquea aquí.
+  const audio = document.createElement('audio');
+  audio.autoplay = true;
+  audio.setAttribute('playsinline', '');
+  audio.style.display = 'none';
+  document.body.appendChild(audio);
+  CV.audio = audio;
+  audio.play().catch(() => {});
+
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw Object.assign(new Error(window.isSecureContext ? 'Este navegador no permite usar el micrófono.' : 'El micrófono solo funciona con https.'), { paraAlumno: true });
+    }
+    const r = await cvApi('session', { contexto: CV.ctx, midiendo: CV.adapta, band: CV.semilla || undefined });
+    if (!r.ok) { const j = await r.json().catch(() => ({})); throw Object.assign(new Error(cvMensaje(j.error, r.status)), { paraAlumno: true }); }
+    const ses = await r.json();
+
+    const pc = new RTCPeerConnection();
+    CV.pc = pc;
+    pc.ontrack = e => {
+      const pista = e.streams[0] || null;
+      audio.srcObject = pista;
+      audio.play().catch(() => {});
+      if (pista) cvVigilaVoz(pista);
+    };
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+    CV.stream = stream;
+    const track = stream.getAudioTracks()[0];
+    if (track) pc.addTrack(track, stream);
+
+    const dc = pc.createDataChannel('oai-events');
+    CV.dc = dc;
+    dc.addEventListener('open', () => {
+      CV.estado = 'live';
+      CV.arrancando = false;
+      renderConversar();
+      // Que hable primero: su primer turno es el "¿Listo para practicar…?".
+      dc.send(JSON.stringify({ type: 'response.create' }));
+    });
+    dc.addEventListener('message', e => {
+      try { cvEvento(JSON.parse(e.data)); } catch (err) { /* fragmento no-JSON */ }
+    });
+    pc.addEventListener('connectionstatechange', () => cvConexion(pc));
+
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    const sdp = await fetch('https://api.openai.com/v1/realtime/calls', {
+      method: 'POST', body: offer.sdp,
+      headers: { Authorization: 'Bearer ' + ses.clientSecret, 'Content-Type': 'application/sdp' },
+    });
+    if (!sdp.ok) {
+      console.error('[conversar] SDP', sdp.status, await sdp.text().catch(() => ''));
+      throw Object.assign(new Error(sdp.status === 401 ? 'La conexión caducó. Vuelve a intentarlo.' : 'No se pudo abrir el canal de voz.'), { paraAlumno: true });
+    }
+    await pc.setRemoteDescription({ type: 'answer', sdp: await sdp.text() });
+  } catch (e) {
+    console.error('[conversar] inicio', e);
+    cvLimpia();
+    CV.estado = 'idle';
+    CV.arrancando = false;
+    CV.error = cvErrorVisible(e);
+    renderConversar();
+  }
+}
+
+function cvErrorVisible(e) {
+  if (e && e.paraAlumno) return e.message;
+  const t = e ? String(e.name) + ' ' + String(e.message) : '';
+  if (/NotAllowed|Permission/i.test(t)) return 'Necesito permiso para usar el micrófono.';
+  if (/NotFound/i.test(t)) return 'No encuentro ningún micrófono conectado.';
+  return 'No se pudo empezar la conversación. Inténtalo de nuevo.';
+}
+
+// `disconnected` es transitorio (en móvil salta y se recupera solo): solo se da
+// por perdida si no vuelve en 10 s. Ante `failed` se renegocia el ICE.
+function cvConexion(pc) {
+  if (CV.pc !== pc) return;
+  const st = pc.connectionState;
+  if (st === 'connected') {
+    clearTimeout(CV.reconTimer);
+    CV.reconTimer = null;
+    if (CV.estado === 'reconnecting') { CV.estado = 'live'; CV.error = ''; cvPintaEstado(); cvPintaExtra(); }
+    return;
+  }
+  if (st !== 'failed' && st !== 'disconnected') return;
+  if (st === 'failed') { try { pc.restartIce(); } catch (e) { /* no disponible */ } }
+  if (CV.estado === 'live') { CV.estado = 'reconnecting'; cvPintaEstado(); }
+  if (CV.reconTimer) return;
+  CV.reconTimer = setTimeout(() => {
+    CV.reconTimer = null;
+    if (CV.pc !== pc || pc.connectionState === 'connected') return;
+    CV.error = 'Se perdió la conexión con ' + mascotName() + '.';
+    cvStop(true);
+  }, 10000);
+}
+
+function cvEvento(evt) {
+  const tipo = evt.type || '';
+  const id = evt.item_id || evt.response_id || '';
+  switch (tipo) {
+    case 'input_audio_buffer.speech_started':
+      CV.escuchando = true;
+      cvCancelaEspera();
+      cvPintaEstado();
+      break;
+    case 'input_audio_buffer.speech_stopped':
+      CV.escuchando = false;
+      cvAbreEspera();
+      cvPintaEstado();
+      break;
+    case 'conversation.item.input_audio_transcription.delta':
+      cvUpsert('u' + id, 'yo', evt.delta || '', true, true);
+      break;
+    case 'conversation.item.input_audio_transcription.completed': {
+      const texto = String(evt.transcript || '').trim();
+      if (!texto) { cvQuita('u' + id); break; }
+      cvUpsert('u' + id, 'yo', texto, false, false);
+      cvResponde(texto);
+      cvTurnoAlumno(texto);
+      break;
+    }
+    case 'response.output_audio_transcript.delta':
+    case 'response.audio_transcript.delta':
+    case 'response.output_text.delta':
+    case 'response.text.delta':
+      if (!CV.hablando) { CV.hablando = true; cvMicSegunHabla(); cvPintaEstado(); }
+      cvUpsert('a' + id, 'tu', evt.delta || '', true, true);
+      break;
+    case 'response.output_audio_transcript.done':
+    case 'response.audio_transcript.done':
+    case 'response.output_text.done':
+    case 'response.text.done': {
+      const previo = CV.turnos.find(x => x.id === 'a' + id);
+      const texto = String(evt.transcript || evt.text || (previo && previo.texto) || '').trim();
+      cvUpsert('a' + id, 'tu', texto, false, false);
+      if (texto) CV.ultimoTutor = texto;
+      break;
+    }
+    case 'response.done':
+      CV.hablando = false;
+      // Si algún `.done` de transcripción no llegó, la burbuja se quedaba en
+      // gris y a medias. Aquí se da por cerrada con lo que haya.
+      CV.turnos.forEach(t => { if (t.rol === 'tu' && t.parcial) { t.parcial = false; cvPintaTurno(t); } });
+      cvMicSegunHabla();
+      cvPintaEstado();
+      break;
+    case 'error':
+      console.error('[conversar] realtime', evt.error);
+      break;
+  }
+}
+
+function cvAbreEspera() {
+  CV.esperando2 = true;
+}
+
+function cvCancelaEspera() {
+  CV.esperando2 = false;
+}
+
+function cvResponde(texto) {
+  if (!CV.esperando2 || !String(texto || '').trim()) return;
+  CV.esperando2 = false;
+  const dc = CV.dc;
+  if (dc && dc.readyState === 'open') dc.send(JSON.stringify({ type: 'response.create' }));
+}
+
+// Mide el nivel del audio que llega del tutor para saber cuándo SUENA de verdad.
+//
+// Hacía falta porque `response.done` avisa de que el modelo terminó de generar,
+// no de que terminó de oírse: la reproducción sigue varios segundos. En ese
+// hueco el micro volvía a abrirse, grababa al tutor por el altavoz y lo
+// transcribía como si lo hubiera dicho el alumno — de ahí las frases ajenas en
+// el chat y las respuestas a nada.
+function cvVigilaVoz(pista) {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ctx = new AC();
+    CV.audioCtx = ctx;
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    const an = ctx.createAnalyser();
+    an.fftSize = 512;
+    ctx.createMediaStreamSource(pista).connect(an);
+    const datos = new Uint8Array(an.fftSize);
+    let ultimaVoz = 0;
+    CV.vigila = setInterval(() => {
+      an.getByteTimeDomainData(datos);
+      let suma = 0;
+      for (let i = 0; i < datos.length; i++) { const d = (datos[i] - 128) / 128; suma += d * d; }
+      if (Math.sqrt(suma / datos.length) > 0.01) ultimaVoz = Date.now();
+      // Cola corta a propósito. Tiene que cubrir los silencios de entre palabra y
+      // palabra, pero cada milisegundo de más se come el arranque del alumno:
+      // con 500 ms, quien contestaba justo al acabar la mascota perdía su
+      // primera palabra y llegaba una frase mutilada, que el transcriptor
+      // convertía en cualquier cosa.
+      const sonando = Date.now() - ultimaVoz < 150;
+      if (sonando !== CV.sonando) { CV.sonando = sonando; cvMicSegunHabla(); cvPintaEstado(); }
+    }, 50);
+  } catch (e) { /* sin Web Audio se sigue con response.done */ }
+}
+
+// El micro se corta mientras la mascota habla o suena: ahí solo grabaría su
+// propia voz por el altavoz, y encima se factura.
+function cvMicSegunHabla() {
+  const track = CV.stream && CV.stream.getAudioTracks()[0];
+  if (track) track.enabled = !CV.micOff && !CV.hablando && !CV.sonando;
+}
+function cvToggleMic() { CV.micOff = !CV.micOff; cvMicSegunHabla(); cvPintaEstado(); }
+
+function cvEnviaTexto(texto) {
+  const dc = CV.dc;
+  if (!dc || dc.readyState !== 'open') return;
+  dc.send(JSON.stringify({ type: 'conversation.item.create', item: { type: 'message', role: 'user', content: [{ type: 'input_text', text: texto }] } }));
+  dc.send(JSON.stringify({ type: 'response.create' }));
+  cvUpsert('t' + Date.now(), 'yo', texto, false, false);
+  cvTurnoAlumno(texto);
+}
+
+// La estimación va en cola: dos turnos seguidos no deben pisarse el estado.
+function cvEstima(extra) {
+  _cvCola = _cvCola.then(async () => {
+    try {
+      const r = await cvApi('turn', Object.assign({ state: CV.est, contexto: CV.ctx, semilla: CV.semilla, fijo: !CV.adapta }, extra));
+      if (!r.ok) return;
+      const j = await r.json();
+      CV.est = j.state;
+      CV.flags = { band: j.band, bilingue: j.bilingue, cuestaSeguir: j.cuestaSeguir };
+      if (j.sessionUpdate && CV.dc && CV.dc.readyState === 'open') CV.dc.send(JSON.stringify(j.sessionUpdate));
+      cvPintaExtra();
+    } catch (e) { /* la conversación sigue aunque falle la estimación */ }
+  });
+  return _cvCola;
+}
+async function cvTurnoAlumno(texto) {
+  const p = CV.pend;
+  p.texto.push(texto);
+  p.palabras += texto.split(/\s+/).filter(Boolean).length;
+  p.turnos += 1;
+  await cvEstima({ text: texto });
+  const cada = (CV.est && CV.est.confidence >= 0.6) ? 6 : 3;
+  if (p.turnos >= cada || p.palabras >= 60) cvObserva();
+}
+// `detectarMisquotes` comprueba, letra a letra, que lo que el tutor le atribuye
+// al alumno esté de verdad en lo que dijo. Fallaba justo en lo que el prompt
+// prohíbe primero —'You said, "I get up early."' sobre un "I get that"— así que
+// aquí se le corrige por el canal de datos, que es lo único que no depende de
+// que el modelo se acuerde de una regla.
+//
+// Una vez por sesión: cada mensaje se queda en el contexto y se paga en todos
+// los turnos siguientes.
+function cvAvisaCita(citas) {
+  if (!citas || !citas.length || CV.citaAvisada) return;
+  if (!CV.dc || CV.dc.readyState !== 'open') return;
+  CV.citaAvisada = true;
+  CV.dc.send(JSON.stringify({
+    type: 'conversation.item.create',
+    item: {
+      type: 'message', role: 'system',
+      content: [{ type: 'input_text', text: 'AVISO DEL SISTEMA: le has atribuido al alumno una frase que no dijo ('
+        + citas.slice(0, 2).map(c => '"' + String(c).slice(0, 80) + '"').join(', ')
+        + '). No vuelvas a repetir sus palabras ni a entrecomillarle, tampoco para felicitarle. Da el visto bueno sin citar.' }],
+    },
+  }));
+}
+
+async function cvObserva() {
+  const p = CV.pend;
+  if (!p.texto.length) return;
+  const studentText = p.texto.join(' '), tutorText = CV.ultimoTutor, palabras = p.palabras;
+  CV.pend = { texto: [], palabras: 0, turnos: 0 };
+  try {
+    const r = await cvApi('observe', { studentText, tutorText });
+    if (!r.ok) return;
+    const o = await r.json();
+    (o.errors || []).forEach(e => {
+      if (!CV.errores.some(x => x.quote === e.quote)) CV.errores.push({ quote: e.quote, correction: e.correction });
+    });
+    cvAvisaCita(o.tutorMisquotes);
+    await cvEstima({ obs: {
+      errorCount: (o.errors || []).length, wordsObserved: palabras,
+      confirmedStructures: o.structuresConfirmed || [], unclearAudio: !!o.unclearAudio, comprehension: o.comprehension,
+    } });
+    if (CV.estado === 'ended') cvPintaExtra();
+  } catch (e) { /* idem */ }
+}
+
+function cvLimpia() {
+  clearTimeout(CV.reconTimer);
+  CV.reconTimer = null;
+  cvCancelaEspera();
+  clearInterval(CV.vigila);
+  CV.vigila = null;
+  try { if (CV.audioCtx) CV.audioCtx.close(); } catch (e) { /* ya cerrado */ }
+  CV.audioCtx = null;
+  CV.sonando = false;
+  try { if (CV.dc) CV.dc.close(); } catch (e) { /* ya cerrado */ }
+  try { if (CV.pc) { CV.pc.getSenders().forEach(s => s.track && s.track.stop()); CV.pc.close(); } } catch (e) { /* ya cerrado */ }
+  try { if (CV.stream) CV.stream.getTracks().forEach(t => t.stop()); } catch (e) { /* ya parado */ }
+  if (CV.audio) { CV.audio.srcObject = null; CV.audio.remove(); }
+  CV.dc = CV.pc = CV.stream = CV.audio = null;
+  CV.hablando = CV.escuchando = false;
+}
+function cvStop(pintar) {
+  if (!CV.pc && !CV.arrancando) return;
+  cvLimpia();
+  CV.arrancando = false;
+  CV.estado = CV.turnos.length ? 'ended' : 'idle';
+  cvObserva();
+  if (pintar !== false) renderConversar();
+}
+
+// Pantalla bloqueada o app en segundo plano: tras 20 s se corta, para no dejar
+// el micro abierto facturando. Una notificación rápida no la mata.
+document.addEventListener('visibilitychange', () => {
+  clearTimeout(CV.ocultoTimer);
+  if (document.hidden && CV.pc) CV.ocultoTimer = setTimeout(() => cvStop(true), 20000);
+});
+window.addEventListener('pagehide', () => cvStop(false));
 
 //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // Boot: first run (no profile) → onboarding; otherwise straight to the course.
