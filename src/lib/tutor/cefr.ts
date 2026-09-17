@@ -180,6 +180,7 @@ export function turnDetection(modo: TurnMode, band: Band) {
     prefix_padding_ms: 300,
     silence_duration_ms: PROFILES[band].vadSilenceMs,
     interrupt_response: false,
+    create_response: false,
   };
 }
 

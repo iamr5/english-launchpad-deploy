@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 // El pase que necesita la página del asistente para poder abrir sesiones.
 
@@ -9,8 +10,9 @@ export type TutorPass = {
   ready: boolean;
 };
 
-export const getTutorPass = createServerFn({ method: "GET" }).handler(
-  async (): Promise<TutorPass> => {
+export const getTutorPass = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async (): Promise<TutorPass> => {
     const { issueTutorToken, newSessionId } = await import("./tutor-token");
     const sid = newSessionId();
 
@@ -19,5 +21,4 @@ export const getTutorPass = createServerFn({ method: "GET" }).handler(
       sid,
       ready: Boolean(process.env["OPENAI_API_KEY"]),
     };
-  },
-);
+  });

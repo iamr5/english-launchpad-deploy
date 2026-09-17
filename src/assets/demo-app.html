@@ -8656,7 +8656,7 @@ const CV_ICONOS = {
 };
 const CV = {
   estado: 'idle', ctx: null, turnos: [], errores: [], est: null,
-  flags: { band: null, bilingue: false, cuestaSeguir: false }, semilla: null, adapta: false, citaAvisada: false,
+  flags: { band: null, bilingue: false, cuestaSeguir: false }, semilla: null, adapta: false, citaAvisada: false, esperando2: false, esperaTimer: null,
   pc: null, dc: null, stream: null, audio: null, arrancando: false, reconTimer: null, ocultoTimer: null,
   pend: { texto: [], palabras: 0, turnos: 0 }, ultimoTutor: '',
   hablando: false, sonando: false, escuchando: false, micOff: false, error: '',
@@ -9011,7 +9011,7 @@ async function cvStart() {
   CV.arrancando = true;
   Object.assign(CV, {
     estado: 'connecting', error: '', turnos: [], errores: [], est: null, ultimoTutor: '',
-    flags: { band: null, bilingue: false, cuestaSeguir: false }, semilla: cvNivelSesion(), adapta: cvAdapta(), citaAvisada: false,
+    flags: { band: null, bilingue: false, cuestaSeguir: false }, semilla: cvNivelSesion(), adapta: cvAdapta(), citaAvisada: false, esperando2: false,
     pend: { texto: [], palabras: 0, turnos: 0 }, micOff: false, hablando: false, sonando: false, escuchando: false,
   });
   renderConversar();
@@ -9110,15 +9110,24 @@ function cvEvento(evt) {
   const tipo = evt.type || '';
   const id = evt.item_id || evt.response_id || '';
   switch (tipo) {
-    case 'input_audio_buffer.speech_started': CV.escuchando = true; cvPintaEstado(); break;
-    case 'input_audio_buffer.speech_stopped': CV.escuchando = false; cvPintaEstado(); break;
+    case 'input_audio_buffer.speech_started':
+      CV.escuchando = true;
+      cvCancelaEspera();
+      cvPintaEstado();
+      break;
+    case 'input_audio_buffer.speech_stopped':
+      CV.escuchando = false;
+      cvAbreEspera();
+      cvPintaEstado();
+      break;
     case 'conversation.item.input_audio_transcription.delta':
       cvUpsert('u' + id, 'yo', evt.delta || '', true, true);
       break;
     case 'conversation.item.input_audio_transcription.completed': {
       const texto = String(evt.transcript || '').trim();
-      if (!texto) { cvQuita('u' + id); break; }
+      if (!texto) { cvQuita('u' + id); cvResponde(''); break; }
       cvUpsert('u' + id, 'yo', texto, false, false);
+      cvResponde(texto);
       cvTurnoAlumno(texto);
       break;
     }
@@ -9156,6 +9165,33 @@ function cvEvento(evt) {
       break;
     }
   }
+}
+
+const CV_ESPERA_MS = 1500;
+
+function cvAbreEspera() {
+  if (CV.esperando2) return;
+  CV.esperando2 = true;
+  clearTimeout(CV.esperaTimer);
+  CV.esperaTimer = setTimeout(() => cvResponde(null), CV_ESPERA_MS);
+}
+
+function cvCancelaEspera() {
+  clearTimeout(CV.esperaTimer);
+  CV.esperaTimer = null;
+  CV.esperando2 = false;
+}
+
+function cvResponde(texto) {
+  if (!CV.esperando2) return;
+  CV.esperando2 = false;
+  clearTimeout(CV.esperaTimer);
+  CV.esperaTimer = null;
+  const dc = CV.dc;
+  if (!dc || dc.readyState !== 'open') return;
+  const t = String(texto == null ? '' : texto).trim();
+  if (texto !== null && !t) return;
+  dc.send(JSON.stringify({ type: 'response.create' }));
 }
 
 // Mide el nivel del audio que llega del tutor para saber cuándo SUENA de verdad.
@@ -9281,6 +9317,7 @@ async function cvObserva() {
 function cvLimpia() {
   clearTimeout(CV.reconTimer);
   CV.reconTimer = null;
+  cvCancelaEspera();
   clearInterval(CV.vigila);
   CV.vigila = null;
   try { if (CV.audioCtx) CV.audioCtx.close(); } catch (e) { /* ya cerrado */ }
