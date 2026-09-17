@@ -96,6 +96,7 @@ export function useRealtimeTutor({
   });
   const [micMuted, setMicMuted] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+  const [sonando, setSonando] = useState(false);
   const [listening, setListening] = useState(false);
 
   const pcRef = useRef<RTCPeerConnection | null>(null);
@@ -118,6 +119,11 @@ export function useRealtimeTutor({
   const arrancandoRef = useRef(false);
   const bilingueEnviadoRef = useRef(false);
   const reconexionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const esperandoRef = useRef(false);
+  const citaAvisadaRef = useRef(false);
+  const sonandoRef = useRef(false);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const vigilaRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const modoRef = useRef<TurnMode>(modo);
   modoRef.current = modo;
   const vocabRef = useRef<{ temas: string[]; palabras: string[] } | undefined>(undefined);
@@ -172,7 +178,34 @@ export function useRealtimeTutor({
         unclearAudio: boolean;
         comprehension: "followed" | "partial" | "lost";
         cost: { usd: number };
+        tutorMisquotes?: string[];
       };
+
+      const citas = obs.tutorMisquotes ?? [];
+      const canal = dcRef.current;
+      if (citas.length && !citaAvisadaRef.current && canal?.readyState === "open") {
+        citaAvisadaRef.current = true;
+        canal.send(
+          JSON.stringify({
+            type: "conversation.item.create",
+            item: {
+              type: "message",
+              role: "system",
+              content: [
+                {
+                  type: "input_text",
+                  text: `AVISO DEL SISTEMA: le has atribuido al alumno una frase que no dijo (${citas
+                    .slice(0, 2)
+                    .map((c) => `"${c.slice(0, 80)}"`)
+                    .join(
+                      ", ",
+                    )}). No vuelvas a repetir sus palabras ni a entrecomillarle, tampoco para felicitarle. Da el visto bueno sin citar.`,
+                },
+              ],
+            },
+          }),
+        );
+      }
 
       setEstimator((prev) => {
         const next = applyObservation(prev, {
@@ -250,8 +283,8 @@ export function useRealtimeTutor({
     if (modo === "manual" || micMuted) return;
     const track = streamRef.current?.getAudioTracks()[0];
     if (!track) return;
-    track.enabled = !speaking;
-  }, [speaking, micMuted, modo]);
+    track.enabled = !speaking && !sonando;
+  }, [speaking, sonando, micMuted, modo]);
 
   const acumulaCoste = useCallback((usage: Record<string, unknown> | undefined) => {
     if (!usage) return;
@@ -315,10 +348,12 @@ export function useRealtimeTutor({
 
       switch (tipo) {
         case "input_audio_buffer.speech_started":
+          esperandoRef.current = false;
           setListening(true);
           break;
 
         case "input_audio_buffer.speech_stopped":
+          esperandoRef.current = true;
           setListening(false);
           break;
 
@@ -335,6 +370,11 @@ export function useRealtimeTutor({
           }
           upsertTurn(`u-${itemId}`, "student", texto, false, false);
           registrarTurnoAlumno(texto);
+          if (modoRef.current === "auto" && esperandoRef.current) {
+            esperandoRef.current = false;
+            const dc = dcRef.current;
+            if (dc?.readyState === "open") dc.send(JSON.stringify({ type: "response.create" }));
+          }
           break;
         }
 
@@ -368,15 +408,9 @@ export function useRealtimeTutor({
           break;
         }
 
-        case "error": {
-          const e = (evt["error"] || {}) as Record<string, unknown>;
-          const msg = String(e["message"] || "");
-          console.error("[tutor] error del servidor de realtime", e);
-          // Ruido del truncado de audio: no es accionable, no se le enseña al alumno.
-          if (/already shorter than/i.test(msg)) break;
-          setError(msg || "La sesión devolvió un error.");
+        case "error":
+          console.error("[tutor] error del servidor de realtime", evt["error"]);
           break;
-        }
 
         default:
           break;
@@ -385,8 +419,48 @@ export function useRealtimeTutor({
     [acumulaCoste, registrarTurnoAlumno, upsertTurn],
   );
 
+  const vigilaVoz = useCallback((pista: MediaStream) => {
+    const AC =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AC) return;
+    try {
+      const ctx = new AC();
+      audioCtxRef.current = ctx;
+      if (ctx.state === "suspended") void ctx.resume().catch(() => {});
+      const an = ctx.createAnalyser();
+      an.fftSize = 512;
+      ctx.createMediaStreamSource(pista).connect(an);
+      const datos = new Uint8Array(an.fftSize);
+      let ultimaVoz = 0;
+      vigilaRef.current = setInterval(() => {
+        an.getByteTimeDomainData(datos);
+        let suma = 0;
+        for (const v of datos) {
+          const d = (v - 128) / 128;
+          suma += d * d;
+        }
+        if (Math.sqrt(suma / datos.length) > 0.01) ultimaVoz = Date.now();
+        const suena = Date.now() - ultimaVoz < 150;
+        if (suena !== sonandoRef.current) {
+          sonandoRef.current = suena;
+          setSonando(suena);
+        }
+      }, 50);
+    } catch {
+      audioCtxRef.current = null;
+    }
+  }, []);
+
   const stop = useCallback(() => {
     arrancandoRef.current = false;
+    esperandoRef.current = false;
+    if (vigilaRef.current) clearInterval(vigilaRef.current);
+    vigilaRef.current = null;
+    void audioCtxRef.current?.close().catch(() => {});
+    audioCtxRef.current = null;
+    sonandoRef.current = false;
+    setSonando(false);
     if (reconexionRef.current) clearTimeout(reconexionRef.current);
     reconexionRef.current = null;
     dcRef.current?.close();
@@ -414,6 +488,8 @@ export function useRealtimeTutor({
     // La reserva va antes del await: si no, dos pulsaciones abren dos sesiones.
     if (pcRef.current || arrancandoRef.current) return;
     arrancandoRef.current = true;
+    citaAvisadaRef.current = false;
+    esperandoRef.current = false;
 
     setError(null);
     setStatus("connecting");
@@ -430,7 +506,7 @@ export function useRealtimeTutor({
 
     try {
       if (!navigator.mediaDevices?.getUserMedia) {
-        throw new Error(
+        throw new ErrorParaAlumno(
           window.isSecureContext
             ? "Este navegador no permite acceder al micrófono."
             : "El navegador solo da acceso al micrófono en HTTPS. Abre la página por el enlace https, no por la IP local.",
@@ -457,7 +533,7 @@ export function useRealtimeTutor({
 
       if (!r.ok) {
         const cuerpo = (await r.json().catch(() => ({}))) as { error?: string };
-        throw new Error(mensajeDeError(cuerpo.error, r.status));
+        throw new ErrorParaAlumno(mensajeDeError(cuerpo.error));
       }
 
       const sesion = (await r.json()) as {
@@ -473,8 +549,10 @@ export function useRealtimeTutor({
 
       // Salida: el audio del tutor, sobre el elemento ya desbloqueado arriba.
       pc.ontrack = (e) => {
-        audioEl.srcObject = e.streams[0] ?? null;
+        const pista = e.streams[0] ?? null;
+        audioEl.srcObject = pista;
         void audioEl.play().catch(() => {});
+        if (pista) vigilaVoz(pista);
       };
 
       // Entrada: el micrófono.
@@ -495,6 +573,7 @@ export function useRealtimeTutor({
 
       dc.addEventListener("open", () => {
         setStatus("live");
+        dc.send(JSON.stringify({ type: "response.create" }));
       });
 
       dc.addEventListener("message", (e) => {
@@ -555,27 +634,23 @@ export function useRealtimeTutor({
         // El cuerpo de la respuesta dice el motivo real.
         const detalle = await sdpRes.text().catch(() => "");
         console.error("[tutor] intercambio SDP fallido", sdpRes.status, detalle);
-        throw new Error(
+        throw new ErrorParaAlumno(
           sdpRes.status === 401
-            ? "La credencial de voz caducó o fue rechazada. Recarga la página y vuelve a intentarlo."
-            : `No se pudo abrir el canal de voz (${sdpRes.status}). ${detalle.slice(0, 160)}`,
+            ? "La conexión caducó. Recarga la página y vuelve a intentarlo."
+            : "No se pudo abrir el canal de voz. Inténtalo de nuevo.",
         );
       }
 
       await pc.setRemoteDescription({ type: "answer", sdp: await sdpRes.text() });
       arrancandoRef.current = false;
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "No se pudo iniciar la sesión.";
-      setError(
-        msg.includes("Permission") || msg.includes("NotAllowed")
-          ? "Necesito permiso para usar el micrófono."
-          : msg,
-      );
+      console.error("[tutor] no se pudo iniciar la sesión", e);
+      setError(errorVisible(e));
       setStatus("error");
       arrancandoRef.current = false;
       stop();
     }
-  }, [manejaEvento, mic, modo, nombre, stop, token]);
+  }, [manejaEvento, mic, modo, nombre, stop, token, vigilaVoz]);
 
   /** Escribir en vez de hablar. */
   const sendText = useCallback(
@@ -658,17 +733,26 @@ export function useRealtimeTutor({
   };
 }
 
-function mensajeDeError(codigo: string | undefined, status: number): string {
+class ErrorParaAlumno extends Error {}
+
+function errorVisible(e: unknown): string {
+  if (e instanceof ErrorParaAlumno) return e.message;
+  const t = e instanceof Error ? `${e.name} ${e.message}` : "";
+  if (/NotAllowed|Permission/i.test(t)) return "Necesito permiso para usar el micrófono.";
+  if (/NotFound/i.test(t)) return "No encuentro ningún micrófono conectado.";
+  return "No se pudo iniciar la sesión. Inténtalo de nuevo.";
+}
+
+function mensajeDeError(codigo: string | undefined): string {
   switch (codigo) {
     case "invalid_token":
-      return "El pase de esta página caducó. Recarga para pedir uno nuevo.";
+      return "Tu sesión caducó. Recarga la página para seguir.";
     case "rate_limited":
       return "Has abierto demasiadas sesiones en la última hora. Espera un poco.";
     case "ai_unavailable":
-      return "Falta configurar OPENAI_API_KEY en el servidor.";
     case "bad_api_key":
-      return "La clave de OpenAI del servidor no es válida.";
+      return "El asistente no está disponible ahora mismo.";
     default:
-      return `No se pudo iniciar la sesión (${status}).`;
+      return "No se pudo iniciar la sesión. Inténtalo de nuevo.";
   }
 }

@@ -15,6 +15,8 @@ export const getTutorPass = createServerFn({ method: "GET" })
   .handler(async (): Promise<TutorPass> => {
     const { issueTutorToken, newSessionId } = await import("./tutor-token");
     const sid = newSessionId();
+    if (!process.env["OPENAI_API_KEY"])
+      console.error("[tutor] falta OPENAI_API_KEY en el servidor");
 
     return {
       token: await issueTutorToken(sid),

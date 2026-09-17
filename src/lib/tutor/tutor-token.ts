@@ -3,11 +3,11 @@
 const enc = new TextEncoder();
 
 /** Con qué se firma. */
-function secret(): string {
+function secret(): string | null {
   const env = (typeof process !== "undefined" && process.env) || ({} as Record<string, string>);
   if (env["TUTOR_TOKEN_SECRET"]) return env["TUTOR_TOKEN_SECRET"] as string;
   if (env["SUPABASE_SERVICE_ROLE_KEY"]) return `tutor-token-v1:${env["SUPABASE_SERVICE_ROLE_KEY"]}`;
-  return "aprendoenglish-tutor-pase-por-defecto";
+  return import.meta.env.DEV ? "aprendoenglish-tutor-pase-por-defecto" : null;
 }
 
 const b64url = (b: ArrayBuffer | Uint8Array) => {
@@ -18,9 +18,14 @@ const b64url = (b: ArrayBuffer | Uint8Array) => {
 };
 
 async function sign(payload: string): Promise<string> {
+  const clave = secret();
+  if (!clave) {
+    console.error("[tutor] falta TUTOR_TOKEN_SECRET o SUPABASE_SERVICE_ROLE_KEY");
+    throw new Error("tutor_no_disponible");
+  }
   const key = await crypto.subtle.importKey(
     "raw",
-    enc.encode(secret()),
+    enc.encode(clave),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"],
@@ -51,7 +56,7 @@ export async function verifyTutorToken(
   token: string,
   now = Date.now(),
 ): Promise<TutorClaims | null> {
-  if (!token || token.length > 512) return null;
+  if (!token || token.length > 512 || !secret()) return null;
 
   const dot = token.lastIndexOf(".");
   if (dot < 1) return null;
@@ -85,6 +90,11 @@ export async function verifyTutorToken(
 export async function verifyTutorAccess(token: string): Promise<TutorClaims | null> {
   const tutor = await verifyTutorToken(token);
   if (tutor) return tutor;
+  const env = (typeof process !== "undefined" && process.env) || ({} as Record<string, string>);
+  if (!env["COURSE_TOKEN_SECRET"] && !import.meta.env.DEV) {
+    console.error("[tutor] falta COURSE_TOKEN_SECRET: no se aceptan pases de curso");
+    return null;
+  }
   const { verifyCourseToken } = await import("@/lib/course-token");
   const slug = await verifyCourseToken(token);
   return slug ? { sid: newSessionId(), exp: Date.now() + 30 * 60 * 1000 } : null;

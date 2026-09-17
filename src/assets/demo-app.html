@@ -8656,7 +8656,7 @@ const CV_ICONOS = {
 };
 const CV = {
   estado: 'idle', ctx: null, turnos: [], errores: [], est: null,
-  flags: { band: null, bilingue: false, cuestaSeguir: false }, semilla: null, adapta: false, citaAvisada: false, esperando2: false, esperaTimer: null,
+  flags: { band: null, bilingue: false, cuestaSeguir: false }, semilla: null, adapta: false, citaAvisada: false, esperando2: false,
   pc: null, dc: null, stream: null, audio: null, arrancando: false, reconTimer: null, ocultoTimer: null,
   pend: { texto: [], palabras: 0, turnos: 0 }, ultimoTutor: '',
   hablando: false, sonando: false, escuchando: false, micOff: false, error: '',
@@ -8955,7 +8955,7 @@ function cvMensaje(codigo, status) {
   if (codigo === 'invalid_token') return 'Tu sesión caducó. Recarga la app para seguir.';
   if (codigo === 'rate_limited') return 'Has practicado mucho en la última hora. Descansa un momento.';
   if (codigo === 'ai_unavailable') return 'La práctica hablada no está disponible ahora mismo.';
-  return 'No se pudo empezar (' + status + ').';
+  return 'No se pudo empezar la conversación. Inténtalo de nuevo.';
 }
 // El nivel que la app ya sabe de ti. Es solo el punto de partida: desde el primer
 // turno manda lo que hables, no esto.
@@ -9028,10 +9028,10 @@ async function cvStart() {
 
   try {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      throw new Error(window.isSecureContext ? 'Este navegador no permite usar el micrófono.' : 'El micrófono solo funciona con https.');
+      throw Object.assign(new Error(window.isSecureContext ? 'Este navegador no permite usar el micrófono.' : 'El micrófono solo funciona con https.'), { paraAlumno: true });
     }
     const r = await cvApi('session', { contexto: CV.ctx, midiendo: CV.adapta, band: CV.semilla || undefined });
-    if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(cvMensaje(j.error, r.status)); }
+    if (!r.ok) { const j = await r.json().catch(() => ({})); throw Object.assign(new Error(cvMensaje(j.error, r.status)), { paraAlumno: true }); }
     const ses = await r.json();
 
     const pc = new RTCPeerConnection();
@@ -9070,17 +9070,25 @@ async function cvStart() {
     });
     if (!sdp.ok) {
       console.error('[conversar] SDP', sdp.status, await sdp.text().catch(() => ''));
-      throw new Error(sdp.status === 401 ? 'La conexión caducó. Vuelve a intentarlo.' : 'No se pudo abrir el canal de voz.');
+      throw Object.assign(new Error(sdp.status === 401 ? 'La conexión caducó. Vuelve a intentarlo.' : 'No se pudo abrir el canal de voz.'), { paraAlumno: true });
     }
     await pc.setRemoteDescription({ type: 'answer', sdp: await sdp.text() });
   } catch (e) {
-    const msg = (e && e.message) || 'No se pudo empezar.';
+    console.error('[conversar] inicio', e);
     cvLimpia();
     CV.estado = 'idle';
     CV.arrancando = false;
-    CV.error = /Permission|NotAllowed/i.test(msg) ? 'Necesito permiso para usar el micrófono.' : msg;
+    CV.error = cvErrorVisible(e);
     renderConversar();
   }
+}
+
+function cvErrorVisible(e) {
+  if (e && e.paraAlumno) return e.message;
+  const t = e ? String(e.name) + ' ' + String(e.message) : '';
+  if (/NotAllowed|Permission/i.test(t)) return 'Necesito permiso para usar el micrófono.';
+  if (/NotFound/i.test(t)) return 'No encuentro ningún micrófono conectado.';
+  return 'No se pudo empezar la conversación. Inténtalo de nuevo.';
 }
 
 // `disconnected` es transitorio (en móvil salta y se recupera solo): solo se da
@@ -9125,7 +9133,7 @@ function cvEvento(evt) {
       break;
     case 'conversation.item.input_audio_transcription.completed': {
       const texto = String(evt.transcript || '').trim();
-      if (!texto) { cvQuita('u' + id); cvResponde(''); break; }
+      if (!texto) { cvQuita('u' + id); break; }
       cvUpsert('u' + id, 'yo', texto, false, false);
       cvResponde(texto);
       cvTurnoAlumno(texto);
@@ -9156,42 +9164,25 @@ function cvEvento(evt) {
       cvMicSegunHabla();
       cvPintaEstado();
       break;
-    case 'error': {
-      const msg = String((evt.error && evt.error.message) || '');
+    case 'error':
       console.error('[conversar] realtime', evt.error);
-      if (/already shorter than/i.test(msg)) break;
-      CV.error = msg || 'La sesión devolvió un error.';
-      cvPintaExtra();
       break;
-    }
   }
 }
 
-const CV_ESPERA_MS = 1500;
-
 function cvAbreEspera() {
-  if (CV.esperando2) return;
   CV.esperando2 = true;
-  clearTimeout(CV.esperaTimer);
-  CV.esperaTimer = setTimeout(() => cvResponde(null), CV_ESPERA_MS);
 }
 
 function cvCancelaEspera() {
-  clearTimeout(CV.esperaTimer);
-  CV.esperaTimer = null;
   CV.esperando2 = false;
 }
 
 function cvResponde(texto) {
-  if (!CV.esperando2) return;
+  if (!CV.esperando2 || !String(texto || '').trim()) return;
   CV.esperando2 = false;
-  clearTimeout(CV.esperaTimer);
-  CV.esperaTimer = null;
   const dc = CV.dc;
-  if (!dc || dc.readyState !== 'open') return;
-  const t = String(texto == null ? '' : texto).trim();
-  if (texto !== null && !t) return;
-  dc.send(JSON.stringify({ type: 'response.create' }));
+  if (dc && dc.readyState === 'open') dc.send(JSON.stringify({ type: 'response.create' }));
 }
 
 // Mide el nivel del audio que llega del tutor para saber cuándo SUENA de verdad.

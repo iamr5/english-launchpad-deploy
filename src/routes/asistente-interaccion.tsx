@@ -45,14 +45,7 @@ function AsistentePage() {
   if (pass.isError || !pass.data)
     return <Aviso>No se pudo preparar la sesión. Recarga la página.</Aviso>;
 
-  if (!pass.data.ready) {
-    return (
-      <Aviso>
-        Falta configurar <code className="font-mono">OPENAI_API_KEY</code> en el entorno del
-        servidor. El asistente no puede abrir sesiones sin ella.
-      </Aviso>
-    );
-  }
+  if (!pass.data.ready) return <Aviso>El asistente no está disponible ahora mismo.</Aviso>;
 
   return (
     <TutorConsole
